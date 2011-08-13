@@ -1,0 +1,64 @@
+--- #YAML:1.0
+name:               Math-NumSeq
+version:            1
+abstract:           Number sequences.
+author:
+    - Kevin Ryde <user42@zip.com.au>
+license:            gpl
+distribution_type:  module
+configure_requires:
+    ExtUtils::MakeMaker:  0
+build_requires:
+    ExtUtils::MakeMaker:  0
+requires:
+    base:               0
+    constant:           1.02
+    File::HomeDir:      0
+    File::Spec:         0
+    List::Util:         0
+    Math::Libm:         0
+    Math::Prime::XS:    0.23
+    Module::Load:       0
+    Module::Pluggable:  0
+    perl:               5.004
+    Test:               0
+    Test::More:         0
+resources:
+    homepage:  http://user42.tuxfamily.org/math-numseq/index.html
+    license:   http://www.gnu.org/licenses/gpl.html
+no_index:
+    directory:
+        - t
+        - inc
+        - xt
+        - devel
+        - examples
+generated_by:       ExtUtils::MakeMaker version 6.56
+meta-spec:
+    url:      http://module-build.sourceforge.net/META-spec-v1.4.html
+    version:  1.4
+optional_features:
+    maximum_devel:
+        description:  Stuff used variously for development.
+        requires:
+            Devel::Comments:      0
+            Devel::TimeThis:      1
+            File::Spec:           0
+            Math::BigRat:         0
+            Math::Fibonacci:      0
+            Math::Polynomial:     1
+            Math::Prime::TiedArray:  1
+            Math::TriangularNumbers:  1
+            Module::Util:         0
+            Parse::CPAN::Meta:    0
+            Pod::Simple::HTML:    0
+            Smart::Comments:      0
+            Test::DistManifest:   0
+            Test::Pod:            1.00
+            Test::Synopsis:       0
+            Test::YAML::Meta:     0.15
+            warnings::unused:     0
+            YAML:                 0
+            YAML::Syck:           0
+            YAML::Tiny:           0
+            YAML::XS:             0

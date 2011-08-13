@@ -1,0 +1,117 @@
+This file contains message digests of all files listed in MANIFEST,
+signed via the Module::Signature module, version 0.68.
+
+To verify the content in this distribution, first make sure you have
+Module::Signature installed, then type:
+
+    % cpansign -v
+
+It will check each file's integrity, as well as the signature's
+validity.  If "==> Signature verified OK! <==" is not displayed,
+the distribution may already have been compromised, and you should
+not run its Makefile.PL or Build.PL.
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+SHA1 842745cb706f8f2126506f544492f7a80dbe29b3 COPYING
+SHA1 1bae9856fc65a5bf116517614ff5fd0926b31be0 Changes
+SHA1 381e6836c7487dfa70430e78456e4a032fe82fb3 MANIFEST
+SHA1 1d745ef4cc154d3b13bfee6d1048ac4135fc1aa7 MANIFEST.SKIP
+SHA1 55881ab8fca7891de4bfb4a8fe44f0cbc22d9a8e META.yml
+SHA1 21e54b49bb99eb7050f73db00c755b6c13badb40 Makefile.PL
+SHA1 dde19254c74736b1883e9cafe6d1ebe98fe650e1 debian/changelog
+SHA1 ac3478d69a3c81fa62e60f5c3696165a4e5e6ac4 debian/compat
+SHA1 637b7f0647ee0b94a2687d17f96a7c4951661b55 debian/control
+SHA1 7d43dca34b754596e0cb869f852801c0166870b0 debian/copyright
+SHA1 439e5013652d7cd9caf8da404efdf290c1b9abc5 debian/rules
+SHA1 61652cd1568dcf2614df833eba241755eee34e89 debian/source/format
+SHA1 56bff9e42ee2c57b5ed3d48eecd090b4d3f00ab2 debian/watch
+SHA1 925dd6b520fabcce67e1c0e2a2b908bcf12d4810 devel/Base4Only01.pm
+SHA1 7eca787066ea08f2c97731529b1cceb140c2e261 devel/OeisCatalogue-SqrtDigits.pm
+SHA1 e7ee931a8b88a15f1897582f8c3b6a4f49b6aa83 devel/bits.pl
+SHA1 ffc99a359574ba79676a5e7fa9364f07c58a23d0 devel/cbrt.pl
+SHA1 ea58f78e64eaab0891c288df3a2089996eb50d92 devel/euler.pl
+SHA1 2ff0c29b443182742d605408447a638bb49180b3 devel/exe-cbrt.c
+SHA1 0b06d0412708d575288854d4d5bfa838104c9d98 devel/maybe-decprime.pl
+SHA1 8ef6cdf5e114087756b61b117b57924a2e5403b5 devel/maybe-ln.pl
+SHA1 5e5488e7d55dbfb801251d335c794801a1b4268b devel/oeis.pl
+SHA1 fb316dfc02a68d2bedca6f4a7cda24f0c2032eca devel/old/Base4Without3.pm
+SHA1 dd3213710e8749968adffc238761ce7148620116 devel/old/FractionBits.pm
+SHA1 428b8d19fa7a6a1902c6fe5989389a1ca1a67c66 devel/old/PentagonalGeneralized.pm
+SHA1 b9e3d58eed2f5f1217a35a10baa16b682a5ec7b4 devel/old/PentagonalSecond.pm
+SHA1 f24a94304a0bd51c10fda884162a2ee528de4092 devel/old/SemiPrimesOdd.pm
+SHA1 ce43a7e4accb8e99ad6cbf3b0d6b27313102d45e devel/old/TernaryWithout2.pm
+SHA1 5f3ad6ac0ed3a2368b167a6c889f8a32d8ba2463 devel/old/ThueMorse.pm
+SHA1 3c1445256f4b9cd275c2d22fbd009aec597343d9 devel/old/ThueMorseEvil.pm
+SHA1 a085977e3c0a05d083f262cac3d52bb35ffffc1d devel/old/ThueMorseOdious.pm
+SHA1 52a86d5c9d9f758311dd6f5553a5705f7aeac212 devel/primes.pl
+SHA1 c9c4be7ec455fbccf3275fb551e197281d7324da devel/run.pl
+SHA1 f5b0a1ab6231c28e6a56b823de3054dc0e5aa747 devel/triangular.pl
+SHA1 4b1a3d9217d81794abcbf621b24b200df07f7499 inc/MyMakeMakerExtras.pm
+SHA1 7a988b2aa7ed09f1cb9029a1ef3f0e2139dca0cf inc/my_pod2html
+SHA1 c194ddcb18165eeb941ded8c241d9cca3d015d02 lib/Math/NumSeq.pm
+SHA1 1d2879477eca969ecb171e047ab2385fdca60e05 lib/Math/NumSeq/Base/Array.pm
+SHA1 816c3138edaab75bf476564339a8e0db3d2dab68 lib/Math/NumSeq/Base/Digits.pm
+SHA1 b1b2824bc78b64478eaef28f47c740ded83fbca3 lib/Math/NumSeq/Base/IterateIth.pm
+SHA1 bdeae42c2cd4a7eca00c40c3b75eeb6e43f906cf lib/Math/NumSeq/Base/IteratePred.pm
+SHA1 e0f656d4d25091d6c701e14ba4d99ea54f18fa89 lib/Math/NumSeq/Base/Sparse.pm
+SHA1 74743fc5f27ef9919ac2a7c5cf2bab1de304e544 lib/Math/NumSeq/Beastly.pm
+SHA1 c5dd7660d139358aee380882faf7b979e93d52c1 lib/Math/NumSeq/CollatzSteps.pm
+SHA1 daf6bdd5ab5375abc97df4aec6ad2d2f196d35b3 lib/Math/NumSeq/Cubes.pm
+SHA1 fae769163e1a0e38ad83db4ef2a8a937e99656bf lib/Math/NumSeq/CullenNumbers.pm
+SHA1 d7ea046f53bf4db9c4c317fb876a49489e57206d lib/Math/NumSeq/DigitLength.pm
+SHA1 50bf27eb8037da6d7168efaa6155695df8ccfa1a lib/Math/NumSeq/DigitLengthCumulative.pm
+SHA1 e2d9ecc381217e7220848e98642d60ee6c29a142 lib/Math/NumSeq/Even.pm
+SHA1 5c8d02d924cc95da754a420fc3e224a23c35c414 lib/Math/NumSeq/Factorials.pm
+SHA1 9c946e1e9c7d53b5929bf431fe1b38f140c64a1c lib/Math/NumSeq/Fibonacci.pm
+SHA1 af6a520831ca704e84a3cc28580a7b33d67a7a27 lib/Math/NumSeq/File.pm
+SHA1 cfde7765e52a21c5d81b6801ee92db0fe6c2588d lib/Math/NumSeq/FractionDigits.pm
+SHA1 94abd3ec5df955d012eaaf4e6d6e6ae3792b98c5 lib/Math/NumSeq/HarshadNumbers.pm
+SHA1 df899055409958305f837b20bf2edc7ccc07a13a lib/Math/NumSeq/LucasNumbers.pm
+SHA1 f160b7981bf1b63ab18ec38fb4514de37ff4cf7e lib/Math/NumSeq/OEIS.pm
+SHA1 7832f9d85119a2a5de2e7fa84294b7a3725a178c lib/Math/NumSeq/OEIS/Catalogue.pm
+SHA1 b1b6c335d88b6ceace0a54848cf572fcec2fe5d8 lib/Math/NumSeq/OEIS/Catalogue/Plugin.pm
+SHA1 496b4009defe8b2cd7982eb4d6440a59036cfffa lib/Math/NumSeq/OEIS/Catalogue/Plugin/BuiltinTable.pm
+SHA1 b58a72687e0cfd155da804efc0cb0f6c5c21bf4b lib/Math/NumSeq/OEIS/Catalogue/Plugin/FractionDigits.pm
+SHA1 8a16860a6995f1437384cfeb606ba43d50059b36 lib/Math/NumSeq/OEIS/Catalogue/Plugin/ZZ_Files.pm
+SHA1 714da27c4a375eb51a274fdd6c4db0c26e9e44bf lib/Math/NumSeq/OEIS/File.pm
+SHA1 a7084b201ccc3c3fb759220e19c7139dfa8c0b62 lib/Math/NumSeq/Odd.pm
+SHA1 bd1c04384a5e3eb42bd5aa7d7baad4ecd8bed60f lib/Math/NumSeq/Palindromes.pm
+SHA1 1e7c5b56168dee428bc71be0ad15418a20f703ee lib/Math/NumSeq/Polygonal.pm
+SHA1 99e3d1378f96a4a805f8b1b221e5e174491e6ce5 lib/Math/NumSeq/Primorials.pm
+SHA1 1c8c45960f0fbbe902080daa48b968b3c7452c36 lib/Math/NumSeq/Pronic.pm
+SHA1 364dbae3f2aed28e668fde69f004f2031e632c23 lib/Math/NumSeq/ProthNumbers.pm
+SHA1 369e2b8633964d85d80a021b78cc9d28c08ca6e8 lib/Math/NumSeq/RadixWithoutDigit.pm
+SHA1 be29b59a9c94b83cb2ab7cf32ada86b1179eb095 lib/Math/NumSeq/Repdigits.pm
+SHA1 b7b95aaab98e6427697ba042b35a2a66aa702a33 lib/Math/NumSeq/SqrtDigits.pm
+SHA1 f06540fc9f5158f721320061a800ae8dbeaab195 lib/Math/NumSeq/Squares.pm
+SHA1 f2681508430933a72a78bf9cb4f9bd6781358b71 lib/Math/NumSeq/StarNumbers.pm
+SHA1 71055b846de3c647f17620d1fa17bfae5ee9624b lib/Math/NumSeq/Tetrahedral.pm
+SHA1 cd877bb35a636d54898da4299b4c41a212378514 lib/Math/NumSeq/Triangular.pm
+SHA1 e5daef3f33be18307301fdae216f7607060b401b lib/Math/NumSeq/WoodallNumbers.pm
+SHA1 5ee479994512fde74727ed243599e3c8c475c5da t/Cubes.t
+SHA1 7c3f157cb23c2f2ea1dd6d57134e51e964fc5cda t/File-1.txt
+SHA1 7c75c11187946e786ce500cd2a5f8d8e6672a1f3 t/File.t
+SHA1 016f6f5865d54130d50f400fb630091bd1a6c76f t/MyTestHelpers.pm
+SHA1 0481cce19d4c27857427ee00fc7b334a18643120 t/NumSeq.t
+SHA1 9190dcfbc4596b62b152175b0bd7c2355870c62d t/SqrtDigits.t
+SHA1 f6e3cb561fa23807c494bc9a20e380ffb0a46e66 tools/make-oeis-catalogue.pl
+SHA1 0279c9310ec528d10a2a14e602bf98f1c776cce1 xt/0-META-read.t
+SHA1 219395eb91b03829e6f14db4ebd57d88ea972e61 xt/0-Test-ConsistentVersion.t
+SHA1 8a5e0f34131de34e584fbb1939c191a152566155 xt/0-Test-DistManifest.t
+SHA1 cc04a5fe5d8b8b38bfd56453d5d2686c8ea58783 xt/0-Test-Pod.t
+SHA1 8cc52e23427a82cfef5802bf512b13c65de2687a xt/0-Test-Synopsis.t
+SHA1 194f76a77d4b022a8b707932d3a45be310400360 xt/0-Test-YAML-Meta.t
+SHA1 bdc59bfb29089f4c801a4282c0c3498f9a7982e5 xt/0-examples-xrefs.t
+SHA1 c03e001ac27b9cb5954174852eb3087d758334d2 xt/0-file-is-part-of.t
+SHA1 daba2840c7f128371d42516619a0e04fee2f5ff4 xt/0-no-debug-left-on.t
+SHA1 bef5f63441bafef8bfe95d32b0c2b9f69db4a456 xt/MyOEIS.pm
+SHA1 8f43595b79cb1ded747a8b31c51d00c136cc4c61 xt/NumSeq-oeis.t
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iD8DBQFORcGHLFMCIV9q3ToRAgf4AKCkuDya8o4iV7wSXD18A3soReYI8gCgjeWJ
+TUIBWAls6FnLMcMfwk+osBk=
+=iq/L
+-----END PGP SIGNATURE-----

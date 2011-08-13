@@ -1,0 +1,102 @@
+#!/usr/bin/perl -w
+
+# Copyright 2011 Kevin Ryde
+
+# This file is part of Math-NumSeq.
+#
+# Math-NumSeq is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the Free
+# Software Foundation; either version 3, or (at your option) any later
+# version.
+#
+# Math-NumSeq is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
+
+use 5.004;
+use strict;
+use Test;
+plan tests => 41;
+
+use lib 't';
+use MyTestHelpers;
+MyTestHelpers::nowarnings();
+
+use Math::NumSeq::SqrtDigits;
+
+# uncomment this to run the ### lines
+#use Smart::Comments;
+
+#------------------------------------------------------------------------------
+# VERSION
+
+{
+  my $want_version = 1;
+  ok ($Math::NumSeq::SqrtDigits::VERSION, $want_version, 'VERSION variable');
+  ok (Math::NumSeq::SqrtDigits->VERSION,  $want_version, 'VERSION class method');
+
+  ok (eval { Math::NumSeq::SqrtDigits->VERSION($want_version); 1 },
+      1,
+      "VERSION class check $want_version");
+  my $check_version = $want_version + 1000;
+  ok (! eval { Math::NumSeq::SqrtDigits->VERSION($check_version); 1 },
+      1,
+      "VERSION class check $check_version");
+}
+
+
+#------------------------------------------------------------------------------
+# characteristic()
+
+{
+  my $seq = Math::NumSeq::SqrtDigits->new;
+  ok ($seq->characteristic('digits'), 10, 'characteristic(digits)');
+}
+
+
+#------------------------------------------------------------------------------
+
+foreach my $sqrt (2,7,123456) {
+  foreach my $radix (2,3,4,5,8,9,10,11,15,16,17,12345) {
+    require Math::BigInt;
+    my $root = Math::BigInt->new($radix);
+    $root->bpow(2 * 200);  # past the 150 digit extending step
+    $root->bmul($sqrt);
+    $root->bsqrt;
+    my @digits;
+    while ($root != 0) {
+      push @digits, $root % $radix;
+      $root->bdiv($radix);
+    }
+    @digits = reverse @digits;
+    my $want = join(',',@digits);
+
+    my $seq = Math::NumSeq::SqrtDigits->new (sqrt => $sqrt, radix => $radix);
+    my @got;
+    foreach (1 .. @digits) {
+      my ($i,$value) = $seq->next;
+      push @got, $value;
+    }
+    my $got = join(',',@got);
+
+    ok ($got,$want, "sqrt($sqrt) radix $radix");
+    if ($got ne $want) {
+      my $i = 0;
+      while ($i < length($got) && $i < length($want)) {
+        if (substr($got,$i,1) ne substr($want,$i,1)) {
+          MyTestHelpers::diag("differ at char $i");
+          last;
+        }
+        $i++;
+      }
+    }
+  }
+}
+
+exit 0;
+
+
