@@ -21,7 +21,7 @@ use strict;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 1;
+$VERSION = 2;
 
 use Math::NumSeq::Fibonacci;
 @ISA = ('Math::NumSeq::Fibonacci');
@@ -51,7 +51,7 @@ __END__
 
 =head1 NAME
 
-Math::NumSeq::LucasNumbers -- perfect squares
+Math::NumSeq::LucasNumbers -- Lucas numbers
 
 =head1 SYNOPSIS
 
@@ -86,7 +86,7 @@ Return true if C<$value> is a Lucas number.
 =head1 SEE ALSO
 
 L<Math::NumSeq>,
-L<Math::NumSeq::LucasNumbers>
+L<Math::NumSeq::Fibonacci>
 
 =head1 HOME PAGE
 

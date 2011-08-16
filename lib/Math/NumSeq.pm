@@ -46,7 +46,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 1;
+$VERSION = 2;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -178,7 +178,10 @@ way to go through the values.
 
 =head1 FUNCTIONS
 
-In the following "Foo" is one of the actual subclass names.
+In the following "Foo" is one of the actual subclass names.  The intention
+is that all modules C<Math::NumSeq::Something> are sequence classes, and
+that supporting things are deeper, such as under
+C<Math::NumSeq::Something::Helper> or C<Math::NumSeq::Base::SharedStuff>.
 
 =over 4
 
@@ -275,12 +278,14 @@ L<Math::NumSeq::SqrtDigits>
 
 L<Math::NumSeq::DigitLength>,
 L<Math::NumSeq::DigitLengthCumulative>,
-L<Math::NumSeq::RadixWithoutDigit>,
-L<Math::NumSeq::HarshadNumbers>
+L<Math::NumSeq::DigitProduct>,
+L<Math::NumSeq::DigitSum>,
+L<Math::NumSeq::RadixWithoutDigit>
 
 L<Math::NumSeq::Beastly>,
 L<Math::NumSeq::Repdigits>,
 L<Math::NumSeq::Palindromes>
+L<Math::NumSeq::HarshadNumbers>
 
 L<Math::NumSeq::CullenNumbers>,
 L<Math::NumSeq::ProthNumbers>,

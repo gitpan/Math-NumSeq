@@ -22,7 +22,7 @@ use Carp;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 1;
+$VERSION = 2;
 
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
@@ -239,8 +239,9 @@ sub _extend {
   }
 
   unless (Math::BigInt->can('new')) {
-    require Math::BigInt;
-    Math::BigInt->import (try => 'GMP');
+    # pure-perl Calc.pm is very slow
+    eval 'use Math::BigInt try => "GMP"; 1'
+      || require Math::BigInt;
   }
   my $calcdigits = int(2*$self->{'i_extended'} + 32);
 
@@ -392,7 +393,7 @@ Return true if C<$value> is a perfect square.
 =head1 SEE ALSO
 
 L<Math::NumSeq>,
-L<Math::NumSeq::Cubes>
+L<Math::NumSeq::FractionDigits>
 
 =head1 HOME PAGE
 

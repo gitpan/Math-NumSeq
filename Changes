@@ -17,5 +17,8 @@ with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 2, August 2011
+    - new DigitSum, DigitProduct
+
 Version 1, August 2011
     - the first version

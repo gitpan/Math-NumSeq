@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 1;
+$VERSION = 2;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -49,8 +49,10 @@ use constant parameter_common_radix =>
 use constant parameter_info_array => [ parameter_common_radix ];
 
 sub pred {
-  my ($self, $n) = @_;
-  return ($n >= 0 && $n < $self->{'radix'});
+  my ($self, $value) = @_;
+  return ($value == int($value)
+          && $value >= 0
+          && $value < $self->{'radix'});
 }
 
 1;

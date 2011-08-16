@@ -19,7 +19,7 @@
 
 use 5.004;
 use strict;
-use Test::More tests => 90;
+use Test::More tests => 94;
 
 use lib 't';
 use MyTestHelpers;
@@ -93,6 +93,32 @@ foreach my $elem
    # PiBits.pm
    # Repdigits.pm
    # SqrtDigits.pm
+
+   [ 'Math::NumSeq::DigitProduct', 0,
+     [ 0,
+       1,
+       0,  # 10
+       1,  # 11,
+       0,
+       0,
+       0,
+       1,  # 111
+       0, ],
+     { radix => 2 } ],
+
+   [ 'Math::NumSeq::DigitProduct', 0,
+     [ 0,1,2,
+       0,1,2,
+       0,2,4,  # 20,21,22
+       
+       0,0,0,  # 100,101,102
+       0,1,2,
+       0,2,4,
+
+       0,0,0,
+       0,2,4,
+       0,4,8, ],
+     { radix => 3 } ],
 
    [ 'Math::NumSeq::SqrtDigits', 0,
      [ 1, 0, 1, 1, 0, 1, 0, 1, 0, ],

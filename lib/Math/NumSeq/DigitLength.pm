@@ -21,7 +21,7 @@ use strict;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 1;
+$VERSION = 2;
 
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
@@ -100,7 +100,8 @@ sub ith {
 
 sub pred {
   my ($self, $value) = @_;
-  return ($value >= 1);
+  return ($value == int($value)
+          && $value >= 1);
 }
 
 1;

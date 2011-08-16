@@ -22,7 +22,7 @@ use List::Util 'max';
 use Math::NumSeq;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 1;
+$VERSION = 2;
 
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
@@ -56,6 +56,10 @@ $oeis_anum[10] =
    # OEIS-Catalogue: A020806 fraction=1/7
    '22/7'  => 'A068028',   # 22/7 decimal
    # OEIS-Catalogue: A068028 fraction=22/7
+
+   '1/9'   => 'A000012',   # 1/9 decimal, is just 1,1,1,1
+   # pending something better for a constant sequence
+   # OEIS-Catalogue: A000012 fraction=1/9
 
    '1/11'  => 'A010680',   # 1/11 decimal
    # OEIS-Catalogue: A010680 fraction=1/11
@@ -201,7 +205,7 @@ __END__
 
 =head1 NAME
 
-Math::NumSeq::FractionDigits -- the digits of a square root
+Math::NumSeq::FractionDigits -- the digits of a fraction p/q
 
 =head1 SYNOPSIS
 
@@ -237,7 +241,7 @@ parameter in another base.
 =head1 SEE ALSO
 
 L<Math::NumSeq>,
-L<Math::NumSeq::Cubes>
+L<Math::NumSeq::SqrtDigits>
 
 =head1 HOME PAGE
 

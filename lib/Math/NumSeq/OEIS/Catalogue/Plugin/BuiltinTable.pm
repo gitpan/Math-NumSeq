@@ -22,7 +22,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 1;
+$VERSION = 2;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
@@ -157,6 +157,126 @@ use constant info_arrayref =>
     ]
   },
   {
+    'anum' => 'A007954',
+    'class' => 'Math::NumSeq::DigitProduct',
+    'parameters' => [
+      'radix',
+      10
+    ]
+  },
+  {
+    'anum' => 'A053735',
+    'class' => 'Math::NumSeq::DigitSum',
+    'parameters' => [
+      'radix',
+      3
+    ]
+  },
+  {
+    'anum' => 'A053737',
+    'class' => 'Math::NumSeq::DigitSum',
+    'parameters' => [
+      'radix',
+      4
+    ]
+  },
+  {
+    'anum' => 'A053824',
+    'class' => 'Math::NumSeq::DigitSum',
+    'parameters' => [
+      'radix',
+      5
+    ]
+  },
+  {
+    'anum' => 'A053827',
+    'class' => 'Math::NumSeq::DigitSum',
+    'parameters' => [
+      'radix',
+      6
+    ]
+  },
+  {
+    'anum' => 'A053828',
+    'class' => 'Math::NumSeq::DigitSum',
+    'parameters' => [
+      'radix',
+      7
+    ]
+  },
+  {
+    'anum' => 'A053829',
+    'class' => 'Math::NumSeq::DigitSum',
+    'parameters' => [
+      'radix',
+      8
+    ]
+  },
+  {
+    'anum' => 'A053830',
+    'class' => 'Math::NumSeq::DigitSum',
+    'parameters' => [
+      'radix',
+      9
+    ]
+  },
+  {
+    'anum' => 'A007953',
+    'class' => 'Math::NumSeq::DigitSum',
+    'parameters' => [
+      'radix',
+      10
+    ]
+  },
+  {
+    'anum' => 'A053831',
+    'class' => 'Math::NumSeq::DigitSum',
+    'parameters' => [
+      'radix',
+      11
+    ]
+  },
+  {
+    'anum' => 'A053832',
+    'class' => 'Math::NumSeq::DigitSum',
+    'parameters' => [
+      'radix',
+      12
+    ]
+  },
+  {
+    'anum' => 'A053833',
+    'class' => 'Math::NumSeq::DigitSum',
+    'parameters' => [
+      'radix',
+      13
+    ]
+  },
+  {
+    'anum' => 'A053834',
+    'class' => 'Math::NumSeq::DigitSum',
+    'parameters' => [
+      'radix',
+      14
+    ]
+  },
+  {
+    'anum' => 'A053835',
+    'class' => 'Math::NumSeq::DigitSum',
+    'parameters' => [
+      'radix',
+      15
+    ]
+  },
+  {
+    'anum' => 'A053836',
+    'class' => 'Math::NumSeq::DigitSum',
+    'parameters' => [
+      'radix',
+      16
+    ]
+  },
+  {
     'anum' => 'A005843',
     'class' => 'Math::NumSeq::Even'
   },
@@ -182,6 +302,14 @@ use constant info_arrayref =>
     'parameters' => [
       'fraction',
       '22/7'
+    ]
+  },
+  {
+    'anum' => 'A000012',
+    'class' => 'Math::NumSeq::FractionDigits',
+    'parameters' => [
+      'fraction',
+      '1/9'
     ]
   },
   {

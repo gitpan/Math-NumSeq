@@ -81,7 +81,8 @@ $|=1;
     $values_class = 'Math::NumSeq::OEIS';
     $values_class = 'Math::NumSeq::SqrtDigits';
     $values_class = 'Math::NumSeq::DigitLength';
-    $values_class = 'App::MathImage::NumSeq::ReverseAddSteps';
+    $values_class = 'Math::NumSeq::DigitProduct';
+    $values_class = 'App::MathImage::NumSeq::UndulatingNumbers';
     eval "require $values_class; 1" or die $@;
     print Math::NumSeq::DigitLength->VERSION,"\n";
     my $values_obj = $values_class->new (fraction => '1/975',
@@ -89,7 +90,7 @@ $|=1;
                                          pairs => 'first',
                                          lo => 0,
                                          hi => 10, # 200*$rep,
-                                         radix => 10,
+                                         radix => 2,
                                          digit => 3,
                                          sqrt => 2,
                                          where => 'low',
@@ -110,7 +111,7 @@ $|=1;
     }
     my $check_pred_upto = ! $values_obj->characteristic('digits')
       && ! $values_obj->characteristic('count');
-    foreach (1 .. 31) {
+    foreach (1 .. 10) {
       my ($i,$value) = $values_obj->next;
       if (! defined $i) {
         print "undef\n";

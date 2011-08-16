@@ -35,7 +35,7 @@ use Math::NumSeq::SqrtDigits;
 # VERSION
 
 {
-  my $want_version = 1;
+  my $want_version = 2;
   ok ($Math::NumSeq::SqrtDigits::VERSION, $want_version, 'VERSION variable');
   ok (Math::NumSeq::SqrtDigits->VERSION,  $want_version, 'VERSION class method');
 
@@ -60,9 +60,9 @@ use Math::NumSeq::SqrtDigits;
 
 #------------------------------------------------------------------------------
 
+require Math::BigInt;
 foreach my $sqrt (2,7,123456) {
   foreach my $radix (2,3,4,5,8,9,10,11,15,16,17,12345) {
-    require Math::BigInt;
     my $root = Math::BigInt->new($radix);
     $root->bpow(2 * 200);  # past the 150 digit extending step
     $root->bmul($sqrt);

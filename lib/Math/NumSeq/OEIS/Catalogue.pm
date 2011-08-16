@@ -15,6 +15,12 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
+
+# my $catalogue = Math::Values::OeisCatalogue->new(exclude_files=>1);
+#
+
+
+
 package Math::NumSeq::OEIS::Catalogue;
 use 5.004;
 use strict;
@@ -28,7 +34,7 @@ my @plugins = sort __PACKAGE__->plugins;
 ### @plugins
 
 use vars '$VERSION';
-$VERSION = 1;
+$VERSION = 2;
 
 # sub seq_to_num {
 #   my ($class, $num) = @_;

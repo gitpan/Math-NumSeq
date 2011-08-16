@@ -24,7 +24,7 @@ use base 'Math::NumSeq';
 use Math::NumSeq::Base::Digits;
 
 use vars '$VERSION';
-$VERSION = 1;
+$VERSION = 2;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -83,19 +83,19 @@ sub next {
 }
 
 sub pred {
-  my ($self, $n) = @_;
+  my ($self, $value) = @_;
   my $radix = $self->{'radix'};
   if ($radix == 2) {
-    return ! (($n+1) & $n);
+    return ! (($value+1) & $value);
   }
   if ($radix == 10) {
-    my $digit = substr($n,0,1);
-    return ($n !~ /[^$digit]/);
+    my $digit = substr($value,0,1);
+    return ($value !~ /[^$digit]/);
 
   } else {
-    my $digit = $n % $radix;
-    while ($n = int($n/$radix)) {
-      if (($n % $radix) != $digit) {
+    my $digit = $value % $radix;
+    while ($value = int($value/$radix)) {
+      if (($value % $radix) != $digit) {
         return 0;
       }
     }

@@ -24,7 +24,7 @@ use Math::NumSeq;
 use base 'Math::NumSeq';
 
 use vars '$VERSION';
-$VERSION = 1;
+$VERSION = 2;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -154,12 +154,12 @@ sub ith {
 }
 
 sub pred {
-  my ($self, $n) = @_;
+  my ($self, $value) = @_;
   my $radix = $self->{'radix'};
   my @digits;
-  while ($n) {
-    push @digits, $n % $radix;
-    $n = int ($n / $radix);
+  while ($value) {
+    push @digits, $value % $radix;
+    $value = int ($value / $radix);
   }
   for my $i (0 .. int(@digits/2)-1) {
     if ($digits[$i] != $digits[-$i-1]) {

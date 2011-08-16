@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 1;
+$VERSION = 2;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -191,7 +191,7 @@ sub ith {
     }
   }
   ### $i
-  return $i * (($k-2)*$i + $self->{'add'}) * 0.5;
+  return $i * (($k-2)*$i + $self->{'add'}) / 2;
 }
 
 # k=3  -1/2 + sqrt(2/1 * $n + 1/4)
@@ -203,12 +203,12 @@ sub ith {
 #
 # i = 1/(2*(k-2)) * [k-4 + sqrt( 8*(k-2)*n + (4-k)^2 ) ]
 sub pred {
-  my ($self, $n) = @_;
-  if ($n <= 0) {
-    return ($n == 0);
+  my ($self, $value) = @_;
+  if ($value <= 0) {
+    return ($value == 0);
   }
   my $k = $self->{'k'};
-  my $sqrt = sqrt(8*($k-2) * $n + (4-$k)**2);
+  my $sqrt = sqrt(8*($k-2) * $value + (4-$k)**2);
   if ($self->{'pairs'} eq 'both') {
     my $other = ($sqrt + $self->{'add'}) / (2*($k-2));
     if (int($other) == $other) {

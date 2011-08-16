@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 1;
+$VERSION = 2;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -98,7 +98,8 @@ sub ith {
 
 sub pred {
   my ($self, $value) = @_;
-  return ($value >= 0);
+  return ($value == int($value)
+          && $value >= 0);
 }
 
 1;

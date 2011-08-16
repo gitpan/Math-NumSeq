@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 1;
+$VERSION = 2;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -48,10 +48,10 @@ sub next {
   return ($i, $self->ith($i));
 }
 sub pred {
-  my ($class_or_self, $n) = @_;
-  if ($n < 0) { return 0; }
-  # FIXME: the _inverse() +.25, -.5 might be lost to rounding for very big $n
-  my $i = _inverse($n);
+  my ($self, $value) = @_;
+  if ($value < 0) { return 0; }
+  # FIXME: the _inverse() +.25, -.5 might be lost to rounding for very big $value
+  my $i = _inverse($value);
   return ($i == int($i));
 }
 sub ith {
@@ -60,8 +60,8 @@ sub ith {
 }
 
 sub _inverse {
-  my ($n) = @_;
-  return sqrt(2*$n + .25) - .5;
+  my ($value) = @_;
+  return sqrt(2*$value + .25) - .5;
 }
 
 1;

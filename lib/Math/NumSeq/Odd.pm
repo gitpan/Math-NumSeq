@@ -23,7 +23,7 @@ use Math::NumSeq;
 use base 'Math::NumSeq::Even';
 
 use vars '$VERSION';
-$VERSION = 1;
+$VERSION = 2;
 
 # use constant name => Math::NumSeq::__('Odd Integers');
 use constant description => Math::NumSeq::__('The odd integers 1, 3, 5, 7, 9, etc.');
@@ -48,9 +48,10 @@ sub ith {
   return 2*$i+1; # $self->{'lo'} + 2*$i;
 }
 sub pred {
-  my ($class_or_self, $n) = @_;
-  ### Odd pred(): $n
-  return ($n & 1);
+  my ($class_or_self, $value) = @_;
+  ### Odd pred(): $value
+  return ($value == int($value)
+          && ($value % 2));
 }
 
 # sub new {

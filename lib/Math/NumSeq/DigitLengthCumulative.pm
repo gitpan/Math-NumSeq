@@ -30,7 +30,7 @@ use constant parameter_info_array =>
 #use Smart::Comments;
 
 use vars '$VERSION';
-$VERSION = 1;
+$VERSION = 2;
 
 # use constant name => Math::NumSeq::__('Digit Length Cumulative');
 use constant description => Math::NumSeq::__('Cumulative length of numbers 0,1,2,3,etc written out in the given radix.  For example binary 1,2,4,6,9,12,15,18,22,etc, 2 steps by 2, then 4 steps by 3, then 8 steps by 4, then 16 steps by 5, etc.');
@@ -136,7 +136,7 @@ __END__
 
 =head1 NAME
 
-Math::NumSeq::DigitLengthCumulative -- length of 1 to i in digits
+Math::NumSeq::DigitLengthCumulative -- total length in digits of 1 to i
 
 =head1 SYNOPSIS
 

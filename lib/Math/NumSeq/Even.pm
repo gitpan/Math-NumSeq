@@ -23,7 +23,7 @@ use Math::NumSeq;
 use base 'Math::NumSeq';
 
 use vars '$VERSION';
-$VERSION = 1;
+$VERSION = 2;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -46,7 +46,8 @@ sub next {
 sub pred {
   my ($class_or_self, $value) = @_;
   ### Even pred(): $value
-  return ! ($value & 1);
+  return ($value == int($value)
+          && ($value % 2) == 0);
 }
 sub ith {
   my ($self, $i) = @_;
