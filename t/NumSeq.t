@@ -19,7 +19,7 @@
 
 use 5.004;
 use strict;
-use Test::More tests => 94;
+use Test::More;
 
 use lib 't';
 use MyTestHelpers;
@@ -33,6 +33,19 @@ POSIX::setlocale(POSIX::LC_ALL(), 'C'); # no message translations
 
 use constant DBL_INT_MAX => (POSIX::FLT_RADIX() ** POSIX::DBL_MANT_DIG());
 use constant MY_MAX => (POSIX::FLT_RADIX() ** (POSIX::DBL_MANT_DIG()-5));
+
+{
+  require Math::BigInt;
+  MyTestHelpers::diag ('Math::BigInt version ', Math::BigInt->VERSION);
+
+  my $n = Math::BigInt->new(1);
+  if (! $n->can('bsqrt')) {
+    MyTestHelpers::diag ('skip due to Math::BigInt no bsqrt()');
+    plan skip_all => 'skip due to Math::BigInt no bsqrt()';
+  }
+}
+
+plan tests => 94;
 
 sub diff_nums {
   my ($gotaref, $wantaref) = @_;

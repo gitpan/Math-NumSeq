@@ -17,6 +17,9 @@ with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 3, August 2011
+    - tests skip bigint bsqrt() not in perl 5.6.0
+
 Version 2, August 2011
     - new DigitSum, DigitProduct
 

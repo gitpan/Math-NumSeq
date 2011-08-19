@@ -21,7 +21,7 @@ use strict;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 2;
+$VERSION = 3;
 
 use Math::NumSeq::Fibonacci;
 @ISA = ('Math::NumSeq::Fibonacci');

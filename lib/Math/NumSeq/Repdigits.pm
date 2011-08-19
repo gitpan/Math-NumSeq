@@ -24,7 +24,7 @@ use base 'Math::NumSeq';
 use Math::NumSeq::Base::Digits;
 
 use vars '$VERSION';
-$VERSION = 2;
+$VERSION = 3;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;

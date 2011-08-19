@@ -20,22 +20,40 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 41;
 
 use lib 't';
 use MyTestHelpers;
-MyTestHelpers::nowarnings();
+BEGIN { MyTestHelpers::nowarnings(); }
 
 use Math::NumSeq::SqrtDigits;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
+my $test_count = 41;
+plan tests => $test_count;
+
+{
+  require Math::BigInt;
+  MyTestHelpers::diag ('Math::BigInt version ', Math::BigInt->VERSION);
+
+  my $n = Math::BigInt->new(1);
+  if (! $n->can('bsqrt')) {
+    MyTestHelpers::diag ('skip due to Math::BigInt no bsqrt()');
+    foreach (1 .. $test_count) {
+      skip ('skip due to Math::BigInt no bsqrt()', 1, 1);
+    }
+    exit 0;
+  }
+}
+
+
+
 #------------------------------------------------------------------------------
 # VERSION
 
 {
-  my $want_version = 2;
+  my $want_version = 3;
   ok ($Math::NumSeq::SqrtDigits::VERSION, $want_version, 'VERSION variable');
   ok (Math::NumSeq::SqrtDigits->VERSION,  $want_version, 'VERSION class method');
 

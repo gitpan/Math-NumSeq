@@ -22,7 +22,7 @@ use Carp;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 2;
+$VERSION = 3;
 
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
@@ -389,6 +389,11 @@ Return C<$i ** 2>.
 Return true if C<$value> is a perfect square.
 
 =back
+
+=head1 BUGS
+
+The current code requires C<Math::BigInt> C<bsqrt()>, which may mean BigInt
+1.60 (in Perl 5.8.0) or higher.
 
 =head1 SEE ALSO
 

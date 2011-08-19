@@ -21,7 +21,7 @@ use strict;
 use Math::Prime::XS;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 2;
+$VERSION = 3;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');

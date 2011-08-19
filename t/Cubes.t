@@ -35,7 +35,7 @@ use Math::NumSeq::Cubes;
 # VERSION
 
 {
-  my $want_version = 2;
+  my $want_version = 3;
   ok ($Math::NumSeq::Cubes::VERSION, $want_version, 'VERSION variable');
   ok (Math::NumSeq::Cubes->VERSION,  $want_version, 'VERSION class method');
 
