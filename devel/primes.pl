@@ -22,6 +22,10 @@ use strict;
 use warnings;
 use POSIX;
 
+use Smart::Comments;
+
+# use blib "$ENV{HOME}/perl/bit-vector/Bit-Vector-7.1/blib";
+
 {
   require Math::Prime::TiedArray;
   tie my @primes, 'Math::Prime::TiedArray';
@@ -30,4 +34,40 @@ use POSIX;
   exit 0;
 }
 
+{
+  require Bit::Vector;
+  my $size = 0xFF; # F00000;
+  my $vector = Bit::Vector->new($size);
+  $vector->Primes();
+  print $vector->bit_test(0),"\n";
+  print $vector->bit_test(1),"\n";
+  print $vector->bit_test(2),"\n";
+  print $vector->bit_test(3),"\n";
+  print $vector->bit_test(4),"\n";
+  print $vector->bit_test(5),"\n";
+  print $vector->bit_test(1928099),"\n";
+  foreach my $i (0 .. 100) {
+    if ($vector->bit_test($i)) {
+      print ",$i";
+    }
+  }
+  print "\n";
 
+
+  # require Math::Prime::XS;
+  # foreach my $i (65536 .. $size-1) {
+  #   my $v = 0 + $vector->bit_test($i);
+  #   my $x = 0 + Math::Prime::XS::is_prime($i);
+  #   if ($v != $x) {
+  #     print "$i $v $x\n";
+  #   }
+  # }
+  exit 0;
+}
+
+{
+  require Math::Prime::XS;
+  local $, = "\n";
+  print Math::Prime::XS::sieve_primes(2,3);
+  exit 0;
+}

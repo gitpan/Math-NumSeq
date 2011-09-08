@@ -22,7 +22,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 3;
+$VERSION = 4;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
@@ -115,6 +115,56 @@ use constant info_arrayref =>
   {
     'anum' => 'A002064',
     'class' => 'Math::NumSeq::CullenNumbers'
+  },
+  {
+    'anum' => 'A080791',
+    'class' => 'Math::NumSeq::DigitCount',
+    'parameters' => [
+      'radix',
+      2,
+      'digit',
+      0
+    ]
+  },
+  {
+    'anum' => 'A000120',
+    'class' => 'Math::NumSeq::DigitCount',
+    'parameters' => [
+      'radix',
+      2,
+      'digit',
+      1
+    ]
+  },
+  {
+    'anum' => 'A062756',
+    'class' => 'Math::NumSeq::DigitCount',
+    'parameters' => [
+      'radix',
+      3,
+      'digit',
+      1
+    ]
+  },
+  {
+    'anum' => 'A081603',
+    'class' => 'Math::NumSeq::DigitCount',
+    'parameters' => [
+      'radix',
+      3,
+      'digit',
+      2
+    ]
+  },
+  {
+    'anum' => 'A102683',
+    'class' => 'Math::NumSeq::DigitCount',
+    'parameters' => [
+      'radix',
+      10,
+      'digit',
+      9
+    ]
   },
   {
     'anum' => 'A070939',
@@ -274,6 +324,14 @@ use constant info_arrayref =>
     'parameters' => [
       'radix',
       16
+    ]
+  },
+  {
+    'anum' => 'A006567',
+    'class' => 'Math::NumSeq::Emirps',
+    'parameters' => [
+      'radix',
+      10
     ]
   },
   {
@@ -735,6 +793,10 @@ use constant info_arrayref =>
     ]
   },
   {
+    'anum' => 'A000040',
+    'class' => 'Math::NumSeq::Primes'
+  },
+  {
     'anum' => 'A002110',
     'class' => 'Math::NumSeq::Primorials'
   },
@@ -873,6 +935,10 @@ use constant info_arrayref =>
       'radix',
       10
     ]
+  },
+  {
+    'anum' => 'A005384',
+    'class' => 'Math::NumSeq::SophieGermainPrimes'
   },
   {
     'anum' => 'A004539',
@@ -1619,12 +1685,48 @@ use constant info_arrayref =>
     'class' => 'Math::NumSeq::StarNumbers'
   },
   {
+    'anum' => 'A002487',
+    'class' => 'Math::NumSeq::SternDiatomic'
+  },
+  {
     'anum' => 'A000292',
     'class' => 'Math::NumSeq::Tetrahedral'
   },
   {
     'anum' => 'A000217',
     'class' => 'Math::NumSeq::Triangular'
+  },
+  {
+    'anum' => 'A001359',
+    'class' => 'Math::NumSeq::TwinPrimes',
+    'parameters' => [
+      'pairs',
+      'first'
+    ]
+  },
+  {
+    'anum' => 'A006512',
+    'class' => 'Math::NumSeq::TwinPrimes',
+    'parameters' => [
+      'pairs',
+      'second'
+    ]
+  },
+  {
+    'anum' => 'A001097',
+    'class' => 'Math::NumSeq::TwinPrimes',
+    'parameters' => [
+      'pairs',
+      'both'
+    ]
+  },
+  {
+    'anum' => 'A014574',
+    'class' => 'Math::NumSeq::TwinPrimes',
+    'parameters' => [
+      'pairs',
+      'average'
+    ]
   },
   {
     'anum' => 'A003261',

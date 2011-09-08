@@ -23,7 +23,7 @@ use Math::NumSeq;
 use base 'Math::NumSeq';
 
 use vars '$VERSION';
-$VERSION = 3;
+$VERSION = 4;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -74,6 +74,8 @@ Math::NumSeq::Even -- even integers
 The sequence of even integers 0,2,4,6,8, etc.
 
 =head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 =over 4
 

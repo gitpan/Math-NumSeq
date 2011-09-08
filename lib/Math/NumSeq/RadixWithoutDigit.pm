@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 3;
+$VERSION = 4;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -36,14 +36,15 @@ use constant characteristic_monotonic => 2;
 
 use Math::NumSeq::Base::Digits;
 use constant parameter_info_array =>
-  [ Math::NumSeq::Base::Digits::parameter_common_radix(),
-    { name    => 'digit',
-      type    => 'integer',
-      display => Math::NumSeq::__('Digit'),
-      default => -1,
-      minimum => -1,
-      width   => 2,
-      description => Math::NumSeq::__('Digit to exclude.  Default -1 means the highest digit, ie. radix-1.'),
+  [ Math::NumSeq::Base::Digits->parameter_info_list(),
+    {
+     name    => 'digit',
+     type    => 'integer',
+     display => Math::NumSeq::__('Digit'),
+     default => -1,
+     minimum => -1,
+     width   => 2,
+     description => Math::NumSeq::__('Digit to exclude.  Default -1 means the highest digit, ie. radix-1.'),
     },
   ];
 
@@ -290,6 +291,8 @@ The integers without a given digit, for example decimal without 9s is 0 to
 8, 10 to 18, 20 to 28, ... 80 to 88, 100, etc.
 
 =head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 =over 4
 

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 3;
+$VERSION = 4;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -81,6 +81,8 @@ Math::NumSeq::WoodallNumbers -- Woodall numbers i*2^i-1
 The Woodall numbers 1, 7, 23, 63, etc, i*2^i-1 starting from i=1.
 
 =head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 =over 4
 

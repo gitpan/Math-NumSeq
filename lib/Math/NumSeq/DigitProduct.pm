@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 3;
+$VERSION = 4;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -34,8 +34,7 @@ use constant characteristic_smaller => 1;
 use constant characteristic_monotonic => 0;
 
 use Math::NumSeq::Base::Digits;
-use constant parameter_info_array =>
-  [ Math::NumSeq::Base::Digits::parameter_common_radix() ];
+*parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
 
 use constant values_min => 0;
 sub values_max {
@@ -111,6 +110,8 @@ For binary (C<radix =E<gt> 2>) the digits are all just 0 or 1 which means
 the product is 1 for numbers 0b1, 0b11, 0b111, etc, 2**k-1, or 0 otherwise.
 
 =head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 =over 4
 

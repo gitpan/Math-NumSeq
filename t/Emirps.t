@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2011 Kevin Ryde
+# Copyright 2010, 2011 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -19,52 +19,57 @@
 
 use 5.004;
 use strict;
-use Test;
-plan tests => 5;
+use Test::More tests => 8;
 
 use lib 't';
 use MyTestHelpers;
 MyTestHelpers::nowarnings();
 
-require Math::NumSeq::File;
+use Math::NumSeq::Emirps;
 
+# uncomment this to run the ### lines
+#use Smart::Comments;
 
 #------------------------------------------------------------------------------
 # VERSION
 
 {
   my $want_version = 4;
-  ok ($Math::NumSeq::File::VERSION, $want_version, 'VERSION variable');
-  ok (Math::NumSeq::File->VERSION,  $want_version, 'VERSION class method');
+  is ($Math::NumSeq::Emirps::VERSION, $want_version, 'VERSION variable');
+  is (Math::NumSeq::Emirps->VERSION,  $want_version, 'VERSION class method');
 
-  ok (eval { Math::NumSeq::File->VERSION($want_version); 1 },
-      1,
+  ok (eval { Math::NumSeq::Emirps->VERSION($want_version); 1 },
       "VERSION class check $want_version");
   my $check_version = $want_version + 1000;
-  ok (! eval { Math::NumSeq::File->VERSION($check_version); 1 },
-      1,
+  ok (! eval { Math::NumSeq::Emirps->VERSION($check_version); 1 },
       "VERSION class check $check_version");
 }
 
 
 #------------------------------------------------------------------------------
-# next()
+# characteristic()
 
 {
-  require File::Spec;
-  my $filename = File::Spec->catfile('t','File-1.txt');
-  my @want = ([1,123], [2,456], [4,789]);
-  my $seq = Math::NumSeq::File->new
-    (filename => $filename);
-  my @got;
-  while (my ($i, $value) = $seq->next) {
-    push @got, [$i,$value];
-  }
-  ok (join(',', map {'['.join(',',@$_).'],'} @got),
-      join(',', map {'['.join(',',@$_).'],'} @want),
-      "next() contents $filename");
+  my $values_obj = Math::NumSeq::Emirps->new
+    (lo => 1,
+     hi => 30);
+
+  is (! $values_obj->characteristic('count'), 1, 'characteristic(count)');
 }
 
+
+#------------------------------------------------------------------------------
+# _reverse_in_radix()
+
+{
+  ## no critic (ProtectPrivateSubs)
+  is (Math::NumSeq::Emirps::_reverse_in_radix(123,10),
+      321);
+  is (Math::NumSeq::Emirps::_reverse_in_radix(0xAB,16),
+      0xBA);
+  is (Math::NumSeq::Emirps::_reverse_in_radix(6,2),
+      3);
+}
 
 exit 0;
 

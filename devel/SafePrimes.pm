@@ -15,61 +15,57 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
-package Math::NumSeq::Base::Array;
+package Math::NumSeq::SafePrimes;
 use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
 $VERSION = 4;
 
-use Math::NumSeq;
-@ISA = ('Math::NumSeq');
+use Math::NumSeq::Primes;
+@ISA = ('Math::NumSeq::Primes');
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-sub new {
-  my $class = shift;
-  my $self = $class->SUPER::new (@_);
-  my $array = $self->{'array'};
-  if ($self->{'lo'}) {
-    while (@$array && (! defined $array->[0] || $array->[0] < $self->{'lo'})) {
-      shift @$array;
-    }
-  }
-  ### shifted to: @$array
-  return $self;
-}
+
+use constant description => Math::NumSeq::__('The safe primes 5,7,11,23,47, being primes where (P-1)/2 is also prime (those are the Sophie Germain primes).');
+use constant values_min => 5;
+use constant characteristic_monotonic => 2;
+use constant oeis_anum => 'A005385';
+
 sub rewind {
   my ($self) = @_;
-  $self->{'i'} = 0;
+  $self->SUPER::rewind;
+  $self->{'safe_i'} = 0;
+  $self->{'safe_bseq'} = Math::NumSeq::Primes->new;
 }
+
 sub next {
   my ($self) = @_;
-  ### ValuesArray next(): $self->{'i'} . ' of ' . scalar(@{$self->{'array'}})
-  my $array = $self->{'array'};
-  my $i;
+
+  my $bseq = $self->{'safe_bseq'};
+  my $behind = 0;
   for (;;) {
-    if (($i = $self->{'i'}++) > $#$array) {
-      return;
+    (undef, my $prime) = $self->SUPER::next
+      or return;
+
+    my $target = ($prime-1)/2;
+    while ($behind < $target) {
+      (undef, $behind) = $bseq->next
+        or return;
     }
-    if (defined (my $n = $self->{'array'}->[$i])) {
-      return ($i, $n);
+    if ($behind == $target) {
+      return (++$self->{'safe_i'}, $prime);
     }
   }
 }
+
 sub pred {
-  my ($self, $n) = @_;
-  return exists (($self->{'hash'} ||= do {
-    my %h;
-    @h{@{$self->{'array'}}} = ();
-    ### %h
-    \%h
-  })->{$n});
-}
-sub ith {
-  my ($self, $i) = @_;
-  return $self->{'array'}->[$i];
+  my ($self, $value) = @_;
+  return (($value & 1)
+          && $self->SUPER::pred ($value)
+          && $self->SUPER::pred (($value-1)/2));
 }
 
 1;

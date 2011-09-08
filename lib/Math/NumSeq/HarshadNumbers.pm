@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 3;
+$VERSION = 4;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
@@ -37,8 +37,7 @@ use constant i_start => 1;
 use constant characteristic_monotonic => 1;
 
 use Math::NumSeq::Base::Digits;
-use constant parameter_info_array =>
-  [ Math::NumSeq::Base::Digits::parameter_common_radix() ];
+*parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
 
 my @oeis_anum;
 
@@ -99,6 +98,8 @@ are divisible by the sum of their digits, being 1 to 10, then 12, 18, 20,
 digit sum 1+8=9.
 
 =head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 =over 4
 

@@ -21,10 +21,11 @@ use strict;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 3;
+$VERSION = 4;
 
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
+
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -35,30 +36,31 @@ use constant values_min => 1;
 use constant characteristic_count => 1;
 use constant characteristic_monotonic => 1;
 
+use Math::NumSeq::Base::Digits;
+*parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
+
 # cf A000523 - floor(log2(n))
 #    A036786 - roman numeral length <  decimal length
 #    A036787 - roman numeral length == decimal length
 #    A036788 - roman numeral length <= decimal length
 #
 my @oeis_anum;
-$oeis_anum[2] = 'A070939';  # 2 binary
-# OEIS-Catalogue: A070939 radix=2
+BEGIN {
+  $oeis_anum[2] = 'A070939';  # 2 binary
+  # OEIS-Catalogue: A070939 radix=2
 
-$oeis_anum[3] = 'A081604';  # 3 ternary
-# OEIS-Catalogue: A081604 radix=3
+  $oeis_anum[3] = 'A081604';  # 3 ternary
+  # OEIS-Catalogue: A081604 radix=3
 
-$oeis_anum[4] = 'A110591';  # 4
-# OEIS-Catalogue: A110591 radix=4
+  $oeis_anum[4] = 'A110591';  # 4
+  # OEIS-Catalogue: A110591 radix=4
 
-$oeis_anum[5] = 'A110592';  # 5
-# OEIS-Catalogue: A110592 radix=5
-
+  $oeis_anum[5] = 'A110592';  # 5
+  # OEIS-Catalogue: A110592 radix=5
+}
 sub oeis_anum {
-  my ($class_or_self) = @_;
-  my $radix = (ref $class_or_self
-               ? $class_or_self->{'radix'}
-               : $class_or_self->parameter_default('radix'));
-  return $oeis_anum[$radix];
+  my ($self) = @_;
+  return $oeis_anum[$self->{'radix'}];
 }
 
 sub rewind {
@@ -100,8 +102,7 @@ sub ith {
 
 sub pred {
   my ($self, $value) = @_;
-  return ($value == int($value)
-          && $value >= 1);
+  return ($value >= 1 && $value == int($value));
 }
 
 1;
@@ -126,6 +127,8 @@ The length in digits of integers 0 upwards, so for example ternary
 
 =head1 FUNCTIONS
 
+See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
+
 =over 4
 
 =item C<$seq = Math::NumSeq::DigitLength-E<gt>new (radix =E<gt> $r)>
@@ -145,7 +148,8 @@ Return true if C<$value E<gt>= 1>, all lengths being 1 or more.
 =head1 SEE ALSO
 
 L<Math::NumSeq>,
-L<Math::NumSeq::DigitLengthCumulative>
+L<Math::NumSeq::DigitLengthCumulative>,
+L<Math::NumSeq::DigitCount>
 
 =head1 HOME PAGE
 

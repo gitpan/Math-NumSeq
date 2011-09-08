@@ -26,7 +26,7 @@ use strict;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 3;
+$VERSION = 4;
 
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -72,6 +72,8 @@ Math::NumSeq::Tetrahedral -- tetrahedral numbers i*(i+1)*(i+2)/6
 The tetrahedral numbers, 0, 1, 4, 10, 20, 35, 56, etc, i*(i+1)*(i+2)/6.
 
 =head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 =over 4
 

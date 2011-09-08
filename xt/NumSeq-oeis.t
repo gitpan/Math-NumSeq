@@ -36,6 +36,9 @@ use Math::NumSeq::OEIS::Catalogue;
 use POSIX ();
 POSIX::setlocale(POSIX::LC_ALL(), 'C'); # no message translations
 
+# uncomment this to run the ### lines
+#use Devel::Comments '###';
+
 use constant DBL_INT_MAX => (POSIX::FLT_RADIX() ** POSIX::DBL_MANT_DIG());
 use constant MY_MAX => (POSIX::FLT_RADIX() ** (POSIX::DBL_MANT_DIG()-5));
 
@@ -97,7 +100,6 @@ sub check_class {
   my $name = join(',',
                   $class,
                   map {defined $_ ? $_ : '[undef]'} @$parameters);
-  diag "$anum $name";
 
   my ($want, $want_i_start, $filename) = MyOEIS::read_values($anum)
     or do {
@@ -125,6 +127,21 @@ sub check_class {
     # full B-file goes to 2^32 which is too much to sieve
     @$want = grep {$_ < 200_000} @$want;
 
+  } elsif ($anum eq 'A001359'
+           || $anum eq 'A006512'
+           || $anum eq 'A014574'
+           || $anum eq 'A001097') {
+    # twin primes shorten for now
+    @$want = grep {$_ < 1_000_000} @$want;
+
+  } elsif ($anum eq 'A005384') {
+    # sophie germain shorten for now
+    @$want = grep {$_ < 1_000_000} @$want;
+
+  } elsif ($anum eq 'A006567') {
+    # emirps shorten for now
+    @$want = grep {$_ < 100_000} @$want;
+
   } elsif ($anum eq 'A004542') {  # sqrt(2) in base 5
     diag "skip doubtful $anum $name";
     return;
@@ -132,6 +149,9 @@ sub check_class {
     diag "skip doubtful $anum $name";
     return;
   }
+
+  my $want_count = scalar(@$want);
+  diag "$anum $name  ($want_count values to $want->[-1])";
 
   my $hi = $want->[-1];
   if ($hi < @$want) {

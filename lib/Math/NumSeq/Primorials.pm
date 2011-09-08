@@ -21,7 +21,7 @@ use strict;
 use Math::Prime::XS;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 3;
+$VERSION = 4;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -97,6 +97,8 @@ The sequence of primorials, 1, 2, 6, 30, 210, etc, being the product of the
 first i many primes, 2*3*5*...*p[i].
 
 =head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 =over 4
 

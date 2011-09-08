@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 3;
+$VERSION = 4;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -85,6 +85,8 @@ The sequence of triangular numbers 0, 1, 3, 6, 10, 15, 21, 28, etc,
 i*(i+1)/2.
 
 =head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 =over 4
 

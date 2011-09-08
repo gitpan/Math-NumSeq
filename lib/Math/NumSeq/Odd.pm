@@ -23,7 +23,7 @@ use Math::NumSeq;
 use base 'Math::NumSeq::Even';
 
 use vars '$VERSION';
-$VERSION = 3;
+$VERSION = 4;
 
 # use constant name => Math::NumSeq::__('Odd Integers');
 use constant description => Math::NumSeq::__('The odd integers 1, 3, 5, 7, 9, etc.');
@@ -87,6 +87,8 @@ Math::NumSeq::Odd -- odd integers
 The sequence of odd integers 1, 3, 5, 7, etc.
 
 =head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 =over 4
 

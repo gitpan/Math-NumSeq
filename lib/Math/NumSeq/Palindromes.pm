@@ -24,19 +24,19 @@ use Math::NumSeq;
 use base 'Math::NumSeq';
 
 use vars '$VERSION';
-$VERSION = 3;
+$VERSION = 4;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
 # use constant name => Math::NumSeq::__('Palindromes');
 use constant values_min => 0;
+use constant characteristic_monotonic => 2;
 use constant description => Math::NumSeq::__('Numbers which are "palindromes" reading the same backwards or forwards, like 153351.  Default is decimal, or select a radix.');
 
 use Math::NumSeq::Base::Digits;
-use constant parameter_info_array =>
-  [ Math::NumSeq::Base::Digits::parameter_common_radix() ];
-use constant characteristic_monotonic => 2;
+*parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
+
 
 # cf palindomric primes
 # 'A002385', # 10
@@ -206,6 +206,8 @@ The sequence of palindrome numbers 0 .. 9, 11, 22, ..., 99, 101, 111, 121,
 is decimal or the C<radix> parameter can select another base.
 
 =head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 =over 4
 

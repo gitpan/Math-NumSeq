@@ -83,36 +83,42 @@ $|=1;
     $values_class = 'Math::NumSeq::DigitLength';
     $values_class = 'Math::NumSeq::DigitProduct';
     $values_class = 'App::MathImage::NumSeq::UndulatingNumbers';
+    $values_class = 'App::MathImage::NumSeq::SternDiatomic';
+    $values_class = 'App::MathImage::NumSeq::CunninghamChain';
+    $values_class = 'Math::NumSeq::DigitCount';
+    $values_class = 'App::MathImage::NumSeq::ReRound';
     eval "require $values_class; 1" or die $@;
     print Math::NumSeq::DigitLength->VERSION,"\n";
-    my $values_obj = $values_class->new (fraction => '1/975',
-                                         polygonal => 13,
-                                         pairs => 'first',
-                                         lo => 0,
-                                         hi => 10, # 200*$rep,
-                                         radix => 2,
-                                         digit => 3,
-                                         sqrt => 2,
-                                         where => 'low',
-                                         # expression => 'z=3; z*x^2 + 3*x + 2',
-                                         expression => 'x^2 + 3*x + 2',
-                                         expression_evaluator => 'MEE',
-                                         oeis_anum  => 'A000396',
-                                         # distinct => 1,
-                                         planepath_class => 'HypotOctant',
-                                         coord_type => 'Y',
-                                         multiplicity => 'distinct',
-                                        );
-    print "anum ",($values_obj->oeis_anum||''),"\n";
-    ### $values_obj
-    # ### type: $values_obj->type
-    if (my $radix = $values_obj->characteristic('digits')) {
+    my $seq = $values_class->new (
+                                  length => 1,
+                                  fraction => '1/975',
+                                  polygonal => 13,
+                                  pairs => 'first',
+                                  lo => 0,
+                                  hi => 10, # 200*$rep,
+                                  radix => 3,
+                                  digit => 1,
+                                  sqrt => 2,
+                                  where => 'low',
+                                  # expression => 'z=3; z*x^2 + 3*x + 2',
+                                  expression => 'x^2 + 3*x + 2',
+                                  expression_evaluator => 'MEE',
+                                  oeis_anum  => 'A000396',
+                                  # distinct => 1,
+                                  planepath_class => 'HypotOctant',
+                                  coord_type => 'Y',
+                                  multiplicity => 'distinct',
+                                 );
+    print "anum ",($seq->oeis_anum||''),"\n";
+    ### $seq
+    # ### type: $seq->type
+    if (my $radix = $seq->characteristic('digits')) {
       print "  radix $radix\n";
     }
-    my $check_pred_upto = ! $values_obj->characteristic('digits')
-      && ! $values_obj->characteristic('count');
-    foreach (1 .. 10) {
-      my ($i,$value) = $values_obj->next;
+    my $check_pred_upto = ! $seq->characteristic('digits')
+      && ! $seq->characteristic('count');
+    foreach (1 .. 50) {
+      my ($i,$value) = $seq->next;
       if (! defined $i) {
         print "undef\n";
         last;
@@ -129,20 +135,22 @@ $|=1;
       }
 
 
-      if ($values_obj->can('pred')) {
-        if (! $values_obj->pred($value)) {
+      if ($seq->can('pred')) {
+        if (! $seq->pred($value)) {
           print " oops, pred($value) false\n";
         }
-        while ($pred_upto < $value) {
-          if ($values_obj->pred($pred_upto)) {
-            print " oops, pred($pred_upto) is true\n";
+        unless ($seq->characteristic('count')) {
+          while ($pred_upto < $value) {
+            if ($seq->pred($pred_upto)) {
+              print " oops, pred($pred_upto) is true\n";
+            }
+            $pred_upto++;
           }
-          $pred_upto++;
+          $pred_upto = $value+1;
         }
-        $pred_upto = $value+1;
       }
-      if ($values_obj->can('ith')) {
-        my $ith_value = $values_obj->ith($i);
+      if ($seq->can('ith')) {
+        my $ith_value = $seq->ith($i);
         if ($ith_value != $value) {
           print " oops, ith($i)=$ith_value next=$value\n";
         }
@@ -150,10 +158,10 @@ $|=1;
     }
     print "\n";
 
-    if ($values_obj->can('ith')) {
+    if ($seq->can('ith')) {
       print "by ith(): ";
-      foreach my $i ($values_obj->i_start .. 110) {
-        my $value = $values_obj->ith($i);
+      foreach my $i ($seq->i_start .. 110) {
+        my $value = $seq->ith($i);
         if (! defined $value) {
           print "undef\n";
           if ($i > 3) {
@@ -163,7 +171,7 @@ $|=1;
           }
         }
         if (defined $value) {
-           print "$value,";
+          print "$value,";
           #print "$i=$value,";
         } else {
           print "$i,";
@@ -173,7 +181,7 @@ $|=1;
           last;
         }
 
-        if ($values_obj->can('pred') && ! $values_obj->pred($value)) {
+        if ($seq->can('pred') && ! $seq->pred($value)) {
           print " oops, pred($value) false\n";
         }
       }
@@ -185,16 +193,16 @@ $|=1;
 
 {
   require App::MathImage::NumSeq::Tribonacci;
-  my $values_obj = App::MathImage::NumSeq::Tribonacci->new (hi => 13);
-  my @next = ( $values_obj->next,
-               $values_obj->next,
-               $values_obj->next,
-               $values_obj->next,
-               $values_obj->next,
-               $values_obj->next );
+  my $seq = App::MathImage::NumSeq::Tribonacci->new (hi => 13);
+  my @next = ( $seq->next,
+               $seq->next,
+               $seq->next,
+               $seq->next,
+               $seq->next,
+               $seq->next );
   ### @next
-  print $values_obj->pred(12),"\n";
-  ### $values_obj
+  print $seq->pred(12),"\n";
+  ### $seq
   exit 0;
 }
 

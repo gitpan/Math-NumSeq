@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 3;
+$VERSION = 4;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -79,6 +79,8 @@ The sequence of pronic numbers 2, 6, 12, 20, 30, etc, i*(i+1).  These are
 twice the triangular numbers, and half way between perfect squares.
 
 =head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 =over 4
 

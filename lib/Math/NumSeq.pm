@@ -46,7 +46,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 3;
+$VERSION = 4;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -233,6 +233,47 @@ Sometimes the OEIS has duplicates, ie. two A-numbers which are the same
 sequence.  C<$seq-E<gt>oeis_anum()> generally returns whichever is the
 primary one, at least for accidental duplication.
 
+=item C<$aref = Math::NumSeq::Foo-E<gt>parameter_info_array()>
+
+=item C<@list = Math::NumSeq::Foo-E<gt>parameter_info_list()>
+
+Return an arrayref of list describing the parameters taken by a given class.
+This meant to help making widgets etc for user interaction in a GUI.  Each
+element is a hashref
+
+    {
+      name        =>    parameter key arg for new()
+      description =>    human readable string
+      type        =>    string "integer","boolean","enum" etc
+      default     =>    value
+      minimum     =>    number, or undef
+      maximum     =>    number, or undef
+      width       =>    integer, suggested display size
+      choices     =>    for enum, an arrayref     
+    }
+
+C<type> is a string, one of
+
+    "integer"
+    "enum"
+    "boolean"
+    "string"
+    "filename"
+
+"filename" is separate from "string" since it might require subtly different
+handling to ensure it reaches Perl as a byte string, whereas a "string" type
+might in principle take Perl wide chars.
+
+For "enum" the C<choices> field is the possible values, such as
+
+    { name => "flavour",
+      type => "enum",
+      choices => ["strawberry","chocolate"],
+    }
+
+C<minimum> and C<maximum> are omitted if there's no hard limit on the
+parameter.
+
 =back
 
 =head2 Optional Methods
@@ -268,6 +309,11 @@ L<Math::NumSeq::StarNumbers>,
 L<Math::NumSeq::Even>,
 L<Math::NumSeq::Odd>
 
+L<Math::NumSeq::Primes>,
+L<Math::NumSeq::TwinPrimes>,
+L<Math::NumSeq::SophieGermainPrimes>,
+L<Math::NumSeq::Emirps>
+
 L<Math::NumSeq::Factorials>,
 L<Math::NumSeq::Primorials>,
 L<Math::NumSeq::Fibonacci>,
@@ -276,6 +322,7 @@ L<Math::NumSeq::LucasNumbers>
 L<Math::NumSeq::FractionDigits>,
 L<Math::NumSeq::SqrtDigits>
 
+L<Math::NumSeq::DigitCount>,
 L<Math::NumSeq::DigitLength>,
 L<Math::NumSeq::DigitLengthCumulative>,
 L<Math::NumSeq::DigitProduct>,
@@ -291,7 +338,8 @@ L<Math::NumSeq::CullenNumbers>,
 L<Math::NumSeq::ProthNumbers>,
 L<Math::NumSeq::WoodallNumbers>
 
-L<Math::NumSeq::CollatzSteps>
+L<Math::NumSeq::CollatzSteps>,
+L<Math::NumSeq::SternDiatomic>
 
 L<Math::Sequence> and L<Math::Series>, for symbolic recursive sequence
 definitions

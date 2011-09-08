@@ -21,7 +21,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION','@ISA';
-$VERSION = 3;
+$VERSION = 4;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -96,15 +96,15 @@ Math::NumSeq::OEIS -- number sequence by OEIS A-number
 
 =head1 DESCRIPTION
 
-This is a sequence from the Online Encyclopedia of Integer Sequences,
-selected by it's A-number.
+This module selects a NumSeq by its Online Encyclopedia of Integer Sequences
+A-number.
 
 If there's NumSeq code implementing the sequence then that's used, otherwise
-files if available.  See L<Math::NumSeq::OEIS::Catalogue> for available
-A-numbers.
+files if available.  See L<Math::NumSeq::OEIS::Catalogue> for querying the
+available A-numbers.
 
-OEIS files are sought in an F<OEIS> directory in the user's home directory.
-It can use HTML, "internal" format, and B-file or A-file.
+Files should be in an F<OEIS> directory in the user's home directory.  It
+can be the HTML, "internal" format, B-file, or A-file.
 
     ~/OEIS/A000032.html
     ~/OEIS/A000032.internal
@@ -119,24 +119,26 @@ It can use HTML, "internal" format, and B-file or A-file.
 
 The "internal" format is more reliable for parsing than the HTML.  The
 B-file or A-file alone can be used, but in that case there's no
-C<$seq-E<gt>description()> and some of the C<$seq-E<gt>characteristic()>
-attributes.
+C<$seq-E<gt>description()> and only a few of the
+C<$seq-E<gt>characteristic()> attributes.
 
 The F<a000000.txt> or F<b000000.txt> files are generally a long list of
 values (the F<a.txt> longer than the F<b.txt>, when available).  Some
 sequences don't have them, only 30 or 40 sample values from HTML or internal
-page, though they may be enough for fast growing sequences.
+page.  Those few samples might be enough for fast growing sequences.
 
 Sometimes more than one NumSeq module can generate a given OEIS sequence.
-For example Polygonal k=4 and the Squares are both A000290.
-C<Math::NumSeq::OEIS> tries to give the faster or more sensible one.
+For example Squares and Polygonal k=4 are both A000290.
+C<Math::NumSeq::OEIS> tries to give the better or faster one.
 
 Sometimes the OEIS has duplicates, ie. two A-numbers which are the same
-sequence.  When there's NumSeq module code implementing the sequence
-C<Math::NumSeq::OEIS> is accepts either A-number (as long as both have been
-put in the code).
+sequence.  The code modules are setup with both A-numbers, where known, but
+the C<$seq-E<gt>oeis_anum()> method will generally read back as whichever is
+the "primary" one.
 
 =head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 =over 4
 

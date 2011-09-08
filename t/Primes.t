@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010, 2011 Kevin Ryde
+# Copyright 2011 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,13 +20,13 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 7;
+plan tests => 16;
 
 use lib 't';
 use MyTestHelpers;
-MyTestHelpers::nowarnings();
+BEGIN { MyTestHelpers::nowarnings(); }
 
-use Math::NumSeq::Cubes;
+use Math::NumSeq::Primes;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -36,55 +36,65 @@ use Math::NumSeq::Cubes;
 
 {
   my $want_version = 4;
-  ok ($Math::NumSeq::Cubes::VERSION, $want_version, 'VERSION variable');
-  ok (Math::NumSeq::Cubes->VERSION,  $want_version, 'VERSION class method');
+  ok ($Math::NumSeq::Primes::VERSION, $want_version, 'VERSION variable');
+  ok (Math::NumSeq::Primes->VERSION,  $want_version, 'VERSION class method');
 
-  ok (eval { Math::NumSeq::Cubes->VERSION($want_version); 1 },
+  ok (eval { Math::NumSeq::Primes->VERSION($want_version); 1 },
       1,
       "VERSION class check $want_version");
   my $check_version = $want_version + 1000;
-  ok (! eval { Math::NumSeq::Cubes->VERSION($check_version); 1 },
+  ok (! eval { Math::NumSeq::Primes->VERSION($check_version); 1 },
       1,
       "VERSION class check $check_version");
 }
 
 
 #------------------------------------------------------------------------------
-# characteristic()
+# oeis_anum()
 
 {
-  my $seq = Math::NumSeq::Cubes->new;
-  ok (! $seq->characteristic('count'), 1, 'characteristic(count)');
-  ok ($seq->characteristic('digits'), undef, 'characteristic(digits)');
+  my $seq = Math::NumSeq::Primes->new;
+  ok ($seq->oeis_anum, 'A000040');
 }
 
-
 #------------------------------------------------------------------------------
-# pred()
+# _primes_list()
 
 {
-  my $seq = Math::NumSeq::Cubes->new;
-  ok (!! $seq->pred(27),
-      1,
-      'pred() 27 is cube');
-
+  my @list = Math::NumSeq::Primes::_primes_list(1,10);
+  ok (join(',',@list), '2,3,5,7');
 }
 
-
 #------------------------------------------------------------------------------
-# bit of a diagnostic to see how accurate cbrt() is, for the cbrt(27) not an
-# integer struck in the past
+# next()
+
 {
-  require Math::Libm;
-  my $n = 27;
-  $n = Math::Libm::cbrt ($n);
-  MyTestHelpers::diag("cbrt(27) is $n");
-  my $i = int($n);
-  MyTestHelpers::diag("int() is $i");
-  my $eq = ($n == int($n));
-  MyTestHelpers::diag("equal is '$eq'");
+  my $seq = Math::NumSeq::Primes->new;
+  {
+    my ($i, $value) = $seq->next;
+    ok ($i, 1);
+    ok ($value, 2);
+  }
+  {
+    my ($i, $value) = $seq->next;
+    ok ($i, 2);
+    ok ($value, 3);
+  }
+  {
+    my ($i, $value) = $seq->next;
+    ok ($i, 3);
+    ok ($value, 5);
+  }
+  {
+    my ($i, $value) = $seq->next;
+    ok ($i, 4);
+    ok ($value, 7);
+  }
+  {
+    my ($i, $value) = $seq->next;
+    ok ($i, 5);
+    ok ($value, 11);
+  }
 }
 
 exit 0;
-
-

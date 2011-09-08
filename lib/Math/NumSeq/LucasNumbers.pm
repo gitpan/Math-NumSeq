@@ -21,7 +21,7 @@ use strict;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 3;
+$VERSION = 4;
 
 use Math::NumSeq::Fibonacci;
 @ISA = ('Math::NumSeq::Fibonacci');
@@ -66,6 +66,8 @@ starting from 1,3.  This is the same recurrence as the Fibonacci numbers,
 but a different starting point.
 
 =head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 =over 4
 

@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 3;
+$VERSION = 4;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -35,7 +35,7 @@ use constant values_min => 666;
 use constant characteristic_monotonic => 1;
 
 use Math::NumSeq::Base::Digits;
-use constant parameter_info_array => [ Math::NumSeq::Base::Digits::parameter_common_radix ];
+*parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
 
 
 # cf A131645 the beastly primes
@@ -123,6 +123,8 @@ their digits.  The default is decimal digits, or a radix can be given.
     etc
 
 =head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 =over 4
 

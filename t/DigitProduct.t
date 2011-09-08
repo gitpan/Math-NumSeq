@@ -35,7 +35,7 @@ use Math::NumSeq::DigitProduct;
 # VERSION
 
 {
-  my $want_version = 3;
+  my $want_version = 4;
   is ($Math::NumSeq::DigitProduct::VERSION, $want_version, 'VERSION variable');
   is (Math::NumSeq::DigitProduct->VERSION,  $want_version, 'VERSION class method');
 
@@ -51,8 +51,8 @@ use Math::NumSeq::DigitProduct;
 # characteristic()
 
 {
-  my $values_obj = Math::NumSeq::DigitProduct->new;
-  # is ($values_obj->characteristic('smaller'), 1, 'characteristic(smaller)');
+  my $seq = Math::NumSeq::DigitProduct->new;
+  # is ($seq->characteristic('smaller'), 1, 'characteristic(smaller)');
 }
 
 

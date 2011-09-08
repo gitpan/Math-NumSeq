@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 3;
+$VERSION = 4;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -34,8 +34,8 @@ use constant characteristic_monotonic => 0;
 use constant characteristic_smaller => 1;
 
 use Math::NumSeq::Base::Digits;
-use constant parameter_info_array =>
-  [ Math::NumSeq::Base::Digits::parameter_common_radix() ];
+*parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
+
 
 my @oeis = (undef,
             undef,
@@ -154,6 +154,8 @@ The sequence of digit sums, 0,1,...,9,1,2,..., etc.  For example at i=123
 the value is 1+2+3=6.
 
 =head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 =over 4
 

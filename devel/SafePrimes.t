@@ -20,28 +20,32 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 5;
+plan tests => 6;
 
 use lib 't';
 use MyTestHelpers;
-MyTestHelpers::nowarnings();
+BEGIN { MyTestHelpers::nowarnings(); }
 
-require Math::NumSeq::File;
+use Math::NumSeq::SafePrimes;
 
+# uncomment this to run the ### lines
+#use Smart::Comments;
 
 #------------------------------------------------------------------------------
 # VERSION
 
 {
   my $want_version = 4;
-  ok ($Math::NumSeq::File::VERSION, $want_version, 'VERSION variable');
-  ok (Math::NumSeq::File->VERSION,  $want_version, 'VERSION class method');
+  ok ($Math::NumSeq::SafePrimes::VERSION, $want_version,
+      'VERSION variable');
+  ok (Math::NumSeq::SafePrimes->VERSION,  $want_version,
+      'VERSION class method');
 
-  ok (eval { Math::NumSeq::File->VERSION($want_version); 1 },
+  ok (eval { Math::NumSeq::SafePrimes->VERSION($want_version); 1 },
       1,
       "VERSION class check $want_version");
   my $check_version = $want_version + 1000;
-  ok (! eval { Math::NumSeq::File->VERSION($check_version); 1 },
+  ok (! eval { Math::NumSeq::SafePrimes->VERSION($check_version); 1 },
       1,
       "VERSION class check $check_version");
 }
@@ -50,22 +54,23 @@ require Math::NumSeq::File;
 #------------------------------------------------------------------------------
 # next()
 
-{
-  require File::Spec;
-  my $filename = File::Spec->catfile('t','File-1.txt');
-  my @want = ([1,123], [2,456], [4,789]);
-  my $seq = Math::NumSeq::File->new
-    (filename => $filename);
-  my @got;
-  while (my ($i, $value) = $seq->next) {
-    push @got, [$i,$value];
+sub collect {
+  my ($seq, $count) = @_;
+  my @i;
+  my @values;
+  foreach (1 .. ($count||5)) {
+    my ($i, $value) = $seq->next
+      or last;
+    push @i, $i;
+    push @values, $value;
   }
-  ok (join(',', map {'['.join(',',@$_).'],'} @got),
-      join(',', map {'['.join(',',@$_).'],'} @want),
-      "next() contents $filename");
+  return join(',',@i) . ' -- ' . join(',',@values);
+}
+    
+{
+  my $seq = Math::NumSeq::SafePrimes->new;
+  ok ($seq->oeis_anum, 'A005385');
+  ok (collect($seq), '1,2,3,4,5 -- 5,7,11,23,47');
 }
 
-
 exit 0;
-
-

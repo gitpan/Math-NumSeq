@@ -21,10 +21,9 @@ use strict;
 
 use Math::NumSeq;
 use base 'Math::NumSeq';
-use Math::NumSeq::Base::Digits;
 
 use vars '$VERSION';
-$VERSION = 3;
+$VERSION = 4;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -33,8 +32,9 @@ $VERSION = 3;
 use constant description => Math::NumSeq::__('Numbers which are a "repdigit", meaning 0, 1 ... 9, 11, 22, 33, ... 99, 111, 222, 333, ..., 999, etc.  The default is decimal, or select a radix.');
 use constant characteristic_monotonic => 1;
 use constant values_min => 1;
-use constant parameter_info_array =>
-  [ Math::NumSeq::Base::Digits::parameter_common_radix() ];
+
+use Math::NumSeq::Base::Digits;
+*parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
 
 sub oeis_anum {
   my ($class_or_self) = @_;
@@ -141,6 +141,8 @@ The sequence of repdigit numbers, 1 ... 9, 11, 22, 33, ... 99, 111, 222,
 is decimal or a C<radix> parameter can be given.
 
 =head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 =over 4
 

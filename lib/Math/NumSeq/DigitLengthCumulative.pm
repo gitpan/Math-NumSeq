@@ -23,14 +23,13 @@ use Math::NumSeq;
 use base 'Math::NumSeq';
 
 use Math::NumSeq::Base::Digits;
-use constant parameter_info_array =>
-  [ Math::NumSeq::Base::Digits::parameter_common_radix() ];
+*parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
 use vars '$VERSION';
-$VERSION = 3;
+$VERSION = 4;
 
 # use constant name => Math::NumSeq::__('Digit Length Cumulative');
 use constant description => Math::NumSeq::__('Cumulative length of numbers 0,1,2,3,etc written out in the given radix.  For example binary 1,2,4,6,9,12,15,18,22,etc, 2 steps by 2, then 4 steps by 3, then 8 steps by 4, then 16 steps by 5, etc.');
@@ -150,6 +149,8 @@ The total length of numbers 0 to i, for example ternary 1,2,3,5,7,9,etc,
 representing ternary numbers 0,1,2,10,11,12.
 
 =head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 =over 4
 
