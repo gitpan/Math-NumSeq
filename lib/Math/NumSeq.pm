@@ -46,7 +46,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 4;
+$VERSION = 5;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -327,6 +327,7 @@ L<Math::NumSeq::DigitLength>,
 L<Math::NumSeq::DigitLengthCumulative>,
 L<Math::NumSeq::DigitProduct>,
 L<Math::NumSeq::DigitSum>,
+L<Math::NumSeq::DigitSumModulo>,
 L<Math::NumSeq::RadixWithoutDigit>
 
 L<Math::NumSeq::Beastly>,

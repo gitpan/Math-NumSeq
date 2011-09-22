@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 4;
+$VERSION = 5;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -150,8 +150,8 @@ Math::NumSeq::DigitSum -- sum of digits
 
 =head1 DESCRIPTION
 
-The sequence of digit sums, 0,1,...,9,1,2,..., etc.  For example at i=123
-the value is 1+2+3=6.
+The sum of digits in each i, so 0,1,...,9,1,2,..., etc.  For example at
+i=123 the value is 1+2+3=6.
 
 =head1 FUNCTIONS
 
@@ -181,7 +181,8 @@ C<$value E<gt>= 0>.
 
 L<Math::NumSeq>,
 L<Math::NumSeq::DigitLength>,
-L<Math::NumSeq::DigitProduct>
+L<Math::NumSeq::DigitProduct>,
+L<Math::NumSeq::DigitSumModulo>
 
 =head1 HOME PAGE
 

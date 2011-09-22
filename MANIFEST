@@ -47,6 +47,7 @@ lib/Math/NumSeq/DigitLength.pm
 lib/Math/NumSeq/DigitLengthCumulative.pm
 lib/Math/NumSeq/DigitProduct.pm
 lib/Math/NumSeq/DigitSum.pm
+lib/Math/NumSeq/DigitSumModulo.pm
 lib/Math/NumSeq/Emirps.pm
 lib/Math/NumSeq/Even.pm
 lib/Math/NumSeq/Factorials.pm

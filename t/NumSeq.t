@@ -45,7 +45,7 @@ use constant MY_MAX => (POSIX::FLT_RADIX() ** (POSIX::DBL_MANT_DIG()-5));
   }
 }
 
-plan tests => 112;
+plan tests => 114;
 
 sub diff_nums {
   my ($gotaref, $wantaref) = @_;
@@ -106,6 +106,19 @@ foreach my $elem
    # PiBits.pm
    # Repdigits.pm
    # SqrtDigits.pm
+
+   [ 'Math::NumSeq::DigitSumModulo', 0,
+     [ 0,  # 00
+       1,  # 01
+       1,  # 10
+       2,  # 11,
+       1,  # 100
+       2,  # 101
+       2,  # 110
+       0,  # 111
+       1,  # 1000
+     ],
+     { radix => 2, modulus => 3 } ],
 
    [ 'Math::NumSeq::DigitProduct', 0,
      [ 0,

@@ -22,7 +22,7 @@ use List::Util 'max';
 use Math::NumSeq;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 4;
+$VERSION = 5;
 
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
@@ -38,7 +38,7 @@ use constant parameter_info_array =>
       display    => Math::NumSeq::__('Fraction'),
       type       => 'string',
       type_hint  => 'fraction',
-      width      => 12,
+      width      => 10,
       default    => '5/29', # an arbitrary choice
       description => Math::NumSeq::__('The fraction to show, for example 5/29.  Press Return when ready to display the expression.'),
     },

@@ -21,10 +21,11 @@ use 5.006;
 use strict;
 use warnings;
 use Data::Dumper;
+use ExtUtils::Manifest;
 use Module::Util;
 
 use vars '$VERSION';
-$VERSION = 4;
+$VERSION = 5;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -35,13 +36,20 @@ my %seen;
 my $exit_code = 0;
 
 my @info_arrayref;
-my @classes = Module::Util::find_in_namespace('Math::NumSeq');
-@classes = grep {! /^Math::NumSeq::.*::/} @classes; # not sub-parts
-@classes = sort @classes;
-foreach my $class (@classes) {
+my $manifest_href = ExtUtils::Manifest::maniread();
+my @filenames = keys %$manifest_href;
+# files for Math::NumSeq::Foo, and not sub-parts
+@filenames = grep {m{^lib/Math/NumSeq/[^/]*$}} @filenames;
+@filenames = sort @filenames;
 
-  my $filename = Module::Util::find_installed($class) or die;
+foreach my $filename (@filenames) {
+  my $class = $filename;
+  $class =~ s{^lib/}{};
+  $class = Module::Util::path_to_module($class);
+
   ### $filename
+  ### $class
+
   open my $in, '<', $filename or die;
   while (<$in>) {
     chomp;

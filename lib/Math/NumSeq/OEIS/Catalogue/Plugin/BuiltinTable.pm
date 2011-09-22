@@ -22,7 +22,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 4;
+$VERSION = 5;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
@@ -30,52 +30,6 @@ use Math::NumSeq::OEIS::Catalogue::Plugin;
 
 use constant info_arrayref =>
 [
-  {
-    'anum' => 'A005224',
-    'class' => 'Math::NumSeq::Aronson',
-    'parameters' => [
-      'conjunctions',
-      0
-    ]
-  },
-  {
-    'anum' => 'A055508',
-    'class' => 'Math::NumSeq::Aronson',
-    'parameters' => [
-      'letter',
-      'H',
-      'conjunctions',
-      0
-    ]
-  },
-  {
-    'anum' => 'A049525',
-    'class' => 'Math::NumSeq::Aronson',
-    'parameters' => [
-      'letter',
-      'I',
-      'conjunctions',
-      0
-    ]
-  },
-  {
-    'anum' => 'A081023',
-    'class' => 'Math::NumSeq::Aronson',
-    'parameters' => [
-      'lying',
-      1,
-      'conjunctions',
-      0
-    ]
-  },
-  {
-    'anum' => 'A080520',
-    'class' => 'Math::NumSeq::Aronson',
-    'parameters' => [
-      'lang',
-      'fr'
-    ]
-  },
   {
     'anum' => 'A051003',
     'class' => 'Math::NumSeq::Beastly',
@@ -324,6 +278,78 @@ use constant info_arrayref =>
     'parameters' => [
       'radix',
       16
+    ]
+  },
+  {
+    'anum' => 'A010060',
+    'class' => 'Math::NumSeq::DigitSumModulo',
+    'parameters' => [
+      'radix',
+      2
+    ]
+  },
+  {
+    'anum' => 'A053838',
+    'class' => 'Math::NumSeq::DigitSumModulo',
+    'parameters' => [
+      'radix',
+      3
+    ]
+  },
+  {
+    'anum' => 'A053839',
+    'class' => 'Math::NumSeq::DigitSumModulo',
+    'parameters' => [
+      'radix',
+      4
+    ]
+  },
+  {
+    'anum' => 'A053840',
+    'class' => 'Math::NumSeq::DigitSumModulo',
+    'parameters' => [
+      'radix',
+      5
+    ]
+  },
+  {
+    'anum' => 'A053841',
+    'class' => 'Math::NumSeq::DigitSumModulo',
+    'parameters' => [
+      'radix',
+      6
+    ]
+  },
+  {
+    'anum' => 'A053842',
+    'class' => 'Math::NumSeq::DigitSumModulo',
+    'parameters' => [
+      'radix',
+      7
+    ]
+  },
+  {
+    'anum' => 'A053843',
+    'class' => 'Math::NumSeq::DigitSumModulo',
+    'parameters' => [
+      'radix',
+      8
+    ]
+  },
+  {
+    'anum' => 'A053844',
+    'class' => 'Math::NumSeq::DigitSumModulo',
+    'parameters' => [
+      'radix',
+      9
+    ]
+  },
+  {
+    'anum' => 'A053837',
+    'class' => 'Math::NumSeq::DigitSumModulo',
+    'parameters' => [
+      'radix',
+      10
     ]
   },
   {

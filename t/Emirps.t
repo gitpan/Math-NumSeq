@@ -34,7 +34,7 @@ use Math::NumSeq::Emirps;
 # VERSION
 
 {
-  my $want_version = 4;
+  my $want_version = 5;
   is ($Math::NumSeq::Emirps::VERSION, $want_version, 'VERSION variable');
   is (Math::NumSeq::Emirps->VERSION,  $want_version, 'VERSION class method');
 

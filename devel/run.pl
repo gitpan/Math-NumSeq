@@ -87,10 +87,10 @@ $|=1;
     $values_class = 'App::MathImage::NumSeq::CunninghamChain';
     $values_class = 'Math::NumSeq::DigitCount';
     $values_class = 'App::MathImage::NumSeq::ReRound';
+    $values_class = 'App::MathImage::NumSeq::Expression';
     eval "require $values_class; 1" or die $@;
     print Math::NumSeq::DigitLength->VERSION,"\n";
-    my $seq = $values_class->new (
-                                  length => 1,
+    my $seq = $values_class->new (length => 1,
                                   fraction => '1/975',
                                   polygonal => 13,
                                   pairs => 'first',
@@ -101,8 +101,9 @@ $|=1;
                                   sqrt => 2,
                                   where => 'low',
                                   # expression => 'z=3; z*x^2 + 3*x + 2',
-                                  expression => 'x^2 + 3*x + 2',
-                                  expression_evaluator => 'MEE',
+                                  # expression => 'x^2 + 3*x + 2',
+                                  expression => 'atan(x)',
+                                  expression_evaluator => 'Perl',
                                   oeis_anum  => 'A000396',
                                   # distinct => 1,
                                   planepath_class => 'HypotOctant',

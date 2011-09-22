@@ -22,7 +22,7 @@ use POSIX ();
 use Math::Prime::XS 0.23; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 4;
+$VERSION = 5;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');

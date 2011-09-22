@@ -22,7 +22,7 @@ use List::Util 'min', 'max';
 use POSIX ();
 
 use vars '$VERSION', '@ISA';
-$VERSION = 4;
+$VERSION = 5;
 
 use Math::NumSeq::Primes;
 @ISA = ('Math::NumSeq::Primes');

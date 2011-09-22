@@ -23,7 +23,7 @@ use Math::NumSeq;
 use base 'Math::NumSeq::Even';
 
 use vars '$VERSION';
-$VERSION = 4;
+$VERSION = 5;
 
 # use constant name => Math::NumSeq::__('Odd Integers');
 use constant description => Math::NumSeq::__('The odd integers 1, 3, 5, 7, 9, etc.');
