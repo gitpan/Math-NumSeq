@@ -12,6 +12,8 @@ devel/bits.pl
 devel/cbrt.pl
 devel/euler.pl
 devel/exe-cbrt.c
+devel/expression.pl
+devel/language-expr.pl
 devel/maybe-decprime.pl
 devel/maybe-ln.pl
 devel/oeis.pl
@@ -50,12 +52,14 @@ lib/Math/NumSeq/DigitSum.pm
 lib/Math/NumSeq/DigitSumModulo.pm
 lib/Math/NumSeq/Emirps.pm
 lib/Math/NumSeq/Even.pm
+lib/Math/NumSeq/Expression.pm
 lib/Math/NumSeq/Factorials.pm
 lib/Math/NumSeq/Fibonacci.pm
 lib/Math/NumSeq/File.pm
 lib/Math/NumSeq/FractionDigits.pm
 lib/Math/NumSeq/HarshadNumbers.pm
 lib/Math/NumSeq/LucasNumbers.pm
+lib/Math/NumSeq/MobiusFunction.pm
 lib/Math/NumSeq/Odd.pm
 lib/Math/NumSeq/OEIS.pm
 lib/Math/NumSeq/OEIS/Catalogue.pm
@@ -66,6 +70,7 @@ lib/Math/NumSeq/OEIS/Catalogue/Plugin/ZZ_Files.pm
 lib/Math/NumSeq/OEIS/File.pm
 lib/Math/NumSeq/Palindromes.pm
 lib/Math/NumSeq/Polygonal.pm
+lib/Math/NumSeq/PrimeFactorCount.pm
 lib/Math/NumSeq/Primes.pm
 lib/Math/NumSeq/Primorials.pm
 lib/Math/NumSeq/Pronic.pm
@@ -88,10 +93,13 @@ SIGNATURE
 t/Cubes.t
 t/DigitProduct.t
 t/Emirps.t
+t/Expression.t
 t/File-1.txt
 t/File.t
+t/MobiusFunction.t
 t/MyTestHelpers.pm
 t/NumSeq.t
+t/PrimeFactorsCount.t
 t/Primes.t
 t/SophieGermainPrimes.t
 t/SqrtDigits.t

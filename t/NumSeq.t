@@ -93,7 +93,7 @@ sub _min {
 foreach my $elem
   (
    # ChampernowneBinaryLsb.pm
-   # Count/PrimeFactors.pm
+   # PrimeFactorCount.pm
    # DigitsModulo.pm~
    # DigitsModulo.pm
    # Expression.pm~

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 5;
+$VERSION = 6;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -156,7 +156,7 @@ sub oeis_anum {
 
 sub rewind {
   my ($self) = @_;
-  my $lo = $self->{'lo'} || 0;
+  # my $lo = $self->{'lo'} || 0;
 
   my $k = $self->{'polygonal'} || 2;
   my $add = - $k + 4;
@@ -170,6 +170,8 @@ sub rewind {
   }
   $self->{'k'} = $k;
   $self->{'add'} = $add;
+
+  $self->Math::NumSeq::Base::IterateIth::rewind;
 }
 
 sub ith {

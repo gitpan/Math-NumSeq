@@ -20,13 +20,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 5;
+$VERSION = 6;
 
 use Math::NumSeq::Primes;
 @ISA = ('Math::NumSeq::Primes');
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+#use Devel::Comments;
 
 
 # use constant name => Math::NumSeq::__('Twin Primes');
@@ -79,15 +79,18 @@ my %pairs_add = (first => 0,
                  
 sub rewind {
   my ($self) = @_;
-  $self->SUPER::rewind;
+  ### TwinPrimes rewind() ...
 
+  $self->SUPER::rewind;
   $self->{'twin_i'} = 0;
-  $self->{'pairs_add'} = $pairs_add{$self->{'pairs'}};
+  $self->{'twin_both'} = 0;
   (undef, $self->{'twin_prev'}) = $self->SUPER::next;
+  ### twin_prev: $self->{'twin_prev'}
 }
 
 sub next {
   my ($self) = @_;
+  ### TwinPrimes next(): "twin_i=$self->{'twin_i'} prev=$self->{'twin_prev'}"
   my $prev = $self->{'twin_prev'};
 
   for (;;) {

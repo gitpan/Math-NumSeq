@@ -22,7 +22,7 @@ use List::Util 'max';
 use Math::NumSeq;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 5;
+$VERSION = 6;
 
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
@@ -210,13 +210,18 @@ Math::NumSeq::FractionDigits -- the digits of a fraction p/q
 =head1 SYNOPSIS
 
  use Math::NumSeq::FractionDigits;
- my $seq = Math::NumSeq::FractionDigits->new;
+ my $seq = Math::NumSeq::FractionDigits->new (fraction => '2/11');
  my ($i, $value) = $seq->next;
 
 =head1 DESCRIPTION
 
 The sequence of digits which are a given fraction.  For example 1/7 in
 decimal 1,4,2,8,5,7,1,4, etc, being 0.14285714...
+
+The digits are always a repeating sequence of length no more than den-1.  In
+fact for a given repeating sequence a,b,c,a,b,c,etc the fraction is abc/999,
+if you want to cook up a sequence like that.  In a base other than decimal
+the "9" is radix-1, ie. the highest digit.
 
 =head1 FUNCTIONS
 
@@ -229,14 +234,14 @@ See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 =item C<$seq = Math::NumSeq::FractionDigits-E<gt>new (fraction =E<gt> $f, radix =E<gt> $r)>
 
 Create and return a new sequence object giving the digits of C<$f>.  C<$f>
-is a string num/den, optionally with a decimal point,
+is a string "num/den", or a decimal "xx.yy",
 
     2/29
     1.5/3.25
     29.125
 
-The default is the fraction digits in decimal, or with the C<radix>
-parameter in another base.
+The default is digits in decimal, or with the C<radix> parameter in another
+base.
 
 =back
 

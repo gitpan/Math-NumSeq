@@ -46,7 +46,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 5;
+$VERSION = 6;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -312,7 +312,9 @@ L<Math::NumSeq::Odd>
 L<Math::NumSeq::Primes>,
 L<Math::NumSeq::TwinPrimes>,
 L<Math::NumSeq::SophieGermainPrimes>,
-L<Math::NumSeq::Emirps>
+L<Math::NumSeq::Emirps>,
+L<Math::NumSeq::MobiusFunction>,
+L<Math::NumSeq::PrimeFactorCount>
 
 L<Math::NumSeq::Factorials>,
 L<Math::NumSeq::Primorials>,

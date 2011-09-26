@@ -193,18 +193,48 @@ sub check_class {
   {
     ### by next() ...
     my @got;
+    my $got = \@got;
     while (my ($i, $value) = $seq->next) {
       push @got, $value;
       if (@got >= @$want) {
         last;
       }
     }
-    my $got = \@got;
 
     my $diff = diff_nums($got, $want);
     if (defined $diff) {
       $good = 0;
       diag "bad: $name by next() hi=$hi";
+      diag $diff;
+      diag ref $seq;
+      diag $filename;
+      diag "got  len ".scalar(@$got);
+      diag "want len ".scalar(@$want);
+      if ($#$got > 200) { $#$got = 200 }
+      if ($#$want > 200) { $#$want = 200 }
+      diag "got  ". join(',', map {defined() ? $_ : 'undef'} @$got);
+      diag "want ". join(',', map {defined() ? $_ : 'undef'} @$want);
+    }
+  }
+  {
+    ### by next() after rewind ...
+    $seq->rewind;
+
+    my @got;
+    my $got = \@got;
+    while (my ($i, $value) = $seq->next) {
+      ### $i
+      ### $value
+      push @got, $value;
+      if (@got >= @$want) {
+        last;
+      }
+    }
+
+    my $diff = diff_nums($got, $want);
+    if (defined $diff) {
+      $good = 0;
+      diag "bad: $name by rewind next() hi=$hi";
       diag $diff;
       diag ref $seq;
       diag $filename;
@@ -278,6 +308,15 @@ sub check_class {
 }
 
 #------------------------------------------------------------------------------
+# forced
+
+# check_class ('A001097',
+#              'Math::NumSeq::TwinPrimes',
+#              [ pairs => 'both' ]);
+# exit 0;
+
+
+#------------------------------------------------------------------------------
 # OEIS-Catalogue generated vs files
 
 for (my $anum = Math::NumSeq::OEIS::Catalogue->anum_first;  #  'A007770';
@@ -308,7 +347,6 @@ for (my $anum = Math::NumSeq::OEIS::Catalogue->anum_first;  #  'A007770';
 # check_class ('A010701',
 #              'Math::NumSeq::FractionDigits',
 #              [ fraction => '10/3', radix => 10 ]);
-
 
 diag "total checks $total_checks";
 $good = 1;

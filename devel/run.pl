@@ -33,83 +33,89 @@ $|=1;
 
 {
   my $pred_upto = 0;
-  foreach my $rep (1 .. 3) {
-    my $values_class;
-    # $values_class = $gen->values_class('Abundant');
-    # $values_class = $gen->values_class('Obstinate');
-    # $values_class = $gen->values_class('Lucas');
-    # $values_class = $gen->values_class('Emirps');
-    # $values_class = $gen->values_class('Repdigits');
-    # $values_class = $gen->values_class('UndulatingNumbers');
-    # $values_class = $gen->values_class('TernaryWithout2');
-    # $values_class = $gen->values_class('PrimeQuadraticEuler');
-    # $values_class = $gen->values_class('Base4Without3');
-    # $values_class = $gen->values_class('Tribonacci');
-    # $values_class = $gen->values_class('Perrin');
-    # $values_class = $gen->values_class('Polygonal');
-    # $values_class = $gen->values_class('Expression');
-    # $values_class = $gen->values_class('Pentagonal');
-    # $values_class = $gen->values_class('TwinPrimes');
-    # # $values_class = $gen->values_class('DigitsModulo');
-    # $values_class = $gen->values_class('RadixWithoutDigit');
-    # $values_class = $gen->values_class('Odd');
-    # $values_class = $gen->values_class('Factorials');
-    # $values_class = $gen->values_class('SumTwoSquares');
-    # $values_class = $gen->values_class('PlanePathCoord');
-    # $values_class = $gen->values_class('Palindromes');
-    # # $values_class = $gen->values_class('MathSequence');
-    # $values_class = $gen->values_class('DigitLength');
-    # $values_class = $gen->values_class('DigitLengthCumulative');
-    # $values_class = $gen->values_class('HypotCount');
-    # $values_class = $gen->values_class('PrimeIndexCount');
-    # $values_class = $gen->values_class('Primorials');
-    # $values_class = $gen->values_class('Loeschian');
-    # $values_class = $gen->values_class('SumXsq3Ysq');
-    # $values_class = $gen->values_class('ProthNumbers');
-    # $values_class = $gen->values_class('DigitCountLow');
-    # $values_class = $gen->values_class('DigitSumModulo');
-    # $values_class = $gen->values_class('PrimeFactorCount');
-    # $values_class = $gen->values_class('RadixWithoutDigit');
-    # $values_class = $gen->values_class('ReverseAddSteps');
-    # $values_class = $gen->values_class('Harshad');
-    # $values_class = $gen->values_class('HappySteps');
-    # $values_class = $gen->values_class('TotientPerfect');
-    # $values_class = $gen->values_class('TotientStepsSum');
-    # $values_class = $gen->values_class('FractionDigits');
-    # $values_class = $gen->values_class('RepdigitBase');
-    require Math::NumSeq::DigitLength;
-    $values_class = 'Math::NumSeq::OEIS';
-    $values_class = 'Math::NumSeq::SqrtDigits';
-    $values_class = 'Math::NumSeq::DigitLength';
-    $values_class = 'Math::NumSeq::DigitProduct';
-    $values_class = 'App::MathImage::NumSeq::UndulatingNumbers';
-    $values_class = 'App::MathImage::NumSeq::SternDiatomic';
-    $values_class = 'App::MathImage::NumSeq::CunninghamChain';
-    $values_class = 'Math::NumSeq::DigitCount';
-    $values_class = 'App::MathImage::NumSeq::ReRound';
-    $values_class = 'App::MathImage::NumSeq::Expression';
-    eval "require $values_class; 1" or die $@;
-    print Math::NumSeq::DigitLength->VERSION,"\n";
-    my $seq = $values_class->new (length => 1,
-                                  fraction => '1/975',
-                                  polygonal => 13,
-                                  pairs => 'first',
-                                  lo => 0,
-                                  hi => 10, # 200*$rep,
-                                  radix => 3,
-                                  digit => 1,
-                                  sqrt => 2,
-                                  where => 'low',
-                                  # expression => 'z=3; z*x^2 + 3*x + 2',
-                                  # expression => 'x^2 + 3*x + 2',
-                                  expression => 'atan(x)',
-                                  expression_evaluator => 'Perl',
-                                  oeis_anum  => 'A000396',
-                                  # distinct => 1,
-                                  planepath_class => 'HypotOctant',
-                                  coord_type => 'Y',
-                                  multiplicity => 'distinct',
-                                 );
+
+  my $values_class;
+  # $values_class = $gen->values_class('Abundant');
+  # $values_class = $gen->values_class('Obstinate');
+  # $values_class = $gen->values_class('Lucas');
+  # $values_class = $gen->values_class('Emirps');
+  # $values_class = $gen->values_class('Repdigits');
+  # $values_class = $gen->values_class('UndulatingNumbers');
+  # $values_class = $gen->values_class('TernaryWithout2');
+  # $values_class = $gen->values_class('PrimeQuadraticEuler');
+  # $values_class = $gen->values_class('Base4Without3');
+  # $values_class = $gen->values_class('Tribonacci');
+  # $values_class = $gen->values_class('Perrin');
+  # $values_class = $gen->values_class('Polygonal');
+  # $values_class = $gen->values_class('Expression');
+  # $values_class = $gen->values_class('Pentagonal');
+  # $values_class = $gen->values_class('TwinPrimes');
+  # # $values_class = $gen->values_class('DigitsModulo');
+  # $values_class = $gen->values_class('RadixWithoutDigit');
+  # $values_class = $gen->values_class('Odd');
+  # $values_class = $gen->values_class('Factorials');
+  # $values_class = $gen->values_class('SumTwoSquares');
+  # $values_class = $gen->values_class('PlanePathCoord');
+  # $values_class = $gen->values_class('Palindromes');
+  # # $values_class = $gen->values_class('MathSequence');
+  # $values_class = $gen->values_class('DigitLength');
+  # $values_class = $gen->values_class('DigitLengthCumulative');
+  # $values_class = $gen->values_class('HypotCount');
+  # $values_class = $gen->values_class('PrimeIndexCount');
+  # $values_class = $gen->values_class('Primorials');
+  # $values_class = $gen->values_class('Loeschian');
+  # $values_class = $gen->values_class('SumXsq3Ysq');
+  # $values_class = $gen->values_class('ProthNumbers');
+  # $values_class = $gen->values_class('DigitCountLow');
+  # $values_class = $gen->values_class('DigitSumModulo');
+  # $values_class = $gen->values_class('PrimeFactorCount');
+  # $values_class = $gen->values_class('RadixWithoutDigit');
+  # $values_class = $gen->values_class('ReverseAddSteps');
+  # $values_class = $gen->values_class('Harshad');
+  # $values_class = $gen->values_class('HappySteps');
+  # $values_class = $gen->values_class('TotientPerfect');
+  # $values_class = $gen->values_class('TotientStepsSum');
+  # $values_class = $gen->values_class('FractionDigits');
+  # $values_class = $gen->values_class('RepdigitBase');
+  require Math::NumSeq::DigitLength;
+  $values_class = 'Math::NumSeq::OEIS';
+  $values_class = 'Math::NumSeq::SqrtDigits';
+  $values_class = 'Math::NumSeq::DigitLength';
+  $values_class = 'Math::NumSeq::DigitProduct';
+  $values_class = 'App::MathImage::NumSeq::UndulatingNumbers';
+  $values_class = 'App::MathImage::NumSeq::SternDiatomic';
+  $values_class = 'App::MathImage::NumSeq::CunninghamChain';
+  $values_class = 'Math::NumSeq::DigitCount';
+  $values_class = 'App::MathImage::NumSeq::ReRound';
+  $values_class = 'Math::NumSeq::Expression';
+  $values_class = 'App::MathImage::NumSeq::MobiusFunction';
+  $values_class = 'Math::NumSeq::TwinPrimes';
+  $values_class = 'App::MathImage::NumSeq::PrimeFactorCount';
+  $values_class = 'App::MathImage::NumSeq::PlanePath';
+  eval "require $values_class; 1" or die $@;
+  print Math::NumSeq::DigitLength->VERSION,"\n";
+  my $seq = $values_class->new (length => 1,
+                                fraction => '1/975',
+                                polygonal => 13,
+                                pairs => 'first',
+                                lo => 0,
+                                hi => 10, # 200*$rep,
+                                radix => 3,
+                                digit => 1,
+                                sqrt => 2,
+                                where => 'low',
+                                # expression => 'z=3; z*x^2 + 3*x + 2',
+                                # expression => 'x^2 + 3*x + 2',
+                                expression => 'atan(x)',
+                                expression_evaluator => 'Perl',
+                                oeis_anum  => 'A000396',
+                                # distinct => 1,
+                                planepath => 'SquareSpiral,wider=2',
+                                coord_type => 'Y',
+                                multiplicity => 'distinct',
+                               );
+
+  foreach my $rep (1 .. 2) {
     print "anum ",($seq->oeis_anum||''),"\n";
     ### $seq
     # ### type: $seq->type
@@ -188,6 +194,8 @@ $|=1;
       }
       print "\n";
     }
+    print "rewind\n";
+    $seq->rewind;
   }
   exit 0;
 }

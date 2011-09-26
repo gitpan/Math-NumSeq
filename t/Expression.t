@@ -19,52 +19,50 @@
 
 use 5.004;
 use strict;
-use Test;
-plan tests => 5;
+use Test::More tests => 7;
 
 use lib 't';
 use MyTestHelpers;
 MyTestHelpers::nowarnings();
 
-require Math::NumSeq::File;
+use Math::NumSeq::Expression;
 
+# uncomment this to run the ### lines
+#use Smart::Comments;
 
 #------------------------------------------------------------------------------
 # VERSION
 
 {
   my $want_version = 6;
-  ok ($Math::NumSeq::File::VERSION, $want_version, 'VERSION variable');
-  ok (Math::NumSeq::File->VERSION,  $want_version, 'VERSION class method');
+  is ($Math::NumSeq::Expression::VERSION, $want_version, 'VERSION variable');
+  is (Math::NumSeq::Expression->VERSION,  $want_version, 'VERSION class method');
 
-  ok (eval { Math::NumSeq::File->VERSION($want_version); 1 },
-      1,
+  ok (eval { Math::NumSeq::Expression->VERSION($want_version); 1 },
       "VERSION class check $want_version");
   my $check_version = $want_version + 1000;
-  ok (! eval { Math::NumSeq::File->VERSION($check_version); 1 },
-      1,
+  ok (! eval { Math::NumSeq::Expression->VERSION($check_version); 1 },
       "VERSION class check $check_version");
 }
 
 
 #------------------------------------------------------------------------------
-# next()
 
 {
-  require File::Spec;
-  my $filename = File::Spec->catfile('t','File-1.txt');
-  my @want = ([1,123], [2,456], [4,789]);
-  my $seq = Math::NumSeq::File->new
-    (filename => $filename);
-  my @got;
-  while (my ($i, $value) = $seq->next) {
-    push @got, [$i,$value];
-  }
-  ok (join(',', map {'['.join(',',@$_).'],'} @got),
-      join(',', map {'['.join(',',@$_).'],'} @want),
-      "next() contents $filename");
+  my $seq = Math::NumSeq::Expression->new (expression => '2*i');
+  is (join(',',map {$seq->next} 1,2,3), '0,0,1,2,2,4');
+}
+{
+  my $seq = Math::NumSeq::Expression->new (expression => 'i*2');
+  is (join(',',map {$seq->next} 1,2,3), '0,0,1,2,2,4');
+}
+{
+  my $seq = Math::NumSeq::Expression->new (expression => '2*$i');
+  is (join(',',map {$seq->next} 1,2,3), '0,0,1,2,2,4');
 }
 
+
+#------------------------------------------------------------------------------
 
 exit 0;
 
