@@ -24,7 +24,8 @@
 
 use 5.004;
 use strict;
-use Test::More tests => 1;
+use Test;
+plan tests => 1;
 
 use lib 't','xt';
 use MyTestHelpers;
@@ -103,7 +104,7 @@ sub check_class {
 
   my ($want, $want_i_start, $filename) = MyOEIS::read_values($anum)
     or do {
-      diag "skip $anum $name, no file data";
+      MyTestHelpers::diag("skip $anum $name, no file data");
       return;
     };
   ### read_values len: scalar(@$want)
@@ -143,15 +144,15 @@ sub check_class {
     @$want = grep {$_ < 100_000} @$want;
 
   } elsif ($anum eq 'A004542') {  # sqrt(2) in base 5
-    diag "skip doubtful $anum $name";
+    MyTestHelpers::diag ("skip doubtful $anum $name");
     return;
   } elsif ($anum eq 'A022000') {  # FIXME: not 1/996 ???
-    diag "skip doubtful $anum $name";
+    MyTestHelpers::diag ("skip doubtful $anum $name");
     return;
   }
 
   my $want_count = scalar(@$want);
-  diag "$anum $name  ($want_count values to $want->[-1])";
+  MyTestHelpers::diag ("$anum $name  ($want_count values to $want->[-1])");
 
   my $hi = $want->[-1];
   if ($hi < @$want) {
@@ -174,9 +175,9 @@ sub check_class {
     my $want_anum = $duplicate_anum{$anum} || $anum;
     if ($got_anum ne $want_anum) {
       $good = 0;
-      diag "bad: $name";
-      diag "got anum  $got_anum";
-      diag ref $seq;
+      MyTestHelpers::diag ("bad: $name");
+      MyTestHelpers::diag ("got anum  $got_anum");
+      MyTestHelpers::diag (ref $seq);
     }
   }
 
@@ -204,16 +205,16 @@ sub check_class {
     my $diff = diff_nums($got, $want);
     if (defined $diff) {
       $good = 0;
-      diag "bad: $name by next() hi=$hi";
-      diag $diff;
-      diag ref $seq;
-      diag $filename;
-      diag "got  len ".scalar(@$got);
-      diag "want len ".scalar(@$want);
+      MyTestHelpers::diag ("bad: $name by next() hi=$hi");
+      MyTestHelpers::diag ($diff);
+      MyTestHelpers::diag (ref $seq);
+      MyTestHelpers::diag ($filename);
+      MyTestHelpers::diag ("got  len ".scalar(@$got));
+      MyTestHelpers::diag ("want len ".scalar(@$want));
       if ($#$got > 200) { $#$got = 200 }
       if ($#$want > 200) { $#$want = 200 }
-      diag "got  ". join(',', map {defined() ? $_ : 'undef'} @$got);
-      diag "want ". join(',', map {defined() ? $_ : 'undef'} @$want);
+      MyTestHelpers::diag ("got  ". join(',', map {defined() ? $_ : 'undef'} @$got));
+      MyTestHelpers::diag ("want ". join(',', map {defined() ? $_ : 'undef'} @$want));
     }
   }
   {
@@ -234,16 +235,16 @@ sub check_class {
     my $diff = diff_nums($got, $want);
     if (defined $diff) {
       $good = 0;
-      diag "bad: $name by rewind next() hi=$hi";
-      diag $diff;
-      diag ref $seq;
-      diag $filename;
-      diag "got  len ".scalar(@$got);
-      diag "want len ".scalar(@$want);
+      MyTestHelpers::diag ("bad: $name by rewind next() hi=$hi");
+      MyTestHelpers::diag ($diff);
+      MyTestHelpers::diag (ref $seq);
+      MyTestHelpers::diag ($filename);
+      MyTestHelpers::diag ("got  len ".scalar(@$got));
+      MyTestHelpers::diag ("want len ".scalar(@$want));
       if ($#$got > 200) { $#$got = 200 }
       if ($#$want > 200) { $#$want = 200 }
-      diag "got  ". join(',', map {defined() ? $_ : 'undef'} @$got);
-      diag "want ". join(',', map {defined() ? $_ : 'undef'} @$want);
+      MyTestHelpers::diag ("got  ". join(',', map {defined() ? $_ : 'undef'} @$got));
+      MyTestHelpers::diag ("want ". join(',', map {defined() ? $_ : 'undef'} @$want));
     }
   }
 
@@ -253,6 +254,10 @@ sub check_class {
       or next;
     if ($seq->characteristic('count')) {
       ### no pred on characteristic(count) ..
+      next;
+    }
+    if (! $seq->characteristic('monotonic')) {
+      ### no pred on not characteristic(monotonic) ..
       next;
     }
     if ($seq->characteristic('digits')) {
@@ -291,16 +296,16 @@ sub check_class {
     my $diff = diff_nums($got, $want);
     if (defined $diff) {
       $good = 0;
-      diag "bad: $name by pred() hi=$hi";
-      diag $diff;
-      diag ref $seq;
-      diag $filename;
-      diag "got  len ".scalar(@$got);
-      diag "want len ".scalar(@$want);
+      MyTestHelpers::diag ("bad: $name by pred() hi=$hi");
+      MyTestHelpers::diag ($diff);
+      MyTestHelpers::diag (ref $seq);
+      MyTestHelpers::diag ($filename);
+      MyTestHelpers::diag ("got  len ".scalar(@$got));
+      MyTestHelpers::diag ("want len ".scalar(@$want));
       if ($#$got > 200) { $#$got = 200 }
       if ($#$want > 200) { $#$want = 200 }
-      diag "got  ". join(',', map {defined() ? $_ : 'undef'} @$got);
-      diag "want ". join(',', map {defined() ? $_ : 'undef'} @$want);
+      MyTestHelpers::diag ("got  ". join(',', map {defined() ? $_ : 'undef'} @$got));
+      MyTestHelpers::diag ("want ". join(',', map {defined() ? $_ : 'undef'} @$want));
     }
   }
 
@@ -327,8 +332,8 @@ for (my $anum = Math::NumSeq::OEIS::Catalogue->anum_first;  #  'A007770';
   my $info = Math::NumSeq::OEIS::Catalogue->anum_to_info($anum);
   if (! $info) {
     $good = 0;
-    diag "bad: $anum";
-    diag "info is undef";
+    MyTestHelpers::diag ("bad: $anum");
+    MyTestHelpers::diag ("info false: ",$info);
     next;
   }
   if ($info->{'class'} eq 'Math::NumSeq::OEIS::File') {
@@ -348,7 +353,7 @@ for (my $anum = Math::NumSeq::OEIS::Catalogue->anum_first;  #  'A007770';
 #              'Math::NumSeq::FractionDigits',
 #              [ fraction => '10/3', radix => 10 ]);
 
-diag "total checks $total_checks";
+MyTestHelpers::diag ("total checks $total_checks");
 $good = 1;
 ok ($good);
 exit 0;

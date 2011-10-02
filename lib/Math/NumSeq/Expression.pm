@@ -23,14 +23,14 @@ use List::Util;
 use Math::Libm;
 use Module::Util;
 
+use vars '$VERSION', '@ISA';
+$VERSION = 7;
 use Math::NumSeq;
-use base 'Math::NumSeq';
-
-use vars '$VERSION';
-$VERSION = 6;
+@ISA = ('Math::NumSeq');
 
 # uncomment this to run the ### lines
 #use Devel::Comments;
+
 
 my ($have_MS, $have_MEE, $have_LE, @evaluators);
 BEGIN {

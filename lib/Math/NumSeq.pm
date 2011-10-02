@@ -46,7 +46,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 6;
+$VERSION = 7;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -67,8 +67,8 @@ HERE
 }
 
 # sub name {
-#   my ($class_or_self) = @_;
-#   my $name = ref($class_or_self) || $class_or_self;
+#   my ($self) = @_;
+#   my $name = ref($self) || $self;
 #   $name =~ s/^Math::NumSeq:://;
 #   return $name;
 # }
@@ -148,6 +148,16 @@ sub new {
   $self->rewind;
   return $self;
 }
+
+#------------------------------------------------------------------------------
+# shared internals
+
+sub _is_infinite {
+  my ($x) = @_;
+  return ($x != $x         # nan
+          || $x-1 == $x);  # inf
+}
+
 
 1;
 __END__
@@ -307,7 +317,8 @@ L<Math::NumSeq::Polygonal>,
 L<Math::NumSeq::Tetrahedral>,
 L<Math::NumSeq::StarNumbers>,
 L<Math::NumSeq::Even>,
-L<Math::NumSeq::Odd>
+L<Math::NumSeq::Odd>,
+L<Math::NumSeq::All>
 
 L<Math::NumSeq::Primes>,
 L<Math::NumSeq::TwinPrimes>,
@@ -332,10 +343,11 @@ L<Math::NumSeq::DigitSum>,
 L<Math::NumSeq::DigitSumModulo>,
 L<Math::NumSeq::RadixWithoutDigit>
 
+L<Math::NumSeq::Palindromes>,
 L<Math::NumSeq::Beastly>,
 L<Math::NumSeq::Repdigits>,
-L<Math::NumSeq::Palindromes>
-L<Math::NumSeq::HarshadNumbers>
+L<Math::NumSeq::HarshadNumbers>,
+L<Math::NumSeq::HappyNumbers>
 
 L<Math::NumSeq::CullenNumbers>,
 L<Math::NumSeq::ProthNumbers>,

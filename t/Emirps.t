@@ -19,7 +19,8 @@
 
 use 5.004;
 use strict;
-use Test::More tests => 8;
+use Test;
+plan tests => 8;
 
 use lib 't';
 use MyTestHelpers;
@@ -34,14 +35,16 @@ use Math::NumSeq::Emirps;
 # VERSION
 
 {
-  my $want_version = 6;
-  is ($Math::NumSeq::Emirps::VERSION, $want_version, 'VERSION variable');
-  is (Math::NumSeq::Emirps->VERSION,  $want_version, 'VERSION class method');
+  my $want_version = 7;
+  ok ($Math::NumSeq::Emirps::VERSION, $want_version, 'VERSION variable');
+  ok (Math::NumSeq::Emirps->VERSION,  $want_version, 'VERSION class method');
 
   ok (eval { Math::NumSeq::Emirps->VERSION($want_version); 1 },
+      1,
       "VERSION class check $want_version");
   my $check_version = $want_version + 1000;
   ok (! eval { Math::NumSeq::Emirps->VERSION($check_version); 1 },
+      1,
       "VERSION class check $check_version");
 }
 
@@ -54,7 +57,7 @@ use Math::NumSeq::Emirps;
     (lo => 1,
      hi => 30);
 
-  is (! $values_obj->characteristic('count'), 1, 'characteristic(count)');
+  ok ($values_obj->characteristic('count'), undef, 'characteristic(count)');
 }
 
 
@@ -63,11 +66,11 @@ use Math::NumSeq::Emirps;
 
 {
   ## no critic (ProtectPrivateSubs)
-  is (Math::NumSeq::Emirps::_reverse_in_radix(123,10),
+  ok (Math::NumSeq::Emirps::_reverse_in_radix(123,10),
       321);
-  is (Math::NumSeq::Emirps::_reverse_in_radix(0xAB,16),
+  ok (Math::NumSeq::Emirps::_reverse_in_radix(0xAB,16),
       0xBA);
-  is (Math::NumSeq::Emirps::_reverse_in_radix(6,2),
+  ok (Math::NumSeq::Emirps::_reverse_in_radix(6,2),
       3);
 }
 

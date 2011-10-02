@@ -21,10 +21,10 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 6;
-
+$VERSION = 7;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
+*_is_infinite = \&Math::NumSeq::_is_infinite;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -40,11 +40,8 @@ use Math::NumSeq::Base::Digits;
 
 # cf A131645 the beastly primes
 sub oeis_anum {
-  my ($class_or_self) = @_;
-  my $radix = (ref $class_or_self
-               ? $class_or_self->{'radix'}
-               : $class_or_self->parameter_default('radix'));
-  return ($radix == 10
+  my ($self) = @_;
+  return ($self->{'radix'} == 10
           ? 'A051003'
           : undef);
 }
@@ -82,6 +79,10 @@ sub pred {
   }
   if ($radix == 10) {
     return ($value =~ /666/);
+  }
+
+  if (_is_infinite($value)) {
+    return 0;
   }
 
   my $cube = $self->{'cube'};      # radix^3

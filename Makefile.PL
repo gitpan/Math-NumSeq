@@ -35,6 +35,7 @@ MyMakeMakerExtras::WriteMakefile
                     'List::Util' => 0,
                     'Math::Libm' => 0,
                     'Math::Prime::XS' => '0.23', # version 0.23 for fix 1928099
+                    'Module::Util' => 0,
                     'Module::Load' => 0,
                     'Module::Pluggable' => 0,
 
@@ -51,18 +52,36 @@ MyMakeMakerExtras::WriteMakefile
    { resources =>
      { homepage => 'http://user42.tuxfamily.org/math-numseq/index.html',
      },
+     recommends =>
+     { 'Math::Prime::XS' => '0.25', # v.25 faster is_prime()
+     },
      optional_features =>
-     { maximum_devel =>
+     { maximum_interoperation =>
+       { description => 'Have maximum inter-operation with other modules (optional other stuff).',
+         requires => { 'Math::Symbolic' => 0,
+                       'Math::Expression::Evaluator' => 0,
+                       'Language::Expr' => 0,
+                       'Language::Expr::Compiler::Perl' => 0,
+                     },
+       },
+       maximum_tests =>
+       { description => 'Have "make test" do as much as possible.',
+         requires => { 'Data::Float'  => 0,
+                     },
+       },
+       maximum_devel =>
        { description => 'Stuff used variously for development.',
-         requires => { 'Devel::Comments'  => 0,
-                       'Smart::Comments'  => 0,
+         requires => { 'B::Concise'       => 0,
                        'Math::BigRat'     => 0,
                        'Math::Fibonacci'  => 0,
                        'Math::Polynomial' => 1,
                        'Math::Prime::TiedArray'  => 1,
                        'Math::TriangularNumbers' => 1,
-                       'Module::Util'     => 0,
                        'Devel::TimeThis'  => 1,
+                       'Bit::Vector'      => 0,
+                       'String::Parity'   => 0,
+                       'String::BitCount' => 0,
+                       'Path::Class'      => 0,
                      },
        },
      },

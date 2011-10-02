@@ -19,11 +19,14 @@
 
 use 5.004;
 use strict;
-use Test::More;
+use Test;
 
 use lib 't';
 use MyTestHelpers;
-MyTestHelpers::nowarnings();
+BEGIN { MyTestHelpers::nowarnings() }
+
+my $test_count = 213;
+plan tests => $test_count;
 
 # uncomment this to run the ### lines
 #use Devel::Comments '###';
@@ -33,19 +36,6 @@ POSIX::setlocale(POSIX::LC_ALL(), 'C'); # no message translations
 
 use constant DBL_INT_MAX => (POSIX::FLT_RADIX() ** POSIX::DBL_MANT_DIG());
 use constant MY_MAX => (POSIX::FLT_RADIX() ** (POSIX::DBL_MANT_DIG()-5));
-
-{
-  require Math::BigInt;
-  MyTestHelpers::diag ('Math::BigInt version ', Math::BigInt->VERSION);
-
-  my $n = Math::BigInt->new(1);
-  if (! $n->can('bsqrt')) {
-    MyTestHelpers::diag ('skip due to Math::BigInt no bsqrt()');
-    plan skip_all => 'skip due to Math::BigInt no bsqrt()';
-  }
-}
-
-plan tests => 114;
 
 sub diff_nums {
   my ($gotaref, $wantaref) = @_;
@@ -88,13 +78,41 @@ sub _min {
 }
 
 #------------------------------------------------------------------------------
+my ($pos_infinity, $neg_infinity, $nan);
+my ($is_infinity, $is_nan);
+if (! eval { require Data::Float; 1 }) {
+  MyTestHelpers::diag ("Data::Float not available");
+} elsif (! Data::Float::have_infinite()) {
+  MyTestHelpers::diag ("Data::Float have_infinite() is false");
+} else {
+  $is_infinity = sub {
+    my ($x) = @_;
+    return defined($x) && Data::Float::float_is_infinite($x);
+  };
+  $is_nan = sub {
+    my ($x) = @_;
+    return defined($x) && Data::Float::float_is_nan($x);
+  };
+  $pos_infinity = Data::Float::pos_infinity();
+  $neg_infinity = Data::Float::neg_infinity();
+  $nan = Data::Float::nan();
+}
+sub dbl_max {
+  require POSIX;
+  return POSIX::DBL_MAX();
+}
+sub dbl_max_neg {
+  require POSIX;
+  return - POSIX::DBL_MAX();
+}
+
+#------------------------------------------------------------------------------
 # Math::NumSeq various classes
 
 foreach my $elem
   (
    # ChampernowneBinaryLsb.pm
    # PrimeFactorCount.pm
-   # DigitsModulo.pm~
    # DigitsModulo.pm
    # Expression.pm~
    # Expression.pm
@@ -102,11 +120,55 @@ foreach my $elem
    # Ln2Bits.pm~
    # Ln2Bits.pm
    # MobiusFunction.pm
-   # PiBits.pm~
    # PiBits.pm
    # Repdigits.pm
    # SqrtDigits.pm
 
+   [ 'Math::NumSeq::HappyNumbers', 0,
+     [ 1,7,10,13,19,23, ],
+   ],
+
+   [ 'Math::NumSeq::DigitSum', 0,
+     [ 0,1,1,2,
+       1,2,2,3,
+       1,2,2,3,
+       2,3,3,4 ],
+     { radix => 2 },
+   ],
+   [ 'Math::NumSeq::DigitSum', 0,
+     [ 0,1,2,3,4,5,6,7,8,9,
+       1,2,3,4,5,6,7,8,9,10,
+       2,3,4,5,6,7,8,9,10,11,
+     ],
+   ],
+   [ 'Math::NumSeq::DigitSum', 0,
+     [ 0,1,4,9,16,25,36,49,64,81,    # 0 to 9
+       1,2,5,10,17,26,37,50,65,82,   # 10 to 19
+       4,5,8,13,20,29,40,53,68,85,   # 20 to 29
+     ],
+     { power => 2 },
+   ],
+   
+   [ 'Math::NumSeq::Fibonacci', 1,
+     [ 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144,
+       233, 377, 610, 987, 1597, ] ],
+   [ 'Math::NumSeq::LucasNumbers', 0,
+     [  1, 3, 4, 7, 11, 18, 29 ],
+   ],
+
+   # [ 'Math::NumSeq::Tribonacci', 0,
+   #   [ 0, 0, 1, 1, 2, 4, 7, 13, 24, ],
+   # ],
+   #
+   # [ 'Math::NumSeq::Abundant', 0,
+   #   [  12, 18, 20, 24, 30 ],
+   # ],
+   #
+
+   [ 'Math::NumSeq::SternDiatomic', 0,
+     [ 0, 1, 1, 2, 1, 3, 2, 3, 1, 4, 3, 5 ],
+   ],
+   
    [ 'Math::NumSeq::DigitSumModulo', 0,
      [ 0,  # 00
        1,  # 01
@@ -119,7 +181,7 @@ foreach my $elem
        1,  # 1000
      ],
      { radix => 2, modulus => 3 } ],
-
+   
    [ 'Math::NumSeq::DigitProduct', 0,
      [ 0,
        1,
@@ -131,7 +193,7 @@ foreach my $elem
        1,  # 111
        0, ],
      { radix => 2 } ],
-
+   
    [ 'Math::NumSeq::DigitProduct', 0,
      [ 0,1,2,
        0,1,2,
@@ -140,26 +202,26 @@ foreach my $elem
        0,0,0,  # 100,101,102
        0,1,2,
        0,2,4,
-
+       
        0,0,0,
        0,2,4,
        0,4,8, ],
      { radix => 3 } ],
-
+   
    [ 'Math::NumSeq::SqrtDigits', 0,
      [ 1, 0, 1, 1, 0, 1, 0, 1, 0, ],
      { radix => 2, sqrt => 2 } ],
-
+   
    [ 'Math::NumSeq::FractionDigits', 0,
      [ 0,9,0,9,0,9,0,9,0,9,0,9, ],
      { fraction => '1/11' } ],
-
+   
    [ 'Math::NumSeq::ProthNumbers', 0,
      [ 3, 5, 9, 13, 17, 25, 33, 41, 49, 57, 65, 81, 97, 113, 129, 145,
        161, 177, 193, 209, 225, 241, 257, 289, 321, 353, 385, 417, 449, 481,
        513, 545, 577, 609, 641, 673, 705, 737, 769, 801, 833, 865, 897, 929,
        961, 993, 1025, 1089, 1153, 1217, 1281, 1345, 1409 ] ],
-
+   
    # [ 'Math::NumSeq::TotientSum', 0,
    #   [ 0, 1, 2, 4, 6, 10, 12, 18, 22, 28, 32, 42 ],
    # ],
@@ -262,104 +324,104 @@ foreach my $elem
    #   { radix => 5,
    #     digit => 0,
    #   } ],
-
-
+   
+   
    [ 'Math::NumSeq::CullenNumbers', 0,
      [ 1, 3, 9, 25, 65, 161, 385, 897, 2049, 4609, ] ],
-
+   
    # [ 'Math::NumSeq::SumXsq3Ysq', 0,
    #   [ 4,7,12,13,16,19,21,28,31,36,37 ] ],
-   #
-   # [ 'Math::NumSeq::Palindromes', 0,
-   #   [ 0, 1, 3, 5, 7, 9, 15, 17, 21, 27, 31, 33, 45, 51,
-   #     63, 65, 73, 85, 93, 99, 107, 119, 127, 129, 153,
-   #     165, 189, 195, 219, 231, 255, 257, 273, 297, 313,
-   #     325, 341, 365, 381, 387, 403, 427, 443, 455, 471,
-   #     495, 511, 513, 561, 585, 633, 645, 693, 717, 765,
-   #     771, 819, 843, ],
-   #   { radix => 2 },
-   # ],
-   # [ 'Math::NumSeq::Palindromes', 0,
-   #   [ 0, 1, 2, 4, 8, 10, 13, 16, 20, 23, 26, 28, 40, 52,
-   #     56, 68, 80, 82, 91, 100, 112, 121, 130, 142, 151,
-   #     160, 164, 173, 182, 194, 203, 212, 224, 233, 242,
-   #     244, 280, 316, 328, 364, 400, 412, 448, 484, 488,
-   #     524, 560, 572, 608, 644, 656, 692, 728, 730, 757,
-   #     784, 820, 847, 874, 910, ],
-   #   { radix => 3 },
-   # ],
-   # [ 'Math::NumSeq::Palindromes', 0,
-   #   [ 0, 1, 2, 3, 5, 10, 15, 17, 21, 25, 29, 34, 38, 42,
-   #     46, 51, 55, 59, 63, 65, 85, 105, 125, 130, 150, 170,
-   #     190, 195, 215, 235, 255, 257, 273, 289, 305, 325, 341,
-   #     357, 373, 393, 409, 425, 441, 461, 477, 493, 509, 514,
-   #     530, 546, 562, 582, 598, 614, 630, 650, 666, 682, 698,
-   #     718, 734, ],
-   #   { radix => 4 },
-   # ],
-   # [ 'Math::NumSeq::Palindromes', 0,
-   #   [ 0, 1, 2, 3, 4, 6, 12, 18, 24, 26, 31, 36, 41, 46,
-   #     52, 57, 62, 67, 72, 78, 83, 88, 93, 98, 104, 109, 114,
-   #     119, 124, 126, 156, 186, 216, 246, 252, 282, 312, 342,
-   #     372, 378, 408, 438, 468, 498, 504, 534, 564, 594, 624,
-   #     626, 651, 676, 701, 726, 756, 781, ],
-   #   { radix => 5 },
-   # ],
-   # [ 'Math::NumSeq::Palindromes', 0,
-   #   [ 0, 1, 2, 3, 4, 5, 7, 14, 21, 28, 35, 37, 43, 49, 55,
-   #     61, 67, 74, 80, 86, 92, 98, 104, 111, 117, 123, 129,
-   #     135, 141, 148, 154, 160, 166, 172, 178, 185, 191, 197,
-   #     203, 209, 215, 217, 259, 301, 343, 385, 427, 434, 476,
-   #     518, 560, 602, 644, 651, 693, 735, ],
-   #   { radix => 6 },
-   # ],
-   # [ 'Math::NumSeq::Palindromes', 0,
-   #   [ 0, 1, 2, 3, 4, 5, 6, 8, 16, 24, 32, 40, 48, 50, 57,
-   #     64, 71, 78, 85, 92, 100, 107, 114, 121, 128, 135, 142,
-   #     150, 157, 164, 171, 178, 185, 192, 200, 207, 214, 221,
-   #     228, 235, 242, 250, 257, 264, 271, 278, 285, 292, 300,
-   #     307, 314, 321, 328, 335, 342, ],
-   #   { radix => 7 },
-   # ],
-   # [ 'Math::NumSeq::Palindromes', 0,
-   #   [ 0, 1, 2, 3, 4, 5, 6, 7, 9, 18, 27, 36, 45, 54, 63,
-   #     65, 73, 81, 89, 97, 105, 113, 121, 130, 138, 146, 154,
-   #     162, 170, 178, 186, 195, 203, 211, 219, 227, 235, 243,
-   #     251, 260, 268, 276, 284, 292, 300, 308, 316, 325, 333,
-   #     341, 349, 357, 365, 373, 381, 390, ],
-   #   { radix => 8 },
-   # ],
-   # [ 'Math::NumSeq::Palindromes', 0,
-   #   [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 20, 30, 40, 50, 60,
-   #     70, 80, 82, 91, 100, 109, 118, 127, 136, 145, 154,
-   #     164, 173, 182, 191, 200, 209, 218, 227, 236, 246, 255,
-   #     264, 273, 282, 291, 300, 309, 318, 328, 337, 346, 355,
-   #     364, 373, 382, 391, 400, 410, 419, ],
-   #   { radix => 9 },
-   # ],
-   # [ 'Math::NumSeq::Palindromes', 0,
-   #   [ 0,1,2,3,4,5,6,7,8,9,
-   #     11,22,33,44,55,66,77,88,99,
-   #     101,111,121,131,141,151,161,171,181,191,
-   #     202,212,222,232,242,252,262,272,282,292,
-   #     303,313,323,333,343,353,363,373,383,393,
-   #     404,414,424,434,444,454,464,474,484,494,
-   #     505,515,525,535,545,555,565,575,585,595,
-   #     606,616,626,636,646,656,666,676,686,696,
-   #     707,717,727,737,747,757,767,777,787,797,
-   #     808,818,828,838,848,858,868,878,888,898,
-   #     909,919,929,939,949,959,969,979,989,999,
-   #     1001,1111,1221,1331,1441,1551,1661,1771,1881,1991,
-   #   ] ],
-
+   
+   [ 'Math::NumSeq::Palindromes', 0,
+     [ 0, 1, 3, 5, 7, 9, 15, 17, 21, 27, 31, 33, 45, 51,
+       63, 65, 73, 85, 93, 99, 107, 119, 127, 129, 153,
+       165, 189, 195, 219, 231, 255, 257, 273, 297, 313,
+       325, 341, 365, 381, 387, 403, 427, 443, 455, 471,
+       495, 511, 513, 561, 585, 633, 645, 693, 717, 765,
+       771, 819, 843, ],
+     { radix => 2 },
+   ],
+   [ 'Math::NumSeq::Palindromes', 0,
+     [ 0, 1, 2, 4, 8, 10, 13, 16, 20, 23, 26, 28, 40, 52,
+       56, 68, 80, 82, 91, 100, 112, 121, 130, 142, 151,
+       160, 164, 173, 182, 194, 203, 212, 224, 233, 242,
+       244, 280, 316, 328, 364, 400, 412, 448, 484, 488,
+       524, 560, 572, 608, 644, 656, 692, 728, 730, 757,
+       784, 820, 847, 874, 910, ],
+     { radix => 3 },
+   ],
+   [ 'Math::NumSeq::Palindromes', 0,
+     [ 0, 1, 2, 3, 5, 10, 15, 17, 21, 25, 29, 34, 38, 42,
+       46, 51, 55, 59, 63, 65, 85, 105, 125, 130, 150, 170,
+       190, 195, 215, 235, 255, 257, 273, 289, 305, 325, 341,
+       357, 373, 393, 409, 425, 441, 461, 477, 493, 509, 514,
+       530, 546, 562, 582, 598, 614, 630, 650, 666, 682, 698,
+       718, 734, ],
+     { radix => 4 },
+   ],
+   [ 'Math::NumSeq::Palindromes', 0,
+     [ 0, 1, 2, 3, 4, 6, 12, 18, 24, 26, 31, 36, 41, 46,
+       52, 57, 62, 67, 72, 78, 83, 88, 93, 98, 104, 109, 114,
+       119, 124, 126, 156, 186, 216, 246, 252, 282, 312, 342,
+       372, 378, 408, 438, 468, 498, 504, 534, 564, 594, 624,
+       626, 651, 676, 701, 726, 756, 781, ],
+     { radix => 5 },
+   ],
+   [ 'Math::NumSeq::Palindromes', 0,
+     [ 0, 1, 2, 3, 4, 5, 7, 14, 21, 28, 35, 37, 43, 49, 55,
+       61, 67, 74, 80, 86, 92, 98, 104, 111, 117, 123, 129,
+       135, 141, 148, 154, 160, 166, 172, 178, 185, 191, 197,
+       203, 209, 215, 217, 259, 301, 343, 385, 427, 434, 476,
+       518, 560, 602, 644, 651, 693, 735, ],
+     { radix => 6 },
+   ],
+   [ 'Math::NumSeq::Palindromes', 0,
+     [ 0, 1, 2, 3, 4, 5, 6, 8, 16, 24, 32, 40, 48, 50, 57,
+       64, 71, 78, 85, 92, 100, 107, 114, 121, 128, 135, 142,
+       150, 157, 164, 171, 178, 185, 192, 200, 207, 214, 221,
+       228, 235, 242, 250, 257, 264, 271, 278, 285, 292, 300,
+       307, 314, 321, 328, 335, 342, ],
+     { radix => 7 },
+   ],
+   [ 'Math::NumSeq::Palindromes', 0,
+     [ 0, 1, 2, 3, 4, 5, 6, 7, 9, 18, 27, 36, 45, 54, 63,
+       65, 73, 81, 89, 97, 105, 113, 121, 130, 138, 146, 154,
+       162, 170, 178, 186, 195, 203, 211, 219, 227, 235, 243,
+       251, 260, 268, 276, 284, 292, 300, 308, 316, 325, 333,
+       341, 349, 357, 365, 373, 381, 390, ],
+     { radix => 8 },
+   ],
+   [ 'Math::NumSeq::Palindromes', 0,
+     [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 20, 30, 40, 50, 60,
+       70, 80, 82, 91, 100, 109, 118, 127, 136, 145, 154,
+       164, 173, 182, 191, 200, 209, 218, 227, 236, 246, 255,
+       264, 273, 282, 291, 300, 309, 318, 328, 337, 346, 355,
+       364, 373, 382, 391, 400, 410, 419, ],
+     { radix => 9 },
+   ],
+   [ 'Math::NumSeq::Palindromes', 0,
+     [ 0,1,2,3,4,5,6,7,8,9,
+       11,22,33,44,55,66,77,88,99,
+       101,111,121,131,141,151,161,171,181,191,
+       202,212,222,232,242,252,262,272,282,292,
+       303,313,323,333,343,353,363,373,383,393,
+       404,414,424,434,444,454,464,474,484,494,
+       505,515,525,535,545,555,565,575,585,595,
+       606,616,626,636,646,656,666,676,686,696,
+       707,717,727,737,747,757,767,777,787,797,
+       808,818,828,838,848,858,868,878,888,898,
+       909,919,929,939,949,959,969,979,989,999,
+       1001,1111,1221,1331,1441,1551,1661,1771,1881,1991,
+     ] ],
+   
    [ 'Math::NumSeq::Factorials', 0,
      [ 1, 1, 2, 6, 24, 120, 720 ],
    ],
-
+   
    [ 'Math::NumSeq::Primorials', 0,
      [ 1, 2, 6, 30, 210, ],
    ],
-
+   
    # [ 'Math::NumSeq::SumTwoSquares', 1,
    #   [ 2, 5, 8, 10, 13, 17, 18, 20, 25, 26, 29, 32, 34, 37,
    #     40, 41, 45, 50, 52, 53, 58, 61, 65, 68, 72, 73, 74,
@@ -370,17 +432,17 @@ foreach my $elem
    #
    # [ 'Math::NumSeq::PythagoreanHypots', 1,
    #   [ 5, 10, 13, 15, 17, 20, 25, 26, 29, 30 ] ],
-   #
-   # [ 'Math::NumSeq::All', 0,
-   #   [ 0, 1, 2, 3, 4, 5, 6, 7 ] ],
+
+   [ 'Math::NumSeq::All', 0,
+     [ 0, 1, 2, 3, 4, 5, 6, 7 ] ],
    # [ 'Math::NumSeq::All', 17,
    #   [ 17, 18, 19 ] ],
-   #
+
    [ 'Math::NumSeq::Odd', 1,
      [ 1, 3, 5, 7, 9, 11, 13 ] ],
    [ 'Math::NumSeq::Odd', 6,
      [ 7, 9, 11, 13 ] ],
-
+   
    [ 'Math::NumSeq::Even', 0,
      [ 0, 2, 4, 6, 8, 10, 12 ] ],
    [ 'Math::NumSeq::Even', 5,
@@ -394,21 +456,6 @@ foreach my $elem
    # [ 'Math::NumSeq::Obstinate', 1,
    #   [ 1, 3, 127, ] ],
 
-   # [ 'Math::NumSeq::Fibonacci', 1,
-   #   [ 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144,
-   #     233, 377, 610, 987, 1597, ] ],
-
-   # [ 'Math::NumSeq::Tribonacci', 0,
-   #   [ 0, 0, 1, 1, 2, 4, 7, 13, 24, ],
-   # ],
-   #
-   # [ 'Math::NumSeq::Abundant', 0,
-   #   [  12, 18, 20, 24, 30 ],
-   # ],
-   #
-   # [ 'Math::NumSeq::Lucas', 0,
-   #   [  1, 3, 4, 7, 11, 18, 29 ],
-   # ],
    # [ 'Math::NumSeq::RepdigitAnyBase', 0,
    #   [  0,
    #      7,  # 111 base 2
@@ -446,6 +493,18 @@ foreach my $elem
      ],
      { radix => 3,
        digit => 2,
+     },
+   ],
+   [ 'Math::NumSeq::RadixWithoutDigit', 0,
+     [ 0, 1,    # 0,1
+       3, 4,    # 10, 11
+       # 6, 7,    # 20, 21
+       9, 10,   # 100, 101
+       12, 13,  # 110, 111
+       27, 28,  # 1000, 1001
+     ],
+     { radix => 3,
+       digit => -1,
      },
    ],
 
@@ -495,15 +554,6 @@ foreach my $elem
    #     0x08, 0x09, 0x0A,    # 20,21,22
    #     0x10, 0x11, 0x12,    # 100,101,102
    #     0x14, 0x15, 0x16,    # 200,201,202
-   #   ] ],
-   #
-   # [ 'Math::NumSeq::TernaryWithout2', 0,
-   #   [ 0, 1,    # 0,1
-   #     3, 4,    # 10, 11
-   #     # 6, 7,    # 20, 21
-   #     9, 10,   # 100, 101
-   #     12, 13,  # 110, 111
-   #     27, 28,  # 1000, 1001
    #   ] ],
 
    [ 'Math::NumSeq::StarNumbers', 0,
@@ -684,12 +734,12 @@ foreach my $elem
    #   [ 12, 29, 70, 169, 408, 985, 2378, 5741,
    #     13860, 33461, 80782, 195025, 470832, 1136689,
    #   ] ],
-   
+
    [ 'Math::NumSeq::Primes', 1,
      [ 2, 3, 5, 7, 11, 13, 17 ] ],
    # [ 'Math::NumSeq::Primes', 10,
    #   [ 11, 13, 17 ] ],
-   
+
    [ 'Math::NumSeq::TwinPrimes', 0,
      [ 3, 5, 7, 11, 13, 17, 19, 29, 31 ],
      { pairs => 'both' },
@@ -698,7 +748,7 @@ foreach my $elem
    #   [ 11, 13, 17, 19, 29, 31 ],
    #   { pairs => 'both' },
    # ],
-   
+
    [ 'Math::NumSeq::TwinPrimes', 0,
      [ 3, 5, 11, 17, 29 ],
      { pairs => 'first' },
@@ -707,7 +757,7 @@ foreach my $elem
    #   [ 5, 11, 17, 29 ],
    #   { pairs => 'first' },
    # ],
-   
+
    [ 'Math::NumSeq::TwinPrimes', 0,
      [ 5, 7, 13, 19, 31 ],
      { pairs => 'second' },
@@ -716,7 +766,7 @@ foreach my $elem
    #   [ 7, 13, 19, 31 ],
    #   { pairs => 'second' },
    # ],
-   
+
    # # sloanes
    # # http://oeis.org/A001358
    # [ 'Math::NumSeq::SemiPrimes', 0,
@@ -741,7 +791,7 @@ foreach my $elem
        1223, 1229, 1289, 1409, 1439, 1451, 1481, 1499,
        1511, 1559 ],
    ],
-   
+
    # # http://oeis.org/A005385
    # [ 'Math::NumSeq::SafePrimes', 0,
    #   [ 5, 7, 11, 23, 47, 59, 83, 107, 167, 179, 227, 263,
@@ -922,17 +972,19 @@ foreach my $elem
   ) {
   my ($class, $lo, $want, $values_options, $test_options) = @$elem;
   $values_options ||= {};
+  my $good = 1;
 
   my $name = join (' ',
                    $class,
                    map {"$_=$values_options->{$_}"} keys %$values_options);
+
   eval "require $class; 1" or die $@;
   my $seq = $class->new (lo => $lo,
                          %$values_options);
 
   #### $want
   my $hi = $want->[-1];
-  # diag "$name $lo to ",$hi;
+  # MyTestHelpers::diag ("$name $lo to ",$hi);
 
   # SKIP: {
   #    require Module::Load;
@@ -959,60 +1011,101 @@ foreach my $elem
     } 0 .. $#$want ];
     foreach (@$got) { if ($_ == 0) { $_ = 0 } }  # avoid "-0"
 
-    is_deeply ($got, $want, "$name, lo=$lo hi=$hi");
-    if (! eq_array($got,$want)) {
-      diag "got len ".scalar(@$got);
-      diag "want len ".scalar(@$want);
-      if ($#$got > 200) { $#$got = 200 }
-      if ($#$want > 200) { $#$want = 200 }
-      diag "got  ". join(',', map {defined() ? $_ : 'undef'} @$got);
-      diag "want ". join(',', map {defined() ? $_ : 'undef'} @$want);
+    my $got_str = join(',', map {defined() ? $_ : 'undef'} @$got);
+    my $want_str = join(',', map {defined() ? $_ : 'undef'} @$want);
+    ok ($got_str, $want_str, "$name, lo=$lo hi=$hi");
+    if ($got_str ne $want_str) {
+      MyTestHelpers::diag ("got len ".scalar(@$got));
+      MyTestHelpers::diag ("want len ".scalar(@$want));
+      MyTestHelpers::diag ("got  ", substr ($got_str, 0, 256));
+      MyTestHelpers::diag ("want ", substr ($want_str, 0, 256));
     }
   }
 
-SKIP: {
-  $seq->can('pred')
-    or skip "no pred() for $seq", 1;
-  if ($seq->characteristic('count')) {
-    skip "no pred on characteristic(count) for $seq", 1;
-  }
-  if ($seq->characteristic('digits')) {
-    skip "no pred on characteristic(digits) for $seq", 1;
-  }
-  if ($seq->characteristic('modulus')) {
-    skip "no pred on characteristic(modulus) for $seq", 1;
-  }
-
-  if ($hi > 1000) {
-    $hi = 1000;
-    $want = [ grep {$_<=$hi} @$want ];
-  }
-  my @got;
-  foreach my $value (_min(@$want) .. $want->[-1]) {
-    ### $value
-    if ($seq->pred($value)) {
-      push @got, $value;
+  ### ith() ...
+  if (! $seq->can('ith')) {
+    # skip "no ith() for $seq", 1;
+  } else {
+    if (defined $pos_infinity) {
+      # MyTestHelpers::diag ("ith(pos_infinity) ", $name);
+      $seq->ith($pos_infinity);
+    }
+    if (defined $neg_infinity) {
+      $seq->ith($neg_infinity);
+    }
+    if (defined $nan) {
+      $seq->ith($nan);
     }
   }
-  _delete_duplicates($want);
-  #### $want
-  my $got = \@got;
-  my $diff = diff_nums($got, $want);
-  is ($diff, undef,
-      "$class pred() lo=$lo hi=$hi");
-  if (defined $diff) {
-    diag "got len ".scalar(@$got);
-    diag "want len ".scalar(@$want);
-    if ($#$got > 200) { $#$got = 200 }
-    if ($#$want > 200) { $#$want = 200 }
-    diag "got  ". join(',', map {defined() ? $_ : 'undef'} @$got);
-    diag "want ". join(',', map {defined() ? $_ : 'undef'} @$want);
+
+  ### pred() ...
+  if (! $seq->can('pred')) {
+  } else {
+    # MyTestHelpers::diag ($name, "-- pred()");
+
+    if (defined $pos_infinity) {
+      $seq->pred($pos_infinity);
+    }
+    if (defined $neg_infinity) {
+      $seq->pred($neg_infinity);
+    }
+    if (defined $nan) {
+      $seq->pred($nan);
+    }
+
+    {
+      my $count = 0;
+      foreach my $value (@$want) {
+        if (! $seq->pred($value)) {
+          $good = 0;
+          MyTestHelpers::diag ($name, " -- pred($value) false");
+          last if $count++ > 10;
+        }
+      }
+    }
+
+    if ($seq->characteristic('count')) {
+      # MyTestHelpers::diag ($name, "-- no pred() on characteristic(count)");
+    } elsif ($seq->characteristic('digits')) {
+      # MyTestHelpers::diag ($name, "-- no pred() on characteristic(digits)");
+    } elsif (! $seq->characteristic('monotonic')) {
+      # MyTestHelpers::diag ($name, "-- no pred() on not characteristic(monotonic)");
+    } elsif ($seq->characteristic('modulus')) {
+      # MyTestHelpers::diag ($name, "-- no pred() on characteristic(modulus)");
+    } else {
+
+      if ($hi > 1000) {
+        $hi = 1000;
+        $want = [ grep {$_<=$hi} @$want ];
+      }
+      my @got;
+      foreach my $value (_min(@$want) .. $want->[-1]) {
+        ### $value
+        if ($seq->pred($value)) {
+          push @got, $value;
+        }
+      }
+      _delete_duplicates($want);
+      #### $want
+      my $got = \@got;
+      my $diff = diff_nums($got, $want);
+      ok ($diff, undef, "$class pred() lo=$lo hi=$hi");
+      if (defined $diff) {
+        MyTestHelpers::diag ("got len ".scalar(@$got));
+        MyTestHelpers::diag ("want len ".scalar(@$want));
+        if ($#$got > 200) { $#$got = 200 }
+        if ($#$want > 200) { $#$want = 200 }
+        MyTestHelpers::diag ("got  ". join(',', map {defined() ? $_ : 'undef'} @$got));
+        MyTestHelpers::diag ("want ". join(',', map {defined() ? $_ : 'undef'} @$want));
+      }
+    }
   }
-}
+
+  ok ($good, 1, $name);
 }
 
 #------------------------------------------------------------------------------
 
-# diag "Math::Prime::XS version ", Math::Prime::XS->VERSION;
+# MyTestHelpers::diag ("Math::Prime::XS version ", Math::Prime::XS->VERSION);
 
 exit 0;

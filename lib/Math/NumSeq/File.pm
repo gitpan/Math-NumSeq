@@ -28,11 +28,11 @@ use strict;
 use Carp;
 use Fcntl;
 
+use vars '$VERSION', '@ISA';
+$VERSION = 7;
 use Math::NumSeq;
-use base 'Math::NumSeq';
+@ISA = ('Math::NumSeq');
 
-use vars '$VERSION';
-$VERSION = 6;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;

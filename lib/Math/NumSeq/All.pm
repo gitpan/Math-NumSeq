@@ -1,4 +1,4 @@
-# Copyright 2011 Kevin Ryde
+# Copyright 2010, 2011 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -15,69 +15,45 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
-
-# Edsgar Dijkstra
-#    http://www.cs.utexas.edu/users/EWD/ewd05xx/EWD570.PDF
-#    http://www.cs.utexas.edu/users/EWD/ewd05xx/EWD578.PDF
-#
-# from 1858
-#
-
-package Math::NumSeq::SternDiatomic;
+package Math::NumSeq::All;
 use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
 $VERSION = 7;
 use Math::NumSeq;
-use Math::NumSeq::Base::IterateIth;
-@ISA = ('Math::NumSeq::Base::IterateIth',
-        'Math::NumSeq');
-*_is_infinite = \&Math::NumSeq::_is_infinite;
+@ISA = ('Math::NumSeq');
 
 # uncomment this to run the ### lines
-#use Devel::Comments;
+#use Smart::Comments;
 
-use constant description => Math::NumSeq::__('Stern\'s diatomic sequence.');
+use constant name => Math::NumSeq::__('All Integers');
+use constant description => Math::NumSeq::__('All integers 0,1,2,3,etc.');
 use constant values_min => 0;
-use constant characteristic_count => 1;
-use constant characteristic_monotonic => 0;
+use constant characteristic_monotonic => 2;
 
-# cf A126606 - this stern diatomic is A126606(i+1)/2
-#    A049455 - another variation ...
-#    A049456 - with the 1s doubled up ...
-#    A174980 - type ([0,1],1) ...
+# cf A000027 natural numbers starting 1
 #
-use constant oeis_anum => 'A002487';
+use constant oeis_anum => 'A001477';   # non-negatives, so starting 0
+
+sub rewind {
+  my ($self) = @_;
+  $self->{'i'} = $self->{'lo'} || 0;
+}
+sub next {
+  my ($self) = @_;
+  my $i = $self->{'i'}++;
+  return ($i, $i);
+}
 
 sub ith {
   my ($self, $i) = @_;
-
-  if ($i <= 0) {
-    return 0;
-  }
-  if (_is_infinite($i)) {  # don't loop forever if $value is +/-infinity
-    return $i;
-  }
-
-  my $b = ($i & 0); # inherit bignum 0
-  my $a = $b + 1;   # inherit bignum 1
-
-  while ($i) {
-    if ($i % 2) {
-      $b += $a;
-    } else {
-      $a += $b;
-    }
-    $i = int($i/2);
-  }
-  return $b;
+  return $i;
 }
 
 sub pred {
   my ($self, $value) = @_;
-  ### SternDiatomic pred(): $value
-  return ($value >= 0 && $value == int($value));
+  return ($value == int($value));
 }
 
 1;
@@ -87,18 +63,20 @@ __END__
 
 =head1 NAME
 
-Math::NumSeq::SternDiatomic -- Stern's diatomic sequence
+Math::NumSeq::All -- all integers
 
 =head1 SYNOPSIS
 
- use Math::NumSeq::SternDiatomic;
- my $seq = Math::NumSeq::SternDiatomic->new;
+ use Math::NumSeq::All;
+ my $seq = Math::NumSeq::All->new;
  my ($i, $value) = $seq->next;
 
 =head1 DESCRIPTION
 
-The count of how many of a given digit is in C<$i> when written out in a
-given radix.  The default is to count how many 9s in decimal.
+The non-negative integers 0,1,2,3,4, etc.
+
+As a module this is trivial, but it helps put all integers into things using
+NumSeq.
 
 =head1 FUNCTIONS
 
@@ -106,20 +84,25 @@ See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 =over 4
 
-=item C<$seq = Math::NumSeq::SternDiatomic-E<gt>new ()>
+=item C<$seq = Math::NumSeq::All-E<gt>new (key=E<gt>value,...)>
 
 Create and return a new sequence object.
 
+=item C<$value = $seq-E<gt>ith($i)>
+
+Return C<$i>.
+
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value> occurs as value in the sequence, which means simply
-C<$value>=0>.
+Return true if C<$value> is an integer.
 
 =back
 
 =head1 SEE ALSO
 
-L<Math::NumSeq>
+L<Math::NumSeq>,
+L<Math::NumSeq::Even>,
+L<Math::NumSeq::Odd>
 
 =head1 HOME PAGE
 
@@ -127,7 +110,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2011 Kevin Ryde
+Copyright 2010, 2011 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

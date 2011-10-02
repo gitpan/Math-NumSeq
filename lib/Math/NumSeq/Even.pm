@@ -19,11 +19,11 @@ package Math::NumSeq::Even;
 use 5.004;
 use strict;
 
+use vars '$VERSION', '@ISA';
+$VERSION = 7;
 use Math::NumSeq;
-use base 'Math::NumSeq';
+@ISA = ('Math::NumSeq');
 
-use vars '$VERSION';
-$VERSION = 6;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -43,15 +43,15 @@ sub next {
   my $i = $self->{'i'}++;
   return ($i, 2*$i);
 }
-sub pred {
-  my ($class_or_self, $value) = @_;
-  ### Even pred(): $value
-  return ($value == int($value)
-          && ($value % 2) == 0);
-}
 sub ith {
   my ($self, $i) = @_;
   return 2*$i; # $self->{'lo'} + 2*$i;
+}
+sub pred {
+  my ($self, $value) = @_;
+  ### Even pred(): $value
+  return ($value == int($value)
+          && ($value % 2) == 0);
 }
 
 1;
@@ -71,7 +71,7 @@ Math::NumSeq::Even -- even integers
 
 =head1 DESCRIPTION
 
-The sequence of even integers 0,2,4,6,8, etc.
+The even integers 0,2,4,6,8, etc.
 
 =head1 FUNCTIONS
 
@@ -96,7 +96,8 @@ Return true if C<$value> is even.
 =head1 SEE ALSO
 
 L<Math::NumSeq>,
-L<Math::NumSeq::Odd>
+L<Math::NumSeq::Odd>,
+L<Math::NumSeq::All>
 
 =head1 HOME PAGE
 

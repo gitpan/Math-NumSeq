@@ -19,7 +19,8 @@
 
 use 5.004;
 use strict;
-use Test::More tests => 7;
+use Test;
+plan tests => 7;
 
 use lib 't';
 use MyTestHelpers;
@@ -34,14 +35,16 @@ use Math::NumSeq::Expression;
 # VERSION
 
 {
-  my $want_version = 6;
-  is ($Math::NumSeq::Expression::VERSION, $want_version, 'VERSION variable');
-  is (Math::NumSeq::Expression->VERSION,  $want_version, 'VERSION class method');
+  my $want_version = 7;
+  ok ($Math::NumSeq::Expression::VERSION, $want_version, 'VERSION variable');
+  ok (Math::NumSeq::Expression->VERSION,  $want_version, 'VERSION class method');
 
   ok (eval { Math::NumSeq::Expression->VERSION($want_version); 1 },
+      1,
       "VERSION class check $want_version");
   my $check_version = $want_version + 1000;
   ok (! eval { Math::NumSeq::Expression->VERSION($check_version); 1 },
+      1,
       "VERSION class check $check_version");
 }
 
@@ -50,15 +53,15 @@ use Math::NumSeq::Expression;
 
 {
   my $seq = Math::NumSeq::Expression->new (expression => '2*i');
-  is (join(',',map {$seq->next} 1,2,3), '0,0,1,2,2,4');
+  ok (join(',',map {$seq->next} 1,2,3), '0,0,1,2,2,4');
 }
 {
   my $seq = Math::NumSeq::Expression->new (expression => 'i*2');
-  is (join(',',map {$seq->next} 1,2,3), '0,0,1,2,2,4');
+  ok (join(',',map {$seq->next} 1,2,3), '0,0,1,2,2,4');
 }
 {
   my $seq = Math::NumSeq::Expression->new (expression => '2*$i');
-  is (join(',',map {$seq->next} 1,2,3), '0,0,1,2,2,4');
+  ok (join(',',map {$seq->next} 1,2,3), '0,0,1,2,2,4');
 }
 
 

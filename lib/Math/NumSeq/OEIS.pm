@@ -21,7 +21,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION','@ISA';
-$VERSION = 6;
+$VERSION = 7;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -50,11 +50,8 @@ sub parameter_info_array {
 ### parameter_info_array parameter_info_array()
 
 sub oeis_anum {
-  my ($class_or_self) = @_;
-  if (ref $class_or_self) {
-    return $class_or_self->{'oeis_anum'};
-  }
-  return undef;
+  my ($self) = @_;
+  return $self->{'oeis_anum'};
 }
 
 sub new {

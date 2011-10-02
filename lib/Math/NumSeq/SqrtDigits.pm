@@ -22,7 +22,7 @@ use Carp;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 6;
+$VERSION = 7;
 
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
@@ -101,14 +101,10 @@ my %perfect_square = (16 => 1,
                       64 => 1,
                       81 => 1);
 sub oeis_anum {
-  my ($class_or_self) = @_;
+  my ($self) = @_;
   ### oeis_anum() ...
-  my $sqrt = (ref $class_or_self
-              ? $class_or_self->{'sqrt'}
-              : $class_or_self->parameter_default('sqrt'));
-  my $radix = (ref $class_or_self
-               ? $class_or_self->{'radix'}
-               : $class_or_self->parameter_default('radix'));
+  my $sqrt = $self->{'sqrt'};
+  my $radix = $self->{'radix'};
   if ($radix == 10
       && $sqrt >= 10 && $sqrt <= 99
       && ! $perfect_square{$sqrt}) {

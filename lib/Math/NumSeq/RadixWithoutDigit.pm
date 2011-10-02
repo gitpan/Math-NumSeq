@@ -20,18 +20,19 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 6;
+$VERSION = 7;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
+*_is_infinite = \&Math::NumSeq::_is_infinite;
 
 # uncomment this to run the ### lines
 #use Devel::Comments;
 
 # use constant name => Math::NumSeq::__('Without chosen digit');
-use constant description => Math::NumSeq::__('Integers which don\'t have a given digit when written out in a radix.  Digit -1 means the highest digit, ie. radix-1.');
+use constant description => Math::NumSeq::__('Integers which don\'t have a given digit when written out in a radix.');
 use constant characteristic_monotonic => 2;
 
 use Math::NumSeq::Base::Digits;
@@ -48,6 +49,7 @@ use constant parameter_info_array =>
     },
   ];
 
+#------------------------------------------------------------------------------
 my @oeis_anum;
 
 #-----
@@ -91,13 +93,9 @@ $oeis_anum[5]->[4] = 'A023737'; # base 5 no 4
 #-----
 
 sub oeis_anum {
-  my ($class_or_self) = @_;
-  my $radix = (ref $class_or_self
-               ? $class_or_self->{'radix'}
-               : $class_or_self->parameter_default('radix'));
-  my $digit = (ref $class_or_self
-               ? $class_or_self->{'digit'}
-               : $class_or_self->parameter_default('digit'));
+  my ($self) = @_;
+  my $radix = $self->{'radix'};
+  my $digit = $self->{'digit'};
   if ($digit == -1) {
     $digit = $radix-1;
   }
@@ -105,6 +103,7 @@ sub oeis_anum {
 }
 
 
+#------------------------------------------------------------------------------
 
 sub rewind {
   my ($self) = @_;
@@ -171,8 +170,14 @@ sub rewind {
 sub ith {
   my ($self, $i) = @_;
   ### RadixWithoutDigit ith(): $i
+
+  if (_is_infinite($i)) {
+    return $i;  # don't loop forever if $i is +infinity
+  }
+
   my $radix = $self->{'radix'};
   my $digit = $self->{'digit'};
+
   if ($radix == 2) {
     if ($digit == 0) {
       return (2 << $i) - 1;
@@ -181,8 +186,8 @@ sub ith {
     }
   }
 
-  if ($i == $i-1) {
-    return $i;  # don't loop forever if $i is +infinity
+  if ($digit == -1) {
+    $digit = $radix-1;
   }
 
   my $r1 = $radix - 1;
@@ -258,11 +263,18 @@ sub ith {
 
 sub pred {
   my ($self, $value) = @_;
+
   my $radix = $self->{'radix'};
   my $digit = $self->{'digit'};
-  if ($digit == 0 && $value == 0) {
+  if ($digit == -1) {
+    $digit = $radix-1;
+  }
+
+  if (($digit == 0 && $value == 0)
+      || _is_infinite($value)) {  # don't loop forever if $value is +infinity
     return 0;
   }
+
   while ($value) {
     if (($value % $radix) == $digit) {
       return 0;

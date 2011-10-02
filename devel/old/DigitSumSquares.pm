@@ -15,8 +15,7 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
-
-package Math::NumSeq::DigitProduct;
+package App::MathImage::NumSeq::DigitSumSquares;
 use 5.004;
 use strict;
 
@@ -27,30 +26,26 @@ use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
-*_is_infinite = \&Math::NumSeq::_is_infinite;
 
-use constant name => Math::NumSeq::__('Digit Product');
-use constant description => Math::NumSeq::__('Product of digits a given radix.');
-use constant characteristic_smaller => 1;
+# uncomment this to run the ### lines
+#use Smart::Comments;
+
+
+use constant name => Math::NumSeq::__('Digit Sum of Squares');
+use constant description => Math::NumSeq::__('Sum of the squares of the digits in the given radix.  (For binary this is how many 1 bits.)');
+use constant values_min => 0;
 use constant characteristic_monotonic => 0;
+use constant characteristic_smaller => 1;
 
 use Math::NumSeq::Base::Digits;
 *parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
 
-use constant values_min => 0;
-sub values_max {
-  my ($self) = @_;
-  return ($self->{'radix'} == 2 ? 1 : undef);
-}  
 
 #------------------------------------------------------------------------------
-# apparently no ternary or base 4 ...
-# cf A036987 binary, but takes i=0 to be an empty product equal to 1
-
 my @oeis_anum;
-
-$oeis_anum[10] = 'A007954'; # 10 decimal, starting from 0
-# OEIS-Catalogue: A007954 radix=10
+$oeis_anum[2] = 'A000120';   # 2 binary, number of 1s, cf DigitCount
+$oeis_anum[10] = 'A003132';
+# OEIS-Catalogue: A003132
 
 sub oeis_anum {
   my ($self) = @_;
@@ -59,35 +54,41 @@ sub oeis_anum {
 
 #------------------------------------------------------------------------------
 
+# ENHANCE-ME:
+# next() is add 2*d+1 until wrap around then subtract
+#
+# sub next {
+#   my ($self) = @_;
+#   my $radix = $self->{'radix'};
+#   my $sum = $self->{'sum'} + 1;
+#   if (++$self->{'digits'}->[0] >= $radix) {
+#     $self->{'digits'}->[0] = 0;
+#     my $i = 1;
+#     for (;;) {
+#       $sum++;
+#       if (++$self->{'digits'}->[$i] < $radix) {
+#         last;
+#       }
+#     }
+#   }
+#   return ($self->{'i'}++, ($self->{'sum'} = ($sum % $radix)));
+# }
+  
 sub ith {
   my ($self, $i) = @_;
-
-  if (_is_infinite ($i)) {
-    return $i;
-  }
   my $radix = $self->{'radix'};
-  my $product = ($i % $radix);  # low digit
-  for (;;) {
-    $i = int($i/$radix) || last;
-    ($product *= ($i % $radix)) || last;
+  my $sum = 0;
+  while ($i) {
+    $sum += ($i % $radix) ** 2;
+    $i = int($i/$radix)
   }
-  return $product;
+  return $sum;
 }
 
 sub pred {
   my ($self, $value) = @_;
-  if (_is_infinite ($value)
-      || $value < 0
-      || $value != int($value)) {
-    return 0;
-  }
-  my $radix = $self->{'radix'};
-  for (my $i = 2; $i < $radix && $value > 1; $i++) {
-    until ($value % $i) {
-      $value /= $i;
-    }
-  }
-  return ($value <= 1);  # remainder
+  return ($value == int($value)
+          && $value >= 0);
 }
 
 1;
@@ -97,21 +98,18 @@ __END__
 
 =head1 NAME
 
-Math::NumSeq::DigitProduct -- product of digits
+Math::NumSeq::DigitSumSquares -- sum of digits
 
 =head1 SYNOPSIS
 
- use Math::NumSeq::DigitProduct;
- my $seq = Math::NumSeq::DigitProduct->new (radix => 10);
+ use Math::NumSeq::DigitSumSquares;
+ my $seq = Math::NumSeq::DigitSumSquares->new (radix => 10);
  my ($i, $value) = $seq->next;
 
 =head1 DESCRIPTION
 
-The products of the digits of i, for example at i=456 the value is
-4*5*6=120.  i=0 is treated as a single digit 0, so it's product is 0.
-
-For binary (C<radix =E<gt> 2>) the digits are all just 0 or 1 which means
-the product is 1 for numbers 0b1, 0b11, 0b111, etc, 2**k-1, or 0 otherwise.
+The sum of squares of digits in each i, so 0, 1, 4, 9, 16, ..., 81, 1, 2, 5,
+10, .., etc.  For example at i=123 the value is 1*1+2*2+3*3=14.
 
 =head1 FUNCTIONS
 
@@ -119,29 +117,28 @@ See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 =over 4
 
-=item C<$seq = Math::NumSeq::DigitProduct-E<gt>new ()>
+=item C<$seq = Math::NumSeq::DigitSumSquares-E<gt>new ()>
 
-=item C<$seq = Math::NumSeq::DigitProduct-E<gt>new (radix =E<gt> $r)>
+=item C<$seq = Math::NumSeq::DigitSumSquares-E<gt>new (radix =E<gt> $r)>
 
 Create and return a new sequence object.  The default radix is 10,
 ie. decimal, or a C<radix> parameter can be given.
 
 =item C<$value = $seq-E<gt>ith($i)>
 
-Return the product of the digits of C<$i>.
+Return the sum of the digits of C<$i>.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value> is the product of some set of digits.  This means
-its factors (prime factors) are all less than the radix, since anything
-bigger cannot occur.
+Return true if C<$value> occurs as the sum of squares of digits, which means
+simply C<$value E<gt>= 0>.  Any integer C<$value> can occur from all-ones
+11..11.
 
 =back
 
 =head1 SEE ALSO
 
 L<Math::NumSeq>,
-L<Math::NumSeq::DigitLength>,
 L<Math::NumSeq::DigitSum>
 
 =head1 HOME PAGE

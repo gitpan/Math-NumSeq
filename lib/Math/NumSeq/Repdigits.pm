@@ -19,14 +19,16 @@ package Math::NumSeq::Repdigits;
 use 5.004;
 use strict;
 
+use vars '$VERSION', '@ISA';
+$VERSION = 7;
 use Math::NumSeq;
-use base 'Math::NumSeq';
+@ISA = ('Math::NumSeq');
+*_is_infinite = \&Math::NumSeq::_is_infinite;
 
-use vars '$VERSION';
-$VERSION = 6;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
+
 
 # use constant name => Math::NumSeq::__('Repdigits');
 use constant description => Math::NumSeq::__('Numbers which are a "repdigit", meaning 0, 1 ... 9, 11, 22, 33, ... 99, 111, 222, 333, ..., 999, etc.  The default is decimal, or select a radix.');
@@ -37,11 +39,8 @@ use Math::NumSeq::Base::Digits;
 *parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
 
 sub oeis_anum {
-  my ($class_or_self) = @_;
-  my $radix = (ref $class_or_self
-               ? $class_or_self->{'radix'}
-               : $class_or_self->parameter_default('radix'));
-  return ($radix == 10
+  my ($self) = @_;
+  return ($self->{'radix'} == 10
           ? 'A010785'  # starting from i=0
           : undef);
 }
@@ -84,34 +83,39 @@ sub next {
 
 sub pred {
   my ($self, $value) = @_;
+
   my $radix = $self->{'radix'};
   if ($radix == 2) {
     return ! (($value+1) & $value);
+
   }
   if ($radix == 10) {
     my $digit = substr($value,0,1);
     return ($value !~ /[^$digit]/);
-
-  } else {
-    my $digit = $value % $radix;
-    while ($value = int($value/$radix)) {
-      if (($value % $radix) != $digit) {
-        return 0;
-      }
-    }
-    return 1;
   }
+
+  my $digit = $value % $radix;
+  while ($value = int($value/$radix)) {
+    unless (($value % $radix) == $digit) { # false for inf or nan
+      return 0;
+    }
+  }
+  return 1;
 }
 
 sub ith {
   my ($self, $i) = @_;
   my $radix = $self->{'radix'};
 
+  if (_is_infinite ($i)) {
+    return $i;
+  }
+
   if ($radix == 2) {
     return (1 << $i) - 1;
   }
 
-  if (--$i < 0) {
+  if (($i-=1) < 0) {
     return 0;
   }
   my $digit = ($i % ($radix-1)) + 1;

@@ -18,7 +18,6 @@
 package Math::NumSeq::ThueMorse;
 use 5.004;
 use strict;
-use warnings;
 use List::Util 'max';
 
 use Math::NumSeq;
@@ -50,23 +49,20 @@ use constant parameter_info_array =>
 # use constant oeis_anum => 'A001969'; # with even 1s
 # df 'A026147'; # positions of 1s in evil
 # cf A001285
-my @oeis = (undef,
-            undef,
-            'A010060', # 2 binary
-            'A053838', # 3 ternary
-            'A053839', # 4
-            'A053840', # 5
-            'A053841', # 6
-            'A053842', # 7
-            'A053843', # 8
-            'A053844', # 9
-           );
-sub oeis {
-  my ($class_or_self) = @_;
-  my $radix = (ref $class_or_self
-               ? $class_or_self->{'radix'}
-               : $class_or_self->parameter_default('radix'));
-  return $oeis[$radix];
+my @oeis_anum = (undef,
+                 undef,
+                 'A010060', # 2 binary
+                 'A053838', # 3 ternary
+                 'A053839', # 4
+                 'A053840', # 5
+                 'A053841', # 6
+                 'A053842', # 7
+                 'A053843', # 8
+                 'A053844', # 9
+                );
+sub oeis_anum {
+  my ($self) = @_;
+  return $oeis_anum[$self->{'radix'}];
 }
 
 

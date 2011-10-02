@@ -20,13 +20,14 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 6;
-
+$VERSION = 7;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
+*_is_infinite = \&Math::NumSeq::_is_infinite;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
+
 
 use constant characteristic_sparse => 1;
 
@@ -51,6 +52,11 @@ sub new {
 }
 sub ith {
   my ($self, $i) = @_;
+
+  if (_is_infinite($i)) {
+    return $i;
+  }
+
   ### pred_array last: $#{$self->{'pred_array'}}
   while ($#{$self->{'pred_array'}} < $i) {
     _extend ($self);
@@ -62,6 +68,9 @@ sub ith {
 sub pred {
   my ($self, $value) = @_;
   ### Sparse pred(): $value
+  if (_is_infinite($value)) {
+    return $value;
+  }
   while ($self->{'pred_value'} < $value
          || $self->{'pred_value'} < 10) {
     _extend ($self);

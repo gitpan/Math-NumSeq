@@ -18,7 +18,6 @@
 package Math::NumSeq::PentagonalSecond;
 use 5.004;
 use strict;
-use warnings;
 
 use Math::NumSeq;
 use base 'Math::NumSeq';

@@ -23,10 +23,12 @@ use POSIX 'floor','ceil';
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 6;
-
+$VERSION = 7;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
+
+# uncomment this to run the ### lines
+#use Devel::Comments;
 
 # use constant name => Math::NumSeq::__('Cubes');
 use constant description => Math::NumSeq::__('The cubes 1, 8, 27, 64, 125, etc, k*k*k.');
@@ -44,7 +46,7 @@ sub next {
   return ($i, $i*$i*$i);
 }
 sub ith {
-  my ($class_or_self, $i) = @_;
+  my ($self, $i) = @_;
   return $i*$i*$i;
 }
 
@@ -56,11 +58,23 @@ sub ith {
 # Multiplying back should also ensure that a floating point $n bigger than
 # 2^53 won't look like a cube due to rounding.
 #
-#
 sub pred {
-  my ($class_or_self, $n) = @_;
-  my $c = floor (0.5 + cbrt ($n));
-  return ($c*$c*$c == $n);
+  my ($self, $value) = @_;
+  my $i = _cbrt_floor ($value);
+  return ($i*$i*$i == $value);
+}
+
+sub _cbrt_floor {
+  my ($x) = @_;
+  if (ref $x) {
+    if ($x->isa('Math::BigInt')) {
+      return $x->copy->broot(3);
+    }
+    if ($x->isa('Math::BigRat') || $x->isa('Math::BigFloat')) {
+      return $x->as_int->broot(3);
+    }
+  }
+  return floor(cbrt($x));
 }
 
 1;

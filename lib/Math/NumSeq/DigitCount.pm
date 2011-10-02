@@ -20,9 +20,9 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 6;
-
+$VERSION = 7;
 use Math::NumSeq;
+*_is_infinite = \&Math::NumSeq::_is_infinite;
 
 use Math::NumSeq::Base::Digits;
 use Math::NumSeq::Base::IterateIth;
@@ -87,8 +87,8 @@ sub oeis_anum {
 sub ith {
   my ($self, $i) = @_;
   $i = abs($i);
-  if ($i == $i-1) {
-    return $i;  # don't loop forever if $i is +infinity
+  if (_is_infinite ($i)) {
+    return $i;
   }
 
   my $radix = $self->{'radix'};

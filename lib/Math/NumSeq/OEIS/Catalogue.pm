@@ -27,14 +27,14 @@ use strict;
 use List::Util;
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+#use Devel::Comments;
 
 use Module::Pluggable require => 1;
 my @plugins = sort __PACKAGE__->plugins;
 ### @plugins
 
 use vars '$VERSION';
-$VERSION = 6;
+$VERSION = 7;
 
 # sub seq_to_num {
 #   my ($class, $num) = @_;

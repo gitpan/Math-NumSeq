@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 6;
+$VERSION = 7;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
@@ -48,11 +48,8 @@ $oeis_anum[10] = 'A005349';  # decimal sum digits divide N
 # OEIS-Catalogue: A005349
 
 sub oeis_anum {
-  my ($class_or_self) = @_;
-  my $radix = (ref $class_or_self
-               ? $class_or_self->{'radix'}
-               : $class_or_self->parameter_default('radix'));
-  return $oeis_anum[$radix];
+  my ($self) = @_;
+  return $oeis_anum[$self->{'radix'}];
 }
 
 sub pred {
@@ -92,10 +89,10 @@ Math::NumSeq::HarshadNumbers -- harshad or Niven numbers
 
 =head1 DESCRIPTION
 
-The harshad numbers, sometimes called Niven numbers, being integers which
-are divisible by the sum of their digits, being 1 to 10, then 12, 18, 20,
-21, etc.  For example 18 is a harshad number because 18 is divisible by its
-digit sum 1+8=9.
+The harshad numbers, sometimes called Niven numbers, 1 to 10, then 12, 18,
+20, 21, etc, being integers which are divisible by the sum of their digits.
+For example 18 is a harshad number because 18 is divisible by its digit sum
+1+8=9.
 
 =head1 FUNCTIONS
 

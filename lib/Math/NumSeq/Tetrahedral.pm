@@ -16,21 +16,24 @@
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# ENHANCE-ME: pred() by cbrt the multiply back, maybe
-#
-
-
 package Math::NumSeq::Tetrahedral;
 use 5.004;
 use strict;
-use Math::NumSeq;
+use Math::Libm 'cbrt';
+use POSIX 'floor';
 
 use vars '$VERSION','@ISA';
-$VERSION = 6;
-
+$VERSION = 7;
+use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
+
+use Math::NumSeq::Cubes;
+*_cbrt_floor = \&Math::NumSeq::Cubes::_cbrt_floor;
+
+# uncomment this to run the ### lines
+#use Devel::Comments;
 
 # use constant name => Math::NumSeq::__('Tetrahedral');
 use constant description => Math::NumSeq::__('The tetrahedral numbers 0, 1, 4, 10, 20, 35, 56, 84, 120, etc, i*(i+1)*(i+2)/6.');
@@ -48,8 +51,24 @@ sub rewind {
   $self->{'i'} = $i;
 }
 sub ith {
-  my ($class_or_self, $i) = @_;
+  my ($self, $i) = @_;
   return $i*($i+1)*($i+2)/6;
+}
+
+# ENHANCE-ME: cubic equation root formula ?
+# ENHANCE-ME: when value big enough only try cbrt+1 and cbrt+2 ?
+sub pred {
+  my ($self, $value) = @_;
+  ### Tetrahedral pred(): $value
+  my $i = _cbrt_floor($value);
+  for (;;) {
+    my $tet = $i*($i+1)*($i+2)/6;
+    ### $i
+    ### $tet
+    return 1 if $value == $tet;
+    return 0 unless $tet < $value;
+    $i += 1;
+  }
 }
 
 1;

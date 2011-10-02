@@ -20,12 +20,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 6;
+$VERSION = 7;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
+*_is_infinite = \&Math::NumSeq::_is_infinite;
 
 
 # uncomment this to run the ### lines
@@ -46,6 +47,7 @@ use constant parameter_info_array =>
     }
   ];
 
+use constant characteristic_smaller => 1;
 use constant values_min => 0;
 sub values_max {
   my ($self) = @_;
@@ -62,39 +64,39 @@ use constant description => Math::NumSeq::__('Sum of the digits in the given rad
 #    A026147  numbers with ...
 #    A001285  thue-morse
 #
-my @oeis = (undef,
-            undef,
+my @oeis_anum = (undef,
+                 undef,
 
-            'A010060', # 2 binary
-            # OEIS-Catalogue: A010060 radix=2
+                 'A010060', # 2 binary
+                 # OEIS-Catalogue: A010060 radix=2
 
-            'A053838', # 3 ternary
-            # OEIS-Catalogue: A053838 radix=3
+                 'A053838', # 3 ternary
+                 # OEIS-Catalogue: A053838 radix=3
 
-            'A053839', # 4
-            # OEIS-Catalogue: A053839 radix=4
+                 'A053839', # 4
+                 # OEIS-Catalogue: A053839 radix=4
 
-            'A053840', # 5
-            # OEIS-Catalogue: A053840 radix=5
+                 'A053840', # 5
+                 # OEIS-Catalogue: A053840 radix=5
 
-            'A053841', # 6
-            # OEIS-Catalogue: A053841 radix=6
+                 'A053841', # 6
+                 # OEIS-Catalogue: A053841 radix=6
 
-            'A053842', # 7
-            # OEIS-Catalogue: A053842 radix=7
+                 'A053842', # 7
+                 # OEIS-Catalogue: A053842 radix=7
 
-            'A053843', # 8
-            # OEIS-Catalogue: A053843 radix=8
+                 'A053843', # 8
+                 # OEIS-Catalogue: A053843 radix=8
 
-            'A053844', # 9
-            # OEIS-Catalogue: A053844 radix=9
+                 'A053844', # 9
+                 # OEIS-Catalogue: A053844 radix=9
 
-            'A053837', # 10
-            # OEIS-Catalogue: A053837 radix=10
-           );
+                 'A053837', # 10
+                 # OEIS-Catalogue: A053837 radix=10
+                );
 sub oeis_anum {
   my ($self) = @_;
-  return $oeis[$self->{'radix'}];
+  return $oeis_anum[$self->{'radix'}];
 }
 
 # ENHANCE-ME:
@@ -121,6 +123,10 @@ sub oeis_anum {
 sub ith {
   my ($self, $i) = @_;
   my $radix = $self->{'radix'};
+
+  if (_is_infinite ($i)) {
+    return $i;
+  }
 
   # if ($radix == 2) {
   #   # bit count per example in perlfunc unpack()

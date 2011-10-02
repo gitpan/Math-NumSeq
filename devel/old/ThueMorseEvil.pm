@@ -18,7 +18,6 @@
 package Math::NumSeq::ThueMorseEvil;
 use 5.004;
 use strict;
-use warnings;
 use List::Util 'max';
 
 use Math::NumSeq;

@@ -22,16 +22,20 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 6;
+$VERSION = 7;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 218 A-numbers in 40 modules
+# total 225 A-numbers in 42 modules
 
 use constant info_arrayref =>
 [
+  {
+    'anum' => 'A001477',
+    'class' => 'Math::NumSeq::All'
+  },
   {
     'anum' => 'A051003',
     'class' => 'Math::NumSeq::Beastly',
@@ -228,11 +232,7 @@ use constant info_arrayref =>
   },
   {
     'anum' => 'A007953',
-    'class' => 'Math::NumSeq::DigitSum',
-    'parameters' => [
-      'radix',
-      10
-    ]
+    'class' => 'Math::NumSeq::DigitSum'
   },
   {
     'anum' => 'A053831',
@@ -280,6 +280,46 @@ use constant info_arrayref =>
     'parameters' => [
       'radix',
       16
+    ]
+  },
+  {
+    'anum' => 'A003132',
+    'class' => 'Math::NumSeq::DigitSum',
+    'parameters' => [
+      'power',
+      2
+    ]
+  },
+  {
+    'anum' => 'A055012',
+    'class' => 'Math::NumSeq::DigitSum',
+    'parameters' => [
+      'power',
+      3
+    ]
+  },
+  {
+    'anum' => 'A055013',
+    'class' => 'Math::NumSeq::DigitSum',
+    'parameters' => [
+      'power',
+      4
+    ]
+  },
+  {
+    'anum' => 'A055014',
+    'class' => 'Math::NumSeq::DigitSum',
+    'parameters' => [
+      'power',
+      5
+    ]
+  },
+  {
+    'anum' => 'A055015',
+    'class' => 'Math::NumSeq::DigitSum',
+    'parameters' => [
+      'power',
+      6
     ]
   },
   {
@@ -500,6 +540,14 @@ use constant info_arrayref =>
     'parameters' => [
       'fraction',
       '10/3'
+    ]
+  },
+  {
+    'anum' => 'A007770',
+    'class' => 'Math::NumSeq::HappyNumbers',
+    'parameters' => [
+      'radix',
+      10
     ]
   },
   {

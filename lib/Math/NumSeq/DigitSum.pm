@@ -20,12 +20,17 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 6;
+$VERSION = 7;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
+*_is_infinite = \&Math::NumSeq::_is_infinite;
+
+# uncomment this to run the ### lines
+#use Devel::Comments;
+
 
 use constant name => Math::NumSeq::__('Digit Sum');
 use constant description => Math::NumSeq::__('Sum of the digits in the given radix.  For binary this is how many 1 bits.');
@@ -34,70 +39,90 @@ use constant characteristic_monotonic => 0;
 use constant characteristic_smaller => 1;
 
 use Math::NumSeq::Base::Digits;
-*parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
+use constant parameter_info_array =>
+  [ Math::NumSeq::Base::Digits->parameter_info_list,
+    { name       => 'power',
+      display    => Math::NumSeq::__('Power'),
+      type       => 'integer',
+      width      => 1,
+      default    => '1',
+      description => Math::NumSeq::__('Power of the digits, 1=plain sum, 2=sum of squares, 3=sum of cubes, etc.'),
+    },
+  ];
 
 
-my @oeis = (undef,
-            undef,
-            'A000120', # 2 binary, number of 1s, cf DigitCount
+#------------------------------------------------------------------------------
+my @oeis_anum;
+$oeis_anum[1]->[2] = 'A000120';  # 2 binary
+# number of 1s, main handler in DigitCount
 
-            'A053735', # 3 ternary
-            # OEIS-Catalogue: A053735 radix=3
+$oeis_anum[1]->[3] = 'A053735'; # 3 ternary
+# OEIS-Catalogue: A053735 radix=3
 
-            'A053737', # 4
-            # OEIS-Catalogue: A053737 radix=4
+$oeis_anum[1]->[4] = 'A053737'; # 4
+# OEIS-Catalogue: A053737 radix=4
 
-            'A053824', # 5
-            # OEIS-Catalogue: A053824 radix=5
+$oeis_anum[1]->[5] = 'A053824'; # 5
+# OEIS-Catalogue: A053824 radix=5
 
-            'A053827', # 6
-            # OEIS-Catalogue: A053827 radix=6
+$oeis_anum[1]->[6] = 'A053827'; # 6
+# OEIS-Catalogue: A053827 radix=6
 
-            'A053828', # 7
-            # OEIS-Catalogue: A053828 radix=7
+$oeis_anum[1]->[7] = 'A053828'; # 7
+# OEIS-Catalogue: A053828 radix=7
 
-            'A053829', # 8
-            # OEIS-Catalogue: A053829 radix=8
+$oeis_anum[1]->[8] = 'A053829'; # 8
+# OEIS-Catalogue: A053829 radix=8
 
-            'A053830', # 9
-            # OEIS-Catalogue: A053830 radix=9
+$oeis_anum[1]->[9] = 'A053830'; # 9
+# OEIS-Catalogue: A053830 radix=9
 
-            'A007953', # 10 decimal
-            # OEIS-Catalogue: A007953 radix=10
+$oeis_anum[1]->[10] = 'A007953'; # 10 decimal
+# OEIS-Catalogue: A007953
 
-            'A053831', # 11
-            # OEIS-Catalogue: A053831 radix=11
+$oeis_anum[1]->[11] = 'A053831'; # 11
+# OEIS-Catalogue: A053831 radix=11
 
-            'A053832', # 12
-            # OEIS-Catalogue: A053832 radix=12
+$oeis_anum[1]->[12] = 'A053832'; # 12
+# OEIS-Catalogue: A053832 radix=12
 
-            'A053833', # 13
-            # OEIS-Catalogue: A053833 radix=13
+$oeis_anum[1]->[13] = 'A053833'; # 13
+# OEIS-Catalogue: A053833 radix=13
 
-            'A053834', # 14
-            # OEIS-Catalogue: A053834 radix=14
+$oeis_anum[1]->[14] = 'A053834'; # 14
+# OEIS-Catalogue: A053834 radix=14
 
-            'A053835', # 15
-            # OEIS-Catalogue: A053835 radix=15
+$oeis_anum[1]->[15] = 'A053835'; # 15
+# OEIS-Catalogue: A053835 radix=15
 
-            'A053836', # 16
-            # OEIS-Catalogue: A053836 radix=16
-           );
+$oeis_anum[1]->[16] = 'A053836'; # 16
+# OEIS-Catalogue: A053836 radix=16
+
+$oeis_anum[2]->[10] = 'A003132';
+# OEIS-Catalogue: A003132 power=2
+
+$oeis_anum[3]->[10] = 'A055012';
+# OEIS-Catalogue: A055012 power=3
+
+$oeis_anum[3]->[10] = 'A055013';
+# OEIS-Catalogue: A055013 power=4
+
+$oeis_anum[3]->[10] = 'A055014';
+# OEIS-Catalogue: A055014 power=5
+
+$oeis_anum[3]->[10] = 'A055015';
+# OEIS-Catalogue: A055015 power=6
+
 sub oeis_anum {
-  my ($class_or_self) = @_;
-  my $radix = (ref $class_or_self
-               ? $class_or_self->{'radix'}
-               : $class_or_self->parameter_default('radix'));
-  return $oeis[$radix];
+  my ($self) = @_;
+  return $oeis_anum[$self->{'power'}]->[$self->{'radix'}];
 }
 
-
-# uncomment this to run the ### lines
-#use Smart::Comments;
+#------------------------------------------------------------------------------
 
 # ENHANCE-ME:
-# next() is +1 mod m, except when xx09 wraps to xx10 which is +2,
-# or when x099 to x100 then +3, etc extra is how many low 9s
+# next() is +1 until wraps 09 to 10 is -8, or 0999 to 1000 is -998, etc
+# radix=2 is DigitCount
 #
 # sub next {
 #   my ($self) = @_;
@@ -116,12 +141,20 @@ sub oeis_anum {
 #   return ($self->{'i'}++, ($self->{'sum'} = ($sum % $radix)));
 # }
   
+# ENHANCE-ME: radix=2 share Math::NumSeq::DigitCount binary
 sub ith {
   my ($self, $i) = @_;
+  ### DigitSum ith(): $i
+
+  if (_is_infinite ($i)) {
+    return $i;
+  }
+
   my $radix = $self->{'radix'};
+  my $power = $self->{'power'};
   my $sum = 0;
   while ($i) {
-    $sum += ($i % $radix);
+    $sum += ($i % $radix) ** $power;
     $i = int($i/$radix)
   }
   return $sum;
@@ -140,7 +173,7 @@ __END__
 
 =head1 NAME
 
-Math::NumSeq::DigitSum -- sum of digits
+Math::NumSeq::DigitSum -- sum of digits, possibly with powering
 
 =head1 SYNOPSIS
 
@@ -161,14 +194,15 @@ See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 =item C<$seq = Math::NumSeq::DigitSum-E<gt>new ()>
 
-=item C<$seq = Math::NumSeq::DigitSum-E<gt>new (radix =E<gt> $r)>
+=item C<$seq = Math::NumSeq::DigitSum-E<gt>new (radix =E<gt> $r, power =E<gt> $p)>
 
-Create and return a new sequence object.  The default radix is 10,
-ie. decimal, or a C<radix> parameter can be given.
+Create and return a new sequence object.  The default is decimal, with no
+powering, or C<radix> and/or C<power> parameters can be given.
 
 =item C<$value = $seq-E<gt>ith($i)>
 
-Return the sum of the digits of C<$i>.
+Return the sum of the digits of C<$i>, each raised to the given C<power>
+parameter.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 

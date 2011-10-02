@@ -22,10 +22,10 @@ use List::Util 'max';
 use Math::NumSeq;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 6;
-
+$VERSION = 7;
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
+
 
 # uncomment this to run the ### lines
 #use Devel::Comments;
@@ -97,14 +97,10 @@ $oeis_anum[10] =
    # OEIS-Catalogue: A010701 fraction=10/3
   };
 sub oeis_anum {
-  my ($class_or_self) = @_;
+  my ($self) = @_;
   ### oeis_anum() ...
-  my $fraction = (ref $class_or_self
-                  ? $class_or_self->{'fraction'}
-                  : $class_or_self->parameter_default('fraction'));
-  my $radix = (ref $class_or_self
-               ? $class_or_self->{'radix'}
-               : $class_or_self->parameter_default('radix'));
+  my $radix = $self->{'radix'};
+  my $fraction = $self->{'fraction'};
   if (my $anum = $oeis_anum[$radix]->{$fraction}) {
     return $anum;
   }

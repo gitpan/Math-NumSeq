@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Math-NumSeq
-version:            6
+version:            7
 abstract:           Number sequences.
 author:
     - Kevin Ryde <user42@zip.com.au>
@@ -20,6 +20,7 @@ requires:
     Math::Prime::XS:    0.23
     Module::Load:       0
     Module::Pluggable:  0
+    Module::Util:       0
     perl:               5.004
     Test:               0
     Test::More:         0
@@ -41,6 +42,8 @@ optional_features:
     maximum_devel:
         description:  Stuff used variously for development.
         requires:
+            B::Concise:           0
+            Bit::Vector:          0
             Devel::Comments:      0
             Devel::TimeThis:      1
             File::Spec:           0
@@ -49,10 +52,12 @@ optional_features:
             Math::Polynomial:     1
             Math::Prime::TiedArray:  1
             Math::TriangularNumbers:  1
-            Module::Util:         0
             Parse::CPAN::Meta:    0
+            Path::Class:          0
             Pod::Simple::HTML:    0
             Smart::Comments:      0
+            String::BitCount:     0
+            String::Parity:       0
             Test::DistManifest:   0
             Test::Pod:            1.00
             Test::Synopsis:       0
@@ -62,3 +67,16 @@ optional_features:
             YAML::Syck:           0
             YAML::Tiny:           0
             YAML::XS:             0
+    maximum_interoperation:
+        description:  Have maximum inter-operation with other modules (optional other stuff).
+        requires:
+            Language::Expr:       0
+            Language::Expr::Compiler::Perl:  0
+            Math::Expression::Evaluator:  0
+            Math::Symbolic:       0
+    maximum_tests:
+        description:  Have "make test" do as much as possible.
+        requires:
+            Data::Float:  0
+recommends:
+    Math::Prime::XS:  0.25

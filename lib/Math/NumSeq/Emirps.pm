@@ -22,10 +22,10 @@ use List::Util 'min', 'max';
 use POSIX ();
 
 use vars '$VERSION', '@ISA';
-$VERSION = 6;
-
+$VERSION = 7;
 use Math::NumSeq::Primes;
 @ISA = ('Math::NumSeq::Primes');
+*_is_infinite = \&Math::NumSeq::_is_infinite;
 
 
 # uncomment this to run the ### lines
@@ -48,11 +48,8 @@ $oeis_anum[10] = 'A006567';
 # OEIS-Catalogue: A006567 radix=10
 
 sub oeis_anum {
-  my ($class_or_self) = @_;
-  my $radix = (ref $class_or_self
-               ? $class_or_self->{'radix'}
-               : $class_or_self->parameter_default('radix'));
-  return $oeis_anum[$radix];
+  my ($self) = @_;
+  return $oeis_anum[$self->{'radix'}];
 }
 
 #------------------------------------------------------------------------------
@@ -87,10 +84,13 @@ sub next {
   }
 }
 
-# ENHANCE-ME: Could look for small divisors in both values simultaneously,
-# in case the reversal is even etc and easily excluded
+# ENHANCE-ME: Look for small divisors in both values simultaneously, in case
+# the reversal is even etc and easily excluded
 sub pred {
   my ($self, $value) = @_;
+  if (_is_infinite($value)) {
+    return 0;
+  }
   my $rev = _reverse_in_radix($value,$self->{'radix'});
   return ($rev != $value
           && $self->SUPER::pred($value)

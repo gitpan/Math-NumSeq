@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 6;
+$VERSION = 7;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -46,7 +46,7 @@ use constant parameter_common_radix =>
     width   => 3,
     description => Math::NumSeq::__('Radix, ie. base, for the values calculation.  Default is decimal (base 10).'),
   };
-use constant parameter_info_array => [ parameter_common_radix ];
+use constant parameter_info_array => [ parameter_common_radix() ];
 
 sub pred {
   my ($self, $value) = @_;

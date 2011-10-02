@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 6;
+$VERSION = 7;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -55,7 +55,7 @@ sub pred {
   return ($i == int($i));
 }
 sub ith {
-  my ($class_or_self, $i) = @_;
+  my ($self, $i) = @_;
   return $i*($i+1)/2;
 }
 
@@ -81,8 +81,7 @@ Math::NumSeq::Triangular -- triangular numbers
 
 =head1 DESCRIPTION
 
-The sequence of triangular numbers 0, 1, 3, 6, 10, 15, 21, 28, etc,
-i*(i+1)/2.
+The triangular numbers 0, 1, 3, 6, 10, 15, 21, 28, etc, i*(i+1)/2.
 
 =head1 FUNCTIONS
 

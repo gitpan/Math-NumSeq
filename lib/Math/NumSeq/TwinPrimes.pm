@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 6;
+$VERSION = 7;
 
 use Math::NumSeq::Primes;
 @ISA = ('Math::NumSeq::Primes');
@@ -48,28 +48,25 @@ use constant parameter_info_array =>
    },
   ];
 
-my %oeis = (
-            # OEIS-Catalogue: A001359 pairs=first
-            first  => 'A001359',
+my %oeis_anum = (
+                 # OEIS-Catalogue: A001359 pairs=first
+                 first  => 'A001359',
 
-            # OEIS-Catalogue: A006512 pairs=second,
-            second => 'A006512',
+                 # OEIS-Catalogue: A006512 pairs=second,
+                 second => 'A006512',
 
-            # OEIS-Catalogue: A001097 pairs=both
-            both   => 'A001097', # both, without repetition
+                 # OEIS-Catalogue: A001097 pairs=both
+                 both   => 'A001097', # both, without repetition
 
-            # OEIS-Catalogue: A014574 pairs=average
-            average => 'A014574', # average
+                 # OEIS-Catalogue: A014574 pairs=average
+                 average => 'A014574', # average
 
-            # cf A077800 both, with repetition
-            #      cf 'A077800'  # both, with repetition
-           );
+                 # cf A077800 both, with repetition
+                 #      cf 'A077800'  # both, with repetition
+                );
 sub oeis_anum {
-  my ($class_or_self) = @_;
-  my $pairs = (ref $class_or_self
-               ? $class_or_self->{'pairs'}
-               : $class_or_self->parameter_default('pairs'));
-  return $oeis{$pairs};
+  my ($self) = @_;
+  return $oeis_anum{$self->{'pairs'}};
 }
 
 my %pairs_add = (first => 0,

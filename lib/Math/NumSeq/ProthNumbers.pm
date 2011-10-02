@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 6;
+$VERSION = 7;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -111,8 +111,8 @@ Math::NumSeq::ProthNumbers -- Proth number sequence
 
 =head1 SYNOPSIS
 
- use Math::NumSeq::Squares;
- my $seq = Math::NumSeq::Squares->new;
+ use Math::NumSeq::ProthNumbers;
+ my $seq = Math::NumSeq::ProthNumbers->new;
  my ($i, $value) = $seq->next;
 
 =head1 DESCRIPTION
@@ -120,7 +120,7 @@ Math::NumSeq::ProthNumbers -- Proth number sequence
 The Proth numbers 3, 5, 9, 13, 17, etc, being integers k*2^n+1 where
 S<k E<lt> 2^n>.
 
-The condition k E<lt> 2^n means the values in binary have low half 00..01
+The k E<lt> 2^n condition means the values in binary have low half 00..01
 and high half some value k,
 
            binary

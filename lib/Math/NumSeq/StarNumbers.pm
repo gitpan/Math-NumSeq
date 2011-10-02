@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 6;
+$VERSION = 7;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -63,11 +63,11 @@ sub next {
   return ($i, $self->ith($i));
 }
 sub ith {
-  my ($class_or_self, $i) = @_;
+  my ($self, $i) = @_;
   return 6*$i*($i-1)+1;
 }
 sub pred {
-  my ($class_or_self, $value) = @_;
+  my ($self, $value) = @_;
   if ($value < 0) { return 0; }
   # FIXME: the _inverse() +3 etc might be lost to rounding for very big $value
   my $i = _inverse($value);
@@ -94,7 +94,7 @@ Math::NumSeq::StarNumbers -- star numbers 6*i*(i-1)+1
 =head1 SYNOPSIS
 
  use Math::NumSeq::StarNumbers;
- my $seq = Math::NumSeq::Squares->new;
+ my $seq = Math::NumSeq::StarNumbers->new;
  my ($i, $value) = $seq->next;
 
 =head1 DESCRIPTION

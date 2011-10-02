@@ -91,6 +91,7 @@ $|=1;
   $values_class = 'App::MathImage::NumSeq::MobiusFunction';
   $values_class = 'Math::NumSeq::TwinPrimes';
   $values_class = 'App::MathImage::NumSeq::PrimeFactorCount';
+  $values_class = 'App::MathImage::NumSeq::Fibbinary';
   $values_class = 'App::MathImage::NumSeq::PlanePath';
   eval "require $values_class; 1" or die $@;
   print Math::NumSeq::DigitLength->VERSION,"\n";
@@ -110,7 +111,7 @@ $|=1;
                                 expression_evaluator => 'Perl',
                                 oeis_anum  => 'A000396',
                                 # distinct => 1,
-                                planepath => 'SquareSpiral,wider=2',
+                                planepath => 'HilbertCurve,height=5',
                                 coord_type => 'Y',
                                 multiplicity => 'distinct',
                                );
@@ -122,9 +123,12 @@ $|=1;
     if (my $radix = $seq->characteristic('digits')) {
       print "  radix $radix\n";
     }
+    print "by next(): ";
+
     my $check_pred_upto = ! $seq->characteristic('digits')
       && ! $seq->characteristic('count');
-    foreach (1 .. 50) {
+    my $hi = 50;
+    foreach (1 .. $hi) {
       my ($i,$value) = $seq->next;
       if (! defined $i) {
         print "undef\n";
@@ -166,8 +170,8 @@ $|=1;
     print "\n";
 
     if ($seq->can('ith')) {
-      print "by ith(): ";
-      foreach my $i ($seq->i_start .. 110) {
+      print "by ith():  ";
+      foreach my $i ($seq->i_start .. $seq->i_start + $hi - 1) {
         my $value = $seq->ith($i);
         if (! defined $value) {
           print "undef\n";

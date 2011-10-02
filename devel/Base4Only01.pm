@@ -41,7 +41,7 @@ use Math::NumSeq;
 use base 'Math::NumSeq';
 
 use vars '$VERSION';
-$VERSION = 6;
+$VERSION = 7;
 
 # http://oeis.org/A000695
 #    Moser-de Bruijn sequence, sums of distinct powers of 4
@@ -87,7 +87,7 @@ sub next {
   return ($self->{'i'} = $i);
 }
 sub pred {
-  my ($class_or_self, $n) = @_;
+  my ($self, $n) = @_;
   while ($n) {
     if (($n & 3) >= 2) {
       return 0;

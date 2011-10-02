@@ -20,11 +20,12 @@ use 5.004;
 use strict;
 use List::Util 'max';
 
+use vars '$VERSION', '@ISA';
+$VERSION = 7;
 use Math::NumSeq;
-use base 'Math::NumSeq';
+@ISA = ('Math::NumSeq');
+*_is_infinite = \&Math::NumSeq::_is_infinite;
 
-use vars '$VERSION';
-$VERSION = 6;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -38,6 +39,7 @@ use Math::NumSeq::Base::Digits;
 *parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
 
 
+#------------------------------------------------------------------------------
 # cf palindomric primes
 # 'A002385', # 10
 # 'A029732', # 16
@@ -72,13 +74,11 @@ my @oeis_anum = (undef,     # 0
                  # OEIS-Catalogue: A002113
                 );
 sub oeis_anum {
-  my ($class_or_self) = @_;
-  my $radix = (ref $class_or_self
-               ? $class_or_self->{'radix'}
-               : $class_or_self->parameter_default('radix'));
-  return $oeis_anum[$radix];
+  my ($self) = @_;
+  return $oeis_anum[$self->{'radix'}];
 }
 
+#------------------------------------------------------------------------------
 
 
   # my @digits;
@@ -110,6 +110,11 @@ sub next {
 sub ith {
   my ($self, $i) = @_;
   ### Palindrome ith(): $i
+
+  if (_is_infinite($i)) {  # don't loop forever if $value is +/-infinity
+    return undef;
+  }
+
   my $radix = $self->{'radix'};
 
   if ($i < 1) {
@@ -155,6 +160,9 @@ sub ith {
 
 sub pred {
   my ($self, $value) = @_;
+  if (_is_infinite($value)) {  # don't loop forever if $value is +/-infinity
+    return 0;
+  }
   my $radix = $self->{'radix'};
   my @digits;
   while ($value) {

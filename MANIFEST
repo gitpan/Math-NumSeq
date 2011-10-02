@@ -19,6 +19,7 @@ devel/maybe-ln.pl
 devel/oeis.pl
 devel/OeisCatalogue-SqrtDigits.pm
 devel/old/Base4Without3.pm
+devel/old/DigitSumSquares.pm
 devel/old/FractionBits.pm
 devel/old/PentagonalGeneralized.pm
 devel/old/PentagonalSecond.pm
@@ -35,6 +36,7 @@ devel/triangular.pl
 inc/my_pod2html
 inc/MyMakeMakerExtras.pm
 lib/Math/NumSeq.pm
+lib/Math/NumSeq/All.pm
 lib/Math/NumSeq/Base/Array.pm
 lib/Math/NumSeq/Base/Digits.pm
 lib/Math/NumSeq/Base/IterateIth.pm
@@ -57,6 +59,7 @@ lib/Math/NumSeq/Factorials.pm
 lib/Math/NumSeq/Fibonacci.pm
 lib/Math/NumSeq/File.pm
 lib/Math/NumSeq/FractionDigits.pm
+lib/Math/NumSeq/HappyNumbers.pm
 lib/Math/NumSeq/HarshadNumbers.pm
 lib/Math/NumSeq/LucasNumbers.pm
 lib/Math/NumSeq/MobiusFunction.pm

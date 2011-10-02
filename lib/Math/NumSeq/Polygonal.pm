@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 6;
+$VERSION = 7;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -57,7 +57,7 @@ use constant parameter_info_array =>
    },
   ];
 
-my @oeis
+my @oeis_anum
   = (undef, # 0
      undef, # 1
      undef, # 2
@@ -129,14 +129,8 @@ my @oeis
      # OEIS-Catalogue: A051876 polygonal=24 pairs=first  # 24
     );
 sub oeis_anum {
-  my ($class_or_self) = @_;
-  my $k = (ref $class_or_self
-           ? $class_or_self->{'k'}
-           : $class_or_self->parameter_default('polygonal'));
-  my $pairs = (ref $class_or_self
-               ? $class_or_self->{'pairs'}
-               : $class_or_self->parameter_default('pairs'));
-  return $oeis[$k]->{$pairs};
+  my ($self) = @_;
+  return $oeis_anum[$self->{'k'}]->{$self->{'pairs'}};
 }
 
 

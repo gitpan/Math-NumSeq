@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 6;
+$VERSION = 7;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -43,13 +43,13 @@ sub rewind {
   $self->{'i'} = ceil(_inverse(max(0,$self->{'lo'})));
 }
 sub pred {
-  my ($class_or_self, $value) = @_;
+  my ($self, $value) = @_;
   if ($value < 0) { return 0; }
   my $i = _inverse($value);
   return ($i == int($i));
 }
 sub ith {
-  my ($class_or_self, $i) = @_;
+  my ($self, $i) = @_;
   return $i*($i+1);
 }
 

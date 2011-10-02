@@ -19,8 +19,8 @@
 
 use 5.004;
 use strict;
-use warnings;
-use Test::More tests => 27;
+use Test;
+plan tests => 28;
 
 use lib 't';
 use MyTestHelpers;
@@ -35,14 +35,16 @@ use Math::NumSeq::DigitProduct;
 # VERSION
 
 {
-  my $want_version = 6;
-  is ($Math::NumSeq::DigitProduct::VERSION, $want_version, 'VERSION variable');
-  is (Math::NumSeq::DigitProduct->VERSION,  $want_version, 'VERSION class method');
+  my $want_version = 7;
+  ok ($Math::NumSeq::DigitProduct::VERSION, $want_version, 'VERSION variable');
+  ok (Math::NumSeq::DigitProduct->VERSION,  $want_version, 'VERSION class method');
 
   ok (eval { Math::NumSeq::DigitProduct->VERSION($want_version); 1 },
+      1,
       "VERSION class check $want_version");
   my $check_version = $want_version + 1000;
   ok (! eval { Math::NumSeq::DigitProduct->VERSION($check_version); 1 },
+      1,
       "VERSION class check $check_version");
 }
 
@@ -52,7 +54,7 @@ use Math::NumSeq::DigitProduct;
 
 {
   my $seq = Math::NumSeq::DigitProduct->new;
-  # is ($seq->characteristic('smaller'), 1, 'characteristic(smaller)');
+  ok ($seq->characteristic('smaller'), 1, 'characteristic(smaller)');
 }
 
 
@@ -89,7 +91,7 @@ use Math::NumSeq::DigitProduct;
     my ($radix, $value, $want) = @$elem;
     my $seq = Math::NumSeq::DigitProduct->new (radix => $radix);
     my $got = $seq->pred($value) ? 1 : 0;
-    is ($got, $want, "pred() radix=$radix value=$value got $got want $want");
+    ok ($got, $want, "pred() radix=$radix value=$value got $got want $want");
   }
 }
 

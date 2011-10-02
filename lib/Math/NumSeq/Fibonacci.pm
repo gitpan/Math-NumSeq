@@ -21,10 +21,11 @@ use strict;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 6;
-
+$VERSION = 7;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
+use Math::NumSeq;
+*_is_infinite = \&Math::NumSeq::_is_infinite;
 
 # use constant name => Math::NumSeq::__('Fibonacci Numbers');
 use constant description => Math::NumSeq::__('The Fibonacci numbers 1,1,2,3,5,8,13,21, etc, each F(i) = F(i-1) + F(i-2), starting from 1,1.');
@@ -33,7 +34,7 @@ use constant characteristic_monotonic => 2;
 use constant oeis_anum => 'A000045'; # fibonacci starting at 1,1
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+#use Devel::Comments;
 
 sub rewind {
   my ($self) = @_;
@@ -50,6 +51,23 @@ sub next {
   ### $ret
   return ($self->{'i'}++, $ret);
 }
+
+# powering ...
+# sub ith {
+#   my ($self, $i) = @_;
+#   ### Fibonacci ith(): $i
+#   my $x = 0;
+#   my $y = 1;
+#   if (_is_infinite($i)) {
+#     return $i;
+#   }
+#   while ($i--) {
+#     $x += $y;
+#     return $x unless ($i--);
+#     $y += $x;
+#   }
+#   return $y;
+# }
 
 1;
 __END__
