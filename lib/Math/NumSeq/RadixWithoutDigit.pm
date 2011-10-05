@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 7;
+$VERSION = 8;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -271,6 +271,7 @@ sub pred {
   }
 
   if (($digit == 0 && $value == 0)
+      || $value != int($value)
       || _is_infinite($value)) {  # don't loop forever if $value is +infinity
     return 0;
   }

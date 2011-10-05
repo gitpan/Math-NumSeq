@@ -20,15 +20,17 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 7;
+$VERSION = 8;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
+*_is_infinite = \&Math::NumSeq::_is_infinite;
 
 # uncomment this to run the ### lines
 #use Devel::Comments;
+
 
 # use constant name => Math::NumSeq::__('Cullen Numbers');
 use constant description => Math::NumSeq::__('Cullen numbers n*2^n+1.');
@@ -43,7 +45,14 @@ sub ith {
 sub pred {
   my ($self, $value) = @_;
   ### CullenNumbers pred(): $value
-  ($value >= 1 && $value & 1) or return 0;
+
+  unless ($value >= 1
+          && ($value & 1)
+          && $value == int($value)
+          && ! _is_infinite($value)) {
+    return 0;
+  }
+
   my $exp = 0;
   $value -= 1;  # now seeking $value == $exp * 2**$exp
   for (;;) {

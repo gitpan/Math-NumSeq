@@ -13,14 +13,17 @@ devel/cbrt.pl
 devel/euler.pl
 devel/exe-cbrt.c
 devel/expression.pl
+devel/kimberling.pl
 devel/language-expr.pl
 devel/maybe-decprime.pl
 devel/maybe-ln.pl
+devel/numaronson.pl
 devel/oeis.pl
 devel/OeisCatalogue-SqrtDigits.pm
 devel/old/Base4Without3.pm
 devel/old/DigitSumSquares.pm
 devel/old/FractionBits.pm
+devel/old/Pentagonal.pm
 devel/old/PentagonalGeneralized.pm
 devel/old/PentagonalSecond.pm
 devel/old/SemiPrimesOdd.pm
@@ -29,6 +32,7 @@ devel/old/ThueMorse.pm
 devel/old/ThueMorseEvil.pm
 devel/old/ThueMorseOdious.pm
 devel/primes.pl
+devel/reverse-add.pl
 devel/run.pl
 devel/SafePrimes.pm
 devel/SafePrimes.t
@@ -56,6 +60,7 @@ lib/Math/NumSeq/Emirps.pm
 lib/Math/NumSeq/Even.pm
 lib/Math/NumSeq/Expression.pm
 lib/Math/NumSeq/Factorials.pm
+lib/Math/NumSeq/Fibbinary.pm
 lib/Math/NumSeq/Fibonacci.pm
 lib/Math/NumSeq/File.pm
 lib/Math/NumSeq/FractionDigits.pm
@@ -63,6 +68,7 @@ lib/Math/NumSeq/HappyNumbers.pm
 lib/Math/NumSeq/HarshadNumbers.pm
 lib/Math/NumSeq/LucasNumbers.pm
 lib/Math/NumSeq/MobiusFunction.pm
+lib/Math/NumSeq/NumAronson.pm
 lib/Math/NumSeq/Odd.pm
 lib/Math/NumSeq/OEIS.pm
 lib/Math/NumSeq/OEIS/Catalogue.pm
@@ -80,6 +86,7 @@ lib/Math/NumSeq/Pronic.pm
 lib/Math/NumSeq/ProthNumbers.pm
 lib/Math/NumSeq/RadixWithoutDigit.pm
 lib/Math/NumSeq/Repdigits.pm
+lib/Math/NumSeq/ReverseAdd.pm
 lib/Math/NumSeq/SophieGermainPrimes.pm
 lib/Math/NumSeq/SqrtDigits.pm
 lib/Math/NumSeq/Squares.pm
@@ -87,6 +94,7 @@ lib/Math/NumSeq/StarNumbers.pm
 lib/Math/NumSeq/SternDiatomic.pm
 lib/Math/NumSeq/Tetrahedral.pm
 lib/Math/NumSeq/Triangular.pm
+lib/Math/NumSeq/Tribonacci.pm
 lib/Math/NumSeq/TwinPrimes.pm
 lib/Math/NumSeq/WoodallNumbers.pm
 Makefile.PL

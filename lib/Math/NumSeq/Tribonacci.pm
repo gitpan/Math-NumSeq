@@ -1,4 +1,4 @@
-# Copyright2011 Kevin Ryde
+# Copyright 2010, 2011 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -15,86 +15,69 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
-package Math::NumSeq::Primorials;
+package Math::NumSeq::Tribonacci;
 use 5.004;
 use strict;
-use Math::Prime::XS;
 
 use vars '$VERSION', '@ISA';
 $VERSION = 8;
+use Math::NumSeq::Base::Sparse;
+@ISA = ('Math::NumSeq::Base::Sparse');
 
-use Math::NumSeq;
-@ISA = ('Math::NumSeq');
-
-# use constant name => Math::NumSeq::__('Primorials');
-use constant description => Math::NumSeq::__('The primorials 1, 2, 6, 30, 210, etc, 2*3*5*7*...Prime(n).');
-use constant characteristic_monotonic => 2;
-use constant values_min => 1;
-
-# cf A034386 product of primes p <= i, so repeating 1, 2, 6, 6, 30, 30,
-#
-use constant oeis_anum => 'A002110'; # starting at 1
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
+# use constant name => Math::NumSeq::__('Tribonacci Numbers');
+use constant description => Math::NumSeq::__('Tribonacci numbers 0, 0, 1, 1, 2, 4, 7, 13, 24, being T(i) = T(i-1) + T(i-2) + T(i-3) starting from 0,0,1.');
+use constant characteristic_monotonic => 2;
+use constant characteristic_monotonic_from_i => 3;
+use constant values_min => 1;
+use constant oeis_anum => 'A000073'; # tribonacci
+
 sub rewind {
   my ($self) = @_;
-  ### Primorials rewind()
-  $self->{'prime'} = 1;
   $self->{'i'} = 0;
-  $self->{'f'} = 1;
+  $self->{'f0'} = 0;
+  $self->{'f1'} = 0;
+  $self->{'f2'} = 1;
 }
 sub next {
   my ($self) = @_;
-  ### Primorials next()
-  if (my $i = $self->{'i'}++) {
-    my $prime;
-    do {
-      $prime = $self->{'prime'}++;
-    } until (Math::Prime::XS::is_prime($prime));
-    return ($i, $self->{'f'} *= $prime);
-  } else {
-    return (0, 1);
-  }
-}
-
-sub pred {
-  my ($self, $value) = @_;
-  ### Factorials pred()
-  my $prime = 2;
-  for (;;) {
-    if ($value == 1) {
-      return 1;
-    }
-    if (($value % $prime) == 0) {
-      $value /= $prime;
-    } else {
-      return 0;
-    }
-    until (Math::Prime::XS::is_prime(++$prime)) {}
-  }
+  ### Tribonacci next(): "$self->{'f0'} $self->{'f1'} $self->{'f2'}"
+  (my $ret,
+   $self->{'f0'},
+   $self->{'f1'},
+   $self->{'f2'})
+   = ($self->{'f0'},
+      $self->{'f1'},
+      $self->{'f2'},
+      $self->{'f0'}+$self->{'f1'}+$self->{'f2'});
+  return ($self->{'i'}++, $ret);
 }
 
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq primorials
+=for stopwords Ryde Math-NumSeq
 
 =head1 NAME
 
-Math::NumSeq::Primorials -- primorials 2*3*...*p[i]
+Math::NumSeq::Tribonacci -- Tribonacci numbers
 
 =head1 SYNOPSIS
 
- use Math::NumSeq::Primorials;
- my $seq = Math::NumSeq::Primorials->new;
+ use Math::NumSeq::Tribonacci;
+ my $seq = Math::NumSeq::Tribonacci->new;
  my ($i, $value) = $seq->next;
 
 =head1 DESCRIPTION
 
-The sequence of primorials, 1, 2, 6, 30, 210, etc, being the product of the
-first i many primes, 2*3*5*...*p[i].
+The Tribonacci sequence 0,0,1,1,1,3,5,9,17,etc,
+
+    T(i) = T(i-1) + T(i-2) + T(i-3)
+
+starting from 0,0,1.
 
 =head1 FUNCTIONS
 
@@ -102,26 +85,24 @@ See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 =over 4
 
-=item C<$seq = Math::NumSeq::Primorials-E<gt>new (key=E<gt>value,...)>
+=item C<$seq = Math::NumSeq::Tribonacci-E<gt>new ()>
 
 Create and return a new sequence object.
 
 =item C<$value = $seq-E<gt>ith($i)>
 
-Return C<2*3*5*...*p[$i]>.  For C<$i==0> this is considered an empty product
-and the return is 1.
+Return the C<$i>'th Tribonacci number.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value> is equal to C<2*3*5*...*p[i]> for number of the
-primes.
+Return true if C<$value> is a Tribonacci number.
 
 =back
 
 =head1 SEE ALSO
 
 L<Math::NumSeq>,
-L<Math::NumSeq::Factorials>
+L<Math::NumSeq::Fibonacci>
 
 =head1 HOME PAGE
 

@@ -24,7 +24,7 @@ use Math::Libm;
 use Module::Util;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 7;
+$VERSION = 8;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -88,10 +88,54 @@ use constant parameter_info_array =>
      description => Math::NumSeq::__('The expression evaluator module, Perl for Perl itself, MS for Math::Symbolic, MEE for Math::Expression::Evaluator, LE for Language::Expr.'),
    },
                                      ];
-
 # ### parameter_info_array: parameter_info_array()
 # ### parameter_info_hash: __PACKAGE__->parameter_info_hash
 # ### evaluator default: __PACKAGE__->parameter_default('expression_evaluator')
+
+#------------------------------------------------------------------------------
+my %oeis_anum;
+
+# some experimental A-number generators for easy expressions not with their
+# own module
+
+# A008865 starts from i=1
+# $oeis_anum{'i*i-2'} = 'A008865';
+# # OEIS-Catalogue: A008865 expression=i*i-2
+
+$oeis_anum{'i*i+1'} = 'A002522';
+# OEIS-Catalogue: A002522 expression=i*i+1
+$oeis_anum{'i*i+2'} = 'A059100';
+# OEIS-Catalogue: A059100 expression=i*i+2
+
+$oeis_anum{'i*(i+2)'} = 'A005563';
+# OEIS-Catalogue: A005563 expression=i*(i+2)
+
+$oeis_anum{'i*(4*i*i-1)/3'} = 'A000447';  # sum of odd squares
+# OEIS-Catalogue: A000447 expression=i*(4*i*i-1)/3
+
+# A162395 start i=1
+# $oeis_anum{'i*i*(-1)**(i+1)'} = 'A162395';
+# # OEIS-Catalogue: A162395 expression=i*i*(-1)**(i+1)
+
+$oeis_anum{'i*(4*i-1)'} = 'A033991';
+# OEIS-Catalogue: A033991 expression=i*(4*i-1)
+
+$oeis_anum{'(2*i)**3'} = 'A016743';  # even cubes (2i)^3
+# OEIS-Catalogue: A016743 expression=(2*i)**3
+
+$oeis_anum{'3018*i'} = 'A086746';  # multiples of 3018
+# OEIS-Catalogue: A086746 expression=3018*i
+
+sub oeis_anum {
+  my ($self) = @_;
+  ### oeis_anum(): $self
+  return $oeis_anum{$self->{'expression'}};
+}
+
+#------------------------------------------------------------------------------
+
+
+
 
 {
   package Math::NumSeq::Expression::LanguageExpr;
@@ -266,6 +310,7 @@ HERE
   my $self = bless { 
                      # hi    => $options{'hi'},
                      subr  => $subr,
+                     expression => $expression, # for oeis_anum() and dumps
                    }, $class;
   $self->rewind;
   return $self;

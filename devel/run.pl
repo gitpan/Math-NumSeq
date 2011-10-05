@@ -46,7 +46,6 @@ $|=1;
   # $values_class = $gen->values_class('Base4Without3');
   # $values_class = $gen->values_class('Tribonacci');
   # $values_class = $gen->values_class('Perrin');
-  # $values_class = $gen->values_class('Polygonal');
   # $values_class = $gen->values_class('Expression');
   # $values_class = $gen->values_class('Pentagonal');
   # $values_class = $gen->values_class('TwinPrimes');
@@ -87,39 +86,48 @@ $|=1;
   $values_class = 'App::MathImage::NumSeq::CunninghamChain';
   $values_class = 'Math::NumSeq::DigitCount';
   $values_class = 'App::MathImage::NumSeq::ReRound';
-  $values_class = 'Math::NumSeq::Expression';
   $values_class = 'App::MathImage::NumSeq::MobiusFunction';
   $values_class = 'Math::NumSeq::TwinPrimes';
   $values_class = 'App::MathImage::NumSeq::PrimeFactorCount';
-  $values_class = 'App::MathImage::NumSeq::Fibbinary';
   $values_class = 'App::MathImage::NumSeq::PlanePath';
+  $values_class = 'App::MathImage::NumSeq::Fibbinary';
+  $values_class = 'Math::NumSeq::NumAronson';
+  $values_class = 'Math::NumSeq::Polygonal';
+  $values_class = 'App::MathImage::NumSeq::ReverseAddSteps';
+  $values_class = 'Math::NumSeq::Expression';
+  $values_class = 'Math::NumSeq::ReverseAdd';
   eval "require $values_class; 1" or die $@;
   print Math::NumSeq::DigitLength->VERSION,"\n";
-  my $seq = $values_class->new (length => 1,
+  my $seq = $values_class->new (start => 1,
+                                length => 1,
                                 fraction => '1/975',
-                                polygonal => 13,
-                                pairs => 'first',
+                                polygonal => 6,
+                                pairs => 'average',
                                 lo => 0,
                                 hi => 10, # 200*$rep,
-                                radix => 3,
+                                # radix => 3,
                                 digit => 1,
                                 sqrt => 2,
                                 where => 'low',
                                 # expression => 'z=3; z*x^2 + 3*x + 2',
                                 # expression => 'x^2 + 3*x + 2',
-                                expression => 'atan(x)',
-                                expression_evaluator => 'Perl',
+                                # expression => 'atan(x)',
+                                expression => '9*i*i',
+                                # expression_evaluator => 'Perl',
                                 oeis_anum  => 'A000396',
                                 # distinct => 1,
                                 planepath => 'HilbertCurve,height=5',
                                 coord_type => 'Y',
                                 multiplicity => 'distinct',
                                );
+  my $hi = 50;
+  print "anum ",($seq->oeis_anum||''),"\n";
+  my $values_min = $seq->values_min;
+  my $values_max = $seq->values_max;
+  my $saw_value_min;
 
   foreach my $rep (1 .. 2) {
-    print "anum ",($seq->oeis_anum||''),"\n";
     ### $seq
-    # ### type: $seq->type
     if (my $radix = $seq->characteristic('digits')) {
       print "  radix $radix\n";
     }
@@ -127,20 +135,23 @@ $|=1;
 
     my $check_pred_upto = ! $seq->characteristic('digits')
       && ! $seq->characteristic('count');
-    my $hi = 50;
     foreach (1 .. $hi) {
       my ($i,$value) = $seq->next;
       if (! defined $i) {
         print "undef\n";
         last;
       }
-      if (defined $value) {
-        #print "$i=";
-        print "$value,";
-      } else {
-        print "$i,";
-        $value = $i;
+      print "$value,";
+      if (defined $values_min && $value < $values_min) {
+        print " oops, value < values_min=$values_min\n";
       }
+      if (defined $values_max && $value > $values_max) {
+        print " oops, value < values_max=$values_max\n";
+      }
+      if (! defined $saw_value_min || $value < $saw_value_min) {
+        $saw_value_min = $value;
+      }
+
       if ($value > DBL_INT_MAX) {
         last;
       }
@@ -167,39 +178,57 @@ $|=1;
         }
       }
     }
-    print "\n";
-
-    if ($seq->can('ith')) {
-      print "by ith():  ";
-      foreach my $i ($seq->i_start .. $seq->i_start + $hi - 1) {
-        my $value = $seq->ith($i);
-        if (! defined $value) {
-          print "undef\n";
-          if ($i > 3) {
-            last;
-          } else {
-            next;
-          }
-        }
-        if (defined $value) {
-          print "$value,";
-          #print "$i=$value,";
-        } else {
-          print "$i,";
-          $value=$i;
-        }
-        if ($value > DBL_INT_MAX) {
-          last;
-        }
-
-        if ($seq->can('pred') && ! $seq->pred($value)) {
-          print " oops, pred($value) false\n";
-        }
-      }
-      print "\n";
+    if (defined $values_min && $saw_value_min != $values_min) {
+      print "oops, saw_value_min=$saw_value_min != values_min=$values_min\n";
     }
+    print "\n";
     print "rewind\n";
     $seq->rewind;
+  }
+
+  if ($seq->can('ith')) {
+    print "by ith():  ";
+    foreach my $i ($seq->i_start .. $seq->i_start + $hi - 1) {
+      my $value = $seq->ith($i);
+      if (! defined $value) {
+        print "undef\n";
+        if ($i > 3) {
+          last;
+        } else {
+          next;
+        }
+      }
+      if (defined $value) {
+        print "$value,";
+        #print "$i=$value,";
+      } else {
+        print "$i,";
+        $value=$i;
+      }
+      if ($value > DBL_INT_MAX) {
+        last;
+      }
+
+      if ($seq->can('pred') && ! $seq->pred($value)) {
+        print " oops, pred($value) false\n";
+      }
+    }
+    print "\n";
+  }
+
+  if ($seq->can('pred')
+      && ! ($seq->characteristic('count'))) {
+    print "by pred(): ";
+    foreach my $value (0 .. $hi - 1) {
+      if ($seq->pred($value)) {
+        print "$value,";
+        #print "$i=$value,";
+      }
+      if ($value > DBL_INT_MAX) {
+        last;
+      }
+    }
+    print "\n";
   }
   exit 0;
 }

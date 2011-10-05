@@ -21,7 +21,7 @@ use strict;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 7;
+$VERSION = 8;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
 use Math::NumSeq;
@@ -111,7 +111,9 @@ Return true if C<$value> is a Fibonacci number.
 =head1 SEE ALSO
 
 L<Math::NumSeq>,
-L<Math::NumSeq::LucasNumbers>
+L<Math::NumSeq::LucasNumbers>,
+L<Math::NumSeq::Fibbinary>
+L<Math::NumSeq::Tribonacci>
 
 L<Math::Fibonacci>
 

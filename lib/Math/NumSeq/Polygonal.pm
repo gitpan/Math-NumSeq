@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 7;
+$VERSION = 8;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -28,11 +28,11 @@ use Math::NumSeq::Base::IterateIth;
         'Math::NumSeq');
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+#use Devel::Comments;
 
 # use constant name => Math::NumSeq::__('Polygonal Numbers');
 use constant description => Math::NumSeq::__('Polygonal numbers');
-use constant values_min => 1;
+use constant values_min => 0;
 use constant characteristic_monotonic => 2;
 use constant parameter_info_array =>
   [
@@ -41,98 +41,143 @@ use constant parameter_info_array =>
      type    => 'integer',
      default => 6,
      minimum => 3,
+     width   => 3,
      description => Math::NumSeq::__('Which polygonal numbers to show.  3 is the triangular numbers, 4 the perfect squares, 5 the pentagonal numbers, etc.'),
    },
    { name    => 'pairs',
      display => Math::NumSeq::__('Pairs'),
      type    => 'enum',
      default => 'first',
-     choices => ['first','second','both'],  # ,'average'
+     choices => ['first','second','both','average'],
      choices_display => [Math::NumSeq::__('First'),
                          Math::NumSeq::__('Second'),
                          Math::NumSeq::__('Both'),
-                         # Math::NumSeq::__('Average'),
+                         Math::NumSeq::__('Average'),
                         ],
      description => Math::NumSeq::__('Which of the pair of values to show.'),
    },
   ];
 
-my @oeis_anum
-  = (undef, # 0
-     undef, # 1
-     undef, # 2
+#------------------------------------------------------------------------------
+my %oeis_anum;
 
-     # in Triangular.pm ... A000217 polygonal=3  pairs=first
-     { first  =>  'A000217' }, # 3 triangular
+# main generator Triangular.pm ... A000217 polygonal=3  pairs=first
+$oeis_anum{'first'}->[3] = 'A000217';  # 3 triangular
 
-     # in Squares.pm    ... A000290 polygonal=4  pairs=first
-     { first  =>  'A000290' }, # 4 squares
+# main generator Squares.pm    ... A000290 polygonal=4  pairs=first
+$oeis_anum{'first'}->[4] = 'A000290'; # 4 squares
 
-     {
-      # OEIS-Catalogue: A000326 polygonal=5  pairs=first
-      first  => 'A000326',   # 5 pentagonal
-      # OEIS-Catalogue: A005449 polygonal=5  pairs=second
-      second => 'A005449',
-      # OEIS-Catalogue: A001318 polygonal=5  pairs=both
-      both   => 'A001318',
-     },
+$oeis_anum{'first'}->[5]  = 'A000326';   # 5 pentagonal
+$oeis_anum{'second'}->[5] = 'A005449';
+$oeis_anum{'both'}->[5]   = 'A001318';
+# OEIS-Catalogue: A000326 polygonal=5  pairs=first
+# OEIS-Catalogue: A005449 polygonal=5  pairs=second
+# OEIS-Catalogue: A001318 polygonal=5  pairs=both
 
-     {
-      # OEIS-Catalogue: A000384 polygonal=6  pairs=first  # 6 hexagonal
-      first  => 'A000384',   # 6 hexagonal
-      # OEIS-Catalogue: A014105 polygonal=6  pairs=second
-      second => 'A014105',
-     },
+$oeis_anum{'first'}->[6]  = 'A000384';   # 6 hexagonal
+$oeis_anum{'second'}->[6] = 'A014105';
+# OEIS-Catalogue: A000384 polygonal=6  pairs=first
+# OEIS-Catalogue: A014105 polygonal=6  pairs=second
 
-     # OEIS-Catalogue: A000566 polygonal=7  pairs=first  # 7 heptagonal
-     { first  => 'A000566' }, # 7 heptagonal
+$oeis_anum{'first'}->[7]  = 'A000566'; # 7 heptagonal
+# OEIS-Catalogue: A000566 polygonal=7
 
-     # OEIS-Catalogue: A000567 polygonal=8  pairs=first  # 8 octagonal
-     { first  =>  'A000567' }, # 8 octagonal
+$oeis_anum{'first'}->[8]  =  'A000567'; # 8 octagonal
+# OEIS-Catalogue: A000567 polygonal=8
 
-     # OEIS-Catalogue: A001106 polygonal=9  pairs=first  # 9 nonagonal
-     { first  =>  'A001106' }, # 9 nonagonal
+$oeis_anum{'first'}->[9]  =  'A001106'; # 9 nonagonal
+# OEIS-Catalogue: A001106 polygonal=9
 
-     # OEIS-Catalogue: A001107 polygonal=10 pairs=first  # 10 decogaonal
-     { first  =>  'A001107' }, # 10 decogaonal
+$oeis_anum{'first'}->[10]  =  'A001107'; # 10 decogaonal
+# OEIS-Catalogue: A001107 polygonal=10
 
-     # OEIS-Catalogue: A051682 polygonal=11 pairs=first  # 11 hendecagonal
-     { first  =>  'A051682' }, # 11 hendecagonal
+$oeis_anum{'first'}->[11]  =  'A051682'; # 11 hendecagonal
+# OEIS-Catalogue: A051682 polygonal=11
 
-     # OEIS-Catalogue: A051624 polygonal=12 pairs=first  # 12-gonal
-     { first  =>  'A051624' }, # 12-gonal
+$oeis_anum{'first'}->[12]  =  'A051624'; # 12-gonal
+# OEIS-Catalogue: A051624 polygonal=12
 
-     # these in sequence ...
-     { first  =>  'A051865' }, # 13 tridecagonal
-     { first  =>  'A051866' }, # 14-gonal
-     { first  =>  'A051867' }, # 15
-     { first  =>  'A051868' }, # 16
-     { first  =>  'A051869' }, # 17
-     { first  =>  'A051870' }, # 18
-     { first  =>  'A051871' }, # 19
-     { first  =>  'A051872' }, # 20
-     { first  =>  'A051873' }, # 21
-     { first  =>  'A051874' }, # 22
-     { first  =>  'A051875' }, # 23
-     { first  =>  'A051876' }, # 24
-     # OEIS-Catalogue: A051865 polygonal=13 pairs=first  # 13 tridecagonal
-     # OEIS-Catalogue: A051866 polygonal=14 pairs=first  # 14-gonal
-     # OEIS-Catalogue: A051867 polygonal=15 pairs=first  # 15
-     # OEIS-Catalogue: A051868 polygonal=16 pairs=first  # 16
-     # OEIS-Catalogue: A051869 polygonal=17 pairs=first  # 17
-     # OEIS-Catalogue: A051870 polygonal=18 pairs=first  # 18
-     # OEIS-Catalogue: A051871 polygonal=19 pairs=first  # 19
-     # OEIS-Catalogue: A051872 polygonal=20 pairs=first  # 20
-     # OEIS-Catalogue: A051873 polygonal=21 pairs=first  # 21
-     # OEIS-Catalogue: A051874 polygonal=22 pairs=first  # 22
-     # OEIS-Catalogue: A051875 polygonal=23 pairs=first  # 23
-     # OEIS-Catalogue: A051876 polygonal=24 pairs=first  # 24
-    );
+# these in sequence ...
+$oeis_anum{'first'}->[13]  =  'A051865'; # 13 tridecagonal
+$oeis_anum{'first'}->[14]  =  'A051866'; # 14-gonal
+$oeis_anum{'first'}->[15]  =  'A051867'; # 15
+$oeis_anum{'first'}->[16]  =  'A051868'; # 16
+$oeis_anum{'first'}->[17]  =  'A051869'; # 17
+$oeis_anum{'first'}->[18]  =  'A051870'; # 18
+$oeis_anum{'first'}->[19]  =  'A051871'; # 19
+$oeis_anum{'first'}->[20]  =  'A051872'; # 20
+$oeis_anum{'first'}->[21]  =  'A051873'; # 21
+$oeis_anum{'first'}->[22]  =  'A051874'; # 22
+$oeis_anum{'first'}->[23]  =  'A051875'; # 23
+$oeis_anum{'first'}->[24]  =  'A051876'; # 24
+# OEIS-Catalogue: A051865 polygonal=13   # 13 tridecagonal
+# OEIS-Catalogue: A051866 polygonal=14   # 14-gonal
+# OEIS-Catalogue: A051867 polygonal=15   # 15
+# OEIS-Catalogue: A051868 polygonal=16   # 16
+# OEIS-Catalogue: A051869 polygonal=17   # 17
+# OEIS-Catalogue: A051870 polygonal=18   # 18
+# OEIS-Catalogue: A051871 polygonal=19   # 19
+# OEIS-Catalogue: A051872 polygonal=20   # 20
+# OEIS-Catalogue: A051873 polygonal=21   # 21
+# OEIS-Catalogue: A051874 polygonal=22   # 22
+# OEIS-Catalogue: A051875 polygonal=23   # 23
+# OEIS-Catalogue: A051876 polygonal=24   # 24
+
+$oeis_anum{'average'}->[6] = 'A001105'; # (k-2)/2==2 is 2*squares
+# OEIS-Catalogue: A001105 polygonal=6 pairs=average
+
+$oeis_anum{'average'}->[8] = 'A033428'; # (k-2)/2==3 is 3*squares
+# OEIS-Catalogue: A033428 polygonal=8 pairs=average
+
+$oeis_anum{'average'}->[10] = 'A016742'; # (k-2)/2==4 is 4*squares
+# OEIS-Catalogue: A016742 polygonal=10 pairs=average
+
+$oeis_anum{'average'}->[12] = 'A033429'; # (k-2)/2==5 is 5*squares
+# OEIS-Catalogue: A033429 polygonal=12 pairs=average
+
+$oeis_anum{'average'}->[14] = 'A033581'; # (k-2)/2==6 is 6*squares
+# OEIS-Catalogue: A033581 polygonal=14 pairs=average
+
+$oeis_anum{'average'}->[16] = 'A033582'; # (k-2)/2==7 is 7*squares
+# OEIS-Catalogue: A033582 polygonal=16 pairs=average
+
+$oeis_anum{'average'}->[18] = 'A139098'; # (k-2)/2==8 is 8*squares
+# OEIS-Catalogue: A139098 polygonal=18 pairs=average
+
+$oeis_anum{'average'}->[20] = 'A016766'; # (k-2)/2==9 is 9*squares
+# OEIS-Catalogue: A016766 polygonal=20 pairs=average
+
+$oeis_anum{'average'}->[22] = 'A033583'; # (k-2)/2==10 is 10*squares
+# OEIS-Catalogue: A033583 polygonal=22 pairs=average
+
+$oeis_anum{'average'}->[24] = 'A033584'; # (k-2)/2==11 is 11*squares
+# OEIS-Catalogue: A033584 polygonal=24 pairs=average
+
+$oeis_anum{'average'}->[26] = 'A135453'; # (k-2)/2==12 is 12*squares
+# OEIS-Catalogue: A135453 polygonal=26 pairs=average
+
+$oeis_anum{'average'}->[28] = 'A152742'; # (k-2)/2==13 is 13*squares
+# OEIS-Catalogue: A152742 polygonal=28 pairs=average
+
+$oeis_anum{'average'}->[30] = 'A144555'; # (k-2)/2==14 is 14*squares
+# OEIS-Catalogue: A144555 polygonal=30 pairs=average
+
+$oeis_anum{'average'}->[32] = 'A064761'; # (k-2)/2==15 is 15*squares
+# OEIS-Catalogue: A064761 polygonal=32 pairs=average
+
+$oeis_anum{'average'}->[34] = 'A016802'; # (k-2)/2==16 is 16*squares
+# OEIS-Catalogue: A016802 polygonal=34 pairs=average
+ 
+$oeis_anum{'average'}->[290] = 'A017522'; # (k-2)/2==290 is 144*squares (12n)^2
+# OEIS-Catalogue: A017522 polygonal=290 pairs=average
+
+
 sub oeis_anum {
   my ($self) = @_;
-  return $oeis_anum[$self->{'k'}]->{$self->{'pairs'}};
+  return $oeis_anum{$self->{'pairs'}}->[$self->{'k'}];
 }
 
+#------------------------------------------------------------------------------
 
 # ($k-2)*$i*($i+1)/2 - ($k-3)*$i
 # = ($k-2)/2*$i*i + ($k-2)/2*$i - ($k-3)*$i
@@ -147,25 +192,49 @@ sub oeis_anum {
 # i/2*(25*i + 25 - 48)
 # i/2*(25*i - 23)
 # 
+# P(i) = (k-2)/2 * i*(i+1) - (k-3)*i
+# S(i) = (k-2)/2 * i*(i-1) + (k-3)*i
+# P(i)-S(i)
+#     = (k-2)/2 * i*(i+1) - (k-3)*i  - [ (k-2)/2 * i*(i-1) + (k-3)*i ]
+#     = (k-2)/2 * [ i*(i+1) - i*(i-1) ]  - (k-3)*i  - (k-3)*i
+#     = (k-2)/2 * [ i*i+i - (i*i-i) ]  - 2*(k-3)*i
+#     = (k-2)/2 * [ i*i+i - i*i + i ]  - 2*(k-3)*i
+#     = (k-2)/2 * [ i + i ]  - 2*(k-3)*i
+#     = (k-2)/2 * 2*i]  - 2*(k-3)*i
+#     = 2*i * [ (k-2)/2 - (k-3) ]
+#     = 2*i * [ (k-2) - (2k-6) ] / 2
+#     = i * [ -k + 4 ] / 2
+#     = i * (4-k) / 2
+#
+# average
+# (P(i) + S(i)) / 2
+#     = [ (k-2)/2 * i*(i+1) - (k-3)*i + (k-2)/2 * i*(i-1) + (k-3)*i ] / 2
+#     = [ (k-2)/2 * i*(i+1) + (k-2)/2 * i*(i-1) ] / 2
+#     = (k-2)/2 * [ i*(i+1) + i*(i-1) ] / 2
+#     = (k-2)/2 * i * [ (i+1) + (i-1) ] / 2
+#     = (k-2)/2 * i * [ 2i ] / 2
+#     = (k-2)/2 * i*i
 
 sub rewind {
   my ($self) = @_;
   # my $lo = $self->{'lo'} || 0;
 
   my $k = $self->{'polygonal'} || 2;
-  my $add = - $k + 4;
+  my $add = 4 - $k;
   my $pairs = $self->{'pairs'} || ($self->{'pairs'} = 'first');
   if ($k >= 5) {
     if ($pairs eq 'second') {
       $add = - $add;
     } elsif ($pairs eq 'both') {
       $add = - abs($add);
+    } elsif ($pairs eq 'average') {
+      $add = 0;
     }
   }
   $self->{'k'} = $k;
   $self->{'add'} = $add;
 
-  $self->Math::NumSeq::Base::IterateIth::rewind;
+  $self->SUPER::rewind;
 }
 
 sub ith {
@@ -198,13 +267,29 @@ sub ith {
 # k=8  4/12 + sqrt(2/6 * $n + 1/9)
 #
 # i = 1/(2*(k-2)) * [k-4 + sqrt( 8*(k-2)*n + (4-k)^2 ) ]
+#
+# average A(i) = (k-2)/2 * i*i
+#   i*i = A*2/(k-2)
+#   i = sqrt(2A / (k-2))
+#   i = sqrt(2A * (k-2)) / (k-2)
+#   i = sqrt(8A * (k-2)) / (2*(k-2))
+#   which is add==0
+#
 sub pred {
   my ($self, $value) = @_;
+  ### Polygonal pred(): $value
+  ### k: $self->{'k'}
+  ### add: $self->{'add'}
+
   if ($value <= 0) {
     return ($value == 0);
   }
+
   my $k = $self->{'k'};
-  my $sqrt = sqrt(8*($k-2) * $value + (4-$k)**2);
+  my $add = $self->{'add'};
+  my $sqrt = sqrt(8*($k-2) * $value + $add*$add);
+  ### sqrt of: (8*($k-2) * $value + $add*$add)
+
   if ($self->{'pairs'} eq 'both') {
     my $other = ($sqrt + $self->{'add'}) / (2*($k-2));
     if (int($other) == $other) {
@@ -212,9 +297,100 @@ sub pred {
     }
   }
   $sqrt = ($sqrt - $self->{'add'}) / (2*($k-2));
-  return (int($sqrt) == $sqrt);
-
+  ### $sqrt
+  return ($sqrt == int($sqrt));
 }
 
 1;
 __END__
+
+=for stopwords Ryde Math-NumSeq
+
+=head1 NAME
+
+Math::NumSeq::Polygonal -- polygonal numbers, triangular, square, pentagonal, etc
+
+=head1 SYNOPSIS
+
+ use Math::NumSeq::Polygonal;
+ my $seq = Math::NumSeq::Polygonal->new (polygonal => 7);
+ my ($i, $value) = $seq->next;
+
+=head1 DESCRIPTION
+
+The sequence of polygonal numbers.  The 3-gonals are the triangular numbers
+i*(i+1)/2, the 4-gonals are squares i*i, the 5-gonals are pentagonals
+(3i-1)*i/2.  In general the k-gonals for kE<gt>=3 are
+
+    P(i) = (k-2)/2 * i*(i+1) - (k-3)*i
+
+C<pairs =E<gt> 'second'> gives the polygonals of the second kind, which are
+the same formula negating the i.
+
+    S(i) = (k-2)/2 * i*(i-1) + (k-3)*i
+
+The result is positive values, bigger than the plain polygonals.  For
+example the pentagonals are 0,1,5,12,22,etc and the second pentagonals are
+0,2,7,15,26,etc.
+
+C<pairs =E<gt> 'both'> gives the firsts and seconds interleaved.  P(0) and
+S(0) are both 0 and is given just once at i=0,
+
+    0, P(1),S(1), P(2),S(2), P(3),S(3), ...
+
+C<pairs =E<gt> 'average'> is the average of the first and second, which ends
+up being simplly a multiple of the perfect squares,
+
+    A(i) = (P(i)+S(i))/2
+         = (k-2)/2 * i*i
+
+This is an integer if k is even, or if k is odd but i is even.  If both k
+and i odd then it's an 0.5.
+
+=head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
+
+=over 4
+
+=item C<$seq = Math::NumSeq::Polygonal-E<gt>new (key=E<gt>value,...)>
+
+Create and return a new sequence object.
+
+=item C<$value = $seq-E<gt>ith($i)>
+
+Return C<$i ** 2>.
+
+=item C<$bool = $seq-E<gt>pred($value)>
+
+Return true if C<$value> is a perfect square.
+
+=back
+
+=head1 SEE ALSO
+
+L<Math::NumSeq>,
+L<Math::NumSeq::Cubes>
+
+=head1 HOME PAGE
+
+http://user42.tuxfamily.org/math-numseq/index.html
+
+=head1 LICENSE
+
+Copyright 2010, 2011 Kevin Ryde
+
+Math-NumSeq is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+Math-NumSeq is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+more details.
+
+You should have received a copy of the GNU General Public License along with
+Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
+
+=cut

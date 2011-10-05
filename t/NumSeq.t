@@ -25,7 +25,7 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
-my $test_count = 213;
+my $test_count = 228;
 plan tests => $test_count;
 
 # uncomment this to run the ### lines
@@ -124,6 +124,52 @@ foreach my $elem
    # Repdigits.pm
    # SqrtDigits.pm
 
+   [ 'Math::NumSeq::Polygonal', 0,  # pentagonal
+     [ 0, 1,   5, 12,   22 ],  { polygonal => 5 },
+   ],
+   [ 'Math::NumSeq::Polygonal', 0,  # pentagonal second
+     [ 0, 2,   7, 15,   26 ],  { polygonal => 5, pairs => 'second' },
+   ],
+   [ 'Math::NumSeq::Polygonal', 0,  # pentagonal average
+     [ 0, 1.5, 6, 13.5, 24 ],  { polygonal => 5, pairs => 'average' },
+   ],
+   [ 'Math::NumSeq::Polygonal', 0,  # pentagonal both
+     [ 0, 1,2, 5,7, 12,15, 22,26 ],
+     { polygonal => 5, pairs => 'both' },
+   ],
+
+   [ 'Math::NumSeq::NumAronson', 0,
+     [ 1, 4,
+       6,7,8, 9,11,13,
+       15,16,17,18,19,20, 21,23,25,27,29,31,
+       33,34,35,36,37,38,39,40,41,42,43,44,
+       45,47,49,51,53,55,57,59,61,63,65,67,69,
+     ],
+     undef,
+   ],
+
+   [ 'Math::NumSeq::Tribonacci', 0,
+     [ 0, 0, 1, 1, 2, 4, 7, 13, 24, ],
+   ],
+
+   [ 'Math::NumSeq::Fibbinary', 0,
+     [ 0x0,  #      0
+       0x1,  #      1
+       0x2,  #     10
+       0x4,  #    100
+       0x5,  #    101
+       0x8,  #   1000
+       0x9,  #   1001
+       0xA,  #   1010
+       0x10, #  10000
+       0x11, #  10001
+       0x12, #  10010
+       0x14, #  10100
+       0x15, #  10101
+       0x20, # 100000
+     ],
+   ],
+
    [ 'Math::NumSeq::HappyNumbers', 0,
      [ 1,7,10,13,19,23, ],
    ],
@@ -148,7 +194,7 @@ foreach my $elem
      ],
      { power => 2 },
    ],
-   
+
    [ 'Math::NumSeq::Fibonacci', 1,
      [ 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144,
        233, 377, 610, 987, 1597, ] ],
@@ -156,10 +202,6 @@ foreach my $elem
      [  1, 3, 4, 7, 11, 18, 29 ],
    ],
 
-   # [ 'Math::NumSeq::Tribonacci', 0,
-   #   [ 0, 0, 1, 1, 2, 4, 7, 13, 24, ],
-   # ],
-   #
    # [ 'Math::NumSeq::Abundant', 0,
    #   [  12, 18, 20, 24, 30 ],
    # ],
@@ -168,7 +210,7 @@ foreach my $elem
    [ 'Math::NumSeq::SternDiatomic', 0,
      [ 0, 1, 1, 2, 1, 3, 2, 3, 1, 4, 3, 5 ],
    ],
-   
+
    [ 'Math::NumSeq::DigitSumModulo', 0,
      [ 0,  # 00
        1,  # 01
@@ -181,7 +223,7 @@ foreach my $elem
        1,  # 1000
      ],
      { radix => 2, modulus => 3 } ],
-   
+
    [ 'Math::NumSeq::DigitProduct', 0,
      [ 0,
        1,
@@ -193,42 +235,42 @@ foreach my $elem
        1,  # 111
        0, ],
      { radix => 2 } ],
-   
+
    [ 'Math::NumSeq::DigitProduct', 0,
      [ 0,1,2,
        0,1,2,
        0,2,4,  # 20,21,22
-       
+
        0,0,0,  # 100,101,102
        0,1,2,
        0,2,4,
-       
+
        0,0,0,
        0,2,4,
        0,4,8, ],
      { radix => 3 } ],
-   
+
    [ 'Math::NumSeq::SqrtDigits', 0,
      [ 1, 0, 1, 1, 0, 1, 0, 1, 0, ],
      { radix => 2, sqrt => 2 } ],
-   
+
    [ 'Math::NumSeq::FractionDigits', 0,
      [ 0,9,0,9,0,9,0,9,0,9,0,9, ],
      { fraction => '1/11' } ],
-   
+
    [ 'Math::NumSeq::ProthNumbers', 0,
      [ 3, 5, 9, 13, 17, 25, 33, 41, 49, 57, 65, 81, 97, 113, 129, 145,
        161, 177, 193, 209, 225, 241, 257, 289, 321, 353, 385, 417, 449, 481,
        513, 545, 577, 609, 641, 673, 705, 737, 769, 801, 833, 865, 897, 929,
        961, 993, 1025, 1089, 1153, 1217, 1281, 1345, 1409 ] ],
-   
+
    # [ 'Math::NumSeq::TotientSum', 0,
    #   [ 0, 1, 2, 4, 6, 10, 12, 18, 22, 28, 32, 42 ],
    # ],
    #
    # [ 'Math::NumSeq::Loeschian', 0,
    #   [ 0,1,3,4,7,9,12,13,16,19,21,25 ] ],
-   
+
    [ 'Math::NumSeq::DigitCount', 0,
      [ 0,1,1,2,
        1,2,2,3,
@@ -260,7 +302,7 @@ foreach my $elem
      { radix => 10,
        digit => 9,
      } ],
-   
+
    # [ 'Math::NumSeq::DigitCountLow', 0,
    #   [ 0,  # 0
    #     0,  # 1
@@ -324,14 +366,14 @@ foreach my $elem
    #   { radix => 5,
    #     digit => 0,
    #   } ],
-   
-   
+
+
    [ 'Math::NumSeq::CullenNumbers', 0,
      [ 1, 3, 9, 25, 65, 161, 385, 897, 2049, 4609, ] ],
-   
+
    # [ 'Math::NumSeq::SumXsq3Ysq', 0,
    #   [ 4,7,12,13,16,19,21,28,31,36,37 ] ],
-   
+
    [ 'Math::NumSeq::Palindromes', 0,
      [ 0, 1, 3, 5, 7, 9, 15, 17, 21, 27, 31, 33, 45, 51,
        63, 65, 73, 85, 93, 99, 107, 119, 127, 129, 153,
@@ -413,15 +455,15 @@ foreach my $elem
        909,919,929,939,949,959,969,979,989,999,
        1001,1111,1221,1331,1441,1551,1661,1771,1881,1991,
      ] ],
-   
+
    [ 'Math::NumSeq::Factorials', 0,
      [ 1, 1, 2, 6, 24, 120, 720 ],
    ],
-   
+
    [ 'Math::NumSeq::Primorials', 0,
      [ 1, 2, 6, 30, 210, ],
    ],
-   
+
    # [ 'Math::NumSeq::SumTwoSquares', 1,
    #   [ 2, 5, 8, 10, 13, 17, 18, 20, 25, 26, 29, 32, 34, 37,
    #     40, 41, 45, 50, 52, 53, 58, 61, 65, 68, 72, 73, 74,
@@ -442,7 +484,7 @@ foreach my $elem
      [ 1, 3, 5, 7, 9, 11, 13 ] ],
    [ 'Math::NumSeq::Odd', 6,
      [ 7, 9, 11, 13 ] ],
-   
+
    [ 'Math::NumSeq::Even', 0,
      [ 0, 2, 4, 6, 8, 10, 12 ] ],
    [ 'Math::NumSeq::Even', 5,
@@ -560,47 +602,24 @@ foreach my $elem
      [ 1, 13, 37, 73, 121, ],
    ],
 
-   # [ 'Math::NumSeq::Pentagonal', 0,
-   #   [ 0,1,5,12,22 ],
-   #   { pairs => 'first' } ],
-   # [ 'Math::NumSeq::Pentagonal', 0,
-   #   [ 0,2,7,15,26 ],
-   #   { pairs => 'second' } ],
-   # [ 'Math::NumSeq::Pentagonal', 0,
-   #   [ 0,1,2,5,7,12,15,22,26 ],
-   #   { pairs => 'both' } ],
-
-   # not yet
-   # [ 'Math::NumSeq::Pentagonal', 0,
-   #   [ 0, 1.5, 6, 13,5, 24 ],
-   #   { pairs => 'average' } ],
-
-   [ 'Math::NumSeq::Polygonal', 0,
-     [ 0, 1, 3, 6, 10, 15, 21 ],  # triangular
+   [ 'Math::NumSeq::Polygonal', 0, # triangular
+     [ 0, 1, 3, 6, 10, 15, 21 ],
      { polygonal => 3 },
    ],
-   [ 'Math::NumSeq::Polygonal', 0,
-     [ 0, 1, 4, 9, 16 ],    # squares
+   [ 'Math::NumSeq::Polygonal', 0, # squares
+     [ 0, 1, 4, 9, 16 ],
      { polygonal => 4 },
    ],
-   [ 'Math::NumSeq::Polygonal', 0,
-     [ 0,1,5,12,22 ],    # pentagonal
-     { polygonal => 5 },
-   ],
-   [ 'Math::NumSeq::Polygonal', 0,
-     [ 0,1,5,12,22 ],    # pentagonal
-     { polygonal => 5 },
-   ],
-   [ 'Math::NumSeq::Polygonal', 0,
-     [ 0, 1, 6, 15, 28, 45, 66 ],    # hexagonal
+   [ 'Math::NumSeq::Polygonal', 0,  # hexagonal
+     [ 0, 1, 6, 15, 28, 45, 66 ],
      { polygonal => 6 },
    ],
-   [ 'Math::NumSeq::Polygonal', 0,
-     [ 0, 1, 7, 18, 34, 55, 81, ],    # heptagonal
+   [ 'Math::NumSeq::Polygonal', 0,    # heptagonal
+     [ 0, 1, 7, 18, 34, 55, 81, ],
      { polygonal => 7 },
    ],
-   [ 'Math::NumSeq::Polygonal', 0,
-     [ 0, 1, 8, 21, 40, 65, 96, ],    # octagonal
+   [ 'Math::NumSeq::Polygonal', 0,   # octagonal
+     [ 0, 1, 8, 21, 40, 65, 96, ],
      { polygonal => 8 },
    ],
    [ 'Math::NumSeq::Polygonal', 0,                  # nonagonal
@@ -815,17 +834,6 @@ foreach my $elem
    #   { module => 'Math::Aronson' },
    # ],
    #
-   # # sloanes
-   # # http://www.research.att.com/%7Enjas/sequences/A079000
-   # [ 'Math::NumSeq::NumaronsonA', 0,
-   #   [ 1, 4, 6, 7, 8, 9, 11, 13, 15, 16, 17, 18, 19, 20,
-   #     21, 23, 25, 27, 29, 31, 33, 34, 35, 36, 37, 38, 39,
-   #     40, 41, 42, 43, 44, 45, 47, 49, 51, 53, 55, 57, 59,
-   #     61, 63, 65, 67, 69, 70, 71, 72, 73, 74, 75, 76, 77,
-   #     78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90,
-   #     91, 92, 93, 95, 97 ],
-   #   undef,
-   # ],
 
    # [ 'Math::NumSeq::ThueMorseEvil', 0,
    #   [ 0, 3, 5, 6, 9, 10, 12, 15, 17, 18, 20, 23, 24, 27,
@@ -1079,7 +1087,9 @@ foreach my $elem
         $want = [ grep {$_<=$hi} @$want ];
       }
       my @got;
-      foreach my $value (_min(@$want) .. $want->[-1]) {
+      my $pred_lo = _min(@$want);
+      my $pred_hi = $want->[-1];
+      for (my $value = $pred_lo; $value <= $pred_hi; $value += 0.5) {
         ### $value
         if ($seq->pred($value)) {
           push @got, $value;

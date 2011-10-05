@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 7;
+$VERSION = 8;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -160,9 +160,12 @@ sub ith {
 
 sub pred {
   my ($self, $value) = @_;
-  if (_is_infinite($value)) {  # don't loop forever if $value is +/-infinity
+
+  if (_is_infinite($value)  # don't loop forever if $value is +/-infinity
+      || $value != int($value)) {
     return 0;
   }
+
   my $radix = $self->{'radix'};
   my @digits;
   while ($value) {

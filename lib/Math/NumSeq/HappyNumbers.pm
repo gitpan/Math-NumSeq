@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 7;
+$VERSION = 8;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
@@ -64,7 +64,9 @@ sub oeis_anum {
 sub pred {
   my ($self, $value) = @_;
   ### HappyNumbers pred(): $value
-  if ($value <= 0 || _is_infinite($value)) {
+  if ($value <= 0
+      || $value != int($value)
+      || _is_infinite($value)) {
     return 0;
   }
   my $radix = $self->{'radix'};

@@ -20,15 +20,17 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 7;
+$VERSION = 8;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
+*_is_infinite = \&Math::NumSeq::_is_infinite;
 
 # uncomment this to run the ### lines
 #use Devel::Comments;
+
 
 # use constant name => Math::NumSeq::__('Proth Numbers');
 use constant description => Math::NumSeq::__('Proth numbers k*2^n+1 for odd k and k < 2^n.');
@@ -49,24 +51,6 @@ use constant i_start => 1;
 use constant oeis_anum => 'A080075';
 
 # ENHANCE-ME: for next() keep the k and its increment 
-
-sub pred {
-  my ($self, $value) = @_;
-  ### ProthNumbers pred(): $value
-  ($value >= 3 && $value & 1) or return 0;
-  my $pow = 2;
-  for (;;) {
-    ### at: "$value   $pow"
-    $value >>= 1;
-    if ($value < $pow) {
-      return 1;
-    }
-    if ($value & 1) {
-      return ($value < $pow);
-    }
-    $pow <<= 1;
-  }
-}
 
 sub ith {
   my ($self, $i) = @_;
@@ -98,6 +82,29 @@ sub ith {
 
   $rem--;  # now 2 or 1
   return ($i - $bit*$rem) * 2 * $rem*$bit + 1;
+}
+
+sub pred {
+  my ($self, $value) = @_;
+  ### ProthNumbers pred(): $value
+  unless ($value >= 3
+          && ($value & 1)
+          && $value == int($value)
+          && ! _is_infinite($value)) {
+    return 0;
+  }
+  my $pow = 2;
+  for (;;) {
+    ### at: "$value   $pow"
+    $value >>= 1;
+    if ($value < $pow) {
+      return 1;
+    }
+    if ($value & 1) {
+      return ($value < $pow);
+    }
+    $pow <<= 1;
+  }
 }
 
 1;

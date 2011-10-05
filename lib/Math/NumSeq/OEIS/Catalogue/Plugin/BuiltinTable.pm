@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 7;
+$VERSION = 8;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 225 A-numbers in 42 modules
+# total 267 A-numbers in 46 modules
 
 use constant info_arrayref =>
 [
@@ -407,8 +407,68 @@ use constant info_arrayref =>
     'class' => 'Math::NumSeq::Even'
   },
   {
+    'anum' => 'A002522',
+    'class' => 'Math::NumSeq::Expression',
+    'parameters' => [
+      'expression',
+      'i*i+1'
+    ]
+  },
+  {
+    'anum' => 'A059100',
+    'class' => 'Math::NumSeq::Expression',
+    'parameters' => [
+      'expression',
+      'i*i+2'
+    ]
+  },
+  {
+    'anum' => 'A005563',
+    'class' => 'Math::NumSeq::Expression',
+    'parameters' => [
+      'expression',
+      'i*(i+2)'
+    ]
+  },
+  {
+    'anum' => 'A000447',
+    'class' => 'Math::NumSeq::Expression',
+    'parameters' => [
+      'expression',
+      'i*(4*i*i-1)/3'
+    ]
+  },
+  {
+    'anum' => 'A033991',
+    'class' => 'Math::NumSeq::Expression',
+    'parameters' => [
+      'expression',
+      'i*(4*i-1)'
+    ]
+  },
+  {
+    'anum' => 'A016743',
+    'class' => 'Math::NumSeq::Expression',
+    'parameters' => [
+      'expression',
+      '(2*i)**3'
+    ]
+  },
+  {
+    'anum' => 'A086746',
+    'class' => 'Math::NumSeq::Expression',
+    'parameters' => [
+      'expression',
+      '3018*i'
+    ]
+  },
+  {
     'anum' => 'A000142',
     'class' => 'Math::NumSeq::Factorials'
+  },
+  {
+    'anum' => 'A003714',
+    'class' => 'Math::NumSeq::Fibbinary'
   },
   {
     'anum' => 'A000045',
@@ -571,6 +631,10 @@ use constant info_arrayref =>
     'class' => 'Math::NumSeq::MobiusFunction'
   },
   {
+    'anum' => 'A079000',
+    'class' => 'Math::NumSeq::NumAronson'
+  },
+  {
     'anum' => 'A005408',
     'class' => 'Math::NumSeq::Odd'
   },
@@ -697,9 +761,7 @@ use constant info_arrayref =>
     'class' => 'Math::NumSeq::Polygonal',
     'parameters' => [
       'polygonal',
-      7,
-      'pairs',
-      'first'
+      7
     ]
   },
   {
@@ -707,9 +769,7 @@ use constant info_arrayref =>
     'class' => 'Math::NumSeq::Polygonal',
     'parameters' => [
       'polygonal',
-      8,
-      'pairs',
-      'first'
+      8
     ]
   },
   {
@@ -717,9 +777,7 @@ use constant info_arrayref =>
     'class' => 'Math::NumSeq::Polygonal',
     'parameters' => [
       'polygonal',
-      9,
-      'pairs',
-      'first'
+      9
     ]
   },
   {
@@ -727,9 +785,7 @@ use constant info_arrayref =>
     'class' => 'Math::NumSeq::Polygonal',
     'parameters' => [
       'polygonal',
-      10,
-      'pairs',
-      'first'
+      10
     ]
   },
   {
@@ -737,9 +793,7 @@ use constant info_arrayref =>
     'class' => 'Math::NumSeq::Polygonal',
     'parameters' => [
       'polygonal',
-      11,
-      'pairs',
-      'first'
+      11
     ]
   },
   {
@@ -747,9 +801,7 @@ use constant info_arrayref =>
     'class' => 'Math::NumSeq::Polygonal',
     'parameters' => [
       'polygonal',
-      12,
-      'pairs',
-      'first'
+      12
     ]
   },
   {
@@ -757,9 +809,7 @@ use constant info_arrayref =>
     'class' => 'Math::NumSeq::Polygonal',
     'parameters' => [
       'polygonal',
-      13,
-      'pairs',
-      'first'
+      13
     ]
   },
   {
@@ -767,9 +817,7 @@ use constant info_arrayref =>
     'class' => 'Math::NumSeq::Polygonal',
     'parameters' => [
       'polygonal',
-      14,
-      'pairs',
-      'first'
+      14
     ]
   },
   {
@@ -777,9 +825,7 @@ use constant info_arrayref =>
     'class' => 'Math::NumSeq::Polygonal',
     'parameters' => [
       'polygonal',
-      15,
-      'pairs',
-      'first'
+      15
     ]
   },
   {
@@ -787,9 +833,7 @@ use constant info_arrayref =>
     'class' => 'Math::NumSeq::Polygonal',
     'parameters' => [
       'polygonal',
-      16,
-      'pairs',
-      'first'
+      16
     ]
   },
   {
@@ -797,9 +841,7 @@ use constant info_arrayref =>
     'class' => 'Math::NumSeq::Polygonal',
     'parameters' => [
       'polygonal',
-      17,
-      'pairs',
-      'first'
+      17
     ]
   },
   {
@@ -807,9 +849,7 @@ use constant info_arrayref =>
     'class' => 'Math::NumSeq::Polygonal',
     'parameters' => [
       'polygonal',
-      18,
-      'pairs',
-      'first'
+      18
     ]
   },
   {
@@ -817,9 +857,7 @@ use constant info_arrayref =>
     'class' => 'Math::NumSeq::Polygonal',
     'parameters' => [
       'polygonal',
-      19,
-      'pairs',
-      'first'
+      19
     ]
   },
   {
@@ -827,9 +865,7 @@ use constant info_arrayref =>
     'class' => 'Math::NumSeq::Polygonal',
     'parameters' => [
       'polygonal',
-      20,
-      'pairs',
-      'first'
+      20
     ]
   },
   {
@@ -837,9 +873,7 @@ use constant info_arrayref =>
     'class' => 'Math::NumSeq::Polygonal',
     'parameters' => [
       'polygonal',
-      21,
-      'pairs',
-      'first'
+      21
     ]
   },
   {
@@ -847,9 +881,7 @@ use constant info_arrayref =>
     'class' => 'Math::NumSeq::Polygonal',
     'parameters' => [
       'polygonal',
-      22,
-      'pairs',
-      'first'
+      22
     ]
   },
   {
@@ -857,9 +889,7 @@ use constant info_arrayref =>
     'class' => 'Math::NumSeq::Polygonal',
     'parameters' => [
       'polygonal',
-      23,
-      'pairs',
-      'first'
+      23
     ]
   },
   {
@@ -867,9 +897,167 @@ use constant info_arrayref =>
     'class' => 'Math::NumSeq::Polygonal',
     'parameters' => [
       'polygonal',
+      24
+    ]
+  },
+  {
+    'anum' => 'A001105',
+    'class' => 'Math::NumSeq::Polygonal',
+    'parameters' => [
+      'polygonal',
+      6,
+      'pairs',
+      'average'
+    ]
+  },
+  {
+    'anum' => 'A033428',
+    'class' => 'Math::NumSeq::Polygonal',
+    'parameters' => [
+      'polygonal',
+      8,
+      'pairs',
+      'average'
+    ]
+  },
+  {
+    'anum' => 'A016742',
+    'class' => 'Math::NumSeq::Polygonal',
+    'parameters' => [
+      'polygonal',
+      10,
+      'pairs',
+      'average'
+    ]
+  },
+  {
+    'anum' => 'A033429',
+    'class' => 'Math::NumSeq::Polygonal',
+    'parameters' => [
+      'polygonal',
+      12,
+      'pairs',
+      'average'
+    ]
+  },
+  {
+    'anum' => 'A033581',
+    'class' => 'Math::NumSeq::Polygonal',
+    'parameters' => [
+      'polygonal',
+      14,
+      'pairs',
+      'average'
+    ]
+  },
+  {
+    'anum' => 'A033582',
+    'class' => 'Math::NumSeq::Polygonal',
+    'parameters' => [
+      'polygonal',
+      16,
+      'pairs',
+      'average'
+    ]
+  },
+  {
+    'anum' => 'A139098',
+    'class' => 'Math::NumSeq::Polygonal',
+    'parameters' => [
+      'polygonal',
+      18,
+      'pairs',
+      'average'
+    ]
+  },
+  {
+    'anum' => 'A016766',
+    'class' => 'Math::NumSeq::Polygonal',
+    'parameters' => [
+      'polygonal',
+      20,
+      'pairs',
+      'average'
+    ]
+  },
+  {
+    'anum' => 'A033583',
+    'class' => 'Math::NumSeq::Polygonal',
+    'parameters' => [
+      'polygonal',
+      22,
+      'pairs',
+      'average'
+    ]
+  },
+  {
+    'anum' => 'A033584',
+    'class' => 'Math::NumSeq::Polygonal',
+    'parameters' => [
+      'polygonal',
       24,
       'pairs',
-      'first'
+      'average'
+    ]
+  },
+  {
+    'anum' => 'A135453',
+    'class' => 'Math::NumSeq::Polygonal',
+    'parameters' => [
+      'polygonal',
+      26,
+      'pairs',
+      'average'
+    ]
+  },
+  {
+    'anum' => 'A152742',
+    'class' => 'Math::NumSeq::Polygonal',
+    'parameters' => [
+      'polygonal',
+      28,
+      'pairs',
+      'average'
+    ]
+  },
+  {
+    'anum' => 'A144555',
+    'class' => 'Math::NumSeq::Polygonal',
+    'parameters' => [
+      'polygonal',
+      30,
+      'pairs',
+      'average'
+    ]
+  },
+  {
+    'anum' => 'A064761',
+    'class' => 'Math::NumSeq::Polygonal',
+    'parameters' => [
+      'polygonal',
+      32,
+      'pairs',
+      'average'
+    ]
+  },
+  {
+    'anum' => 'A016802',
+    'class' => 'Math::NumSeq::Polygonal',
+    'parameters' => [
+      'polygonal',
+      34,
+      'pairs',
+      'average'
+    ]
+  },
+  {
+    'anum' => 'A017522',
+    'class' => 'Math::NumSeq::Polygonal',
+    'parameters' => [
+      'polygonal',
+      290,
+      'pairs',
+      'average'
     ]
   },
   {
@@ -1030,6 +1218,158 @@ use constant info_arrayref =>
     'parameters' => [
       'radix',
       10
+    ]
+  },
+  {
+    'anum' => 'A035522',
+    'class' => 'Math::NumSeq::ReverseAdd',
+    'parameters' => [
+      'radix',
+      2,
+      'start',
+      1
+    ]
+  },
+  {
+    'anum' => 'A061561',
+    'class' => 'Math::NumSeq::ReverseAdd',
+    'parameters' => [
+      'radix',
+      2,
+      'start',
+      22
+    ]
+  },
+  {
+    'anum' => 'A075253',
+    'class' => 'Math::NumSeq::ReverseAdd',
+    'parameters' => [
+      'radix',
+      2,
+      'start',
+      77
+    ]
+  },
+  {
+    'anum' => 'A075268',
+    'class' => 'Math::NumSeq::ReverseAdd',
+    'parameters' => [
+      'radix',
+      2,
+      'start',
+      442
+    ]
+  },
+  {
+    'anum' => 'A077076',
+    'class' => 'Math::NumSeq::ReverseAdd',
+    'parameters' => [
+      'radix',
+      2,
+      'start',
+      537
+    ]
+  },
+  {
+    'anum' => 'A077077',
+    'class' => 'Math::NumSeq::ReverseAdd',
+    'parameters' => [
+      'radix',
+      2,
+      'start',
+      775
+    ]
+  },
+  {
+    'anum' => 'A075299',
+    'class' => 'Math::NumSeq::ReverseAdd',
+    'parameters' => [
+      'radix',
+      4,
+      'start',
+      290
+    ]
+  },
+  {
+    'anum' => 'A075153',
+    'class' => 'Math::NumSeq::ReverseAdd',
+    'parameters' => [
+      'radix',
+      4,
+      'start',
+      318
+    ]
+  },
+  {
+    'anum' => 'A075466',
+    'class' => 'Math::NumSeq::ReverseAdd',
+    'parameters' => [
+      'radix',
+      4,
+      'start',
+      266718
+    ]
+  },
+  {
+    'anum' => 'A075467',
+    'class' => 'Math::NumSeq::ReverseAdd',
+    'parameters' => [
+      'radix',
+      4,
+      'start',
+      270798
+    ]
+  },
+  {
+    'anum' => 'A076247',
+    'class' => 'Math::NumSeq::ReverseAdd',
+    'parameters' => [
+      'radix',
+      4,
+      'start',
+      1059774
+    ]
+  },
+  {
+    'anum' => 'A076248',
+    'class' => 'Math::NumSeq::ReverseAdd',
+    'parameters' => [
+      'radix',
+      4,
+      'start',
+      1059831
+    ]
+  },
+  {
+    'anum' => 'A001127',
+    'class' => 'Math::NumSeq::ReverseAdd',
+    'parameters' => [
+      'start',
+      1
+    ]
+  },
+  {
+    'anum' => 'A033648',
+    'class' => 'Math::NumSeq::ReverseAdd',
+    'parameters' => [
+      'start',
+      3
+    ]
+  },
+  {
+    'anum' => 'A033670',
+    'class' => 'Math::NumSeq::ReverseAdd',
+    'parameters' => [
+      'start',
+      89
+    ]
+  },
+  {
+    'anum' => 'A006960',
+    'class' => 'Math::NumSeq::ReverseAdd',
+    'parameters' => [
+      'start',
+      196
     ]
   },
   {
@@ -1791,6 +2131,10 @@ use constant info_arrayref =>
   {
     'anum' => 'A000217',
     'class' => 'Math::NumSeq::Triangular'
+  },
+  {
+    'anum' => 'A000073',
+    'class' => 'Math::NumSeq::Tribonacci'
   },
   {
     'anum' => 'A001359',

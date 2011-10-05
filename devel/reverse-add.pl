@@ -1,3 +1,5 @@
+#!/usr/bin/perl -w
+
 # Copyright 2011 Kevin Ryde
 
 # This file is part of Math-NumSeq.
@@ -15,39 +17,35 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
-package Math::NumSeq::Base::IteratePred;
 use 5.004;
 use strict;
 
-use vars '$VERSION';
-$VERSION = 8;
-
-sub rewind {
-  my ($self) = @_;
-  $self->{'i'} = $self->i_start;
-  $self->{'value'} = 0;
-}
-sub next {
-  my ($self) = @_;
-  my $value = $self->{'value'};
-  for (;;) {
-    if ($self->pred(++$value)) {
-      return ($self->{'i'}++, ($self->{'value'} = $value));
-    }
+{
+  require Math::BigInt;
+  my $two = Math::BigInt->new(2);
+  foreach my $k (0 .. 20) {
+    my $a = 3*(2**(2*$k + 1) - 2**$k);
+    printf "%b\n", $a;
+    my $b = 3*(2**(2*$k + 1) + 2**$k - 1);
+    printf "%b\n", $b;
+    my $c = 3*(2**(2*$k + 2) - 2**$k);
+    printf "%b\n", $c;
+    my $d = 3*(2**(2*$k + 2) + 3*2**$k - 1);
+    printf "%b\n", $d;
   }
+  exit 0;
 }
-# sub ith {
-#   my ($self, $i) = @_;
-#   $i -= $self->i_start;
-#   my $value = $self->value_min - 1;
-#   while ($i >= 0) {
-#     $value++;
-#     if ($self->pred($value)) {
-#       $i--;
-#     }
-#   }
-#   return $value;    
-# }
 
-1;
-__END__
+{
+  require Math::BigInt;
+  eval { Math::BigInt->import (try => 'GMP') };
+
+  my $k = Math::BigInt->new(196);
+  foreach (1 .. 50) {
+    print "$k\n";
+    $k += Math::BigInt->new (reverse $k);
+  }
+
+  exit 0;
+}
+

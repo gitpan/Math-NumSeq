@@ -1,3 +1,5 @@
+#!/usr/bin/perl -w
+
 # Copyright 2011 Kevin Ryde
 
 # This file is part of Math-NumSeq.
@@ -15,39 +17,18 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
-package Math::NumSeq::Base::IteratePred;
 use 5.004;
 use strict;
 
-use vars '$VERSION';
-$VERSION = 8;
-
-sub rewind {
-  my ($self) = @_;
-  $self->{'i'} = $self->i_start;
-  $self->{'value'} = 0;
-}
-sub next {
-  my ($self) = @_;
-  my $value = $self->{'value'};
-  for (;;) {
-    if ($self->pred(++$value)) {
-      return ($self->{'i'}++, ($self->{'value'} = $value));
+{
+  print "1, 4,\n";
+  foreach my $k (0 .. 5) {
+    my $pow = 2**$k;
+    foreach my $j (-3 * $pow .. 3 * $pow - 1) {
+      my $value = 12*$pow - 3 + (3*$j + abs($j))/2;
+      print "$value, ";
     }
+    print "\n";
   }
+  exit 0;
 }
-# sub ith {
-#   my ($self, $i) = @_;
-#   $i -= $self->i_start;
-#   my $value = $self->value_min - 1;
-#   while ($i >= 0) {
-#     $value++;
-#     if ($self->pred($value)) {
-#       $i--;
-#     }
-#   }
-#   return $value;    
-# }
-
-1;
-__END__

@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 7;
+$VERSION = 8;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -73,9 +73,18 @@ sub next {
 
 sub pred {
   my ($self, $value) = @_;
+
+  {
+    my $int = int($value);
+    if ($value != $int) {
+      return 0;
+    }
+    $value = $int;  # prefer BigInt if input BigFloat
+  }
+
   my $radix = $self->{'radix'};
   if ($radix < 7) {
-    return 0;
+    return 0;  # no digit 6s at all if radix<7
   }
   if ($radix == 10) {
     return ($value =~ /666/);

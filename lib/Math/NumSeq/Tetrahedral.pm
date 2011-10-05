@@ -23,7 +23,7 @@ use Math::Libm 'cbrt';
 use POSIX 'floor';
 
 use vars '$VERSION','@ISA';
-$VERSION = 7;
+$VERSION = 8;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',

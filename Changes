@@ -17,6 +17,10 @@ with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 8, October 2011
+    - new Fibbinary, NumAronson, ReverseAdd, Tribonacci
+    - Polygonal new pairs=>"average" parameter
+
 Version 7, October 2011
     - RadixWithoutDigit pred() fix for digit=-1
     - various better inf/nan handling

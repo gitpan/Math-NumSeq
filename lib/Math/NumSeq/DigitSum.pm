@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 7;
+$VERSION = 8;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -104,13 +104,13 @@ $oeis_anum[2]->[10] = 'A003132';
 $oeis_anum[3]->[10] = 'A055012';
 # OEIS-Catalogue: A055012 power=3
 
-$oeis_anum[3]->[10] = 'A055013';
+$oeis_anum[4]->[10] = 'A055013';
 # OEIS-Catalogue: A055013 power=4
 
-$oeis_anum[3]->[10] = 'A055014';
+$oeis_anum[5]->[10] = 'A055014';
 # OEIS-Catalogue: A055014 power=5
 
-$oeis_anum[3]->[10] = 'A055015';
+$oeis_anum[6]->[10] = 'A055015';
 # OEIS-Catalogue: A055015 power=6
 
 sub oeis_anum {

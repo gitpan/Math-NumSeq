@@ -46,7 +46,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 7;
+$VERSION = 8;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -152,10 +152,11 @@ sub new {
 #------------------------------------------------------------------------------
 # shared internals
 
+# cf Data::Float
 sub _is_infinite {
   my ($x) = @_;
-  return ($x != $x         # nan
-          || $x-1 == $x);  # inf
+  return ($x != $x    # nan
+          || ($x != 0 && $x == 2*$x));  # inf
 }
 
 
@@ -330,7 +331,9 @@ L<Math::NumSeq::PrimeFactorCount>
 L<Math::NumSeq::Factorials>,
 L<Math::NumSeq::Primorials>,
 L<Math::NumSeq::Fibonacci>,
-L<Math::NumSeq::LucasNumbers>
+L<Math::NumSeq::LucasNumbers>,
+L<Math::NumSeq::Fibbinary>,
+L<Math::NumSeq::Tribonacci>
 
 L<Math::NumSeq::FractionDigits>,
 L<Math::NumSeq::SqrtDigits>
@@ -354,7 +357,10 @@ L<Math::NumSeq::ProthNumbers>,
 L<Math::NumSeq::WoodallNumbers>
 
 L<Math::NumSeq::CollatzSteps>,
-L<Math::NumSeq::SternDiatomic>
+L<Math::NumSeq::SternDiatomic>,
+L<Math::NumSeq::NumAronson>
+
+L<Math::NumSeq::Aronson>, in the Math-Aronson dist
 
 L<Math::Sequence> and L<Math::Series>, for symbolic recursive sequence
 definitions

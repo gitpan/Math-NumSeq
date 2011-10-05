@@ -96,6 +96,10 @@ my $total_checks = 0;
 
 sub check_class {
   my ($anum, $class, $parameters) = @_;
+  ### check_class() ...
+  ### $class
+  ### $parameters
+
   eval "require $class" or die;
 
   my $name = join(',',
@@ -162,12 +166,13 @@ sub check_class {
   # hi => $hi
 
   my $seq = $class->new (@$parameters);
-  ### seq: ref $seq
+  ### seq class: ref $seq
   if ($seq->isa('Math::NumSeq::OEIS::File')) {
     die "Oops, not meant to exercies $seq";
   }
 
   {
+    ### $seq
     my $got_anum = $seq->oeis_anum;
     if (! defined $got_anum) {
       $got_anum = 'undef';
@@ -224,8 +229,8 @@ sub check_class {
     my @got;
     my $got = \@got;
     while (my ($i, $value) = $seq->next) {
-      ### $i
-      ### $value
+      # ### $i
+      # ### $value
       push @got, $value;
       if (@got >= @$want) {
         last;

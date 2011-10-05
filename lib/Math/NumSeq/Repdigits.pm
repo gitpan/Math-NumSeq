@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 7;
+$VERSION = 8;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -81,28 +81,6 @@ sub next {
   }
 }
 
-sub pred {
-  my ($self, $value) = @_;
-
-  my $radix = $self->{'radix'};
-  if ($radix == 2) {
-    return ! (($value+1) & $value);
-
-  }
-  if ($radix == 10) {
-    my $digit = substr($value,0,1);
-    return ($value !~ /[^$digit]/);
-  }
-
-  my $digit = $value % $radix;
-  while ($value = int($value/$radix)) {
-    unless (($value % $radix) == $digit) { # false for inf or nan
-      return 0;
-    }
-  }
-  return 1;
-}
-
 sub ith {
   my ($self, $i) = @_;
   my $radix = $self->{'radix'};
@@ -121,6 +99,36 @@ sub ith {
   my $digit = ($i % ($radix-1)) + 1;
   $i = int($i/($radix-1)) + 1;
   return ($radix ** $i - 1) / ($radix - 1) * $digit;
+}
+
+sub pred {
+  my ($self, $value) = @_;
+
+  {
+    my $int = int($value);
+    if ($value != $int) {
+      return 0;
+    }
+    $value = $int;  # prefer BigInt if input BigFloat
+  }
+
+  my $radix = $self->{'radix'};
+  if ($radix == 2) {
+    return ! (($value+1) & $value);
+
+  }
+  if ($radix == 10) {
+    my $digit = substr($value,0,1);
+    return ($value !~ /[^$digit]/);
+  }
+
+  my $digit = $value % $radix;
+  while ($value = int($value/$radix)) {
+    unless (($value % $radix) == $digit) { # false for inf or nan
+      return 0;
+    }
+  }
+  return 1;
 }
 
 1;
