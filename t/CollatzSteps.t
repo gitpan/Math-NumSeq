@@ -20,58 +20,64 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 8;
+plan tests => 6;
 
 use lib 't';
 use MyTestHelpers;
 MyTestHelpers::nowarnings();
 
-use Math::NumSeq::Emirps;
+use Math::NumSeq::CollatzSteps;
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+#use Devel::Comments;
 
 #------------------------------------------------------------------------------
 # VERSION
 
 {
   my $want_version = 9;
-  ok ($Math::NumSeq::Emirps::VERSION, $want_version, 'VERSION variable');
-  ok (Math::NumSeq::Emirps->VERSION,  $want_version, 'VERSION class method');
+  ok ($Math::NumSeq::CollatzSteps::VERSION, $want_version, 'VERSION variable');
+  ok (Math::NumSeq::CollatzSteps->VERSION,  $want_version, 'VERSION class method');
 
-  ok (eval { Math::NumSeq::Emirps->VERSION($want_version); 1 },
+  ok (eval { Math::NumSeq::CollatzSteps->VERSION($want_version); 1 },
       1,
       "VERSION class check $want_version");
   my $check_version = $want_version + 1000;
-  ok (! eval { Math::NumSeq::Emirps->VERSION($check_version); 1 },
+  ok (! eval { Math::NumSeq::CollatzSteps->VERSION($check_version); 1 },
       1,
       "VERSION class check $check_version");
 }
 
 
 #------------------------------------------------------------------------------
-# characteristic()
+# ith()
 
+my $uv_bits = 0;
 {
-  my $values_obj = Math::NumSeq::Emirps->new
-    (lo => 1,
-     hi => 30);
-
-  ok ($values_obj->characteristic('count'), undef, 'characteristic(count)');
+  my $uv = ~0;
+  while ($uv) {
+    $uv_bits++;
+    $uv >>= 1;
+  }
 }
-
-
-#------------------------------------------------------------------------------
-# _reverse_in_radix()
+MyTestHelpers::diag ("uv_bits is $uv_bits");
 
 {
-  ## no critic (ProtectPrivateSubs)
-  ok (Math::NumSeq::Emirps::_reverse_in_radix(123,10),
-      321);
-  ok (Math::NumSeq::Emirps::_reverse_in_radix(0xAB,16),
-      0xBA);
-  ok (Math::NumSeq::Emirps::_reverse_in_radix(6,2),
-      3);
+  my $seq = Math::NumSeq::CollatzSteps->new;
+  foreach my $elem (
+                    [0xFFFF_FFFF, 451],
+
+                    ($uv_bits >= 64
+                     ? [eval '18446744073709551615', 863]  # 2^64-1
+                     : [0,0]),
+
+                   ) {
+    my ($i, $want_value) = @$elem;
+    ### $i
+    my $got_value = $seq->ith($i);
+    ### $got_value
+    ok ($got_value, $want_value, "CollatzSteps ith($i)");
+  }
 }
 
 exit 0;

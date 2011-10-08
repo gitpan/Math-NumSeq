@@ -35,7 +35,7 @@ use Math::NumSeq::SafePrimes;
 # VERSION
 
 {
-  my $want_version = 8;
+  my $want_version = 9;
   ok ($Math::NumSeq::SafePrimes::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::SafePrimes->VERSION,  $want_version,

@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Math-NumSeq
-version:            8
+version:            9
 abstract:           Number sequences.
 author:
     - Kevin Ryde <user42@zip.com.au>
@@ -13,6 +13,7 @@ build_requires:
 requires:
     base:               0
     constant:           1.02
+    constant::defer:    1
     File::HomeDir:      0
     File::Spec:         0
     List::Util:         0

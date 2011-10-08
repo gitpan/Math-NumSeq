@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 8;
+$VERSION = 9;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -31,12 +31,16 @@ use Math::NumSeq;
 
 # use constant name => Math::NumSeq::__('Beastly Numbers');
 use constant description => Math::NumSeq::__('Numbers which contain "666".  The default is decimal, or select a radix.');
-use constant values_min => 666;
 use constant characteristic_monotonic => 1;
 
 use Math::NumSeq::Base::Digits;
 *parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
 
+sub values_min {
+  my ($self) = @_;
+  my $radix = $self->{'radix'};
+  return (6*$radix+6)*$radix+6;   # at i=0
+}
 
 # cf A131645 the beastly primes
 sub oeis_anum {

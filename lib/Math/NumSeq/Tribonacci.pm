@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 8;
+$VERSION = 9;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
 
@@ -32,7 +32,7 @@ use Math::NumSeq::Base::Sparse;
 use constant description => Math::NumSeq::__('Tribonacci numbers 0, 0, 1, 1, 2, 4, 7, 13, 24, being T(i) = T(i-1) + T(i-2) + T(i-3) starting from 0,0,1.');
 use constant characteristic_monotonic => 2;
 use constant characteristic_monotonic_from_i => 3;
-use constant values_min => 1;
+use constant values_min => 0;
 use constant oeis_anum => 'A000073'; # tribonacci
 
 sub rewind {

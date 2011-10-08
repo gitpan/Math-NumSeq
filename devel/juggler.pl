@@ -1,3 +1,5 @@
+#!/usr/bin/perl -w
+
 # Copyright 2011 Kevin Ryde
 
 # This file is part of Math-NumSeq.
@@ -15,22 +17,26 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
-package Math::NumSeq::Base::IterateIth;
 use 5.004;
 use strict;
 
-use vars '$VERSION';
-$VERSION = 9;
+{
+  require App::MathImage::NumSeq::JugglerSteps;
+  my $seq = App::MathImage::NumSeq::JugglerSteps->new;
+  my $i = 18446744073709551615;
+#  $i = 18446744073709551614/2;
+  printf "%X\n", $i;
 
-sub rewind {
-  my ($self) = @_;
-  $self->{'i'} = $self->i_start;
-}
-sub next {
-  my ($self) = @_;
-  my $i = $self->{'i'}++;
-  return ($i, $self->ith($i));
+  require Devel::Peek;
+  print Devel::Peek::Dump($i);
+
+  my $value = $seq->ith($i);
+  print "$value\n";
+
+
+  my $b = App::MathImage::NumSeq::JugglerSteps::_bigint()->new($i);
+  print "$b\n";
+  exit 0;
 }
 
-1;
-__END__
+

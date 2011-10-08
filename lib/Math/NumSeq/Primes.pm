@@ -22,7 +22,7 @@ use POSIX ();
 use Math::Prime::XS 0.23; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 8;
+$VERSION = 9;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -112,6 +112,7 @@ sub pred {
   my ($self, $value) = @_;
   return ($value == int($value)
           && ! _is_infinite($value)
+          && $value <= 0xFFFF_FFFF
           && ($value == 2 || ($value % 2))
           && ($value == 3 || ($value % 3))
           && ($value == 5 || ($value % 5))

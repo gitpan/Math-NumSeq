@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 8;
+$VERSION = 9;
 use Math::NumSeq;
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 

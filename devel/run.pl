@@ -96,6 +96,8 @@ $|=1;
   $values_class = 'App::MathImage::NumSeq::ReverseAddSteps';
   $values_class = 'Math::NumSeq::Expression';
   $values_class = 'Math::NumSeq::ReverseAdd';
+  $values_class = 'App::MathImage::NumSeq::JugglerSteps';
+  $values_class = 'App::MathImage::NumSeq::HofstadterDiff';
   eval "require $values_class; 1" or die $@;
   print Math::NumSeq::DigitLength->VERSION,"\n";
   my $seq = $values_class->new (start => 1,

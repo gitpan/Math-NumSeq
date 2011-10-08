@@ -30,6 +30,7 @@ MyMakeMakerExtras::WriteMakefile
    PREREQ_PM    => {
                     'base' => 0,
                     'constant' => 1.02, # for leading underscore
+                    'constant::defer' => 1,
                     'File::HomeDir' => 0,
                     'File::Spec' => 0,
                     'List::Util' => 0,

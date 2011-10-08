@@ -25,7 +25,7 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
-my $test_count = 228;
+my $test_count = (tests => 234)[1];
 plan tests => $test_count;
 
 # uncomment this to run the ### lines
@@ -136,6 +136,36 @@ foreach my $elem
    [ 'Math::NumSeq::Polygonal', 0,  # pentagonal both
      [ 0, 1,2, 5,7, 12,15, 22,26 ],
      { polygonal => 5, pairs => 'both' },
+   ],
+
+   [ 'Math::NumSeq::CollatzSteps', 0,  # both
+     [ 0,   # 1
+       1,   # 2 -> 1
+       7,   # 3 -> 10->5 -> 16->8->4->2->1
+       2,   # 4 -> 2 -> 1
+       5,   # 5 -> 16->8->4->2->1
+       8,   # 6 -> 3->... (7of)
+     ],
+   ],
+   [ 'Math::NumSeq::CollatzSteps', 0,  # up
+     [ 0,   # 1
+       0,   # 2 -> 1
+       2,   # 3 -> 10->5 -> 16->8->4->2->1
+       0,   # 4 -> 2 -> 1
+       1,   # 5 -> 16->8->4->2->1
+       2,   # 6 -> 3->... (2up)
+     ],
+     { step_type => 'up' },
+   ],
+   [ 'Math::NumSeq::CollatzSteps', 0,  # down
+     [ 0,   # 1
+       1,   # 2 -> 1
+       5,   # 3 -> 10->5 -> 16->8->4->2->1
+       2,   # 4 -> 2 -> 1
+       4,   # 5 -> 16->8->4->2->1
+       6,   # 6 -> 3->... (5down)
+     ],
+     { step_type => 'down' },
    ],
 
    [ 'Math::NumSeq::NumAronson', 0,
@@ -1030,7 +1060,19 @@ foreach my $elem
     }
   }
 
-  ### ith() ...
+  {
+    my $values_min = $seq->values_min;
+    if (defined $values_min) {
+      foreach my $value (@$want) {
+        if ($value < $values_min) {
+          MyTestHelpers::diag ($name, " value $value less than values_min=$values_min");
+          $good = 0;
+        }
+      }
+    }
+  }
+
+  ### ith() infinities: $name
   if (! $seq->can('ith')) {
     # skip "no ith() for $seq", 1;
   } else {
@@ -1046,7 +1088,7 @@ foreach my $elem
     }
   }
 
-  ### pred() ...
+  ### pred() infinities: $name
   if (! $seq->can('pred')) {
   } else {
     # MyTestHelpers::diag ($name, "-- pred()");

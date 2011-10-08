@@ -20,20 +20,21 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 8;
+$VERSION = 9;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
+*_is_infinite = \&Math::NumSeq::_is_infinite;
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+#use Devel::Comments;
 
 use constant description => Math::NumSeq::__('Number of steps to reach 1 in the Collatz "3n+1" problem.');
 use constant characteristic_count => 1;
 use constant characteristic_monotonic => 0;
-use constant values_min => 1;
+use constant values_min => 0;
 use constant i_start => 1;
 
 use constant parameter_info_array =>
@@ -51,36 +52,50 @@ use constant parameter_info_array =>
 #    A075680 odd numbers only
 #    A008908 count of both halvings and triplings, with +1
 #
-my %step_type_to_anum = (up   => 'A006667', # triplings
-                         # OEIS-Catalogue: A006667 step_type=up
+my %oeis_anum = (up   => 'A006667', # triplings
+                 # OEIS-Catalogue: A006667 step_type=up
 
-                         down => 'A006666', # halvings
-                         # OEIS-Catalogue: A006666 step_type=down
+                 down => 'A006666', # halvings
+                 # OEIS-Catalogue: A006666 step_type=down
 
-                         both => 'A006577', # both halvings and triplings
-                         # OEIS-Catalogue: A006577 step_type=both
-                        );
+                 both => 'A006577', # both halvings and triplings
+                 # OEIS-Catalogue: A006577 step_type=both
+                );
 sub oeis_anum {
   my ($self) = @_;
-  return $step_type_to_anum{$self->{'step_type'}};
+  return $oeis_anum{$self->{'step_type'}};
 }
 
-my %step_type_to_up = (up   => 1,
-                       down => 0,
-                       both => 1);
-my %step_type_to_down = (up   => 0,
-                         down => 1,
-                         both => 1);
+use constant _UV_LIMIT => do {
+  my $limit = ~0;
+  my $bits = 0;
+  while ($limit) {
+    $bits++;
+    $limit >>= 1;
+  }
+  $bits -= 2;
+  (1 << $bits) - 1
+};
+use constant::defer _bigint => sub {
+  require Math::BigInt;
+  eval { Math::BigInt->import (try => 'GMP') };
+  return 'Math::BigInt';
+};
+
 sub ith {
   my ($self, $i) = @_;
   ### CollatzSteps ith(): $i
-  my $count = 0;
   if ($i <= 1) {
-    return $count;
+    return 0;
   }
+  if (_is_infinite($i)) {
+    return $i;
+  }
+
+  my $count = 0;
   my $step_type = $self->{'step_type'};
-  my $count_up = $step_type_to_up{$step_type};
-  my $count_down = $step_type_to_down{$step_type};
+  my $count_up = ($step_type ne 'down');
+  my $count_down = ($step_type ne 'up');
   for (;;) {
     until ($i & 1) {
       $i >>= 1;
@@ -90,6 +105,29 @@ sub ith {
     if ($i <= 1) {
       return $count;
     }
+
+    if ($i > _UV_LIMIT) {
+      # stringize to avoid UV to Math::BigInt::GMP bug in its version 1.37
+      $i = _bigint()->new("$i");
+      ### using bigint: "$i"
+      for (;;) {
+        ### odd: "$i"
+        $i->bmul(3);
+        $i->binc();
+        $count += $count_up;
+        ### tripled: "$i  count=$count"
+
+        until ($i->is_odd) {
+          $i->brsft(1);
+          $count += $count_down;
+          ### halve: "$i  count=$count"
+        }
+        if ($i <= 1) {
+          return $count;
+        }
+      }
+    }
+
     $i = 3*$i + 1;
     $count += $count_up;
     ### tripled: "$i  count=$count"
@@ -123,6 +161,11 @@ The number of steps it takes to reach 1 by the Collatz "3n+1" problem,
 
     n -> / 3n+1  if n odd
          \ n/2   if n even
+
+It's conjectured that any starting n will always eventually reduce to 1, so
+the number of steps is finite.  There's no limit in the code on how many
+steps counted.  C<Math::BigInt> is used if 3n+1 steps go past the usual
+scalar integer limit.
 
 =head1 FUNCTIONS
 

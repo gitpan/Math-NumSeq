@@ -30,7 +30,7 @@ use Math::NumSeq::SqrtDigits;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-my $test_count = 41;
+my $test_count = (tests => 41)[1];
 plan tests => $test_count;
 
 {
@@ -53,7 +53,7 @@ plan tests => $test_count;
 # VERSION
 
 {
-  my $want_version = 8;
+  my $want_version = 9;
   ok ($Math::NumSeq::SqrtDigits::VERSION, $want_version, 'VERSION variable');
   ok (Math::NumSeq::SqrtDigits->VERSION,  $want_version, 'VERSION class method');
 
