@@ -1,4 +1,4 @@
-# Copyright 2010, 2011 Kevin Ryde
+# Copyright 2011 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -15,48 +15,55 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
-package Math::NumSeq::Squares;
+
+# math-image --values=BaumSweet --path=ZOrderCurve
+#
+# radix parameter ?
+
+
+package Math::NumSeq::BaumSweet;
 use 5.004;
 use strict;
-use POSIX 'ceil';
-use List::Util 'max';
 
 use vars '$VERSION','@ISA';
 $VERSION = 10;
+use Math::NumSeq 7; # v.7 for _is_infinite()
+use Math::NumSeq::Base::IterateIth;
+@ISA = ('Math::NumSeq::Base::IterateIth',
+        'Math::NumSeq');
+*_is_infinite = \&Math::NumSeq::_is_infinite;
 
-use Math::NumSeq;
-@ISA = ('Math::NumSeq');
-
-# uncomment this to run the ### lines
-#use Smart::Comments;
-
-# use constant name =>  Math::NumSeq::__('Perfect Squares');
-use constant description => Math::NumSeq::__('The perfect squares 1,4,9,16,25, etc k*k.');
-use constant characteristic_monotonic => 2;
+use constant description => Math::NumSeq::__('Baum-Sweet sequence, 1 if i contains no odd-length run of 0 bits, 0 if it does.');
 use constant values_min => 0;
-use constant oeis_anum => 'A000290'; # squares
+use constant values_max => 1;
+# use constant characteristic_smaller => 1; # undocumented
+# use constant characteristic_boolean => 1; # undocumented
+use constant oeis_anum => 'A086747';
 
-sub rewind {
-  my ($self) = @_;
-  $self->{'i'} = ceil (sqrt (max(0,$self->{'lo'})));
-}
-sub next {
-  my ($self) = @_;
-  ### Squares next(): $self->{'i'}
-  my $i = $self->{'i'}++;
-  return ($i, $i*$i);
-}
-sub pred {
-  my ($self, $value) = @_;
-  return (($value >= 0)
-          && do {
-            $value = sqrt($value);
-            $value == int($value)
-          });
-}
 sub ith {
   my ($self, $i) = @_;
-  return $i*$i;
+  if (_is_infinite($i)) {
+    return $i;
+  }
+  while ($i) {
+    if (($i % 2) == 0) {
+      my $oddzeros = 0;
+      do {
+        $oddzeros ^= 1;
+        $i /= 2;
+      } until ($i % 2);
+      if ($oddzeros) {
+        return 0;
+      }
+    }
+    $i = int($i/2);
+  }
+  return 1;
+}
+
+sub pred {
+  my ($self, $value) = @_;
+  return ($value == 0 || $value == 1);
 }
 
 1;
@@ -66,17 +73,18 @@ __END__
 
 =head1 NAME
 
-Math::NumSeq::Squares -- perfect squares
+Math::NumSeq::BaumSweet -- Baum-Sweet sequence
 
 =head1 SYNOPSIS
 
- use Math::NumSeq::Squares;
- my $seq = Math::NumSeq::Squares->new;
+ use Math::NumSeq::BaumSweet;
+ my $seq = Math::NumSeq::BaumSweet->new;
  my ($i, $value) = $seq->next;
 
 =head1 DESCRIPTION
 
-The sequence of squares, 0, 1, 4, 9, 16, 25, etc.
+The Baum-Sweet sequence numbers 1,1,0,1,1,0,0,1,0,1,0,0,etc, being 1 if the
+index i contains no odd-length run of 0 bits, or 0 if it does.
 
 =head1 FUNCTIONS
 
@@ -84,24 +92,25 @@ See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 =over 4
 
-=item C<$seq = Math::NumSeq::Squares-E<gt>new (key=E<gt>value,...)>
+=item C<$seq = Math::NumSeq::BaumSweet-E<gt>new ()>
 
 Create and return a new sequence object.
 
 =item C<$value = $seq-E<gt>ith($i)>
 
-Return C<$i ** 2>.
+Return the C<$i>'th BaumSweet number, ie. 1 or 0 according to whether C<$i>
+is without or with an odd-length run of 0 bits.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value> is a perfect square.
+Return true if C<$value> occurs in the Baum-Sweet sequence, which means simply being 0 or 1.
 
 =back
 
 =head1 SEE ALSO
 
 L<Math::NumSeq>,
-L<Math::NumSeq::Cubes>
+L<Math::NumSeq::Fibbinary>
 
 =head1 HOME PAGE
 
@@ -109,7 +118,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2010, 2011 Kevin Ryde
+Copyright 2011 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

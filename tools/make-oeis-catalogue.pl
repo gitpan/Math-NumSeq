@@ -28,10 +28,10 @@ use ExtUtils::Manifest;
 use Module::Util;
 
 use vars '$VERSION';
-$VERSION = 9;
+$VERSION = 10;
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+#use Devel::Comments;
 
 my $outmodule = 'BuiltinTable';
 my $distname = 'Math-NumSeq';
@@ -96,7 +96,12 @@ foreach my $filename (@filenames) {
 
     $anum or die "$where: oops, no OEIS number: $_";
 
-    my @parameters = split /[,= \t]+/, $parameters;
+    my @parameters = split /[ \t]+/, $parameters;
+    @parameters = map {/(.*?)=(.*)/
+                         or die "$where: oops, unrecognised parameter $_";
+                       ($1,$2)}
+      @parameters;
+    ### @parameters
     if (@parameters & 1) {
       die "Oops, odd number of  OEIS params: $_";
     }
@@ -164,4 +169,4 @@ use constant info_arrayref =>
 HERE
 
 print $out "$dump;\n1;\n__END__\n";
-exit 0;
+exit $exit_code;

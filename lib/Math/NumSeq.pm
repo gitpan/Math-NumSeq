@@ -46,7 +46,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 9;
+$VERSION = 10;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -159,6 +159,11 @@ sub _is_infinite {
           || ($x != 0 && $x == 2*$x));  # inf
 }
 
+use constant::defer _bigint => sub {
+  require Math::BigInt;
+  eval { Math::BigInt->import (try => 'GMP') };
+  return 'Math::BigInt';
+};
 
 1;
 __END__
@@ -333,6 +338,7 @@ L<Math::NumSeq::Primorials>,
 L<Math::NumSeq::Fibonacci>,
 L<Math::NumSeq::LucasNumbers>,
 L<Math::NumSeq::Fibbinary>,
+L<Math::NumSeq::Pell>,
 L<Math::NumSeq::Tribonacci>
 
 L<Math::NumSeq::FractionDigits>,
@@ -355,6 +361,7 @@ L<Math::NumSeq::HappyNumbers>
 L<Math::NumSeq::CullenNumbers>,
 L<Math::NumSeq::ProthNumbers>,
 L<Math::NumSeq::WoodallNumbers>
+L<Math::NumSeq::BaumSweet>,
 
 L<Math::NumSeq::CollatzSteps>,
 L<Math::NumSeq::SternDiatomic>,

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 9;
+$VERSION = 10;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -76,11 +76,6 @@ use constant _UV_LIMIT => do {
   $bits -= 2;
   (1 << $bits) - 1
 };
-use constant::defer _bigint => sub {
-  require Math::BigInt;
-  eval { Math::BigInt->import (try => 'GMP') };
-  return 'Math::BigInt';
-};
 
 sub ith {
   my ($self, $i) = @_;
@@ -108,7 +103,8 @@ sub ith {
 
     if ($i > _UV_LIMIT) {
       # stringize to avoid UV to Math::BigInt::GMP bug in its version 1.37
-      $i = _bigint()->new("$i");
+      $i = Math::NumSeq::_bigint()->new("$i");
+
       ### using bigint: "$i"
       for (;;) {
         ### odd: "$i"

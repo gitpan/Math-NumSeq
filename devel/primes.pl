@@ -29,6 +29,14 @@ use Smart::Comments;
 {
   require Math::Prime::TiedArray;
   tie my @primes, 'Math::Prime::TiedArray';
+  foreach my $i (0 .. 200) {
+    print int(sqrt($primes[$i])),"\n";
+  }
+  exit 0;
+}
+{
+  require Math::Prime::TiedArray;
+  tie my @primes, 'Math::Prime::TiedArray';
   local $, = "\n";
   print @primes[0..5000];
   exit 0;

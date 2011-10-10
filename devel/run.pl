@@ -85,22 +85,26 @@ $|=1;
   $values_class = 'App::MathImage::NumSeq::SternDiatomic';
   $values_class = 'App::MathImage::NumSeq::CunninghamChain';
   $values_class = 'Math::NumSeq::DigitCount';
-  $values_class = 'App::MathImage::NumSeq::ReRound';
   $values_class = 'App::MathImage::NumSeq::MobiusFunction';
   $values_class = 'Math::NumSeq::TwinPrimes';
   $values_class = 'App::MathImage::NumSeq::PrimeFactorCount';
-  $values_class = 'App::MathImage::NumSeq::PlanePath';
   $values_class = 'App::MathImage::NumSeq::Fibbinary';
   $values_class = 'Math::NumSeq::NumAronson';
   $values_class = 'Math::NumSeq::Polygonal';
-  $values_class = 'App::MathImage::NumSeq::ReverseAddSteps';
   $values_class = 'Math::NumSeq::Expression';
   $values_class = 'Math::NumSeq::ReverseAdd';
-  $values_class = 'App::MathImage::NumSeq::JugglerSteps';
   $values_class = 'App::MathImage::NumSeq::HofstadterDiff';
+  $values_class = 'App::MathImage::NumSeq::PlanePath';
+  $values_class = 'App::MathImage::NumSeq::ReRound';
+  $values_class = 'App::MathImage::NumSeq::ReverseAddSteps';
+  $values_class = 'App::MathImage::NumSeq::Pell';
+  $values_class = 'App::MathImage::NumSeq::JugglerSteps';
+  $values_class = 'App::MathImage::NumSeq::AsciiSelf';
+  $values_class = 'App::MathImage::NumSeq::Kolakoski';
   eval "require $values_class; 1" or die $@;
   print Math::NumSeq::DigitLength->VERSION,"\n";
-  my $seq = $values_class->new (start => 1,
+  my $seq = $values_class->new (algorithm_type => '1/2-3/2',
+                                start => 1,
                                 length => 1,
                                 fraction => '1/975',
                                 polygonal => 6,
@@ -118,8 +122,9 @@ $|=1;
                                 # expression_evaluator => 'Perl',
                                 oeis_anum  => 'A000396',
                                 # distinct => 1,
-                                planepath => 'HilbertCurve,height=5',
-                                coord_type => 'Y',
+                                #planepath => 'HilbertCurve,height=5',
+                                planepath => 'RationalsTree,tree_type=Bird',
+                                coord_type => 'X',
                                 multiplicity => 'distinct',
                                );
   my $hi = 50;

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 9;
+$VERSION = 10;
 
 use Math::NumSeq::Primes;
 @ISA = ('Math::NumSeq::Primes');
@@ -48,21 +48,20 @@ use constant parameter_info_array =>
    },
   ];
 
+# cf A077800 both, with repetition
+#
 my %oeis_anum = (
-                 # OEIS-Catalogue: A001359 pairs=first
                  first  => 'A001359',
+                 # OEIS-Catalogue: A001359 pairs=first
 
-                 # OEIS-Catalogue: A006512 pairs=second,
                  second => 'A006512',
+                 # OEIS-Catalogue: A006512 pairs=second
 
-                 # OEIS-Catalogue: A001097 pairs=both
                  both   => 'A001097', # both, without repetition
+                 # OEIS-Catalogue: A001097 pairs=both
 
-                 # OEIS-Catalogue: A014574 pairs=average
                  average => 'A014574', # average
-
-                 # cf A077800 both, with repetition
-                 #      cf 'A077800'  # both, with repetition
+                 # OEIS-Catalogue: A014574 pairs=average
                 );
 sub oeis_anum {
   my ($self) = @_;
@@ -82,7 +81,7 @@ sub rewind {
   $self->{'twin_i'} = 0;
   $self->{'twin_both'} = 0;
   (undef, $self->{'twin_prev'}) = $self->SUPER::next;
-  ### twin_prev: $self->{'twin_prev'}
+  ### $self
 }
 
 sub next {

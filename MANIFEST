@@ -7,6 +7,7 @@ debian/copyright
 debian/rules
 debian/source/format
 debian/watch
+devel/ascii-self.pl
 devel/Base4Only01.pm
 devel/bits.pl
 devel/cbrt.pl
@@ -15,6 +16,7 @@ devel/exe-cbrt.c
 devel/expression.pl
 devel/juggler.pl
 devel/kimberling.pl
+devel/kolakoski.pl
 devel/language-expr.pl
 devel/maybe-decprime.pl
 devel/maybe-ln.pl
@@ -47,6 +49,7 @@ lib/Math/NumSeq/Base/Digits.pm
 lib/Math/NumSeq/Base/IterateIth.pm
 lib/Math/NumSeq/Base/IteratePred.pm
 lib/Math/NumSeq/Base/Sparse.pm
+lib/Math/NumSeq/BaumSweet.pm
 lib/Math/NumSeq/Beastly.pm
 lib/Math/NumSeq/CollatzSteps.pm
 lib/Math/NumSeq/Cubes.pm
@@ -79,6 +82,7 @@ lib/Math/NumSeq/OEIS/Catalogue/Plugin/FractionDigits.pm
 lib/Math/NumSeq/OEIS/Catalogue/Plugin/ZZ_Files.pm
 lib/Math/NumSeq/OEIS/File.pm
 lib/Math/NumSeq/Palindromes.pm
+lib/Math/NumSeq/Pell.pm
 lib/Math/NumSeq/Polygonal.pm
 lib/Math/NumSeq/PrimeFactorCount.pm
 lib/Math/NumSeq/Primes.pm

@@ -155,6 +155,10 @@ sub check_class {
     return;
   }
 
+  # skip all except ...
+  # return unless $anum eq 'A006512';
+
+
   my $want_count = scalar(@$want);
   MyTestHelpers::diag ("$anum $name  ($want_count values to $want->[-1])");
 

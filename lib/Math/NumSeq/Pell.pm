@@ -15,48 +15,61 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
-package Math::NumSeq::Squares;
+package Math::NumSeq::Pell;
 use 5.004;
 use strict;
-use POSIX 'ceil';
-use List::Util 'max';
 
-use vars '$VERSION','@ISA';
+use vars '$VERSION', '@ISA';
 $VERSION = 10;
+use Math::NumSeq::Base::Sparse;
+@ISA = ('Math::NumSeq::Base::Sparse');
 
-use Math::NumSeq;
-@ISA = ('Math::NumSeq');
+use Math::NumSeq 7; # v.7 for _is_infinite()
+*_is_infinite = \&Math::NumSeq::_is_infinite;
+
+
+# use constant name => Math::NumSeq::__('Pell Numbers');
+use constant description => Math::NumSeq::__('The Pell numbers 0, 1, 2, 5, 12, 29, 70, etc, being P(k)=2*P(k-1)+P(k-2) starting from 0,1.');
+use constant values_min => 0;
+use constant characteristic_monotonic => 2; # strictly
+use constant oeis_anum => 'A000129'; # pell
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-# use constant name =>  Math::NumSeq::__('Perfect Squares');
-use constant description => Math::NumSeq::__('The perfect squares 1,4,9,16,25, etc k*k.');
-use constant characteristic_monotonic => 2;
-use constant values_min => 0;
-use constant oeis_anum => 'A000290'; # squares
-
 sub rewind {
   my ($self) = @_;
-  $self->{'i'} = ceil (sqrt (max(0,$self->{'lo'})));
+  ### Pell rewind() ...
+  $self->{'i'} = 0;
+  $self->{'f0'} = 0;
+  $self->{'f1'} = 1;
 }
 sub next {
   my ($self) = @_;
-  ### Squares next(): $self->{'i'}
-  my $i = $self->{'i'}++;
-  return ($i, $i*$i);
+  (my $ret,
+   $self->{'f0'},
+   $self->{'f1'})
+   = ($self->{'f0'},
+      $self->{'f1'},
+      $self->{'f0'} + 2*$self->{'f1'});
+  return ($self->{'i'}++, $ret);
 }
-sub pred {
-  my ($self, $value) = @_;
-  return (($value >= 0)
-          && do {
-            $value = sqrt($value);
-            $value == int($value)
-          });
-}
+
 sub ith {
   my ($self, $i) = @_;
-  return $i*$i;
+  ### ith(): $i
+  if (_is_infinite($i)) {
+    return $i;
+  }
+
+  # ENHANCE-ME: use one of the powering algorithms
+  my $f0 = ($i&0);  # inherit bignum 0
+  my $f1 = $f0 + 1; # inherit bignum 1
+  while ($i-- > 0) {
+    ### at: "i=$i   $f0, $f1"
+    ($f0,$f1) = ($f1, $f0 + 2*$f1);
+  }
+  return $f0;
 }
 
 1;
@@ -66,17 +79,18 @@ __END__
 
 =head1 NAME
 
-Math::NumSeq::Squares -- perfect squares
+Math::NumSeq::Pell -- Pell numbers
 
 =head1 SYNOPSIS
 
- use Math::NumSeq::Squares;
- my $seq = Math::NumSeq::Squares->new;
+ use Math::NumSeq::Pell;
+ my $seq = Math::NumSeq::Pell->new;
  my ($i, $value) = $seq->next;
 
 =head1 DESCRIPTION
 
-The sequence of squares, 0, 1, 4, 9, 16, 25, etc.
+The Pell numbers 0,1,2,5,12,29,70,etc, where P(k)=2*P(k-1)+P(k-2), starting
+from 0,1.
 
 =head1 FUNCTIONS
 
@@ -84,24 +98,25 @@ See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 =over 4
 
-=item C<$seq = Math::NumSeq::Squares-E<gt>new (key=E<gt>value,...)>
+=item C<$seq = Math::NumSeq::Pell-E<gt>new ()>
 
 Create and return a new sequence object.
 
 =item C<$value = $seq-E<gt>ith($i)>
 
-Return C<$i ** 2>.
+Return the C<$i>'th Pell number.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value> is a perfect square.
+Return true if C<$value> is a Pell number.
 
 =back
 
 =head1 SEE ALSO
 
 L<Math::NumSeq>,
-L<Math::NumSeq::Cubes>
+L<Math::NumSeq::Fibonacci>,
+L<Math::NumSeq::LucasNumbers>
 
 =head1 HOME PAGE
 

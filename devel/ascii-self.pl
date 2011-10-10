@@ -1,3 +1,5 @@
+#!/usr/bin/perl -w
+
 # Copyright 2011 Kevin Ryde
 
 # This file is part of Math-NumSeq.
@@ -15,39 +17,32 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
-package Math::NumSeq::Base::IteratePred;
-use 5.004;
+require 5;
 use strict;
 
-use vars '$VERSION';
-$VERSION = 10;
-
-sub rewind {
-  my ($self) = @_;
-  $self->{'i'} = $self->i_start;
-  $self->{'value'} = 0;
-}
-sub next {
-  my ($self) = @_;
-  my $value = $self->{'value'};
-  for (;;) {
-    if ($self->pred(++$value)) {
-      return ($self->{'i'}++, ($self->{'value'} = $value));
+{
+  require App::MathImage::NumSeq::AsciiSelf;
+  require Math::BaseCnv;
+  foreach my $radix (2 .. 64) {
+    print "$radix   ";
+    foreach my $i (48 .. 47+$radix) {
+      my @ascii = App::MathImage::NumSeq::AsciiSelf::_radix_ascii($radix,$i);
+      if ($ascii[0] == $i) {
+        my $base = Math::BaseCnv::cnv($i,10,$radix);
+        print join('_',@ascii), "  [$base], ";
+      }
     }
+    print "\n";
   }
+  exit 0;
 }
-# sub ith {
-#   my ($self, $i) = @_;
-#   $i -= $self->i_start;
-#   my $value = $self->value_min - 1;
-#   while ($i >= 0) {
-#     $value++;
-#     if ($self->pred($value)) {
-#       $i--;
-#     }
-#   }
-#   return $value;    
-# }
 
-1;
-__END__
+{
+  require App::MathImage::NumSeq::AsciiSelf;
+  foreach my $radix (2 .. 40) {
+    my $seq = App::MathImage::NumSeq::AsciiSelf->new (radix => $radix);
+    print "$radix   ",join(',',@{$seq->{'pending'}}),"\n";
+  }
+  exit 0;
+}
+

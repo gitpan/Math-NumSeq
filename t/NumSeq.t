@@ -25,7 +25,7 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
-my $test_count = (tests => 234)[1];
+my $test_count = (tests => 239)[1];
 plan tests => $test_count;
 
 # uncomment this to run the ### lines
@@ -123,6 +123,19 @@ foreach my $elem
    # PiBits.pm
    # Repdigits.pm
    # SqrtDigits.pm
+
+
+   [ 'Math::NumSeq::BaumSweet', 0,
+     [ 1,1,0,1,1,0,0,1,0,1,0,0 ] ],
+   
+   [ 'Math::NumSeq::Pell', 0,
+     [ 0, 1, 2, 5, 12, 29, 70, 169, 408, 985, 2378, 5741,
+       13860, 33461, 80782, 195025, 470832, 1136689,
+     ] ],
+   # [ 'Math::NumSeq::Pell', 6,
+   #   [ 12, 29, 70, 169, 408, 985, 2378, 5741,
+   #     13860, 33461, 80782, 195025, 470832, 1136689,
+   #   ] ],
 
    [ 'Math::NumSeq::Polygonal', 0,  # pentagonal
      [ 0, 1,   5, 12,   22 ],  { polygonal => 5 },
@@ -774,15 +787,6 @@ foreach my $elem
    #   [ 1, 1, 1, 2, 2, 3, 4, 5, 7, 9, 12 ],
    #   undef,
    #   { bfile_offset => 5 } ],
-   #
-   # [ 'Math::NumSeq::Pell', 0,
-   #   [ 0, 1, 2, 5, 12, 29, 70, 169, 408, 985, 2378, 5741,
-   #     13860, 33461, 80782, 195025, 470832, 1136689,
-   #   ] ],
-   # [ 'Math::NumSeq::Pell', 6,
-   #   [ 12, 29, 70, 169, 408, 985, 2378, 5741,
-   #     13860, 33461, 80782, 195025, 470832, 1136689,
-   #   ] ],
 
    [ 'Math::NumSeq::Primes', 1,
      [ 2, 3, 5, 7, 11, 13, 17 ] ],
