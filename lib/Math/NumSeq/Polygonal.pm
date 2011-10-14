@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 10;
+$VERSION = 11;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -39,7 +39,7 @@ use constant parameter_info_array =>
    { name    => 'polygonal',
      display => Math::NumSeq::__('Polygonal'),
      type    => 'integer',
-     default => 6,
+     default => 5,
      minimum => 3,
      width   => 3,
      description => Math::NumSeq::__('Which polygonal numbers to show.  3 is the triangular numbers, 4 the perfect squares, 5 the pentagonal numbers, etc.'),
@@ -339,7 +339,7 @@ S(0) are both 0 and is given just once at i=0,
     0, P(1),S(1), P(2),S(2), P(3),S(3), ...
 
 C<pairs =E<gt> 'average'> is the average of the first and second, which ends
-up being simplly a multiple of the perfect squares,
+up being simply a multiple of the perfect squares,
 
     A(i) = (P(i)+S(i))/2
          = (k-2)/2 * i*i

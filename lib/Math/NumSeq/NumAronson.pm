@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 10;
+$VERSION = 11;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -217,14 +217,15 @@ Math::NumSeq::NumAronson -- numerical version of Aronson's sequence
 
 =head1 DESCRIPTION
 
-This is a s numerical version of Aronson's self-referential sequence by
-Cloitre, Sloane and Vandermast, 1,4,6,7,8,9,11,13,etc.
+This is a self-referential sequence by Cloitre, Sloane and Vandermast,
+1,4,6,7,8,9,11,13,etc, intended as a numerical version of Aronson's sequence
+(L<Math::NumSeq::Aronson>).
 
     http://arxiv.org/abs/math.NT/0305308
 
 Starting from a(1)=1 the rule is "n is in the sequence iff a(n) is odd".
-The result is 3 increments by 1 then 3 increment by 2, followed by 6
-increments by 1 and 6 increments by 2, then 12, 24, 48, etc.
+The result is a uniform pattern 3 steps by 1 then 3 steps by 2, followed by
+6 steps by 1 and 6 steps by 2, then 12, 24, 48, etc.
 
     1,  4
     6,  7,  8,  9,  11, 13

@@ -20,14 +20,14 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 10;
+$VERSION = 11;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-use constant name => Math::NumSeq::__('All Integers');
+# use constant name => Math::NumSeq::__('All Integers');
 use constant description => Math::NumSeq::__('All integers 0,1,2,3,etc.');
 use constant values_min => 0;
 use constant characteristic_monotonic => 2;

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 10;
+$VERSION = 11;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -32,7 +32,24 @@ use constant characteristic_monotonic => 2;
 use constant oeis_anum => 'A000142'; # factorials 1,1,2,6,24, including 0!==1
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+#use Devel::Comments;
+
+use constant _UV_LIMIT => do {
+  my $u = ~0 >> 1;
+  my $limit = 1;
+  for (my $i = 2; $i++; ) {
+    if ($u < $i) {
+      ### _UV_LIMIT stop before: "i=$i"
+      last;
+    }
+    $u -= ($u % $i);
+    $u /= $i;
+    $limit *= $i;
+  }
+  $limit
+};
+### _UV_LIMIT: _UV_LIMIT()
+
 
 sub rewind {
   my ($self) = @_;
@@ -44,16 +61,20 @@ sub next {
   my ($self) = @_;
   ### Factorials next()
   my $i = $self->{'i'}++;
+  my $f = $self->{'f'};
+  if ($f >= _UV_LIMIT && ! ref $f) {
+    $self->{'f'} = Math::NumSeq::_bigint()->new($f);
+  }
   return ($i, $self->{'f'} *= ($i||1));
 }
 
 sub pred {
   my ($self, $value) = @_;
-  ### Factorials pred()
+  ### Factorials pred(): $value
   my $i = 2;
   for (;; $i++) {
-    if ($value == 1) {
-      return 1;
+    if ($value <= 1) {
+      return $value;
     }
     if (($value % $i) == 0) {  # inf or nan fails this
       $value /= $i;

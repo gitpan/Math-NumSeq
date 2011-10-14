@@ -28,7 +28,7 @@ $VERSION = 75;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-use constant name => Math::NumSeq::__('Pentagonal Numbers');
+# use constant name => Math::NumSeq::__('Pentagonal Numbers');
 use constant description => Math::NumSeq::__('The pentagonal numbers 1,5,12,22,etc, (3k-1)*k/2.');
 
 # overriding Polygonal base class

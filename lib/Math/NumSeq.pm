@@ -46,7 +46,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 10;
+$VERSION = 11;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -308,8 +308,7 @@ implement this method.
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> occurs in the sequence.  For example for the
-squares this would return true if C<$value> is a perfect square or false if
-not.
+squares this would return true if C<$value> is a square or false if not.
 
 =back
 
@@ -362,6 +361,7 @@ L<Math::NumSeq::CullenNumbers>,
 L<Math::NumSeq::ProthNumbers>,
 L<Math::NumSeq::WoodallNumbers>
 L<Math::NumSeq::BaumSweet>,
+L<Math::NumSeq::KlarnerRado>
 
 L<Math::NumSeq::CollatzSteps>,
 L<Math::NumSeq::SternDiatomic>,

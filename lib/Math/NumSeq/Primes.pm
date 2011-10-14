@@ -22,7 +22,7 @@ use POSIX ();
 use Math::Prime::XS 0.23; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 10;
+$VERSION = 11;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -30,7 +30,7 @@ use Math::NumSeq;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-use constant name => Math::NumSeq::__('Prime Numbers');
+# use constant name => Math::NumSeq::__('Prime Numbers');
 use constant description => Math::NumSeq::__('The prime numbers 2, 3, 5, 7, 11, 13, 17, etc.');
 use constant characteristic_monotonic => 2;
 use constant values_min => 2;

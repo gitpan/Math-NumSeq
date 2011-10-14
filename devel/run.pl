@@ -65,7 +65,6 @@ $|=1;
   # $values_class = $gen->values_class('Loeschian');
   # $values_class = $gen->values_class('SumXsq3Ysq');
   # $values_class = $gen->values_class('ProthNumbers');
-  # $values_class = $gen->values_class('DigitCountLow');
   # $values_class = $gen->values_class('DigitSumModulo');
   # $values_class = $gen->values_class('PrimeFactorCount');
   # $values_class = $gen->values_class('RadixWithoutDigit');
@@ -90,29 +89,34 @@ $|=1;
   $values_class = 'App::MathImage::NumSeq::PrimeFactorCount';
   $values_class = 'App::MathImage::NumSeq::Fibbinary';
   $values_class = 'Math::NumSeq::NumAronson';
-  $values_class = 'Math::NumSeq::Polygonal';
   $values_class = 'Math::NumSeq::Expression';
   $values_class = 'Math::NumSeq::ReverseAdd';
   $values_class = 'App::MathImage::NumSeq::HofstadterDiff';
-  $values_class = 'App::MathImage::NumSeq::PlanePath';
   $values_class = 'App::MathImage::NumSeq::ReRound';
-  $values_class = 'App::MathImage::NumSeq::ReverseAddSteps';
   $values_class = 'App::MathImage::NumSeq::Pell';
   $values_class = 'App::MathImage::NumSeq::JugglerSteps';
   $values_class = 'App::MathImage::NumSeq::AsciiSelf';
   $values_class = 'App::MathImage::NumSeq::Kolakoski';
+  $values_class = 'Math::NumSeq::Factorials';
+  $values_class = 'Math::NumSeq::Polygonal';
+  $values_class = 'App::MathImage::NumSeq::ReverseAddSteps';
+  $values_class = 'App::MathImage::NumSeq::KlarnerRado';
+  $values_class = 'App::MathImage::NumSeq::PlanePath';
+  $values_class = 'App::MathImage::NumSeq::DivisorCount';
+  $values_class = 'App::MathImage::NumSeq::DigitCountLow';
   eval "require $values_class; 1" or die $@;
   print Math::NumSeq::DigitLength->VERSION,"\n";
-  my $seq = $values_class->new (algorithm_type => '1/2-3/2',
+  my $seq = $values_class->new (divisors_type => 'proper',
+                                algorithm_type => '1/2-3/2',
                                 start => 1,
                                 length => 1,
                                 fraction => '1/975',
-                                polygonal => 6,
-                                pairs => 'average',
+                                polygonal => 8,
+                                pairs => 'second',
                                 lo => 0,
                                 hi => 10, # 200*$rep,
                                 # radix => 3,
-                                digit => 1,
+                                # digit => 1,
                                 sqrt => 2,
                                 where => 'low',
                                 # expression => 'z=3; z*x^2 + 3*x + 2',
@@ -122,13 +126,19 @@ $|=1;
                                 # expression_evaluator => 'Perl',
                                 oeis_anum  => 'A000396',
                                 # distinct => 1,
-                                #planepath => 'HilbertCurve,height=5',
-                                planepath => 'RationalsTree,tree_type=Bird',
-                                coord_type => 'X',
+                                planepath => 'HilbertCurve',
+                                #planepath => 'RationalsTree,tree_type=Bird',
+                                coord_type => 'ENWS',
                                 multiplicity => 'distinct',
                                );
-  my $hi = 50;
-  print "anum ",($seq->oeis_anum||''),"\n";
+  my $hi = 20;
+
+  print "anum ",($seq->oeis_anum//'[undef]'),"\n";
+  print "values_min ",($seq->values_min//'[undef]'),"\n";
+  print "values_max ",($seq->values_max//'[undef]'),"\n";
+  print "characteristic(monotonic) ",($seq->characteristic('monotonic')//'[undef]'),"\n";
+  print "\n";
+
   my $values_min = $seq->values_min;
   my $values_max = $seq->values_max;
   my $saw_value_min;
@@ -168,7 +178,8 @@ $|=1;
         if (! $seq->pred($value)) {
           print " oops, pred($value) false\n";
         }
-        unless ($seq->characteristic('count')) {
+        unless ($seq->characteristic('count')
+                || $value - $pred_upto > 1000) {
           while ($pred_upto < $value) {
             if ($seq->pred($pred_upto)) {
               print " oops, pred($pred_upto) is true\n";

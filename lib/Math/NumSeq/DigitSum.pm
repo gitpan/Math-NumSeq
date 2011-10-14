@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 10;
+$VERSION = 11;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -32,7 +32,7 @@ use Math::NumSeq::Base::IterateIth;
 #use Devel::Comments;
 
 
-use constant name => Math::NumSeq::__('Digit Sum');
+# use constant name => Math::NumSeq::__('Digit Sum');
 use constant description => Math::NumSeq::__('Sum of the digits in the given radix.  For binary this is how many 1 bits.');
 use constant values_min => 0;
 use constant characteristic_monotonic => 0;

@@ -21,7 +21,7 @@ use strict;
 use List::Util 'min', 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 10;
+$VERSION = 11;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -36,8 +36,6 @@ use Math::NumSeq;
 # so sums up to hi need factorize to (hi^2)/4
 # 
 
-
-use constant name => Math::NumSeq::__('Count Prime Factors');
 use constant description => Math::NumSeq::__('Count of prime factors.');
 use constant characteristic_count => 1;
 use constant characteristic_monotonic => 0;

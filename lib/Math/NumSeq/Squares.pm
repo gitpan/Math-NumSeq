@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 10;
+$VERSION = 11;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -31,7 +31,7 @@ use Math::NumSeq;
 #use Smart::Comments;
 
 # use constant name =>  Math::NumSeq::__('Perfect Squares');
-use constant description => Math::NumSeq::__('The perfect squares 1,4,9,16,25, etc k*k.');
+use constant description => Math::NumSeq::__('The squares 1,4,9,16,25, etc k*k.');
 use constant characteristic_monotonic => 2;
 use constant values_min => 0;
 use constant oeis_anum => 'A000290'; # squares
@@ -90,11 +90,11 @@ Create and return a new sequence object.
 
 =item C<$value = $seq-E<gt>ith($i)>
 
-Return C<$i ** 2>.
+Return C<$i * $i>.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value> is a perfect square.
+Return true if C<$value> is a square, ie. k*k for some integer k.
 
 =back
 

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 10;
+$VERSION = 11;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -57,7 +57,7 @@ sub values_max {
   return $self->{'radix'} - 1;
 }
 
-use constant name => Math::NumSeq::__('Digit Sum Modulo');
+# use constant name => Math::NumSeq::__('Digit Sum Modulo');
 use constant description => Math::NumSeq::__('Sum of the digits in the given radix, modulo that radix or a given modulus.  Eg. for binary this is the bitwise parity.');
 
 # cf A001969  numbers with even 1s
@@ -67,7 +67,7 @@ use constant description => Math::NumSeq::__('Sum of the digits in the given rad
 my @oeis_anum = (undef,
                  undef,
 
-                 'A010060', # 2 binary
+                 'A010060', # 2 binary (Thue-Morse)
                  # OEIS-Catalogue: A010060 radix=2
 
                  'A053838', # 3 ternary
@@ -171,6 +171,11 @@ The sum of digits in each i, taken modulo the radix or a given modulus.  For
 example at i=123 with modulus 5 the value is 1+2+3=6, mod 5 = 1.
 
 Modulus 0, which is the default, means modulo the radix.
+
+For binary radix, modulo 2, this is the Thue-Morse "parity" sequence, being
+1 if i has an odd number of 1 bits or 0 if an even number of 1 bits.
+Numbers where it's 1 are sometimes called "odious" numbers and where it's 0
+calle "evil" numbers
 
 =head1 FUNCTIONS
 

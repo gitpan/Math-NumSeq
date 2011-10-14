@@ -22,7 +22,7 @@ use Carp;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 10;
+$VERSION = 11;
 
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
@@ -41,7 +41,7 @@ use constant parameter_info_array =>
     type    => 'integer',
     default => 2,
     width   => 5,
-    description => Math::NumSeq::__('The number to take the square root of.  If this is a perfect square then there\'s just a handful of bits to show, non squares go on infinitely.'),
+    description => Math::NumSeq::__('The number to take the square root of.  If this is a perfect square then there\'s just a handful of digits, non squares go on infinitely.'),
    },
    Math::NumSeq::Base::Digits->parameter_info_list,
   ];
@@ -384,7 +384,11 @@ Return C<$i ** 2>.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value> is a perfect square.
+Return true if C<$value> might occurs as a digit in the square root.
+
+Currently this presumes all digits occur, so simply C<$value E<gt>= 0> and
+C<$value < $radix>.  For a perfect square this might be wrong, for a
+non-square do all digits in fact occur?
 
 =back
 

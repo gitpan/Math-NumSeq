@@ -16,6 +16,7 @@ devel/exe-cbrt.c
 devel/expression.pl
 devel/juggler.pl
 devel/kimberling.pl
+devel/klarner.pl
 devel/kolakoski.pl
 devel/language-expr.pl
 devel/maybe-decprime.pl
@@ -70,6 +71,7 @@ lib/Math/NumSeq/File.pm
 lib/Math/NumSeq/FractionDigits.pm
 lib/Math/NumSeq/HappyNumbers.pm
 lib/Math/NumSeq/HarshadNumbers.pm
+lib/Math/NumSeq/KlarnerRado.pm
 lib/Math/NumSeq/LucasNumbers.pm
 lib/Math/NumSeq/MobiusFunction.pm
 lib/Math/NumSeq/NumAronson.pm

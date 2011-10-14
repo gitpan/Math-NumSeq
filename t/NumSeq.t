@@ -25,7 +25,7 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
-my $test_count = (tests => 239)[1];
+my $test_count = (tests => 242)[1];
 plan tests => $test_count;
 
 # uncomment this to run the ### lines
@@ -114,16 +114,14 @@ foreach my $elem
    # ChampernowneBinaryLsb.pm
    # PrimeFactorCount.pm
    # DigitsModulo.pm
-   # Expression.pm~
    # Expression.pm
-   # FractionDigits.pm
-   # Ln2Bits.pm~
    # Ln2Bits.pm
    # MobiusFunction.pm
    # PiBits.pm
    # Repdigits.pm
-   # SqrtDigits.pm
 
+   [ 'Math::NumSeq::KlarnerRado', 0,
+     [ 1,2,4,5,8,9 ] ],
 
    [ 'Math::NumSeq::BaumSweet', 0,
      [ 1,1,0,1,1,0,0,1,0,1,0,0 ] ],

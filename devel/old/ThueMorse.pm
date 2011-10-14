@@ -31,7 +31,6 @@ $VERSION = 38;
 
 # bit count per example in perlfunc unpack()
 
-# use constant name => Math::NumSeq::__('Digit Sum Modulo');
 use constant description => Math::NumSeq::__('Sum of the digits in the given radix, modulo that radix.  Eg. for binary this is the bitwise parity.');
 
 use Math::NumSeq::Base::Digits;

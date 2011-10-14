@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 10;
+$VERSION = 11;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -33,8 +33,19 @@ use Math::NumSeq;
 use constant description => Math::NumSeq::__('Numbers which contain "666".  The default is decimal, or select a radix.');
 use constant characteristic_monotonic => 1;
 
-use Math::NumSeq::Base::Digits;
-*parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
+use constant parameter_info_array =>
+  [
+   { name      => 'radix',
+     share_key => 'radix_min_7',
+     type      => 'integer',
+     display   => Math::NumSeq::__('Radix'),
+     default   => 10,
+     minimum   => 7,  # less than 7 there's no beastly values
+     width     => 3,
+     description => Math::NumSeq::__('Radix, ie. base, for the values calculation.  Default is decimal (base 10).'),
+   },
+  ];
+
 
 sub values_min {
   my ($self) = @_;
