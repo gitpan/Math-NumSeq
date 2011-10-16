@@ -35,7 +35,7 @@ use Math::NumSeq::Emirps;
 # VERSION
 
 {
-  my $want_version = 11;
+  my $want_version = 12;
   ok ($Math::NumSeq::Emirps::VERSION, $want_version, 'VERSION variable');
   ok (Math::NumSeq::Emirps->VERSION,  $want_version, 'VERSION class method');
 
@@ -53,11 +53,8 @@ use Math::NumSeq::Emirps;
 # characteristic()
 
 {
-  my $values_obj = Math::NumSeq::Emirps->new
-    (lo => 1,
-     hi => 30);
-
-  ok ($values_obj->characteristic('count'), undef, 'characteristic(count)');
+  my $seq = Math::NumSeq::Emirps->new;
+  ok ($seq->characteristic('count'), undef, 'characteristic(count)');
 }
 
 

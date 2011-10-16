@@ -34,7 +34,7 @@ plan tests => 7;
 # VERSION
 
 {
-  my $want_version = 11;
+  my $want_version = 12;
   ok ($Math::NumSeq::PrimeFactorCount::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::PrimeFactorCount->VERSION,  $want_version,
@@ -54,10 +54,7 @@ plan tests => 7;
 # characteristic()
 
 {
-  my $seq = Math::NumSeq::PrimeFactorCount->new
-    (lo => 1,
-     hi => 30);
-
+  my $seq = Math::NumSeq::PrimeFactorCount->new;
   ok ($seq->characteristic('count'), 1, 'characteristic(count)');
 }
 

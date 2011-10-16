@@ -46,7 +46,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 11;
+$VERSION = 12;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -74,9 +74,11 @@ HERE
 # }
 
 use constant description => undef;
-use constant i_start => 0;
 use constant oeis_anum => undef;
-
+sub i_start {
+  my ($self) = @_;
+  return $self->{'i_start'} || 0;
+}
 sub values_min {
   my ($self) = @_;
   return $self->{'values_min'};
@@ -159,6 +161,7 @@ sub _is_infinite {
           || ($x != 0 && $x == 2*$x));  # inf
 }
 
+# or maybe check for new enough for uv->mpz fix
 use constant::defer _bigint => sub {
   require Math::BigInt;
   eval { Math::BigInt->import (try => 'GMP') };
@@ -330,7 +333,8 @@ L<Math::NumSeq::TwinPrimes>,
 L<Math::NumSeq::SophieGermainPrimes>,
 L<Math::NumSeq::Emirps>,
 L<Math::NumSeq::MobiusFunction>,
-L<Math::NumSeq::PrimeFactorCount>
+L<Math::NumSeq::PrimeFactorCount>,
+L<Math::NumSeq::DivisorCount>
 
 L<Math::NumSeq::Factorials>,
 L<Math::NumSeq::Primorials>,
@@ -366,6 +370,7 @@ L<Math::NumSeq::KlarnerRado>
 L<Math::NumSeq::CollatzSteps>,
 L<Math::NumSeq::SternDiatomic>,
 L<Math::NumSeq::NumAronson>
+L<Math::NumSeq::AsciiSelf>
 
 L<Math::NumSeq::Aronson>, in the Math-Aronson dist
 

@@ -18,13 +18,14 @@
 package Math::NumSeq::DigitLength;
 use 5.004;
 use strict;
-use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 11;
-
+$VERSION = 12;
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
+
+use Math::NumSeq;
+*_is_infinite = \&Math::NumSeq::_is_infinite;
 
 
 # uncomment this to run the ### lines
@@ -88,7 +89,7 @@ sub next {
 
 sub ith {
   my ($self, $i) = @_;
-  if ($i == $i-1) {
+  if (_is_infinite($i)) {
     return $i;  # don't loop forever if $i is +infinity
   }
   my $length = 1;

@@ -30,13 +30,13 @@ use POSIX ();
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 11;
+$VERSION = 12;
 
 use Math::NumSeq::Base::Array;
 @ISA = ('Math::NumSeq::Base::Array');
 
 use vars '$VERSION';
-$VERSION = 11;
+$VERSION = 12;
 
 # uncomment this to run the ### lines
 #use Devel::Comments;

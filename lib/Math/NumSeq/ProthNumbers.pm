@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 11;
+$VERSION = 12;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -60,7 +60,7 @@ sub ith {
   }
   $i += 1;
 
-  if ($i == $i-1) {
+  if (_is_infinite($i)) {
     return $i;  # don't loop forever if $i is +infinity
   }
 

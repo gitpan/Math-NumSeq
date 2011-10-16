@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION';
-$VERSION = 11;
+$VERSION = 12;
 
 sub rewind {
   my ($self) = @_;

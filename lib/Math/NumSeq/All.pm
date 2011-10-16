@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 11;
+$VERSION = 12;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -32,13 +32,22 @@ use constant description => Math::NumSeq::__('All integers 0,1,2,3,etc.');
 use constant values_min => 0;
 use constant characteristic_monotonic => 2;
 
-# cf A000027 natural numbers starting 1
-#
-use constant oeis_anum => 'A001477';   # non-negatives, so starting 0
+# experimental i_start to get natural numbers ... probably not very important
+# OEIS-Catalogue: A000027 i_start=1
+# OEIS-Catalogue: A001477
+my %oeis_anum = (0 => 'A001477',  # non-negatives,  starting 0
+                 1 => 'A000027'); # natural numbers starting 1
+sub oeis_anum {
+  my ($self) = @_;
+  my $i_start = $self->i_start;
+  return ($i_start == 0   ? 'A001477'
+          : $i_start == 1 ? 'A000027'
+          : undef);
+}
 
 sub rewind {
   my ($self) = @_;
-  $self->{'i'} = $self->{'lo'} || 0;
+  $self->{'i'} = $self->i_start;
 }
 sub next {
   my ($self) = @_;

@@ -16,6 +16,9 @@ You should have received a copy of the GNU General Public License along
 with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 12, October 2011
+    - new AsciiSelf, DivisorCount
+
 Version 11, October 2011
     - new KlarnerRado
 

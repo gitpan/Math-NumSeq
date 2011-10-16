@@ -21,6 +21,28 @@ use 5.004;
 use strict;
 
 {
+  foreach (my $n = 3; $n < 30; $n+=2) {
+    my $i = $n;
+    print "$n   ";
+    for (;;) {
+      print "$i,";
+      if ($i & 1) {
+        ### 1/2 odd: $i
+        $i *= $i*$i;
+      } else {
+        ### even: $i
+      }
+      $i = int(sqrt($i));
+      if ($i <= 1) {
+        last;
+      }
+    }
+    print "\n";
+  }
+  exit 0;
+}
+
+{
   require App::MathImage::NumSeq::JugglerSteps;
   my $seq = App::MathImage::NumSeq::JugglerSteps->new;
   my $i = 18446744073709551615;

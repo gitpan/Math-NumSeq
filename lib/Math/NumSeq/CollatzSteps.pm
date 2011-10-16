@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 11;
+$VERSION = 12;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -43,7 +43,7 @@ use constant parameter_info_array =>
      display => Math::NumSeq::__('Step Type'),
      type    => 'enum',
      default => 'both',
-     choices => ['up','down','both'],
+     choices => ['both','up','down'],
      description => Math::NumSeq::__('Which steps to count, the 3*n+1 ups, the n/2 downs, or both.'),
    },
   ];

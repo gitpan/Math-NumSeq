@@ -94,20 +94,22 @@ $|=1;
   $values_class = 'App::MathImage::NumSeq::HofstadterDiff';
   $values_class = 'App::MathImage::NumSeq::ReRound';
   $values_class = 'App::MathImage::NumSeq::Pell';
-  $values_class = 'App::MathImage::NumSeq::JugglerSteps';
-  $values_class = 'App::MathImage::NumSeq::AsciiSelf';
   $values_class = 'App::MathImage::NumSeq::Kolakoski';
   $values_class = 'Math::NumSeq::Factorials';
   $values_class = 'Math::NumSeq::Polygonal';
   $values_class = 'App::MathImage::NumSeq::ReverseAddSteps';
   $values_class = 'App::MathImage::NumSeq::KlarnerRado';
   $values_class = 'App::MathImage::NumSeq::PlanePath';
-  $values_class = 'App::MathImage::NumSeq::DivisorCount';
   $values_class = 'App::MathImage::NumSeq::DigitCountLow';
+  $values_class = 'App::MathImage::NumSeq::DivisorCount';
+  $values_class = 'App::MathImage::NumSeq::JugglerSteps';
+  $values_class = 'Math::NumSeq::AsciiSelf';
   eval "require $values_class; 1" or die $@;
   print Math::NumSeq::DigitLength->VERSION,"\n";
-  my $seq = $values_class->new (divisors_type => 'proper',
-                                algorithm_type => '1/2-3/2',
+  my $seq = $values_class->new (
+                                # divisors_type => 'proper',
+                                # algorithm_type => '1/2-3/2',
+                                algorithm_type => '1/3-3/2',
                                 start => 1,
                                 length => 1,
                                 fraction => '1/975',
@@ -115,7 +117,7 @@ $|=1;
                                 pairs => 'second',
                                 lo => 0,
                                 hi => 10, # 200*$rep,
-                                # radix => 3,
+                                radix => 10,
                                 # digit => 1,
                                 sqrt => 2,
                                 where => 'low',
@@ -196,12 +198,14 @@ $|=1;
         }
       }
     }
-    if (defined $values_min && $saw_value_min != $values_min) {
-      print "oops, saw_value_min=$saw_value_min != values_min=$values_min\n";
-    }
     print "\n";
-    print "rewind\n";
-    $seq->rewind;
+    if (defined $values_min && $saw_value_min != $values_min) {
+      print "hmm, saw_value_min=$saw_value_min not seq->values_min=$values_min\n";
+    }
+    if ($rep < 2) {
+      print "rewind\n";
+      $seq->rewind;
+    }
   }
 
   if ($seq->can('ith')) {

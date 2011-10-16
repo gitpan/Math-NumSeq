@@ -21,12 +21,27 @@ require 5;
 use strict;
 
 {
-  require App::MathImage::NumSeq::AsciiSelf;
+  require Math::NumSeq::AsciiSelf;
+  require Math::BaseCnv;
+  foreach my $radix (2 .. 35) {
+    print "$radix\n";
+    foreach my $digit (0 .. $radix-1) {
+      my $ascii = Math::NumSeq::AsciiSelf::_digit_to_ascii($digit);
+      my $base = Math::BaseCnv::cnv($ascii,10,$radix);
+      print "  $base\n";
+    }
+    print "\n";
+  }
+  exit 0;
+}
+
+{
+  require Math::NumSeq::AsciiSelf;
   require Math::BaseCnv;
   foreach my $radix (2 .. 64) {
     print "$radix   ";
     foreach my $i (48 .. 47+$radix) {
-      my @ascii = App::MathImage::NumSeq::AsciiSelf::_radix_ascii($radix,$i);
+      my @ascii = Math::NumSeq::AsciiSelf::_radix_ascii($radix,$i);
       if ($ascii[0] == $i) {
         my $base = Math::BaseCnv::cnv($i,10,$radix);
         print join('_',@ascii), "  [$base], ";
@@ -38,9 +53,9 @@ use strict;
 }
 
 {
-  require App::MathImage::NumSeq::AsciiSelf;
+  require Math::NumSeq::AsciiSelf;
   foreach my $radix (2 .. 40) {
-    my $seq = App::MathImage::NumSeq::AsciiSelf->new (radix => $radix);
+    my $seq = Math::NumSeq::AsciiSelf->new (radix => $radix);
     print "$radix   ",join(',',@{$seq->{'pending'}}),"\n";
   }
   exit 0;
