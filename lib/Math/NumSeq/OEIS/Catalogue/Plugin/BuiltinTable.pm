@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 12;
+$VERSION = 13;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 272 A-numbers in 51 modules
+# total 293 A-numbers in 62 modules
 
 use constant info_arrayref =>
 [
@@ -475,14 +475,6 @@ use constant info_arrayref =>
     ]
   },
   {
-    'anum' => 'A086746',
-    'class' => 'Math::NumSeq::Expression',
-    'parameters' => [
-      'expression',
-      '3018*i'
-    ]
-  },
-  {
     'anum' => 'A000142',
     'class' => 'Math::NumSeq::Factorials'
   },
@@ -623,6 +615,10 @@ use constant info_arrayref =>
     ]
   },
   {
+    'anum' => 'A001462',
+    'class' => 'Math::NumSeq::GolombSequence'
+  },
+  {
     'anum' => 'A007770',
     'class' => 'Math::NumSeq::HappyNumbers',
     'parameters' => [
@@ -643,12 +639,130 @@ use constant info_arrayref =>
     'class' => 'Math::NumSeq::HarshadNumbers'
   },
   {
+    'anum' => 'A007320',
+    'class' => 'Math::NumSeq::JugglerSteps'
+  },
+  {
+    'anum' => 'A095398',
+    'class' => 'Math::NumSeq::JugglerSteps',
+    'parameters' => [
+      'juggler_type',
+      '2/3-3/2'
+    ]
+  },
+  {
+    'anum' => 'A095401',
+    'class' => 'Math::NumSeq::JugglerSteps',
+    'parameters' => [
+      'juggler_type',
+      '3/4-4/3'
+    ]
+  },
+  {
+    'anum' => 'A000002',
+    'class' => 'Math::NumSeq::Kolakoski'
+  },
+  {
+    'anum' => 'A008836',
+    'class' => 'Math::NumSeq::LiouvilleFunction'
+  },
+  {
     'anum' => 'A000204',
     'class' => 'Math::NumSeq::LucasNumbers'
   },
   {
     'anum' => 'A008683',
     'class' => 'Math::NumSeq::MobiusFunction'
+  },
+  {
+    'anum' => 'A010872',
+    'class' => 'Math::NumSeq::Modulo',
+    'parameters' => [
+      'modulus',
+      3
+    ]
+  },
+  {
+    'anum' => 'A010873',
+    'class' => 'Math::NumSeq::Modulo',
+    'parameters' => [
+      'modulus',
+      4
+    ]
+  },
+  {
+    'anum' => 'A010874',
+    'class' => 'Math::NumSeq::Modulo',
+    'parameters' => [
+      'modulus',
+      5
+    ]
+  },
+  {
+    'anum' => 'A010875',
+    'class' => 'Math::NumSeq::Modulo',
+    'parameters' => [
+      'modulus',
+      6
+    ]
+  },
+  {
+    'anum' => 'A010876',
+    'class' => 'Math::NumSeq::Modulo',
+    'parameters' => [
+      'modulus',
+      7
+    ]
+  },
+  {
+    'anum' => 'A010877',
+    'class' => 'Math::NumSeq::Modulo',
+    'parameters' => [
+      'modulus',
+      8
+    ]
+  },
+  {
+    'anum' => 'A010878',
+    'class' => 'Math::NumSeq::Modulo',
+    'parameters' => [
+      'modulus',
+      9
+    ]
+  },
+  {
+    'anum' => 'A010879',
+    'class' => 'Math::NumSeq::Modulo',
+    'parameters' => [
+      'modulus',
+      10
+    ]
+  },
+  {
+    'anum' => 'A010880',
+    'class' => 'Math::NumSeq::Modulo',
+    'parameters' => [
+      'modulus',
+      11
+    ]
+  },
+  {
+    'anum' => 'A010881',
+    'class' => 'Math::NumSeq::Modulo',
+    'parameters' => [
+      'modulus',
+      12
+    ]
+  },
+  {
+    'anum' => 'A086746',
+    'class' => 'Math::NumSeq::Multiples',
+    'parameters' => [
+      'multiples',
+      3018,
+      'i_start',
+      1
+    ]
   },
   {
     'anum' => 'A079000',
@@ -1395,6 +1509,10 @@ use constant info_arrayref =>
       'start',
       196
     ]
+  },
+  {
+    'anum' => 'A016016',
+    'class' => 'Math::NumSeq::ReverseAddSteps'
   },
   {
     'anum' => 'A005384',
@@ -2151,6 +2269,22 @@ use constant info_arrayref =>
   {
     'anum' => 'A000292',
     'class' => 'Math::NumSeq::Tetrahedral'
+  },
+  {
+    'anum' => 'A000010',
+    'class' => 'Math::NumSeq::Totient'
+  },
+  {
+    'anum' => 'A002088',
+    'class' => 'Math::NumSeq::TotientCumulative'
+  },
+  {
+    'anum' => 'A082897',
+    'class' => 'Math::NumSeq::TotientPerfect'
+  },
+  {
+    'anum' => 'A003434',
+    'class' => 'Math::NumSeq::TotientSteps'
   },
   {
     'anum' => 'A000217',

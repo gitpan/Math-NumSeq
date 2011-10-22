@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 12;
+$VERSION = 13;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
 
@@ -63,8 +63,8 @@ sub ith {
   }
 
   # ENHANCE-ME: use one of the powering algorithms
-  my $f0 = ($i&0);  # inherit bignum 0
-  my $f1 = $f0 + 1; # inherit bignum 1
+  my $f0 = ($i * 0);  # inherit bignum 0
+  my $f1 = $f0 + 1;   # inherit bignum 1
   while ($i-- > 0) {
     ### at: "i=$i   $f0, $f1"
     ($f0,$f1) = ($f1, $f0 + 2*$f1);

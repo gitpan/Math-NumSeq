@@ -56,7 +56,7 @@ use strict;
   print "$value\n";
 
 
-  my $b = App::MathImage::NumSeq::JugglerSteps::_bigint()->new($i);
+  my $b = Math::NumSeq::_bigint()->new($i);
   print "$b\n";
   exit 0;
 }

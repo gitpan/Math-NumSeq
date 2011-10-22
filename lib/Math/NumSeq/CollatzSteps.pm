@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 12;
+$VERSION = 13;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -194,7 +194,9 @@ E<gt>= 0>.
 
 =head1 SEE ALSO
 
-L<Math::NumSeq>
+L<Math::NumSeq>,
+L<Math::NumSeq::JugglerSteps>,
+L<Math::NumSeq::ReverseAddSteps>
 
 =head1 HOME PAGE
 

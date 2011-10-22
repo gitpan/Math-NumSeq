@@ -21,7 +21,7 @@ use strict;
 use Math::Prime::XS;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 12;
+$VERSION = 13;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -36,7 +36,24 @@ use constant values_min => 1;
 use constant oeis_anum => 'A002110'; # starting at 1
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+#use Devel::Comments;
+
+use constant _UV_LIMIT => do {
+  my $u = ~0 >> 1;
+  my $limit = 1;
+  for my $p (Math::Prime::XS::sieve_primes(100)) {
+    ### $p
+    if ($u < $p) {
+      ### _UV_LIMIT stop before prime: "p=$p"
+      last;
+    }
+    $u -= ($u % $p);
+    $u /= $p;
+    $limit *= $p;
+  }
+  $limit
+};
+### _UV_LIMIT: _UV_LIMIT()
 
 sub rewind {
   my ($self) = @_;
@@ -48,12 +65,18 @@ sub rewind {
 sub next {
   my ($self) = @_;
   ### Primorials next()
+
   if (my $i = $self->{'i'}++) {
+    my $f = $self->{'f'};
+    if ($f >= _UV_LIMIT && ! ref $f) {
+      $self->{'f'} = Math::NumSeq::_bigint()->new($f);
+    }
     my $prime;
     do {
       $prime = $self->{'prime'}++;
     } until (Math::Prime::XS::is_prime($prime));
     return ($i, $self->{'f'} *= $prime);
+
   } else {
     return (0, 1);
   }
@@ -61,16 +84,19 @@ sub next {
 
 sub pred {
   my ($self, $value) = @_;
-  ### Factorials pred()
+  ### Primorials pred()
   my $prime = 2;
   for (;;) {
-    if ($value == 1) {
-      return 1;
+    if ($value <= 1) {
+      return ($value == 1);
     }
     if (($value % $prime) == 0) {
       $value /= $prime;
+      if (($value % $prime) == 0) {
+        return 0;  # doubled prime factor
+      }
     } else {
-      return 0;
+      return 0;  # not divisible by this prime
     }
     until (Math::Prime::XS::is_prime(++$prime)) {}
   }

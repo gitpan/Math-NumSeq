@@ -25,7 +25,7 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
-my $test_count = (tests => 253)[1];
+my $test_count = (tests => 259)[1];
 plan tests => $test_count;
 
 # uncomment this to run the ### lines
@@ -333,10 +333,10 @@ foreach my $elem
        513, 545, 577, 609, 641, 673, 705, 737, 769, 801, 833, 865, 897, 929,
        961, 993, 1025, 1089, 1153, 1217, 1281, 1345, 1409 ] ],
 
-   # [ 'Math::NumSeq::TotientSum', 0,
-   #   [ 0, 1, 2, 4, 6, 10, 12, 18, 22, 28, 32, 42 ],
-   # ],
-   #
+   [ 'Math::NumSeq::TotientCumulative', 0,
+     [ 0, 1, 2, 4, 6, 10, 12, 18, 22, 28, 32, 42 ],
+   ],
+   
    # [ 'Math::NumSeq::Loeschian', 0,
    #   [ 0,1,3,4,7,9,12,13,16,19,21,25 ] ],
 
@@ -560,11 +560,11 @@ foreach my $elem
    [ 'Math::NumSeq::Even', 5,
      [ 6, 8, 10, 12 ] ],
 
-   # [ 'Math::NumSeq::Multiples', 0,
-   #   [ 0, 2, 4, 6, 8, 10, 12 ],
-   #   { multiples => 2 },
-   # ],
-   #
+   [ 'Math::NumSeq::Multiples', 0,
+     [ 0, 2, 4, 6, 8, 10, 12 ],
+     { multiples => 2 },
+   ],
+   
    # [ 'Math::NumSeq::Obstinate', 1,
    #   [ 1, 3, 127, ] ],
 

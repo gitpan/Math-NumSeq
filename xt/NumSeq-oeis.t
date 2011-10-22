@@ -34,6 +34,10 @@ use MyOEIS;
 
 use Math::NumSeq::OEIS::Catalogue;
 
+eval "use Math::BigInt try => 'GMP'; 1"  # pure perl too slow for big sqrts
+  || eval "use Math::BigInt; 1"
+  || die;
+
 use POSIX ();
 POSIX::setlocale(POSIX::LC_ALL(), 'C'); # no message translations
 
@@ -106,11 +110,18 @@ sub check_class {
                   $class,
                   map {defined $_ ? $_ : '[undef]'} @$parameters);
 
-  my ($want, $want_i_start, $filename) = MyOEIS::read_values($anum)
-    or do {
-      MyTestHelpers::diag("skip $anum $name, no file data");
-      return;
-    };
+  my $max_value = undef;
+  if ($class->isa('Math::NumSeq::Factorials')
+      || $class->isa('Math::NumSeq::Primorials')) {
+    $max_value = 'unlimited';
+  }
+
+  my ($want, $want_i_start, $filename) = MyOEIS::read_values
+    ($anum, max_value => $max_value)
+      or do {
+        MyTestHelpers::diag("skip $anum $name, no file data");
+        return;
+      };
   ### read_values len: scalar(@$want)
   ### $want_i_start
 
@@ -291,16 +302,22 @@ sub check_class {
       $want = [ grep {$_<=$hi} @$want ];
     }
     _delete_duplicates($want);
-    #### $want
+    ### $hi
+    ### $want
 
     my @got;
-    foreach my $value (_min(@$want) .. $hi) {
+    my $lo = _min(@$want);
+    if (! defined $lo) {
+      $lo = $seq->ith($seq->i_start+1);
+    }
+    foreach my $value ($lo .. $hi) {
       #### $value
       if ($seq->pred($value)) {
         push @got, $value;
       }
     }
     my $got = \@got;
+    ### $got
 
     my $diff = diff_nums($got, $want);
     if (defined $diff) {
@@ -324,11 +341,37 @@ sub check_class {
 #------------------------------------------------------------------------------
 # forced
 
-# check_class ('A001097',
-#              'Math::NumSeq::TwinPrimes',
-#              [ pairs => 'both' ]);
+# check_class ('A086746',
+#              'Math::NumSeq::Multiples',
+#              [ multiples => 3018, i_start => 1 ]);
 # exit 0;
 
+
+#------------------------------------------------------------------------------
+# duplicates or uncatalogued
+
+# check_class ('A010701',
+#              'Math::NumSeq::FractionDigits',
+#              [ fraction => '10/3', radix => 10 ]);
+
+check_class ('A000217', # triangular numbers
+             'Math::NumSeq::Polygonal',
+             [ polygonal => 3 ]);
+check_class ('A000290', # squares
+             'Math::NumSeq::Polygonal',
+             [ polygonal => 4 ]);
+check_class ('A000217', # hexagonal both are triangular numbers
+             'Math::NumSeq::Polygonal',
+             [ polygonal => 6, pairs => 'both' ]);
+
+# check_class ('A010701', 'Math::NumSeq::FractionDigits',
+#              [ fraction => '10/3' ]);
+
+check_class ('A000120', 'Math::NumSeq::DigitSum',
+             [ radix => 2 ]);
+
+check_class ('A005843', 'Math::NumSeq::Multiples',
+             [ multiples => 2 ]);
 
 #------------------------------------------------------------------------------
 # OEIS-Catalogue generated vs files
@@ -354,13 +397,6 @@ for (my $anum = Math::NumSeq::OEIS::Catalogue->anum_first;  #  'A007770';
                $info->{'class'},
                $info->{'parameters'});
 }
-
-#------------------------------------------------------------------------------
-# duplicates or uncatalogued
-
-# check_class ('A010701',
-#              'Math::NumSeq::FractionDigits',
-#              [ fraction => '10/3', radix => 10 ]);
 
 MyTestHelpers::diag ("total checks $total_checks");
 $good = 1;

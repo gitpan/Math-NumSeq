@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 12;
+$VERSION = 13;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -84,7 +84,7 @@ See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 =over 4
 
-=item C<$seq = Math::NumSeq::Squares-E<gt>new (key=E<gt>value,...)>
+=item C<$seq = Math::NumSeq::Squares-E<gt>new ()>
 
 Create and return a new sequence object.
 

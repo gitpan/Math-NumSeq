@@ -21,7 +21,7 @@ use strict;
 use List::Util 'min', 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 12;
+$VERSION = 13;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -226,6 +226,7 @@ which can occur in the sequence.
 
 L<Math::NumSeq>,
 L<Math::NumSeq::Primes>,
+L<Math::NumSeq::LiouvilleFunction>,
 L<Math::NumSeq::MobiusFunction>
 
 =head1 HOME PAGE

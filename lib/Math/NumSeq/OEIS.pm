@@ -21,7 +21,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION','@ISA';
-$VERSION = 12;
+$VERSION = 13;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -144,6 +144,14 @@ See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 Create and return a new sequence object.
 
 =back
+
+=head1 BUGS
+
+There's a hard-coded stop at file values bigger than an IV or an NV mantissa
+(whichever is larger).  The idea is not to lose precision reading into a
+float.  Perhaps reading into C<Math::BigInt> would be better, but perhaps
+when reading progressively unlike the current code which slurps the file in
+one go.
 
 =head1 SEE ALSO
 

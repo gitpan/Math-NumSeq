@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 12;
+$VERSION = 13;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -74,7 +74,7 @@ sub pred {
   my $i = 2;
   for (;; $i++) {
     if ($value <= 1) {
-      return $value;
+      return ($value == 1);
     }
     if (($value % $i) == 0) {  # inf or nan fails this
       $value /= $i;

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 12;
+$VERSION = 13;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -62,7 +62,7 @@ sub pred {
   my ($self, $n) = @_;
   return exists (($self->{'hash'} ||= do {
     my %h;
-    @h{@{$self->{'array'}}} = ();
+    @h{grep {defined} @{$self->{'array'}}} = ();
     ### %h
     \%h
   })->{$n});

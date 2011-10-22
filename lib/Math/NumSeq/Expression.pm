@@ -24,7 +24,7 @@ use Math::Libm;
 use Module::Util;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 12;
+$VERSION = 13;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -122,9 +122,6 @@ $oeis_anum{'i*(4*i-1)'} = 'A033991';
 
 $oeis_anum{'(2*i)**3'} = 'A016743';  # even cubes (2i)^3
 # OEIS-Catalogue: A016743 expression=(2*i)**3
-
-$oeis_anum{'3018*i'} = 'A086746';  # multiples of 3018
-# OEIS-Catalogue: A086746 expression=3018*i
 
 sub oeis_anum {
   my ($self) = @_;

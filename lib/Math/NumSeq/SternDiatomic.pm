@@ -28,7 +28,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 12;
+$VERSION = 13;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -60,7 +60,7 @@ sub ith {
     return $i;
   }
 
-  my $b = ($i & 0); # inherit bignum 0
+  my $b = ($i * 0); # inherit bignum 0
   my $a = $b + 1;   # inherit bignum 1
 
   while ($i) {

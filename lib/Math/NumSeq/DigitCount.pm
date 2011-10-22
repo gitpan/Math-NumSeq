@@ -20,14 +20,14 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 12;
+$VERSION = 13;
 use Math::NumSeq;
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
-use Math::NumSeq::Base::Digits;
+use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
-        'Math::NumSeq::Base::Digits');
+        'Math::NumSeq');
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -36,6 +36,8 @@ use constant description => Math::NumSeq::__('How many of a given digit in each 
 use constant values_min => 0;
 use constant characteristic_count => 1;
 use constant characteristic_monotonic => 0;
+
+use Math::NumSeq::Base::Digits;
 use constant parameter_info_array =>
   [
    Math::NumSeq::Base::Digits->parameter_info_list(),

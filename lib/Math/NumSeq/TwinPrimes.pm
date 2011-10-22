@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 12;
+$VERSION = 13;
 
 use Math::NumSeq::Primes;
 @ISA = ('Math::NumSeq::Primes');
@@ -48,7 +48,7 @@ use constant parameter_info_array =>
    },
   ];
 
-# cf A077800 both, with repetition
+# cf A077800 both, with repetition, so 3,5, 5,7, 11,13, ...
 #
 my %oeis_anum = (
                  first  => 'A001359',

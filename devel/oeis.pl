@@ -25,6 +25,17 @@ use POSIX;
 use Smart::Comments;
 
 {
+  require Math::NumSeq::OEIS;
+  my $seq = Math::NumSeq::OEIS->new(anum=>'A009000');
+  # ### $seq
+  ### description: $seq->description
+  ### characteristic(monotonic): $seq->characteristic('monotonic')
+  ### characteristic(smaller): $seq->characteristic('smaller')
+  ### values_min: $seq->values_min
+  ### values_max: $seq->values_max
+  exit 0;
+}
+{
   require Math::NumSeq::OEIS::Catalogue;
   my $anum = 'A055508';
   my $info = Math::NumSeq::OEIS::Catalogue->anum_to_info($anum);
@@ -88,12 +99,7 @@ use Smart::Comments;
 }
 
 
-{
-  require Math::NumSeq::OEIS;
-  my $seq = Math::NumSeq::OEIS->new(anum=>'A000032');
-  ### $seq
-  exit 0;
-}
+
 {
   {
     require File::Find;

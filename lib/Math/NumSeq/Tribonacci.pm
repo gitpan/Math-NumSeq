@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 12;
+$VERSION = 13;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
 
@@ -73,7 +73,7 @@ Math::NumSeq::Tribonacci -- Tribonacci numbers
 
 =head1 DESCRIPTION
 
-The Tribonacci sequence 0,0,1,1,1,3,5,9,17,etc,
+The Tribonacci sequence 0, 0, 1, 1, 2, 4, 7, 13, etc,
 
     T(i) = T(i-1) + T(i-2) + T(i-3)
 

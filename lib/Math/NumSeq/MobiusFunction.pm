@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 12;
+$VERSION = 13;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -118,7 +118,7 @@ sub next {
       # }
     }
   }
-  ### ret: "$i, $ret -> ".($ret != 1 && 4-$ret)
+  ### ret: "$i, $ret -> ".$transform[$ret]
   return ($i, $transform[$ret]);
 }
 
@@ -213,6 +213,7 @@ Return true if C<$value> is 1, 0 or -1.
 =head1 SEE ALSO
 
 L<Math::NumSeq>,
+L<Math::NumSeq::LiouvilleFunction>,
 L<Math::NumSeq::PrimeFactorCount>
 
 =head1 HOME PAGE

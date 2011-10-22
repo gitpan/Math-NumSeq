@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 12;
+$VERSION = 13;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -64,7 +64,7 @@ sub ith {
     return $i;  # don't loop forever if $i is +infinity
   }
 
-  my $exp = ($i & 0);  # inherit
+  my $exp = ($i * 0);  # inherit bignum from $i
   my $rem = $i;
   while ($rem > 3) {
     $rem >>= 1;

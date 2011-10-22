@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 12;
+$VERSION = 13;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -76,6 +76,7 @@ $oeis_anum{'both'}->[5]   = 'A001318';
 
 $oeis_anum{'first'}->[6]  = 'A000384';   # 6 hexagonal
 $oeis_anum{'second'}->[6] = 'A014105';
+$oeis_anum{'both'}->[6]   = 'A000217';   # together triangular numbers
 # OEIS-Catalogue: A000384 polygonal=6  pairs=first
 # OEIS-Catalogue: A014105 polygonal=6  pairs=second
 
@@ -244,7 +245,7 @@ sub ith {
     if ($i == 0) {
       return 1;
     } else {
-      return;
+      return undef;
     }
   }
   my $pairs = $self->{'pairs'};

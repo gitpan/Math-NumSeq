@@ -16,12 +16,6 @@
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# characteristic('monotonic')
-#    from .internal sample values
-#    otherwise reading whole B-File
-#    subclass Sequence::File for b-file with extra info
-
-
 package Math::NumSeq::OEIS::File;
 use 5.004;
 use strict;
@@ -30,16 +24,13 @@ use POSIX ();
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 12;
+$VERSION = 13;
 
 use Math::NumSeq::Base::Array;
 @ISA = ('Math::NumSeq::Base::Array');
 
 use vars '$VERSION';
-$VERSION = 12;
-
-# uncomment this to run the ### lines
-#use Devel::Comments;
+$VERSION = 13;
 
 # use constant name => Math::NumSeq::__('OEIS File');
 sub description {
@@ -51,6 +42,9 @@ sub description {
 }
 use Math::NumSeq::OEIS;
 *parameter_info_array = \&Math::NumSeq::OEIS::parameter_info_array;
+
+# uncomment this to run the ### lines
+#use Devel::Comments;
 
 sub new {
   my ($class, %options) = @_;
@@ -69,6 +63,7 @@ sub new {
     }
 
     if ($self{'characteristic'}->{'radix'}) {
+      ### radix ...
       my $aref = $self{'array'};
       my $max = 0;
       foreach my $i (1 .. $#$aref) {
@@ -79,6 +74,7 @@ sub new {
           $max = $aref->[$i];
         }
       }
+      ### guess max from data: $max
       $self{'values_max'} = $max;
       $self{'radix'} = $max+1;
     }
@@ -95,6 +91,9 @@ sub oeis_dir {
 }
 
 my $max_value = POSIX::FLT_RADIX() ** (POSIX::DBL_MANT_DIG()-5);
+if ((~0 >> 1) > $max_value) {
+  $max_value = (~0 >> 1);
+}
 
 sub anum_to_bfile {
   my ($anum, $prefix) = @_;
@@ -121,29 +120,136 @@ sub _read_values {
     my $seen_good = 0;
     while (defined (my $line = <FH>)) {
       chomp $line;
-      if ($line =~ /^\s*$/) {
-        # ignore blank lines
-      } elsif (my ($i, $n) = ($line =~ /^([0-9]+) (-?[0-9]+)[ \t]*$/)) {
-        if ($n > $max_value) {
-          ### stop at bignum value: $line
+      $line =~ tr/\r//d;    # delete CR if CRLF line endings, eg. b009000.txt
+      ### $line
+
+      if ($line =~ /^\s*(#|$)/) {
+        ### ignore blank or comment ...
+        # comment lines with # eg. b002182.txt
+        next;
+      }
+
+      if (my ($i, $value) = ($line =~ /^([0-9]+)     # i
+                                       [ \t]+
+                                       (-?[0-9]+)    # value
+                                       [ \t]*
+                                       $/x)) {
+        if ($value > $max_value) {
+          ### stop at bignum value ...
           last;
         }
         $seen_good = 1;
-        $array[$i] = $n;
-      } else {
-        # allow random stuff in a.txt files, such as a084888.txt
-        if (! $seen_good && $prefix eq 'a') {
-          close FH or die "Error reading $filename: $!";
-          next PREFIX;
-        }
-        die "oops, bad line in $filename: '$line'";
+        $array[$i] = $value;
+        next;
       }
+
+      # forgive random non-number stuff in a000000.txt files, eg. a084888.txt
+      if (! $seen_good && $prefix eq 'a') {
+        ### non-number in a-file, skip ...
+        close FH or die "Error reading $filename: $!";
+        next PREFIX;
+      }
+      # bad line in b000000.txt file, or in an a000000.txt which had
+      # looked good until this point
+      ### linenum: $.
+      $line =~ s{([^\020-\176])}{sprintf '\\x{%04x}', ord($1)}eg;
+      die "oops, bad line $. in $filename: \"$line\"";
     }
     close FH or die "Error reading $filename: $!";
     $self->{'filename'} = $filename;
     $self->{'array'} = \@array;
+    ### array size: scalar(@{$self->{'array'}})
   }
   return;
+}
+
+sub characteristic_monotonic {
+  my ($self) = @_;
+  ### OEIS-File characteristic_monotonic() ...
+
+  if (! defined $self->{'characteristic'}->{'monotonic'}) {
+    my $monotonic = 2;
+    my $aref = $self->{'array'};
+    my $prev;
+    foreach my $i (0 .. $#$aref) {
+      next unless defined (my $value = $aref->[$i]);
+      if (defined $prev) {
+        if ($value < $prev) {
+          $monotonic = 0;
+          last;
+        }
+        if ($value eq $prev) {
+          $monotonic = 1;
+        }
+      }
+      $prev = $value;
+    }
+    ### $monotonic
+    $self->{'characteristic'}->{'monotonic'} = $monotonic;
+  }
+  return $self->{'characteristic'}->{'monotonic'};
+}
+
+sub characteristic_smaller {
+  my ($self) = @_;
+  ### OEIS-File characteristic_smaller() ...
+
+  if (! defined $self->{'characteristic'}->{'smaller'}) {
+    my $aref = $self->{'array'};
+    my $smaller = 0;
+    my $total = 0;
+    foreach my $i (0 .. $#$aref) {
+      next unless defined (my $value = $aref->[$i]);
+      $total++;
+      $smaller += ($value < $i);
+    }
+    ### $smaller
+    ### $total
+    $self->{'characteristic'}->{'smaller'}
+      = ($total == 0 || $smaller / $total >= .9);
+    ### decide: $self->{'characteristic'}->{'smaller'}
+  }
+  return $self->{'characteristic'}->{'smaller'};
+}
+
+sub values_min {
+  my ($self) = @_;
+  ### OEIS-File values_min() ...
+  if (! exists $self->{'values_min'}) {
+    my $aref = $self->{'array'};
+    my $min;
+    foreach my $i (0 .. $#$aref) {
+      next unless defined (my $value = $aref->[$i]);
+      if (! defined $min || $value < $min) {
+        $min = $value;
+      }
+    }
+    if (! defined $min && $self->{'characteristic'}->{'oeis_nonn'}) {
+      $min = 0;
+    }
+    ### $min
+    $self->{'values_min'} = $min;
+  }
+  return $self->{'values_min'};
+}
+sub values_max {
+  my ($self) = @_;
+  ### OEIS-File values_max() ...
+  return undef;
+
+  # if (! exists $self->{'values_max'}) {
+  #   my $aref = $self->{'array'};
+  #   my $max;
+  #   foreach my $i (0 .. $#$aref) {
+  #     next unless defined (my $value = $aref->[$i]);
+  #     if (! defined $max || $value > $max) {
+  #       $max = $value;
+  #     }
+  #   }
+  #   ### $max
+  #   $self->{'values_max'} = $max;
+  # }
+  # return $self->{'values_max'};
 }
 
 sub _read_internal {
@@ -164,33 +270,35 @@ sub _read_internal {
   $self->{'characteristic'} = \%characteristic;
 
   my $offset;
-  if ($contents =~ /^%O\s+(\d+)/) {
+  if ($contents =~ /^%O\s+(\d+)/m) {
     $offset = $1;
   } else {
     $offset = 0;
   }
 
   my $description;
-  if ($contents =~ /^%N (.*?)(<tt>|$)/) {
+  if ($contents =~ m{^%N (.*?)(<tt>|$)}m) {
     $description = $1;
     $description =~ s/\s+/ /g;
-    $description =~ s/<.*?>//sg;
-    $description =~ s/&lt;/</sg;
-    $description =~ s/&gt;/>/sg;
-    $description =~ s/&amp;/&/sg;
+    $description =~ s/<[^>]*?>//sg;  # <foo ...> tags
+    $description =~ s/&lt;/</sg;     # unentitize <
+    $description =~ s/&gt;/>/sg;     # unentitize >
+    $description =~ s/&amp;/&/sg;    # unentitize &
+    $description =~ s/&#39;/'/sg;    # unentitize '
+    ### $description
 
     if ($description =~ /^number of /i) {
       $characteristic{'count'} = 1;
     }
-    # ENHANCE-ME: use __x() when available
+    # ENHANCE-ME: use __x() when available, or an sprintf "... %s" would be enough ...
     $description .= "\n" . (defined $self->{'filename'}
-                            ? Math::NumSeq::__('Values from B-file ').$self->{'filename'}
-                            : Math::NumSeq::__('First few values from "internal"'));
+                            ? Math::NumSeq::__('Values from B-file ') . $self->{'filename'}
+                            : Math::NumSeq::__('First few values from ') . "$anum.internal");
     $self->{'description'} = $description;
   }
 
   _set_characteristics ($self, $description,
-                        $contents =~ /^%K (.*?)(<tt>|$)/ && $1);
+                        $contents =~ /^%K (.*?)(<tt>|$)/m && $1);
 
   if (! $self->{'array'}) {
     $contents =~ m{^%S (.*?)(</tt>|$)}m
@@ -215,17 +323,18 @@ sub _read_html {
             <td[^>]*>\s*</td>   # blank <td ...></td>
             <td[^>]*>           # <td ...>
             \s*
-            ([^>]+)             # text
+            (.*?)               # text
             <(br|/td)>          # to <br> or </td>
          }sx) {
         $description = $1;
-        $description =~ s/^\s+//;
-        $description =~ s/\s+$//;
-        $description =~ s/\s+/ /g;    # collapse whitespace
-        $description =~ s/<.*?>//sg;
-        $description =~ s/&lt;/</sg;
-        $description =~ s/&gt;/>/sg;
-        $description =~ s/&amp;/&/sg;
+        $description =~ s/\s+$//;       # trailing whitespace
+        $description =~ s/\s+/ /g;      # collapse whitespace
+        $description =~ s/<[^>]*?>//sg; # tags <foo ...>
+        $description =~ s/&lt;/</sg;    # unentitize <
+        $description =~ s/&gt;/>/sg;    # unentitize >
+        $description =~ s/&amp;/&/sg;   # unentitize &
+        $description =~ s/&#39;/'/sg;   # unentitize '
+        ### $description
 
         # __x('Values from B-file {filename}',
         #     filename => $self->{'filename'})
@@ -244,8 +353,8 @@ sub _read_html {
       # fragile grep out of the html ...
       my $keywords;
       if ($contents =~ m{KEYWORD.*?<tt[^>]*>(.*?)</tt>}s) {
-        ### keywords match: $1
-        ($keywords = $1) =~ s{</?span[^>]*>}{}g;
+        ### html keywords match: $1
+        $keywords = $1;
       }
       _set_characteristics ($self, $description, $keywords);
 
@@ -269,14 +378,18 @@ sub _set_characteristics {
   ### $description
   ### $keywords
 
+  $keywords =~ s{<[^>]*>}{}g;  # <foo ...> tags
+  ### $keywords
+
   foreach my $key (split /[, \t]+/, ($keywords||'')) {
     ### $key
     if ($key eq 'nonn') {   # non-negative
       $self->{'values_min'} = 0;
     }
-    # "base" means dependent on some number base
+    # "base" means values are dependent on some number base, but doesn't
+    # mean they're digits or small etc
     # "cons" means decimal expansion of a number
-    if ($key eq 'base' || $key eq 'cons') {
+    if ($key eq 'cons') {
       $self->{'characteristic'}->{'radix'} = 1;
     }
     if ($key eq 'cofr') {

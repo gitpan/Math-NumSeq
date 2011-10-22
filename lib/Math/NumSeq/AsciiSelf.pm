@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 12;
+$VERSION = 13;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -196,6 +196,10 @@ The first value 53 is digits 5,3 which in ASCII is the initial 53 and append
 Then those new digits 5,3,4,9 are ASCII 53,51,52,57 which are appended, and
 so on.
 
+Notice that interpreting the sequence values as ASCII gives the digits of
+the sequence itself, and conversely expanding each value to its digits
+represented in ASCII leaves the sequence unchanged.
+
 The default is digits in decimal.  There's an experimental mostly-working
 C<radix> parameter to do it in other bases.  Bases 8, 12 and 16 end up as
 repetitions of a single value, which is not very interesting.  Bases 5, 9
@@ -261,7 +265,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2010, 2011 Kevin Ryde
+Copyright 2011 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

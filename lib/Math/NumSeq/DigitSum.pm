@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 12;
+$VERSION = 13;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -54,7 +54,7 @@ use constant parameter_info_array =>
 #------------------------------------------------------------------------------
 my @oeis_anum;
 $oeis_anum[1]->[2] = 'A000120';  # 2 binary
-# number of 1s, main handler in DigitCount
+# number of 1s, main handler in Math::NumSeq::DigitCount
 
 $oeis_anum[1]->[3] = 'A053735'; # 3 ternary
 # OEIS-Catalogue: A053735 radix=3

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 12;
+$VERSION = 13;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -113,12 +113,6 @@ sub oeis_anum {
 }
 #------------------------------------------------------------------------------
 
-# use constant::defer _bigint => sub {
-#   require Math::BigInt;
-#   eval { Math::BigInt->import (try => 'GMP') };
-#   return 'Math::BigInt';
-# };
-
 sub rewind {
   my ($self) = @_;
   $self->{'i'} = 0;
@@ -196,7 +190,8 @@ Return the C<$i>th value in the sequence.
 
 =head1 SEE ALSO
 
-L<Math::NumSeq>
+L<Math::NumSeq>,
+L<Math::NumSeq::ReverseAddSteps>
 
 =head1 HOME PAGE
 
