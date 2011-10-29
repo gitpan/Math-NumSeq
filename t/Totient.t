@@ -19,7 +19,8 @@
 
 use 5.004;
 use strict;
-use Test::More tests => 14;
+use Test;
+plan tests => 14;
 
 use lib 't';
 use MyTestHelpers;
@@ -34,14 +35,16 @@ use Math::NumSeq::Totient;
 # VERSION
 
 {
-  my $want_version = 13;
-  is ($Math::NumSeq::Totient::VERSION, $want_version, 'VERSION variable');
-  is (Math::NumSeq::Totient->VERSION,  $want_version, 'VERSION class method');
+  my $want_version = 14;
+  ok ($Math::NumSeq::Totient::VERSION, $want_version, 'VERSION variable');
+  ok (Math::NumSeq::Totient->VERSION,  $want_version, 'VERSION class method');
 
   ok (eval { Math::NumSeq::Totient->VERSION($want_version); 1 },
+      1,
       "VERSION class check $want_version");
   my $check_version = $want_version + 1000;
   ok (! eval { Math::NumSeq::Totient->VERSION($check_version); 1 },
+      1,
       "VERSION class check $check_version");
 }
 
@@ -50,11 +53,8 @@ use Math::NumSeq::Totient;
 # characteristic()
 
 {
-  my $values_obj = Math::NumSeq::Totient->new
-    (lo => 1,
-     hi => 30);
-
-  is ($values_obj->characteristic('count'), 1, 'characteristic(count)');
+  my $values_obj = Math::NumSeq::Totient->new;
+  ok ($values_obj->characteristic('count'), 1, 'characteristic(count)');
 }
 
 
@@ -72,7 +72,7 @@ use Math::NumSeq::Totient;
 #                    ) {
 #     my ($i, $want) = @$elem;
 #     my $got = Math::NumSeq::Totient::_totient($i);
-#     is ($got, $want, "_totient() i=$i got $got want $want");
+#     ok ($got, $want, "_totient() i=$i got $got want $want");
 #   }
 # }
 
@@ -94,7 +94,7 @@ use Math::NumSeq::Totient;
                    ) {
     my ($i, $want) = @$elem;
     my $got = Math::NumSeq::Totient::_totient_by_sieve($values_obj,$i);
-    is ($got, $want, "_totient_by_sieve() i=$i got $got want $want");
+    ok ($got, $want, "_totient_by_sieve() i=$i got $got want $want");
   }
 }
 

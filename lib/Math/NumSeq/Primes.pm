@@ -22,7 +22,7 @@ use POSIX ();
 use Math::Prime::XS 0.23; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 13;
+$VERSION = 14;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -43,6 +43,7 @@ use constant values_min => 2;
 use constant oeis_anum => 'A000040'; # primes
 
 
+use constant 1.02;  # for leading underscore
 use constant _MAX_PRIME_XS => do {
   my $umax = POSIX::UINT_MAX() / 2;
   # if ($umax > 0x8000_0000) {
@@ -180,7 +181,8 @@ L<Math::NumSeq::TwinPrimes>,
 L<Math::NumSeq::SophieGermainPrimes>,
 L<Math::NumSeq::Emirps>
 
-L<Math::Prime::XS>
+L<Math::Prime::XS>,
+L<Math::Prime::TiedArray>
 
 =head1 HOME PAGE
 

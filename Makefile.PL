@@ -28,11 +28,11 @@ MyMakeMakerExtras::WriteMakefile
    ABSTRACT     => 'Number sequences.',
    VERSION_FROM => 'lib/Math/NumSeq.pm',
    PREREQ_PM    => {
-                    'base' => 0,
                     'constant' => 1.02, # for leading underscore
                     'constant::defer' => 1,
                     'File::HomeDir' => 0,
                     'File::Spec' => 0,
+                    'File::Temp' => 0,
                     'List::Util' => 0,
                     'Math::Libm' => 0,
                     'Math::Prime::XS' => '0.23', # version 0.23 for fix 1928099
@@ -42,7 +42,6 @@ MyMakeMakerExtras::WriteMakefile
 
                     # only for testing
                     'Test' => 0,
-                    'Test::More' => 0,
                    },
    AUTHOR       => 'Kevin Ryde <user42@zip.com.au>',
    LICENSE      => 'gpl',
@@ -54,7 +53,7 @@ MyMakeMakerExtras::WriteMakefile
      { homepage => 'http://user42.tuxfamily.org/math-numseq/index.html',
      },
      recommends =>
-     { 'Math::Prime::XS' => '0.25', # v.25 faster is_prime()
+     { 'Math::Prime::XS' => '0.25_01', # v.25 or v.25_01 for faster is_prime()
      },
      optional_features =>
      { maximum_interoperation =>

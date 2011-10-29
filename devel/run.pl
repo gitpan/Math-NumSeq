@@ -61,7 +61,6 @@ $|=1;
   # $values_class = $gen->values_class('DigitLengthCumulative');
   # $values_class = $gen->values_class('HypotCount');
   # $values_class = $gen->values_class('PrimeIndexCount');
-  # $values_class = $gen->values_class('Primorials');
   # $values_class = $gen->values_class('Loeschian');
   # $values_class = $gen->values_class('SumXsq3Ysq');
   # $values_class = $gen->values_class('ProthNumbers');
@@ -106,10 +105,16 @@ $|=1;
   $values_class = 'App::MathImage::NumSeq::JugglerSteps';
   $values_class = 'App::MathImage::NumSeq::Kolakoski';
   $values_class = 'App::MathImage::NumSeq::GolombSequence';
+  $values_class = 'Math::NumSeq::Primorials';
+  $values_class = 'App::MathImage::NumSeq::SemiPrimes';
+  $values_class = 'App::MathImage::NumSeq::MephistoWaltz';
   $values_class = 'App::MathImage::NumSeq::UlamSequence';
+  $values_class = 'App::MathImage::NumSeq::GoldenSequence';
   eval "require $values_class; 1" or die $@;
   print Math::NumSeq::DigitLength->VERSION,"\n";
   my $seq = $values_class->new (
+                                factor_count => 2,
+                                distinct => 1,
                                 # divisors_type => 'proper',
                                 # algorithm_type => '1/2-3/2',
                                 # algorithm_type => '1/3-3/2',

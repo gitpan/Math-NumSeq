@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 13;
+$VERSION = 14;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 293 A-numbers in 62 modules
+# total 299 A-numbers in 64 modules
 
 use constant info_arrayref =>
 [
@@ -43,6 +43,42 @@ use constant info_arrayref =>
   {
     'anum' => 'A001477',
     'class' => 'Math::NumSeq::All'
+  },
+  {
+    'anum' => 'A001358',
+    'class' => 'Math::NumSeq::AlmostPrimes'
+  },
+  {
+    'anum' => 'A014612',
+    'class' => 'Math::NumSeq::AlmostPrimes',
+    'parameters' => [
+      'factor_count',
+      3
+    ]
+  },
+  {
+    'anum' => 'A014613',
+    'class' => 'Math::NumSeq::AlmostPrimes',
+    'parameters' => [
+      'factor_count',
+      4
+    ]
+  },
+  {
+    'anum' => 'A014614',
+    'class' => 'Math::NumSeq::AlmostPrimes',
+    'parameters' => [
+      'factor_count',
+      5
+    ]
+  },
+  {
+    'anum' => 'A006881',
+    'class' => 'Math::NumSeq::AlmostPrimes',
+    'parameters' => [
+      'multiplicity',
+      'distinct'
+    ]
   },
   {
     'anum' => 'A109733',
@@ -669,6 +705,10 @@ use constant info_arrayref =>
   {
     'anum' => 'A000204',
     'class' => 'Math::NumSeq::LucasNumbers'
+  },
+  {
+    'anum' => 'A064990',
+    'class' => 'Math::NumSeq::MephistoWaltz'
   },
   {
     'anum' => 'A008683',

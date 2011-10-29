@@ -33,7 +33,7 @@ require Math::NumSeq::File;
 # VERSION
 
 {
-  my $want_version = 13;
+  my $want_version = 14;
   ok ($Math::NumSeq::File::VERSION, $want_version, 'VERSION variable');
   ok (Math::NumSeq::File->VERSION,  $want_version, 'VERSION class method');
 

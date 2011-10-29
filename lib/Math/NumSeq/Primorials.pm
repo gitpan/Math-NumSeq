@@ -21,10 +21,10 @@ use strict;
 use Math::Prime::XS;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 13;
-
+$VERSION = 14;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
+*_is_infinite = \&Math::NumSeq::_is_infinite;
 
 # use constant name => Math::NumSeq::__('Primorials');
 use constant description => Math::NumSeq::__('The primorials 1, 2, 6, 30, 210, etc, 2*3*5*7*...Prime(n).');
@@ -38,6 +38,7 @@ use constant oeis_anum => 'A002110'; # starting at 1
 # uncomment this to run the ### lines
 #use Devel::Comments;
 
+use constant 1.02;  # for leading underscore
 use constant _UV_LIMIT => do {
   my $u = ~0 >> 1;
   my $limit = 1;
@@ -64,7 +65,7 @@ sub rewind {
 }
 sub next {
   my ($self) = @_;
-  ### Primorials next()
+  ### Primorials next() ...
 
   if (my $i = $self->{'i'}++) {
     my $f = $self->{'f'};
@@ -80,6 +81,24 @@ sub next {
   } else {
     return (0, 1);
   }
+}
+
+sub ith {
+  my ($self, $i) = @_;
+  ### Primorials ith(): $i
+  if (_is_infinite($i)) {
+    return $i;
+  }
+  my $f = 1;
+  my $prime = 1;
+  while ($i-- > 0) {
+    if ($f >= _UV_LIMIT && ! ref $f) {
+      $f = Math::NumSeq::_bigint()->new($f);
+    }
+    until (Math::Prime::XS::is_prime(++$prime)) {}
+    $f *= $prime;
+  }
+  return $f;
 }
 
 sub pred {

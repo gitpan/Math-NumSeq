@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 13;
+$VERSION = 14;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -34,6 +34,7 @@ use constant oeis_anum => 'A000142'; # factorials 1,1,2,6,24, including 0!==1
 # uncomment this to run the ### lines
 #use Devel::Comments;
 
+use constant 1.02;  # for leading underscore
 use constant _UV_LIMIT => do {
   my $u = ~0 >> 1;
   my $limit = 1;

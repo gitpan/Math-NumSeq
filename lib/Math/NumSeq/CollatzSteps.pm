@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 13;
+$VERSION = 14;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -66,6 +66,7 @@ sub oeis_anum {
   return $oeis_anum{$self->{'step_type'}};
 }
 
+use constant 1.02;  # for leading underscore
 use constant _UV_LIMIT => do {
   my $limit = ~0;
   my $bits = 0;

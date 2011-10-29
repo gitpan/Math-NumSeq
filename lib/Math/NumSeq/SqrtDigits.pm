@@ -22,7 +22,7 @@ use Carp;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 13;
+$VERSION = 14;
 
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
@@ -262,7 +262,7 @@ sub _extend {
   ### root is: "$root"
 
   if (my $method = $radix_to_stringize{$radix}) {
-    $self->{'string'} = $root->$method;
+    $self->{'string'} = $root->$method();
     ### string: $self->{'string'}
 
     # one leading zero for i=1 start

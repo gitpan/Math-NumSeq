@@ -16,6 +16,10 @@ You should have received a copy of the GNU General Public License along
 with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 14, October 2011
+    - new AlmostPrimes, MephistoWaltz
+    - Primorials new ith()
+
 Version 13, October 2011
     - new GolombSequence, Kolakoski, JugglerSteps, LiouvilleFunction,
       Totient, TotientCumulative, TotientSum, TotientPerfect

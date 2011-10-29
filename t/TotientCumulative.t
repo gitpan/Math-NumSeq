@@ -19,7 +19,8 @@
 
 use 5.004;
 use strict;
-use Test::More tests => 5;
+use Test;
+plan tests => 5;
 
 use lib 't';
 use MyTestHelpers;
@@ -34,14 +35,18 @@ use Math::NumSeq::TotientCumulative;
 # VERSION
 
 {
-  my $want_version = 13;
-  is ($Math::NumSeq::TotientCumulative::VERSION, $want_version, 'VERSION variable');
-  is (Math::NumSeq::TotientCumulative->VERSION,  $want_version, 'VERSION class method');
+  my $want_version = 14;
+  ok ($Math::NumSeq::TotientCumulative::VERSION, $want_version,
+      'VERSION variable');
+  ok (Math::NumSeq::TotientCumulative->VERSION,  $want_version,
+      'VERSION class method');
 
   ok (eval { Math::NumSeq::TotientCumulative->VERSION($want_version); 1 },
+      1,
       "VERSION class check $want_version");
   my $check_version = $want_version + 1000;
   ok (! eval { Math::NumSeq::TotientCumulative->VERSION($check_version); 1 },
+      1,
       "VERSION class check $check_version");
 }
 
@@ -50,11 +55,8 @@ use Math::NumSeq::TotientCumulative;
 # characteristic()
 
 {
-  my $values_obj = Math::NumSeq::TotientCumulative->new
-    (lo => 1,
-     hi => 30);
-
-  is (! $values_obj->characteristic('count'), 1, 'characteristic(count)');
+  my $values_obj = Math::NumSeq::TotientCumulative->new;
+  ok (! $values_obj->characteristic('count'), 1, 'characteristic(count)');
 }
 
 

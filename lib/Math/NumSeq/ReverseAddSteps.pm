@@ -21,7 +21,7 @@ use strict;
 use POSIX 'ceil';
 
 use vars '$VERSION','@ISA';
-$VERSION = 13;
+$VERSION = 14;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -66,6 +66,7 @@ sub oeis_anum {
 }
 #------------------------------------------------------------------------------
 
+use constant 1.02;  # for leading underscore
 use constant _LIMIT => 100;
 
 sub rewind {
@@ -99,7 +100,6 @@ sub ith {
   my $radix = $self->{'radix'};
   my $uv_limit = $self->{'uv_limit'};
 
-  # $k = Math::NumSeq::_bigint()->new($k);
   my $count = 0;
  OUTER: for ( ; $count < _LIMIT; $count++) {
     my @digits;
@@ -107,7 +107,8 @@ sub ith {
     ### k: "$k"
 
     if ($k >= $uv_limit && ! ref $k) {
-      $k = _bigint()->new("$k");  # stringize against Math::BigInt::GMP uv conversion
+      # stringize against Math::BigInt::GMP uv conversion
+      $k = Math::NumSeq::_bigint()->new("$k");
     }
 
     if (ref $k) {

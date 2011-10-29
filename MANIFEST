@@ -14,6 +14,7 @@ devel/cbrt.pl
 devel/euler.pl
 devel/exe-cbrt.c
 devel/expression.pl
+devel/golden-sequence.pl
 devel/juggler.pl
 devel/kimberling.pl
 devel/klarner.pl
@@ -45,6 +46,7 @@ inc/my_pod2html
 inc/MyMakeMakerExtras.pm
 lib/Math/NumSeq.pm
 lib/Math/NumSeq/All.pm
+lib/Math/NumSeq/AlmostPrimes.pm
 lib/Math/NumSeq/AsciiSelf.pm
 lib/Math/NumSeq/Base/Array.pm
 lib/Math/NumSeq/Base/Digits.pm
@@ -79,6 +81,7 @@ lib/Math/NumSeq/KlarnerRado.pm
 lib/Math/NumSeq/Kolakoski.pm
 lib/Math/NumSeq/LiouvilleFunction.pm
 lib/Math/NumSeq/LucasNumbers.pm
+lib/Math/NumSeq/MephistoWaltz.pm
 lib/Math/NumSeq/MobiusFunction.pm
 lib/Math/NumSeq/Modulo.pm
 lib/Math/NumSeq/Multiples.pm
@@ -131,6 +134,7 @@ t/Emirps.t
 t/Expression.t
 t/File-1.txt
 t/File.t
+t/MephistoWaltz.t
 t/MobiusFunction.t
 t/MyTestHelpers.pm
 t/NumSeq.t

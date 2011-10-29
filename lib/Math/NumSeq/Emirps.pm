@@ -22,7 +22,7 @@ use List::Util 'min', 'max';
 use POSIX ();
 
 use vars '$VERSION', '@ISA';
-$VERSION = 13;
+$VERSION = 14;
 use Math::NumSeq::Primes;
 @ISA = ('Math::NumSeq::Primes');
 *_is_infinite = \&Math::NumSeq::_is_infinite;

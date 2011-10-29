@@ -34,7 +34,7 @@ plan tests => 8;
 # VERSION
 
 {
-  my $want_version = 13;
+  my $want_version = 14;
   ok ($Math::NumSeq::DivisorCount::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::DivisorCount->VERSION,  $want_version,

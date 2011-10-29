@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 13;
+$VERSION = 14;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -172,10 +172,12 @@ example at i=123 with modulus 5 the value is 1+2+3=6, mod 5 = 1.
 
 Modulus 0, which is the default, means modulo the radix.
 
-For binary radix, modulo 2, this is the Thue-Morse "parity" sequence, being
-1 if i has an odd number of 1 bits or 0 if an even number of 1 bits.
-Numbers where it's 1 are sometimes called "odious" numbers and where it's 0
-calle "evil" numbers
+=head2 Thue-Morse Sequence
+
+For C<radix=E<gt>2, modulus=E<gt>2> this is the Thue-Morse "parity"
+sequence, being 1 if i has an odd number of 1 bits or 0 if an even number of
+1 bits.  Numbers where it's 1 are sometimes called "odious" numbers and
+where it's 0 calle "evil" numbers
 
 =head1 FUNCTIONS
 
@@ -203,7 +205,8 @@ radix if modulus=0).
 =head1 SEE ALSO
 
 L<Math::NumSeq>,
-L<Math::NumSeq::DigitSum>
+L<Math::NumSeq::DigitSum>,
+L<Math::NumSeq::MephistoWaltz>
 
 =head1 HOME PAGE
 

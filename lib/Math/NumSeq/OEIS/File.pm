@@ -24,13 +24,13 @@ use POSIX ();
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 13;
+$VERSION = 14;
 
 use Math::NumSeq::Base::Array;
 @ISA = ('Math::NumSeq::Base::Array');
 
 use vars '$VERSION';
-$VERSION = 13;
+$VERSION = 14;
 
 # use constant name => Math::NumSeq::__('OEIS File');
 sub description {
