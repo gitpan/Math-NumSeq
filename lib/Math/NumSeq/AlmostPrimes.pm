@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 14;
+$VERSION = 15;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -49,28 +49,75 @@ use constant parameter_info_array =>
      choices => ['repeated','distinct'],
      default => 'repeated',
      # description => Math::NumSeq::__(''),
-   }
+   },
   ];
 
 # cf A068318 - sum of the prime factors of the nth semiprime
 #
-my %oeis_anum = (repeated => [ undef,
-                               undef,
-                               'A001358',  # 2 with repeats
-                               'A014612',  # 3 with repeats
-                               'A014613',  # 4 with repeats
-                               'A014614',  # 5 with repeats
-                               # OEIS-Catalogue: A001358
-                               # OEIS-Catalogue: A014612 factor_count=3
-                               # OEIS-Catalogue: A014613 factor_count=4
-                               # OEIS-Catalogue: A014614 factor_count=5
-                             ],
-                 distinct => [ undef,
-                               undef,
-                               'A006881', # 2 distinct primes
-                               # OEIS-Catalogue: A006881 multiplicity=distinct
-                             ],
-                );
+my %oeis_anum
+  = (repeated
+     => [ undef,
+          undef,
+          'A001358',  # 2 with repeats
+          'A014612',  # 3 with repeats
+          'A014613',  # 4 with repeats
+          'A014614',  # 5 with repeats
+          'A046306',  # 6 with repeats
+          'A046308',  # 7 with repeats
+          'A046310',  # 8 with repeats
+          'A046312',  # 9 with repeats
+          'A046314',  # 10 with repeats
+          'A069272',  # 11 with repeats
+          'A069273',  # 12 with repeats
+          'A069274',  # 13 with repeats
+          'A069275',  # 14 with repeats
+          'A069276',  # 15 with repeats
+          'A069277',  # 16 with repeats
+          'A069278',  # 17 with repeats
+          'A069279',  # 18 with repeats
+          'A069280',  # 19 with repeats
+          'A069281',  # 20 with repeats
+          # OEIS-Catalogue: A001358
+          # OEIS-Catalogue: A014612 factor_count=3
+          # OEIS-Catalogue: A014613 factor_count=4
+          # OEIS-Catalogue: A014614 factor_count=5
+          # OEIS-Catalogue: A046306 factor_count=6
+          # OEIS-Catalogue: A046308 factor_count=7
+          # OEIS-Catalogue: A046310 factor_count=8
+          # OEIS-Catalogue: A046312 factor_count=9
+          # OEIS-Catalogue: A046314 factor_count=10
+          # OEIS-Catalogue: A069272 factor_count=11
+          # OEIS-Catalogue: A069273 factor_count=12
+          # OEIS-Catalogue: A069274 factor_count=13
+          # OEIS-Catalogue: A069275 factor_count=14
+          # OEIS-Catalogue: A069276 factor_count=15
+          # OEIS-Catalogue: A069277 factor_count=16
+          # OEIS-Catalogue: A069278 factor_count=17
+          # OEIS-Catalogue: A069279 factor_count=18
+          # OEIS-Catalogue: A069280 factor_count=19
+          # OEIS-Catalogue: A069281 factor_count=20
+        ],
+     distinct =>
+     [ undef,
+       undef,
+       'A006881', # 2 distinct primes
+       'A007304', # 3 distinct primes
+       'A046386', # 4 distinct primes
+       'A046387', # 5 distinct primes
+       'A067885', # 6 distinct primes
+       'A123321', # 7 distinct primes
+       'A123322', # 8 distinct primes
+       'A115343', # 9 distinct primes
+       # OEIS-Catalogue: A006881 multiplicity=distinct
+       # OEIS-Catalogue: A007304 factor_count=3 multiplicity=distinct
+       # OEIS-Catalogue: A046386 factor_count=4 multiplicity=distinct
+       # OEIS-Catalogue: A046387 factor_count=5 multiplicity=distinct
+       # OEIS-Catalogue: A067885 factor_count=6 multiplicity=distinct
+       # OEIS-Catalogue: A123321 factor_count=7 multiplicity=distinct
+       # OEIS-Catalogue: A123322 factor_count=8 multiplicity=distinct
+       # OEIS-Catalogue: A115343 factor_count=9 multiplicity=distinct
+     ],
+    );
 sub oeis_anum {
   my ($self) = @_;
   return $oeis_anum{$self->{'multiplicity'}}->[$self->{'factor_count'}];
@@ -268,7 +315,7 @@ sub pred {
 __END__
 
 
-=for stopwords Ryde Math-NumSeq semiprimes
+=for stopwords Ryde Math-NumSeq primorial eg ie semiprimes
 
 =head1 NAME
 
@@ -311,7 +358,7 @@ Create and return a new sequence object.
 
 Return true if C<$value> is an almost-prime, ie. it has exactly
 C<factor_count> many prime factors, and if C<distinct> is true then all
-those factors different..
+those factors different.
 
 =back
 

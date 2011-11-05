@@ -28,7 +28,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 14;
+$VERSION = 15;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -83,7 +83,7 @@ sub pred {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq
+=for stopwords Ryde Math-NumSeq radix
 
 =head1 NAME
 

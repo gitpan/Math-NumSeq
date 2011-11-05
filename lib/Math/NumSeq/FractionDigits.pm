@@ -22,7 +22,7 @@ use List::Util 'max';
 use Math::NumSeq;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 14;
+$VERSION = 15;
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
 
@@ -193,11 +193,10 @@ sub next {
 # 
 # Return true if C<$value> occurs as a digit in the fraction.
 
-
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq
+=for stopwords Ryde Math-NumSeq radix-1 ie xx.yy
 
 =head1 NAME
 

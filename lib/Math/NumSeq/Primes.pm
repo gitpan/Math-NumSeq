@@ -22,7 +22,7 @@ use POSIX ();
 use Math::Prime::XS 0.23; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 14;
+$VERSION = 15;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -59,7 +59,7 @@ sub rewind {
   $self->{'array_hi'} = 1;
   @{$self->{'array'}} = ();
 }
-  
+
 sub next {
   my ($self) = @_;
 

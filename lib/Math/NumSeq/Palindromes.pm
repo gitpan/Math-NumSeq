@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 14;
+$VERSION = 15;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -72,6 +72,24 @@ my @oeis_anum = (undef,     # 0
 
                  'A002113', # 10
                  # OEIS-Catalogue: A002113
+
+                 'A029956', # 11
+                 # OEIS-Catalogue: A029956 radix=11
+
+                 'A029957', # 12
+                 # OEIS-Catalogue: A029957 radix=12
+
+                 'A029958', # 13
+                 # OEIS-Catalogue: A029958 radix=13
+
+                 'A029959', # 14
+                 # OEIS-Catalogue: A029959 radix=14
+
+                 'A029960', # 15
+                 # OEIS-Catalogue: A029960 radix=15
+
+                 'A029730', # 16
+                 # OEIS-Catalogue: A029730 radix=16
                 );
 sub oeis_anum {
   my ($self) = @_;

@@ -29,7 +29,7 @@ use Carp;
 use Fcntl;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 14;
+$VERSION = 15;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 

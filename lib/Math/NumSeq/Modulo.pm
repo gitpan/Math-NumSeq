@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 14;
+$VERSION = 15;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -55,8 +55,9 @@ sub values_max {
 }
 
 my @oeis_anum = (undef,  # 0
-                 undef,  # 1
-                 undef,  # 2
+                 'A000004',  # mod 1, all zeros
+                 'A000035',  # 2, 0,1,0,1,0,1,etc
+                 # OEIS-Catalogue: A000035 modulus=2
                  'A010872',  # 3
                  # OEIS-Catalogue: A010872 modulus=3
                  'A010873',  # 4

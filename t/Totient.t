@@ -35,7 +35,7 @@ use Math::NumSeq::Totient;
 # VERSION
 
 {
-  my $want_version = 14;
+  my $want_version = 15;
   ok ($Math::NumSeq::Totient::VERSION, $want_version, 'VERSION variable');
   ok (Math::NumSeq::Totient->VERSION,  $want_version, 'VERSION class method');
 

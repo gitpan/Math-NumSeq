@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 14;
+$VERSION = 15;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -114,7 +114,7 @@ sub _totient_by_sieve {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq
+=for stopwords Ryde Math-NumSeq Euler's totient coprime
 
 =head1 NAME
 

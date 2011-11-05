@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 14;
+$VERSION = 15;
 
 use Math::NumSeq::Primes;
 @ISA = ('Math::NumSeq::Primes');
@@ -114,7 +114,7 @@ __END__
 #                              i     => 0);
 # }
 
-=for stopwords Ryde Math-NumSeq
+=for stopwords Ryde Math-NumSeq Germain
 
 =head1 NAME
 

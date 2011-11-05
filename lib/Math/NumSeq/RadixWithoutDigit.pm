@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 14;
+$VERSION = 15;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -52,45 +52,34 @@ use constant parameter_info_array =>
 #------------------------------------------------------------------------------
 my @oeis_anum;
 
-#-----
 $oeis_anum[3]->[0] = 'A032924'; # base 3 no 0
-# OEIS-Catalogue: A032924 radix=3 digit=0  # base 3 no 0
-
 $oeis_anum[3]->[1] = 'A005823'; # base 3 no 1
-# OEIS-Catalogue: A005823 radix=3 digit=1  # base 3 no 1
-
 $oeis_anum[3]->[2] = 'A005836'; # base 3 no 2
+# OEIS-Catalogue: A032924 radix=3 digit=0  # base 3 no 0
+# OEIS-Catalogue: A005823 radix=3 digit=1  # base 3 no 1
 # OEIS-Catalogue: A005836 radix=3 digit=2  # base 3 no 2
 
-#-----
 $oeis_anum[4]->[0] = 'A023705'; # base 4 no 0
-# OEIS-Catalogue: A023705 radix=4 digit=0  # base 4 no 0
-
 $oeis_anum[4]->[1] = 'A023709'; # base 4 no 1
-# OEIS-Catalogue: A023709 radix=4 digit=1  # base 4 no 1
-
 $oeis_anum[4]->[2] = 'A023713'; # base 4 no 2
-# OEIS-Catalogue: A023713 radix=4 digit=2  # base 4 no 2
-
 $oeis_anum[4]->[3] = 'A023717'; # base 4 no 3
+# OEIS-Catalogue: A023705 radix=4 digit=0  # base 4 no 0
+# OEIS-Catalogue: A023709 radix=4 digit=1  # base 4 no 1
+# OEIS-Catalogue: A023713 radix=4 digit=2  # base 4 no 2
 # OEIS-Catalogue: A023717 radix=4 digit=3  # base 4 no 3
 
-#-----
 $oeis_anum[5]->[0] = 'A023721'; # base 5 no 0
-# OEIS-Catalogue: A023721 radix=5 digit=0  # base 5 no 0
-
 $oeis_anum[5]->[1] = 'A023725'; # base 5 no 1
-# OEIS-Catalogue: A023725 radix=5 digit=1  # base 5 no 1
-
 $oeis_anum[5]->[2] = 'A023729'; # base 5 no 2
-# OEIS-Catalogue: A023729 radix=5 digit=2  # base 5 no 2
-
 $oeis_anum[5]->[3] = 'A023733'; # base 5 no 3
-# OEIS-Catalogue: A023733 radix=5 digit=3  # base 5 no 3
-
 $oeis_anum[5]->[4] = 'A023737'; # base 5 no 4
+# OEIS-Catalogue: A023721 radix=5 digit=0  # base 5 no 0
+# OEIS-Catalogue: A023725 radix=5 digit=1  # base 5 no 1
+# OEIS-Catalogue: A023729 radix=5 digit=2  # base 5 no 2
+# OEIS-Catalogue: A023733 radix=5 digit=3  # base 5 no 3
 # OEIS-Catalogue: A023737 radix=5 digit=4  # base 5 no 4
-#-----
+
+# cf A037465 base 6 no 5, starting i=1
 
 sub oeis_anum {
   my ($self) = @_;

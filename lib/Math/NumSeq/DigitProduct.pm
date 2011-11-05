@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 14;
+$VERSION = 15;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -41,13 +41,13 @@ use constant values_min => 0;
 sub values_max {
   my ($self) = @_;
   return ($self->{'radix'} == 2 ? 1 : undef);
-}  
+}
 
 #------------------------------------------------------------------------------
 # apparently no ternary or base 4 ...
-# cf A036987 binary, but takes i=0 to be an empty product equal to 1
 
 my @oeis_anum;
+# cf A036987 binary, but takes i=0 to be an empty product equal to 1
 
 $oeis_anum[10] = 'A007954'; # 10 decimal, starting from 0
 # OEIS-Catalogue: A007954 radix=10
@@ -93,7 +93,7 @@ sub pred {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq
+=for stopwords Ryde Math-NumSeq radix ie
 
 =head1 NAME
 

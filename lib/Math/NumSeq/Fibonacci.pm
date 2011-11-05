@@ -21,7 +21,7 @@ use strict;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 14;
+$VERSION = 15;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
 use Math::NumSeq;
@@ -31,7 +31,7 @@ use Math::NumSeq;
 use constant description => Math::NumSeq::__('The Fibonacci numbers 1,1,2,3,5,8,13,21, etc, each F(i) = F(i-1) + F(i-2), starting from 1,1.');
 use constant values_min => 0;
 use constant characteristic_monotonic => 2;
-use constant oeis_anum => 'A000045'; # fibonacci starting at 1,1
+use constant oeis_anum => 'A000045'; # fibonacci starting at i=0 0,1,1,2,3
 
 # uncomment this to run the ### lines
 #use Devel::Comments;
@@ -52,22 +52,28 @@ sub next {
   return ($self->{'i'}++, $ret);
 }
 
-# powering ...
-# sub ith {
-#   my ($self, $i) = @_;
-#   ### Fibonacci ith(): $i
-#   my $x = 0;
-#   my $y = 1;
-#   if (_is_infinite($i)) {
-#     return $i;
-#   }
-#   while ($i--) {
-#     $x += $y;
-#     return $x unless ($i--);
-#     $y += $x;
-#   }
-#   return $y;
-# }
+# ENHANCE-ME: powering ...
+sub ith {
+  my ($self, $i) = @_;
+  ### Fibonacci ith(): $i
+  if ($i == 0) {
+    return $i;
+  }
+  my $f0 = ($i * 0);  # inherit bignum 0
+  my $f1 = $f0 + 1;   # inherit bignum 1
+  if (_is_infinite($i)) {
+    return $i;
+  }
+  while (--$i > 0) {
+    $f0 += $f1;
+
+    unless (--$i > 0) {
+      return $f0;
+    }
+    $f1 += $f0;
+  }
+  return $f1;
+}
 
 1;
 __END__
@@ -86,7 +92,8 @@ Math::NumSeq::Fibonacci -- Fibonacci numbers
 
 =head1 DESCRIPTION
 
-The Fibonacci sequence 1,1,2,3,5,8,13,21, etc, where F(n) = F(n-1) + F(n-2), starting from 1,1.
+The Fibonacci sequence 0,1,1,2,3,5,8,13,21, etc.  The start is i=0 values
+0,1 and from there F(i) = F(i-1) + F(i-2).
 
 =head1 FUNCTIONS
 
@@ -112,7 +119,8 @@ Return true if C<$value> is a Fibonacci number.
 
 L<Math::NumSeq>,
 L<Math::NumSeq::LucasNumbers>,
-L<Math::NumSeq::Fibbinary>
+L<Math::NumSeq::Fibbinary>,
+L<Math::NumSeq::FibonacciWord>,
 L<Math::NumSeq::Tribonacci>
 
 L<Math::Fibonacci>

@@ -19,11 +19,9 @@
 package Math::NumSeq::Tetrahedral;
 use 5.004;
 use strict;
-use Math::Libm 'cbrt';
-use POSIX 'floor';
 
 use vars '$VERSION','@ISA';
-$VERSION = 14;
+$VERSION = 15;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',

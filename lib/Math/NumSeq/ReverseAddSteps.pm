@@ -18,10 +18,9 @@
 package Math::NumSeq::ReverseAddSteps;
 use 5.004;
 use strict;
-use POSIX 'ceil';
 
 use vars '$VERSION','@ISA';
-$VERSION = 14;
+$VERSION = 15;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -177,7 +176,7 @@ sub pred {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq
+=for stopwords Ryde Math-NumSeq repunit infinites recognised
 
 =head1 NAME
 

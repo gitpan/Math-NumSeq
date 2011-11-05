@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 14;
+$VERSION = 15;
 
 use Math::NumSeq::Primes;
 @ISA = ('Math::NumSeq::Primes');
@@ -72,7 +72,7 @@ my %pairs_add = (first => 0,
                  average => 1,
                  second => 2,
                  both => 0);
-                 
+
 sub rewind {
   my ($self) = @_;
   ### TwinPrimes rewind() ...
@@ -135,18 +135,18 @@ __END__
 #   my $hi = $options{'hi'};
 #   $lo = max ($lo, 3);  # start from 3
 #   my $pairs = $options{'pairs'} || $class->parameter_default('pairs');
-# 
+#
 #   my $primes_lo = $lo - ($pairs eq 'second' ? 2 : 0);
 #   require Math::NumSeq::Primes;
 #   my @array = Math::NumSeq::Primes::_primes_list
 #     ($primes_lo, $hi+2);
-# 
+#
 #   my $to = 0;
 #   my $offset = ($pairs eq 'second');
 #   my $inc = ($pairs eq 'average');
 #   ### $pairs
 #   ### $offset
-# 
+#
 #   for (my $i = 0; $i < $#array; $i++) {
 #     if ($array[$i]+2 == $array[$i+1]) {
 #       if ($pairs eq 'both') {
@@ -163,13 +163,13 @@ __END__
 #     $to--;
 #   }
 #   $#array = $to - 1;
-# 
+#
 #   return $class->SUPER::new (%options,
 #                              array => \@array);
 # }
 
 
-=for stopwords Ryde Math-NumSeq
+=for stopwords Ryde Math-NumSeq ie
 
 =head1 NAME
 

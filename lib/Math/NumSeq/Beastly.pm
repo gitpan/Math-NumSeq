@@ -21,13 +21,14 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 14;
+$VERSION = 15;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
+
 
 # use constant name => Math::NumSeq::__('Beastly Numbers');
 use constant description => Math::NumSeq::__('Numbers which contain "666".  The default is decimal, or select a radix.');
@@ -125,7 +126,7 @@ sub pred {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq
+=for stopwords Ryde Math-NumSeq radix
 
 =head1 NAME
 
@@ -139,8 +140,8 @@ Math::NumSeq::Beastly -- numbers containing digits "666"
 
 =head1 DESCRIPTION
 
-This sequence is the beastly numbers, meaning those with "666" somewhere in
-their digits.  The default is decimal digits, or a radix can be given.
+This sequence is the beastly numbers which are those with "666" somewhere in
+their digits.  The default is decimal, or a radix can be given.
 
     666, 1666, 2666, 3666, 4666, 5666,
     6660, 6661, 6662, ..., 6669,
@@ -155,7 +156,7 @@ See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 =item C<$seq = Math::NumSeq::Beastly-E<gt>new ()>
 
-=item C<$seq = Math::NumSeq::Beastly-E<gt>new (radix =E<gt> 16)>
+=item C<$seq = Math::NumSeq::Beastly-E<gt>new (radix =E<gt> $r)>
 
 Create and return a new sequence object.
 

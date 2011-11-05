@@ -28,7 +28,7 @@ use ExtUtils::Manifest;
 use Module::Util;
 
 use vars '$VERSION';
-$VERSION = 14;
+$VERSION = 15;
 
 # uncomment this to run the ### lines
 #use Devel::Comments;
@@ -157,7 +157,7 @@ use 5.004;
 use strict;
 
 use vars '\$VERSION', '\@ISA';
-\$VERSION = $VERSION;
+\$VERSION = $outversion;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 \@ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 

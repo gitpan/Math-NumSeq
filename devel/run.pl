@@ -69,7 +69,6 @@ $|=1;
   # $values_class = $gen->values_class('RadixWithoutDigit');
   # $values_class = $gen->values_class('ReverseAddSteps');
   # $values_class = $gen->values_class('Harshad');
-  # $values_class = $gen->values_class('HappySteps');
   # $values_class = $gen->values_class('TotientPerfect');
   # $values_class = $gen->values_class('TotientStepsSum');
   # $values_class = $gen->values_class('FractionDigits');
@@ -85,7 +84,6 @@ $|=1;
   $values_class = 'App::MathImage::NumSeq::MobiusFunction';
   $values_class = 'Math::NumSeq::TwinPrimes';
   $values_class = 'App::MathImage::NumSeq::PrimeFactorCount';
-  $values_class = 'App::MathImage::NumSeq::Fibbinary';
   $values_class = 'Math::NumSeq::NumAronson';
   $values_class = 'Math::NumSeq::Expression';
   $values_class = 'Math::NumSeq::ReverseAdd';
@@ -109,12 +107,27 @@ $|=1;
   $values_class = 'App::MathImage::NumSeq::SemiPrimes';
   $values_class = 'App::MathImage::NumSeq::MephistoWaltz';
   $values_class = 'App::MathImage::NumSeq::UlamSequence';
-  $values_class = 'App::MathImage::NumSeq::GoldenSequence';
+  $values_class = 'Math::NumSeq::Fibonacci';
+  $values_class = 'App::MathImage::NumSeq::ReplicateDigits';
+  $values_class = 'App::MathImage::NumSeq::HappySteps';
+  $values_class = 'Math::NumSeq::Fibbinary';
+  $values_class = 'Math::NumSeq::FibonacciWord';
+  $values_class = 'Math::NumSeq::PlanePathCoord';
+  $values_class = 'App::MathImage::NumSeq::SumTwoSquares';
+
   eval "require $values_class; 1" or die $@;
   print Math::NumSeq::DigitLength->VERSION,"\n";
   my $seq = $values_class->new (
-                                factor_count => 2,
+                                # planepath => 'HilbertCurve',
+                                # planepath => 'RationalsTree,tree_type=Bird',
+                                # planepath=>'RationalsTree,tree_type=CW',
+                                # coordinate_type => 'X',
+                                planepath => 'SierpinskiTriangle',
+                                coordinate_type => 'Y',
+
                                 distinct => 1,
+                                including_zero => 1,
+                                factor_count => 2,
                                 # divisors_type => 'proper',
                                 # algorithm_type => '1/2-3/2',
                                 # algorithm_type => '1/3-3/2',
@@ -125,7 +138,7 @@ $|=1;
                                 pairs => 'second',
                                 lo => 0,
                                 hi => 10, # 200*$rep,
-                                radix => 2,
+                                radix => 10,
                                 # digit => 1,
                                 sqrt => 2,
                                 where => 'low',
@@ -135,10 +148,6 @@ $|=1;
                                 expression => '9*i*i',
                                 # expression_evaluator => 'Perl',
                                 oeis_anum  => 'A000396',
-                                # distinct => 1,
-                                planepath => 'HilbertCurve',
-                                #planepath => 'RationalsTree,tree_type=Bird',
-                                coord_type => 'ENWS',
                                 multiplicity => 'distinct',
                                );
   my $hi = 20;
@@ -159,6 +168,7 @@ $|=1;
       print "  radix $radix\n";
     }
     print "by next(): ";
+    my $show_i = 1;
 
     my $check_pred_upto = ! $seq->characteristic('digits')
       && ! $seq->characteristic('count');
@@ -167,6 +177,10 @@ $|=1;
       if (! defined $i) {
         print "undef\n";
         last;
+      }
+      if ($show_i) {
+        print "i=$i ";
+        $show_i = 0;
       }
       print "$value,";
       if (defined $values_min && $value < $values_min) {

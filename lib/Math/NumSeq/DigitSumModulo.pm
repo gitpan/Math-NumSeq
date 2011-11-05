@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 14;
+$VERSION = 15;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -44,7 +44,7 @@ use constant parameter_info_array =>
       minimum     => 0,
       width       => 3,
       description => Math::NumSeq::__('Modulus, or 0 to use the radix.'),
-    }
+    },
   ];
 
 use constant characteristic_smaller => 1;
@@ -152,7 +152,7 @@ sub pred {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq
+=for stopwords Ryde Math-NumSeq radix Thue
 
 =head1 NAME
 
@@ -177,7 +177,7 @@ Modulus 0, which is the default, means modulo the radix.
 For C<radix=E<gt>2, modulus=E<gt>2> this is the Thue-Morse "parity"
 sequence, being 1 if i has an odd number of 1 bits or 0 if an even number of
 1 bits.  Numbers where it's 1 are sometimes called "odious" numbers and
-where it's 0 calle "evil" numbers
+where it's 0 called "evil" numbers
 
 =head1 FUNCTIONS
 

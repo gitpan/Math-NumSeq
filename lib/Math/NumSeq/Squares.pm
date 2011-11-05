@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 14;
+$VERSION = 15;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -62,7 +62,7 @@ sub ith {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq
+=for stopwords Ryde Math-NumSeq ie
 
 =head1 NAME
 

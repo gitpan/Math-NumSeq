@@ -154,6 +154,10 @@ sub check_class {
     # sophie germain shorten for now
     @$want = grep {$_ < 1_000_000} @$want;
 
+  } elsif ($class =~ /AlmostPrimes/) {
+    # AlmostPrimes shorten for now
+    @$want = grep {$_ < 1_000_000} @$want;
+
   } elsif ($anum eq 'A006567') {
     # emirps shorten for now
     @$want = grep {$_ < 100_000} @$want;
@@ -167,7 +171,9 @@ sub check_class {
   }
 
   # skip all except ...
+  #
   # return unless $anum eq 'A006512';
+  # return unless $class =~ /Almost/;
 
 
   my $want_count = scalar(@$want);
@@ -307,13 +313,15 @@ sub check_class {
 
     my @got;
     my $lo = _min(@$want);
-    if (! defined $lo) {
+    if (! defined $lo && $seq->can('ith')) {
       $lo = $seq->ith($seq->i_start+1);
     }
-    foreach my $value ($lo .. $hi) {
-      #### $value
-      if ($seq->pred($value)) {
-        push @got, $value;
+    if (defined $lo) {
+      foreach my $value ($lo .. $hi) {
+        #### $value
+        if ($seq->pred($value)) {
+          push @got, $value;
+        }
       }
     }
     my $got = \@got;
@@ -350,6 +358,19 @@ sub check_class {
 #------------------------------------------------------------------------------
 # duplicates or uncatalogued
 
+check_class ('A000004', 'Math::NumSeq::Multiples',
+             [ multiples => 0 ]);
+
+check_class ('A000004', 'Math::NumSeq::ReverseAdd',
+             [ radix => 2, start => 0 ]);
+check_class ('A000004', 'Math::NumSeq::ReverseAdd',
+             [ radix => 9, start => 0 ]);
+
+check_class ('A000120', 'Math::NumSeq::DigitSum',
+             [ radix => 2 ]);
+check_class ('A000120', 'Math::NumSeq::DigitSum',
+             [ radix => 2, power => 3 ]);
+
 # check_class ('A010701',
 #              'Math::NumSeq::FractionDigits',
 #              [ fraction => '10/3', radix => 10 ]);
@@ -357,9 +378,15 @@ sub check_class {
 check_class ('A000217', # triangular numbers
              'Math::NumSeq::Polygonal',
              [ polygonal => 3 ]);
+check_class ('A000217', # triangular numbers
+             'Math::NumSeq::Polygonal',
+             [ polygonal => 3, pairs => 'second' ]);
 check_class ('A000290', # squares
              'Math::NumSeq::Polygonal',
              [ polygonal => 4 ]);
+check_class ('A000290', # squares
+             'Math::NumSeq::Polygonal',
+             [ polygonal => 4, pairs => 'average' ]);
 check_class ('A000217', # hexagonal both are triangular numbers
              'Math::NumSeq::Polygonal',
              [ polygonal => 6, pairs => 'both' ]);
@@ -367,11 +394,14 @@ check_class ('A000217', # hexagonal both are triangular numbers
 # check_class ('A010701', 'Math::NumSeq::FractionDigits',
 #              [ fraction => '10/3' ]);
 
-check_class ('A000120', 'Math::NumSeq::DigitSum',
-             [ radix => 2 ]);
-
 check_class ('A005843', 'Math::NumSeq::Multiples',
              [ multiples => 2 ]);
+
+check_class ('A000004', 'Math::NumSeq::Modulo',
+             [ modulus => 1 ]);
+
+check_class ('A000027', 'Math::NumSeq::HappyNumbers',
+             [ radix => 2 ]);
 
 #------------------------------------------------------------------------------
 # OEIS-Catalogue generated vs files

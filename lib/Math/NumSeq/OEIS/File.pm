@@ -24,13 +24,17 @@ use POSIX ();
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 14;
+$VERSION = 15;
 
 use Math::NumSeq::Base::Array;
 @ISA = ('Math::NumSeq::Base::Array');
 
 use vars '$VERSION';
-$VERSION = 14;
+$VERSION = 15;
+
+# uncomment this to run the ### lines
+#use Devel::Comments;
+
 
 # use constant name => Math::NumSeq::__('OEIS File');
 sub description {
@@ -42,9 +46,6 @@ sub description {
 }
 use Math::NumSeq::OEIS;
 *parameter_info_array = \&Math::NumSeq::OEIS::parameter_info_array;
-
-# uncomment this to run the ### lines
-#use Devel::Comments;
 
 sub new {
   my ($class, %options) = @_;
@@ -365,11 +366,11 @@ sub _read_html {
         my $list = $1;
         _split_sample_values ($self, $filename, $list, $offset);
       }
-      return;
+      return 1;
     }
     ### no html: $!
   }
-  return;
+  return 0;
 }
 
 sub _set_characteristics {

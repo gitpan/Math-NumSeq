@@ -21,7 +21,7 @@ use strict;
 use List::Util 'min', 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 14;
+$VERSION = 15;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -177,7 +177,7 @@ sub pred {
 1;
 __END__
 
-=for stopwords Ryde
+=for stopwords Ryde Math-NumSeq
 
 =head1 NAME
 

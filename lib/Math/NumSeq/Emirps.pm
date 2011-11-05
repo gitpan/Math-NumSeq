@@ -18,11 +18,9 @@
 package Math::NumSeq::Emirps;
 use 5.004;
 use strict;
-use List::Util 'min', 'max';
-use POSIX ();
 
 use vars '$VERSION', '@ISA';
-$VERSION = 14;
+$VERSION = 15;
 use Math::NumSeq::Primes;
 @ISA = ('Math::NumSeq::Primes');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -44,9 +42,10 @@ use constant characteristic_monotonic => 1;
 # A007500 - decimal reversal is a prime, so palindromes which are primes too
 #
 my @oeis_anum;
+$oeis_anum[2] = 'A080790';
 $oeis_anum[10] = 'A006567';
+# OEIS-Catalogue: A080790 radix=2
 # OEIS-Catalogue: A006567 radix=10
-
 sub oeis_anum {
   my ($self) = @_;
   return $oeis_anum[$self->{'radix'}];

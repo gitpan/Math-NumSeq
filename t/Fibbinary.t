@@ -20,57 +20,46 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 6;
+plan tests => 10;
 
 use lib 't';
 use MyTestHelpers;
-BEGIN { MyTestHelpers::nowarnings(); }
+MyTestHelpers::nowarnings();
 
-use Math::NumSeq::SafePrimes;
+use Math::NumSeq::Fibbinary;
 
-# uncomment this to run the ### lines
-#use Smart::Comments;
 
 #------------------------------------------------------------------------------
 # VERSION
 
 {
   my $want_version = 15;
-  ok ($Math::NumSeq::SafePrimes::VERSION, $want_version,
-      'VERSION variable');
-  ok (Math::NumSeq::SafePrimes->VERSION,  $want_version,
-      'VERSION class method');
+  ok ($Math::NumSeq::Fibbinary::VERSION, $want_version, 'VERSION variable');
+  ok (Math::NumSeq::Fibbinary->VERSION,  $want_version, 'VERSION class method');
 
-  ok (eval { Math::NumSeq::SafePrimes->VERSION($want_version); 1 },
+  ok (eval { Math::NumSeq::Fibbinary->VERSION($want_version); 1 },
       1,
       "VERSION class check $want_version");
   my $check_version = $want_version + 1000;
-  ok (! eval { Math::NumSeq::SafePrimes->VERSION($check_version); 1 },
+  ok (! eval { Math::NumSeq::Fibbinary->VERSION($check_version); 1 },
       1,
       "VERSION class check $check_version");
 }
 
 
 #------------------------------------------------------------------------------
-# next()
+# pred()
 
-sub collect {
-  my ($seq, $count) = @_;
-  my @i;
-  my @values;
-  foreach (1 .. ($count||5)) {
-    my ($i, $value) = $seq->next
-      or last;
-    push @i, $i;
-    push @values, $value;
-  }
-  return join(',',@i) . ' -- ' . join(',',@values);
-}
-    
 {
-  my $seq = Math::NumSeq::SafePrimes->new;
-  ok ($seq->oeis_anum, 'A005385');
-  ok (collect($seq), '1,2,3,4,5 -- 5,7,11,23,47');
-}
+  my $seq = Math::NumSeq::Fibbinary->new;
+  ok ($seq->pred(0), 1);
+  ok ($seq->pred(1), 1);
+  ok (! $seq->pred(3), 1);
+  ok ($seq->pred(4), 1);
 
+  ok ($seq->pred(17), 1);
+  ok ($seq->pred(17 * 2**256), 1);
+}
 exit 0;
+
+

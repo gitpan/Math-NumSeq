@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 14;
+$VERSION = 15;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -158,23 +158,23 @@ use constant::defer _cache => sub {
       unlink File::Spec->catfile ($dirname, "cache.pag");
       unlink File::Spec->catfile ($dirname, "cache.dir");
     }
-  };
-  END {
-    if ($tempdir) {
-      ### cache diagnostics ...
-      my $count = 0;
-      while (each %cache) {
-        $count++;
-      }
-      untie %cache;
-      my $dirname = $tempdir->dirname;
-      print "cache final $count file sizes cache.pag ",
-        (-s File::Spec->catfile($dirname,"cache.pag")),
-          " cache.dir ",
-            (-s File::Spec->catfile($dirname,"cache.dir")),
-              "\n";
-    }
-  };
+  }
+  # END {
+  #   if ($tempdir) {
+  #     ### cache diagnostics ...
+  #     my $count = 0;
+  #     while (each %cache) {
+  #       $count++;
+  #     }
+  #     untie %cache;
+  #     my $dirname = $tempdir->dirname;
+  #     print "cache final $count file sizes cache.pag ",
+  #       (-s File::Spec->catfile($dirname,"cache.pag")),
+  #         " cache.dir ",
+  #           (-s File::Spec->catfile($dirname,"cache.dir")),
+  #             "\n";
+  #   }
+  # }
   return \%cache;
 };
 my $cache_key = 0;
@@ -351,7 +351,7 @@ sub pred {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq
+=for stopwords Ryde Math-NumSeq sqrt
 
 =head1 NAME
 

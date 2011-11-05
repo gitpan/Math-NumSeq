@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 7;
+plan tests => 8;
 
 use lib 't';
 use MyTestHelpers;
@@ -35,7 +35,7 @@ use Math::NumSeq::Expression;
 # VERSION
 
 {
-  my $want_version = 14;
+  my $want_version = 15;
   ok ($Math::NumSeq::Expression::VERSION, $want_version, 'VERSION variable');
   ok (Math::NumSeq::Expression->VERSION,  $want_version, 'VERSION class method');
 
@@ -50,6 +50,7 @@ use Math::NumSeq::Expression;
 
 
 #------------------------------------------------------------------------------
+# Perl expressions
 
 {
   my $seq = Math::NumSeq::Expression->new (expression => '2*i');
@@ -66,6 +67,21 @@ use Math::NumSeq::Expression;
 
 
 #------------------------------------------------------------------------------
+
+{
+  my $info = Math::NumSeq::Expression->parameter_info_hash->{'expression_evaluator'};
+  my $good = 1;
+  foreach my $evaluator (@{$info->{'choices'}}) {
+    my $seq = Math::NumSeq::Expression->new (expression_evaluator => $evaluator,
+                                             expression => '123');
+    my $got = join(',',$seq->next);
+    if ($got ne '0,123') {
+      MyTestHelpers::diag ("expression_evaluator $evaluator got $got");
+      $good = 0;
+    }
+  }
+  ok ($good, 1);
+}
 
 exit 0;
 

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 14;
+$VERSION = 15;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -83,6 +83,8 @@ $oeis_anum{'2'}->{'537'} = 'A077076';
 $oeis_anum{'2'}->{'775'} = 'A077077';
 # OEIS-Catalogue: A077077 radix=2 start=775
 
+$oeis_anum{'4'}->{'1'} = 'A035524';
+# OEIS-Catalogue: A035524 radix=4 start=1
 $oeis_anum{'4'}->{'290'} = 'A075299';
 # OEIS-Catalogue: A075299 radix=4 start=290
 $oeis_anum{'4'}->{'318'} = 'A075153';
@@ -109,7 +111,9 @@ $oeis_anum{'10'}->{'196'} = 'A006960';
 
 sub oeis_anum {
   my ($self) = @_;
-  return $oeis_anum{$self->{'radix'}}->{$self->{'start'}};
+  my $start = $self->{'start'};
+  if ($start == 0) { return 'A000004'; } # all zeros
+  return $oeis_anum{$self->{'radix'}}->{$start};
 }
 #------------------------------------------------------------------------------
 

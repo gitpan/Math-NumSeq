@@ -21,7 +21,7 @@ use strict;
 use POSIX 'ceil';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 14;
+$VERSION = 15;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -51,8 +51,28 @@ use constant parameter_info_array =>
   ];
 
 # cf A017173 9n+1
-my %oeis_anum = (1 => 'A001477',  # 1,  integers 0,1,2,...
-                 2 => 'A005843',  # 2 even 0,2,4,...
+my %oeis_anum = (0 => 'A000004',  # 0,  all zeros
+                 # OEIS-Catalogue: A000004 multiples=0
+
+                 1  => 'A001477',  # 1,  integers 0,1,2,...
+                 2  => 'A005843',  # 2 even 0,2,4,...
+
+                 3  => 'A008585',  # 3 starting from i=0
+                 4  => 'A008586',  # 4 starting from i=0
+                 5  => 'A008587',  # 5 starting from i=0
+                 6  => 'A008588',  # 6 starting from i=0
+                 7  => 'A008589',  # 7 starting from i=0
+                 8  => 'A008590',  # 8 starting from i=0
+                 9  => 'A008591',  # 9 starting from i=0
+                 10 => 'A008592',  # 10 starting from i=0
+                 # OEIS-Catalogue: A008585 multiples=3
+                 # OEIS-Catalogue: A008586 multiples=4
+                 # OEIS-Catalogue: A008587 multiples=5
+                 # OEIS-Catalogue: A008588 multiples=6
+                 # OEIS-Catalogue: A008589 multiples=7
+                 # OEIS-Catalogue: A008590 multiples=8
+                 # OEIS-Catalogue: A008591 multiples=9
+                 # OEIS-Catalogue: A008592 multiples=10
 
                  3018 => 'A086746', # multiples of 3018, starting from 1
                  # OEIS-Catalogue: A086746 multiples=3018 i_start=1
@@ -81,8 +101,11 @@ sub ith {
 }
 sub pred {
   my ($self, $value) = @_;
-  return ($value == int($value)
-          && ($value % $self->{'multiples'}) == 0);
+  my $multiples = $self->{'multiples'};
+  return ($multiples == 0
+          ? $value == 0
+          : ($value == int($value)
+             && ($value % $multiples) == 0));
 }
 
 1;

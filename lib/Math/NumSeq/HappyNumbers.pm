@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 14;
+$VERSION = 15;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
@@ -55,11 +55,14 @@ use Math::NumSeq::Base::Digits;
 #    A139566 start 15
 #    A122065 start 74169
 #
+my @oeis_anum;
+$oeis_anum[2] = 'A000027'; # all integers 1 upwards, everything happy in base 2
+$oeis_anum[10] = 'A007770';
+# OEIS-Catalogue: A007770 radix=10
 sub oeis_anum {
   my ($self) = @_;
-  return ($self->{'radix'} == 10 ? 'A007770' : undef);
+  return $oeis_anum[$self->{'radix'}];
 }
-# OEIS-Catalogue: A007770 radix=10
 
 sub pred {
   my ($self, $value) = @_;
@@ -96,7 +99,7 @@ sub pred {
 1;
 __END__
 
-=for stopwords Ryde MathNumSeq
+=for stopwords Ryde Math-NumSeq
 
 =head1 NAME
 

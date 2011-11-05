@@ -24,73 +24,75 @@ use Math::Libm;
 use Module::Util;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 14;
+$VERSION = 15;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
 # uncomment this to run the ### lines
-#use Devel::Comments;
+#use Smart::Comments;
 
 
-my ($have_MS, $have_MEE, $have_LE, @evaluators);
 BEGIN {
-  my $have_MS
-    = defined(Module::Util::find_installed('Math::Symbolic'));
-  my $have_MEE
-    = defined(Module::Util::find_installed('Math::Expression::Evaluator'));
-  my $have_LE
-    = defined(Module::Util::find_installed('Language::Expr'));
-  ### $have_MS
-  ### $have_MEE
-  ### $have_LE
+  my ($have_MS, $have_MEE, $have_LE, @evaluators);
+  BEGIN {
+    $have_MS
+      = defined(Module::Util::find_installed('Math::Symbolic'));
+    $have_MEE
+      = defined(Module::Util::find_installed('Math::Expression::Evaluator'));
+    $have_LE
+      = defined(Module::Util::find_installed('Language::Expr'));
+    ### $have_MS
+    ### $have_MEE
+    ### $have_LE
 
-  @evaluators = ('Perl',
-                 ($have_MS  ? 'MS'  : ()),
-                 ($have_MEE ? 'MEE' : ()),
-                 ($have_LE  ? 'LE'  : ()));
-  ### @evaluators
-}
+    @evaluators = ('Perl',
+                   ($have_MS  ? 'MS'  : ()),
+                   ($have_MEE ? 'MEE' : ()),
+                   ($have_LE  ? 'LE'  : ()));
+    ### @evaluators
+  }
 
-use constant name => Math::NumSeq::__('Arbitrary Expression');
-use constant description =>
-  join ("\n",
-        Math::NumSeq::__('An arbitrary expression.  It should be a function of \"i\" at 0,1,2, etc.  For example (2*i)^2 would give the even perfect squares.
+  use constant name => Math::NumSeq::__('Arbitrary Expression');
+  use constant description =>
+    join ("\n",
+          Math::NumSeq::__('An arbitrary expression.  It should be a function of \"i\" at 0,1,2, etc.  For example (2*i)^2 would give the even perfect squares.
 
 Syntax is per the chosen evaluator, an invalid expression displays an error message.
 Perl (the default) is either 2*i+1 or 2*$i+1.'),
 
-        ($have_MS ?
-         Math::NumSeq::__('Math::Symbolic is like 2*i^2.')
-         : ()),
+          ($have_MS ?
+           Math::NumSeq::__('Math::Symbolic is like 2*i^2.')
+           : ()),
 
-        ($have_MEE ?
-         Math::NumSeq::__('Math::Expression::Evaluator is like t=2*i;t^2')
-         : ()),
+          ($have_MEE ?
+           Math::NumSeq::__('Math::Expression::Evaluator is like t=2*i;t^2')
+           : ()),
 
-        ($have_LE ?
-         Math::NumSeq::__('Language::Expr is like $k**2 + $k - 1.')
-         : ()));
+          ($have_LE ?
+           Math::NumSeq::__('Language::Expr is like $k**2 + $k - 1.')
+           : ()));
 
-use constant parameter_info_array =>
-  [
-   { name    => 'expression',
-     display => Math::NumSeq::__('Expression'),
-     type    => 'string',
-     default => '3*i*i + i + 2',
-     width   => 30,
-     description => Math::NumSeq::__('A mathematical expression giving values to display, for example x^2+x+41.  Only one variable is allowed, see the chosen evaluator Math::Symbolic or Math::Expression::Evaluator for possible operators and function.'),
-   },
-   { name    => 'expression_evaluator',
-     display => Math::NumSeq::__('Evaluator'),
-     type    => 'enum',
-     default => $evaluators[0],
-     choices => \@evaluators,
-     description => Math::NumSeq::__('The expression evaluator module, Perl for Perl itself, MS for Math::Symbolic, MEE for Math::Expression::Evaluator, LE for Language::Expr.'),
-   },
-                                     ];
-# ### parameter_info_array: parameter_info_array()
-# ### parameter_info_hash: __PACKAGE__->parameter_info_hash
-# ### evaluator default: __PACKAGE__->parameter_default('expression_evaluator')
+  use constant parameter_info_array =>
+    [
+     { name    => 'expression',
+       display => Math::NumSeq::__('Expression'),
+       type    => 'string',
+       default => '3*i*i + i + 2',
+       width   => 30,
+       description => Math::NumSeq::__('A mathematical expression giving values to display, for example x^2+x+41.  Only one variable is allowed, see the chosen evaluator Math::Symbolic or Math::Expression::Evaluator for possible operators and function.'),
+     },
+     { name    => 'expression_evaluator',
+       display => Math::NumSeq::__('Evaluator'),
+       type    => 'enum',
+       default => $evaluators[0],
+       choices => \@evaluators,
+       description => Math::NumSeq::__('The expression evaluator module, Perl for Perl itself, MS for Math::Symbolic, MEE for Math::Expression::Evaluator, LE for Language::Expr.'),
+     },
+    ];
+}
+### parameter_info_array: parameter_info_array()
+### parameter_info_hash: __PACKAGE__->parameter_info_hash
+### evaluator default: __PACKAGE__->parameter_default('expression_evaluator')
 
 #------------------------------------------------------------------------------
 my %oeis_anum;
@@ -262,10 +264,17 @@ HERE
 
     my $v = $vars[0];
     my %vars;
-    $subr = sub {
-      $vars{$v} = $_[0];
-      return &$hashsub(\%vars);
-    };
+    if (@vars) {
+      $subr = sub {
+        $vars{$v} = $_[0];
+        return &$hashsub(\%vars);
+      };
+    } else {
+      ### no variables in expression ...
+      $subr = sub {
+        return &$hashsub(\%vars);
+      };
+    }
 
   } elsif ($evaluator eq 'LE') {
     require Language::Expr;
@@ -290,7 +299,7 @@ HERE
     eval { $perlstr = $pe->perl ($expression); 1 }
       or croak "Cannot parse LE expression: $expression\n$@";
 
-    my $v = $vars[0] || 'k';
+    my $v = $vars[0] || 'i';
     ### $v
     ### eval: "sub { my \$$v = \$_[0]; $perlstr }"
     $subr = eval "package Math::NumSeq::Expression::LanguageExpr;
@@ -304,7 +313,7 @@ HERE
     croak "Unknown evaluator: $evaluator";
   }
 
-  my $self = bless { 
+  my $self = bless {
                      # hi    => $options{'hi'},
                      subr  => $subr,
                      expression => $expression, # for oeis_anum() and dumps
@@ -375,7 +384,7 @@ sub next {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq
+=for stopwords Ryde Math-NumSeq evaluator prototyped Evaluator Expr eval subr
 
 =head1 NAME
 

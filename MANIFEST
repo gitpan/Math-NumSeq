@@ -23,6 +23,7 @@ devel/language-expr.pl
 devel/maybe-decprime.pl
 devel/maybe-ln.pl
 devel/numaronson.pl
+devel/oeis-find.pl
 devel/oeis.pl
 devel/OeisCatalogue-SqrtDigits.pm
 devel/old/Base4Without3.pm
@@ -71,6 +72,7 @@ lib/Math/NumSeq/Expression.pm
 lib/Math/NumSeq/Factorials.pm
 lib/Math/NumSeq/Fibbinary.pm
 lib/Math/NumSeq/Fibonacci.pm
+lib/Math/NumSeq/FibonacciWord.pm
 lib/Math/NumSeq/File.pm
 lib/Math/NumSeq/FractionDigits.pm
 lib/Math/NumSeq/GolombSequence.pm
@@ -132,6 +134,8 @@ t/DigitProduct.t
 t/DivisorCount.t
 t/Emirps.t
 t/Expression.t
+t/Fibbinary.t
+t/FibonacciWord.t
 t/File-1.txt
 t/File.t
 t/MephistoWaltz.t

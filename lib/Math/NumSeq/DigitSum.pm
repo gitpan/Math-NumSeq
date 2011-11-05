@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 14;
+$VERSION = 15;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -29,7 +29,7 @@ use Math::NumSeq::Base::IterateIth;
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
 # uncomment this to run the ### lines
-#use Devel::Comments;
+#use Smart::Comments;
 
 
 # use constant name => Math::NumSeq::__('Digit Sum');
@@ -46,6 +46,7 @@ use constant parameter_info_array =>
       type       => 'integer',
       width      => 1,
       default    => '1',
+      minimum    => 1,
       description => Math::NumSeq::__('Power of the digits, 1=plain sum, 2=sum of squares, 3=sum of cubes, etc.'),
     },
   ];
@@ -57,7 +58,9 @@ $oeis_anum[1]->[2] = 'A000120';  # 2 binary
 # number of 1s, main handler in Math::NumSeq::DigitCount
 
 $oeis_anum[1]->[3] = 'A053735'; # 3 ternary
+$oeis_anum[2]->[3] = 'A006287'; # 3 ternary squared digits
 # OEIS-Catalogue: A053735 radix=3
+# OEIS-Catalogue: A006287 radix=3 power=2
 
 $oeis_anum[1]->[4] = 'A053737'; # 4
 # OEIS-Catalogue: A053737 radix=4
@@ -115,7 +118,10 @@ $oeis_anum[6]->[10] = 'A055015';
 
 sub oeis_anum {
   my ($self) = @_;
-  return $oeis_anum[$self->{'power'}]->[$self->{'radix'}];
+  my $power = $self->{'power'};
+  my $radix = $self->{'radix'};
+  if ($radix == 2) { $power = 1; }
+  return $oeis_anum[$power]->[$radix];
 }
 
 #------------------------------------------------------------------------------
@@ -140,7 +146,7 @@ sub oeis_anum {
 #   }
 #   return ($self->{'i'}++, ($self->{'sum'} = ($sum % $radix)));
 # }
-  
+
 # ENHANCE-ME: radix=2 share Math::NumSeq::DigitCount binary
 sub ith {
   my ($self, $i) = @_;

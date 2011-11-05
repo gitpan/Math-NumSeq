@@ -22,13 +22,14 @@ use Carp;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 14;
+$VERSION = 15;
 
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
 
 # uncomment this to run the ### lines
-#use Devel::Comments;
+#use Smart::Comments;
+
 
 # use constant name => Math::NumSeq::__('Square Root Digits');
 use constant description => Math::NumSeq::__('The square root of a given number written out in decimal or a given radix.');
@@ -40,6 +41,7 @@ use constant parameter_info_array =>
     display => Math::NumSeq::__('Sqrt'),
     type    => 'integer',
     default => 2,
+    minimum => 2,
     width   => 5,
     description => Math::NumSeq::__('The number to take the square root of.  If this is a perfect square then there\'s just a handful of digits, non squares go on infinitely.'),
    },
@@ -65,7 +67,13 @@ my @oeis_anum;
 
 # base 2 binary
 $oeis_anum[2]->[2] = 'A004539';   # base 2, sqrt2
+$oeis_anum[2]->[3] = 'A004547';   # base 2, sqrt3
+$oeis_anum[2]->[5] = 'A004555';   # base 2, sqrt5
+$oeis_anum[2]->[6] = 'A004609';   # base 2, sqrt6
 # OEIS-Catalogue: A004539 sqrt=2 radix=2
+# OEIS-Catalogue: A004547 sqrt=3 radix=2
+# OEIS-Catalogue: A004555 sqrt=5 radix=2
+# OEIS-Catalogue: A004609 sqrt=6 radix=2
 
 # base 3 ternary
 $oeis_anum[3]->[2] = 'A004540';   # base 3, sqrt2
@@ -344,7 +352,7 @@ sub next {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq radicand BigInt
+=for stopwords Ryde Math-NumSeq radicand BigInt radix
 
 =head1 NAME
 

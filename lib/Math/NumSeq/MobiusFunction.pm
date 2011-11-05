@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 14;
+$VERSION = 15;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -166,7 +166,7 @@ sub pred {
 1;
 __END__
 
-=for stopwords Ryde Mobius ie
+=for stopwords Ryde Mobius ie Math-NumSeq
 
 =head1 NAME
 

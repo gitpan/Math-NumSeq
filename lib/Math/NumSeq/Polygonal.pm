@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 14;
+$VERSION = 15;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -62,10 +62,12 @@ use constant parameter_info_array =>
 my %oeis_anum;
 
 # main generator Triangular.pm ... A000217 polygonal=3  pairs=first
-$oeis_anum{'first'}->[3] = 'A000217';  # 3 triangular
+$oeis_anum{'first'}->[3]  = 'A000217';  # 3 triangular
+$oeis_anum{'second'}->[3] = 'A000217';  # triangular same as "first"
 
 # main generator Squares.pm    ... A000290 polygonal=4  pairs=first
-$oeis_anum{'first'}->[4] = 'A000290'; # 4 squares
+$oeis_anum{'first'}->[4]   = 'A000290'; # 4 squares
+$oeis_anum{'average'}->[4] = 'A000290'; # squares, same as "first"
 
 $oeis_anum{'first'}->[5]  = 'A000326';   # 5 pentagonal
 $oeis_anum{'second'}->[5] = 'A005449';
@@ -81,13 +83,23 @@ $oeis_anum{'both'}->[6]   = 'A000217';   # together triangular numbers
 # OEIS-Catalogue: A014105 polygonal=6  pairs=second
 
 $oeis_anum{'first'}->[7]  = 'A000566'; # 7 heptagonal
+$oeis_anum{'second'}->[7] = 'A147875'; # (5n-2)(n-1)/2
+$oeis_anum{'both'}->[7]   = 'A085787';
 # OEIS-Catalogue: A000566 polygonal=7
+# OEIS-Catalogue: A147875 polygonal=7 pairs=second
+# OEIS-Catalogue: A085787 polygonal=7 pairs=both
 
-$oeis_anum{'first'}->[8]  =  'A000567'; # 8 octagonal
+$oeis_anum{'first'}->[8]  = 'A000567'; # 8 octagonal
+$oeis_anum{'second'}->[8] = 'A045944'; # Rhombic matchstick n*(3*n+2)
+$oeis_anum{'both'}->[8]   = 'A001082'; # n(3n-4)/4 or (n-1)(3n+1)/4
 # OEIS-Catalogue: A000567 polygonal=8
+# OEIS-Catalogue: A045944 polygonal=8 pairs=second
+# OEIS-Catalogue: A001082 polygonal=8 pairs=both
 
-$oeis_anum{'first'}->[9]  =  'A001106'; # 9 nonagonal
+$oeis_anum{'first'}->[9]  = 'A001106'; # 9 nonagonal
+$oeis_anum{'second'}->[9] = 'A179986'; # 9 nonagonal second n*(7*n+5)/2
 # OEIS-Catalogue: A001106 polygonal=9
+# OEIS-Catalogue: A179986 polygonal=9 pairs=second
 
 $oeis_anum{'first'}->[10]  =  'A001107'; # 10 decogaonal
 # OEIS-Catalogue: A001107 polygonal=10
@@ -123,6 +135,12 @@ $oeis_anum{'first'}->[24]  =  'A051876'; # 24
 # OEIS-Catalogue: A051874 polygonal=22   # 22
 # OEIS-Catalogue: A051875 polygonal=23   # 23
 # OEIS-Catalogue: A051876 polygonal=24   # 24
+
+$oeis_anum{'first'}->[28] = 'A161935'; # (n+1)*(13*n+1)
+# OEIS-Catalogue: A161935 polygonal=28   # 28
+
+$oeis_anum{'second'}->[30] = 'A195028';
+# OEIS-Catalogue: A195028 polygonal=30 pairs=second   # 30 second
 
 $oeis_anum{'average'}->[6] = 'A001105'; # (k-2)/2==2 is 2*squares
 # OEIS-Catalogue: A001105 polygonal=6 pairs=average
@@ -168,7 +186,7 @@ $oeis_anum{'average'}->[32] = 'A064761'; # (k-2)/2==15 is 15*squares
 
 $oeis_anum{'average'}->[34] = 'A016802'; # (k-2)/2==16 is 16*squares
 # OEIS-Catalogue: A016802 polygonal=34 pairs=average
- 
+
 $oeis_anum{'average'}->[290] = 'A017522'; # (k-2)/2==290 is 144*squares (12n)^2
 # OEIS-Catalogue: A017522 polygonal=290 pairs=average
 
@@ -192,7 +210,7 @@ sub oeis_anum {
 # i/2*(25*(i+1) - 48)
 # i/2*(25*i + 25 - 48)
 # i/2*(25*i - 23)
-# 
+#
 # P(i) = (k-2)/2 * i*(i+1) - (k-3)*i
 # S(i) = (k-2)/2 * i*(i-1) + (k-3)*i
 # P(i)-S(i)
@@ -305,7 +323,7 @@ sub pred {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq
+=for stopwords Ryde Math-NumSeq 3-gonals 4-gonals 5-gonals pentagonals polygonals
 
 =head1 NAME
 

@@ -25,7 +25,7 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
-my $test_count = (tests => 262)[1];
+my $test_count = (tests => 264)[1];
 plan tests => $test_count;
 
 # uncomment this to run the ### lines
@@ -119,6 +119,15 @@ foreach my $elem
    # MobiusFunction.pm
    # PiBits.pm
    # Repdigits.pm
+
+   [ 'Math::NumSeq::FibonacciWord', 0,
+     [ 0,1,
+       0,
+       0,1,
+       0,1,0,
+       0,1,0,0,1,
+     ],
+   ],
 
    [ 'Math::NumSeq::DigitLength', 0,
      [ 1,       # 0

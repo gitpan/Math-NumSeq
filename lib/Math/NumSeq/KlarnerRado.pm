@@ -25,7 +25,7 @@ use strict;
 use List::Util;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 14;
+$VERSION = 15;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
@@ -154,7 +154,7 @@ sub pred {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq
+=for stopwords Ryde Math-NumSeq Klarner Rado
 
 =head1 NAME
 
