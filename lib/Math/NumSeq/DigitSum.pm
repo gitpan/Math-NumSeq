@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 15;
+$VERSION = 16;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -54,8 +54,11 @@ use constant parameter_info_array =>
 
 #------------------------------------------------------------------------------
 my @oeis_anum;
-$oeis_anum[1]->[2] = 'A000120';  # 2 binary
-# number of 1s, main handler in Math::NumSeq::DigitCount
+
+$oeis_anum[1]->[2] = 'A000120';  # 2 binary, count of 1 bits like DigitCount
+# OEIS-Other: A000120 radix=2
+# OEIS-Other: A000120 radix=2 power=2
+# OEIS-Other: A000120 radix=2 power=3
 
 $oeis_anum[1]->[3] = 'A053735'; # 3 ternary
 $oeis_anum[2]->[3] = 'A006287'; # 3 ternary squared digits
@@ -212,7 +215,7 @@ parameter.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value> occurs as the sum of digits, which means simply
+Return true if C<$value> occurs as a sum of digits, which means simply
 C<$value E<gt>= 0>.
 
 =back

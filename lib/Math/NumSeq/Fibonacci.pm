@@ -21,10 +21,12 @@ use strict;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 15;
+$VERSION = 16;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
+
 use Math::NumSeq;
+*_bigint = \&Math::NumSeq::_bigint;
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
 # use constant name => Math::NumSeq::__('Fibonacci Numbers');
@@ -34,7 +36,28 @@ use constant characteristic_monotonic => 2;
 use constant oeis_anum => 'A000045'; # fibonacci starting at i=0 0,1,1,2,3
 
 # uncomment this to run the ### lines
-#use Devel::Comments;
+#use Smart::Comments;
+
+my $uv_limit = do {
+  # f1+f0 > i
+  # f0 > i-f1
+  # check i-f1 as the stopping point, so that if i=UV_MAX then won't
+  # overflow a UV trying to get to f1>=i
+  #
+  my $f0 = 1;
+  my $f1 = 1;
+  my $prev_f0;
+  while ($f0 <= ~0 - $f1) {
+    $prev_f0 = $f0;
+    ($f1,$f0) = ($f1+$f0,$f1);
+  }
+  ### $prev_f0
+  ### $f0
+  ### $f1
+  ### ~0 : ~0
+
+  $prev_f0
+};
 
 sub rewind {
   my ($self) = @_;
@@ -46,9 +69,18 @@ sub rewind {
 sub next {
   my ($self) = @_;
   ### Fibonacci next(): "f0=$self->{'f0'}, f1=$self->{'f1'}"
-  (my $ret, $self->{'f0'}, $self->{'f1'})
-   = ($self->{'f0'}, $self->{'f1'}, $self->{'f0'}+$self->{'f1'});
+  (my $ret,
+   $self->{'f0'},
+   $self->{'f1'})
+    = ($self->{'f0'},
+       $self->{'f1'},
+       $self->{'f0'}+$self->{'f1'});
   ### $ret
+
+  if ($ret == $uv_limit) {
+    $self->{'f1'} = _bigint()->new("$self->{'f1'}");
+  }
+
   return ($self->{'i'}++, $ret);
 }
 

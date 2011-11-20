@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 15;
+$VERSION = 16;
 use Math::NumSeq::Primes;
 @ISA = ('Math::NumSeq::Primes');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -35,7 +35,6 @@ use constant description => Math::NumSeq::__('Numbers which are primes forwards 
 use Math::NumSeq::Base::Digits;
 *parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
 
-use constant values_min => 3;
 use constant characteristic_monotonic => 1;
 
 # A006567 - decimal reversal is a prime and different
@@ -50,6 +49,16 @@ sub oeis_anum {
   my ($self) = @_;
   return $oeis_anum[$self->{'radix'}];
 }
+
+# FIXME: find the first value in the sequence ... maybe save it
+my @values_min;
+$values_min[2]  = 11; # binary 1011 reverse 1101 is decimal 13
+$values_min[10] = 13; # reverse to 31
+sub values_min {
+  my ($self) = @_;
+  return $values_min[$self->{'radix'}];
+}
+
 
 #------------------------------------------------------------------------------
 
@@ -206,7 +215,7 @@ Create and return a new sequence object.
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> is an emirp, meaning it and its digit reversal (in
-the C<$seq> radix) are both primes.
+the C<radix>) are both primes.
 
 =back
 

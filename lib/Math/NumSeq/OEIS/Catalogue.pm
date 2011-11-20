@@ -27,14 +27,14 @@ use strict;
 use List::Util;
 
 # uncomment this to run the ### lines
-#use Devel::Comments;
+#use Smart::Comments;
 
 use Module::Pluggable require => 1;
 my @plugins = sort __PACKAGE__->plugins;
 ### @plugins
 
 use vars '$VERSION';
-$VERSION = 15;
+$VERSION = 16;
 
 # sub seq_to_num {
 #   my ($class, $num) = @_;
@@ -43,6 +43,8 @@ $VERSION = 15;
 
 sub anum_to_info {
   my ($class, $anum) = @_;
+  ### Catalogue anum_to_info(): $anum
+
   foreach my $plugin (@plugins) {
     ### $plugin
     if (my $info = $plugin->anum_to_info($anum)) {
@@ -68,10 +70,13 @@ sub anum_list {
 sub _method_apply {
   my $acc = shift;
   my $method = shift;
+  ### plugin anums: map {$_->$method(@_)} @plugins
   return $acc->(grep {defined} map {$_->$method(@_)} @plugins);
 }
 sub anum_after {
   my ($class, $after_anum) = @_;
+  ### Catalogue anum_after(): $after_anum
+
   _method_apply (\&List::Util::minstr, 'anum_after', $after_anum);
 }
 sub anum_before {
@@ -133,8 +138,8 @@ Math::NumSeq::OEIS::Catalogue -- available A-numbers
 
 =head1 DESCRIPTION
 
-This module is the A-numbers available for C<Math::NumSeq::OEIS>.  It
-includes those available from NumSeq module code, and those available from
+This module lists the A-numbers available for C<Math::NumSeq::OEIS>.  It
+includes those available from NumSeq module code and those available from
 files.
 
 A-numbers are handled as strings like "A000032".  Six digits is usual,

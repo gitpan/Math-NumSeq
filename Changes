@@ -16,6 +16,11 @@ You should have received a copy of the GNU General Public License along
 with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 16, November 2011
+    - document $seq->characteristic("count")
+    - new DigitCountLow, DigitCountHigh, RepdigitSome, SqrtEngel
+    - DigitCount document digit=-1 means radix-1
+
 Version 15, November 2011
     - new FibonacciWord
     - Fibbinary better next()

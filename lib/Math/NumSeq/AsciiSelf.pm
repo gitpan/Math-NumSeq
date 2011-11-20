@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 15;
+$VERSION = 16;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -50,6 +50,15 @@ $oeis_anum[10] = 'A109733';
 sub oeis_anum {
   my ($self) = @_;
   return $oeis_anum[$self->{'radix'}];
+}
+
+# ith() on radix 7 is wrong, report it as not available
+sub can {
+  my ($self, $name) = @_;
+  if ($name eq 'ith' && ref $self && $self->{'radix'} == 7) {
+    return undef;
+  }
+  return $self->SUPER::can($name);
 }
 
 # sub new {
@@ -253,7 +262,8 @@ notice the shorter count for zeros?
 =head1 BUGS
 
 C<ith()> gives wrong values for the experimental C<radix> parameter for
-radix 7.  (Other bases are ok.)
+radix 7.  C<can('ith')> returns false for that radix, as a way of saying
+C<ith()> is not available.  (Other bases are ok.)
 
 =head1 SEE ALSO
 

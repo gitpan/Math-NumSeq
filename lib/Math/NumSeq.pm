@@ -46,7 +46,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 15;
+$VERSION = 16;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -154,7 +154,7 @@ sub new {
 #------------------------------------------------------------------------------
 # shared internals
 
-# cf Data::Float
+# cf Data::Float, but it might not handle BigFloat
 sub _is_infinite {
   my ($x) = @_;
   return ($x != $x    # nan
@@ -163,7 +163,7 @@ sub _is_infinite {
 
 # or maybe check for new enough for uv->mpz fix
 use constant::defer _bigint => sub {
-  # note, don't change the back-end if already loaded
+  # Crib note: don't change the back-end if already loaded
   unless (Math::BigInt->can('new')) {
     require Math::BigInt;
     eval { Math::BigInt->import (try => 'GMP') };
@@ -174,7 +174,7 @@ use constant::defer _bigint => sub {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq oopery genericness Online OEIS ie
+=for stopwords Ryde Math-NumSeq oopery genericness Online OEIS ie arrayref hashref filename enum Aronson
 
 =head1 NAME
 
@@ -190,8 +190,8 @@ Math::NumSeq -- number sequences
 =head1 DESCRIPTION
 
 This is a base class for number sequences.  Sequence objects can iterate
-through the values, and some sequences have random access and predicate.
-It's a touch rough yet.
+through values, and some sequences have random access and predicate.  It's a
+touch rough yet.
 
 The idea is to generate things like squares or primes in a generic way.
 Some sequences, like squares, are so easy there's no need for this except
@@ -200,9 +200,9 @@ way to go through the values.
 
 =head1 FUNCTIONS
 
-In the following "Foo" is one of the actual subclass names.  The intention
-is that all modules C<Math::NumSeq::Something> are sequence classes, and
-that supporting things are deeper, such as under
+In the following "Foo" is one of the subclass names.  The intention is that
+all modules C<Math::NumSeq::Something> are sequence classes, and that
+supporting things are deeper, such as under
 C<Math::NumSeq::Something::Helper> or C<Math::NumSeq::Base::SharedStuff>.
 
 =over 4
@@ -238,15 +238,16 @@ C<undef> if unknown or infinity.
 =item C<$ret = $seq-E<gt>characteristic($key)>
 
 Return something if the sequence has a C<$key> (a string) characteristic, or
-C<undef> if not.  This is intended as a loose set of expressing features or
-properties a sequence might have.
+C<undef> if not.  This is intended as a loose set of features or properties
+a sequence might have.
 
-    digits      the radix (an integer), if sequence is digits
+    digits      integer or undef, the radix if sequence is digits
+    count       boolean, true if values are counts of something
 
 =item C<$str = $seq-E<gt>oeis_anum()>
 
-Return the Online Encyclopedia of Integer Sequences A-number (a string) of
-C<$seq>, or C<undef> if not in the OEIS or not known.  For example
+Return Sloane's Online Encyclopedia of Integer Sequences A-number (a string)
+of C<$seq>, or C<undef> if not in the OEIS or not known.  For example
 
     my $seq = Math::NumSeq::Squares->new;
     my $anum = $seq->oeis_anum;
@@ -258,7 +259,8 @@ The web page for that is then
 
 Sometimes the OEIS has duplicates, ie. two A-numbers which are the same
 sequence.  C<$seq-E<gt>oeis_anum()> generally returns whichever is the
-primary one, at least for accidental duplication.
+primary one (at least in cases where the duplication is accidental or
+historical).
 
 =item C<$aref = Math::NumSeq::Foo-E<gt>parameter_info_array()>
 
@@ -359,9 +361,13 @@ L<Math::NumSeq::Pell>,
 L<Math::NumSeq::Tribonacci>
 
 L<Math::NumSeq::FractionDigits>,
-L<Math::NumSeq::SqrtDigits>
+L<Math::NumSeq::SqrtDigits>,
+L<Math::NumSeq::SqrtEngel>
 
 L<Math::NumSeq::DigitCount>,
+L<Math::NumSeq::DigitCountLow>,
+L<Math::NumSeq::DigitCountHigh>
+
 L<Math::NumSeq::DigitLength>,
 L<Math::NumSeq::DigitLengthCumulative>,
 L<Math::NumSeq::DigitProduct>,
@@ -372,14 +378,15 @@ L<Math::NumSeq::RadixWithoutDigit>
 L<Math::NumSeq::Palindromes>,
 L<Math::NumSeq::Beastly>,
 L<Math::NumSeq::Repdigits>,
+L<Math::NumSeq::RepdigitAny>,
 L<Math::NumSeq::HarshadNumbers>,
 L<Math::NumSeq::HappyNumbers>
 
 L<Math::NumSeq::CullenNumbers>,
 L<Math::NumSeq::ProthNumbers>,
-L<Math::NumSeq::WoodallNumbers>
+L<Math::NumSeq::WoodallNumbers>,
 L<Math::NumSeq::BaumSweet>,
-L<Math::NumSeq::KlarnerRado>
+L<Math::NumSeq::KlarnerRado>,
 L<Math::NumSeq::MephistoWaltz>
 
 L<Math::NumSeq::CollatzSteps>,
@@ -391,7 +398,8 @@ L<Math::NumSeq::Kolakoski>,
 L<Math::NumSeq::GolombSequence>,
 L<Math::NumSeq::AsciiSelf>
 
-L<Math::NumSeq::Aronson>, in the Math-Aronson dist
+L<Math::NumSeq::Aronson> (in the Math-Aronson dist),
+L<Math::NumSeq::PlanePathCoord> (in the Math-PlanePath dist)
 
 L<Math::Sequence> and L<Math::Series>, for symbolic recursive sequence
 definitions

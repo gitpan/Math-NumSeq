@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 15;
+$VERSION = 16;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -166,7 +166,7 @@ no values.
 
 =item C<$bool = $seq-E<gt>pred ($value)>
 
-Return true if C<$value> has "666" in its digits.
+Return true if C<$value> has "666" in its digits, in the requested C<radix>.
 
 =back
 

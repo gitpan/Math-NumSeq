@@ -21,7 +21,7 @@ use strict;
 use Math::Prime::XS;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 15;
+$VERSION = 16;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -158,8 +158,7 @@ and the return is 1.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value> is equal to C<2*3*5*...*p[i]> for number of the
-primes.
+Return true if C<$value> is equal to C<2*3*5*...*p[i]> for number of primes.
 
 =back
 

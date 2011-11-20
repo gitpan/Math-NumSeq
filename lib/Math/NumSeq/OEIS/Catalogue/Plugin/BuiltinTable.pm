@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 15;
+$VERSION = 16;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 359 A-numbers in 65 modules
+# total 401 A-numbers in 69 modules
 
 use constant info_arrayref =>
 [
@@ -204,70 +204,70 @@ use constant info_arrayref =>
     'anum' => 'A007304',
     'class' => 'Math::NumSeq::AlmostPrimes',
     'parameters' => [
-      'factor_count',
-      3,
       'multiplicity',
-      'distinct'
+      'distinct',
+      'factor_count',
+      3
     ]
   },
   {
     'anum' => 'A046386',
     'class' => 'Math::NumSeq::AlmostPrimes',
     'parameters' => [
-      'factor_count',
-      4,
       'multiplicity',
-      'distinct'
+      'distinct',
+      'factor_count',
+      4
     ]
   },
   {
     'anum' => 'A046387',
     'class' => 'Math::NumSeq::AlmostPrimes',
     'parameters' => [
-      'factor_count',
-      5,
       'multiplicity',
-      'distinct'
+      'distinct',
+      'factor_count',
+      5
     ]
   },
   {
     'anum' => 'A067885',
     'class' => 'Math::NumSeq::AlmostPrimes',
     'parameters' => [
-      'factor_count',
-      6,
       'multiplicity',
-      'distinct'
+      'distinct',
+      'factor_count',
+      6
     ]
   },
   {
     'anum' => 'A123321',
     'class' => 'Math::NumSeq::AlmostPrimes',
     'parameters' => [
-      'factor_count',
-      7,
       'multiplicity',
-      'distinct'
+      'distinct',
+      'factor_count',
+      7
     ]
   },
   {
     'anum' => 'A123322',
     'class' => 'Math::NumSeq::AlmostPrimes',
     'parameters' => [
-      'factor_count',
-      8,
       'multiplicity',
-      'distinct'
+      'distinct',
+      'factor_count',
+      8
     ]
   },
   {
     'anum' => 'A115343',
     'class' => 'Math::NumSeq::AlmostPrimes',
     'parameters' => [
-      'factor_count',
-      9,
       'multiplicity',
-      'distinct'
+      'distinct',
+      'factor_count',
+      9
     ]
   },
   {
@@ -336,16 +336,6 @@ use constant info_arrayref =>
       2,
       'digit',
       1
-    ]
-  },
-  {
-    'anum' => 'A081602',
-    'class' => 'Math::NumSeq::DigitCount',
-    'parameters' => [
-      'radix',
-      3,
-      'digit',
-      0
     ]
   },
   {
@@ -419,6 +409,62 @@ use constant info_arrayref =>
     ]
   },
   {
+    'anum' => 'A090996',
+    'class' => 'Math::NumSeq::DigitCountHigh',
+    'parameters' => [
+      'radix',
+      2
+    ]
+  },
+  {
+    'anum' => 'A007814',
+    'class' => 'Math::NumSeq::DigitCountLow',
+    'parameters' => [
+      'radix',
+      2,
+      'digit',
+      0,
+      'i_start',
+      1
+    ]
+  },
+  {
+    'anum' => 'A007949',
+    'class' => 'Math::NumSeq::DigitCountLow',
+    'parameters' => [
+      'radix',
+      3,
+      'digit',
+      0,
+      'i_start',
+      1
+    ]
+  },
+  {
+    'anum' => 'A112765',
+    'class' => 'Math::NumSeq::DigitCountLow',
+    'parameters' => [
+      'radix',
+      5,
+      'digit',
+      0,
+      'i_start',
+      1
+    ]
+  },
+  {
+    'anum' => 'A122840',
+    'class' => 'Math::NumSeq::DigitCountLow',
+    'parameters' => [
+      'radix',
+      10,
+      'digit',
+      0,
+      'i_start',
+      1
+    ]
+  },
+  {
     'anum' => 'A070939',
     'class' => 'Math::NumSeq::DigitLength',
     'parameters' => [
@@ -448,6 +494,14 @@ use constant info_arrayref =>
     'parameters' => [
       'radix',
       5
+    ]
+  },
+  {
+    'anum' => 'A055642',
+    'class' => 'Math::NumSeq::DigitLength',
+    'parameters' => [
+      'radix',
+      10
     ]
   },
   {
@@ -1089,6 +1143,14 @@ use constant info_arrayref =>
     ]
   },
   {
+    'anum' => 'A130909',
+    'class' => 'Math::NumSeq::Modulo',
+    'parameters' => [
+      'modulus',
+      16
+    ]
+  },
+  {
     'anum' => 'A000004',
     'class' => 'Math::NumSeq::Multiples',
     'parameters' => [
@@ -1423,11 +1485,41 @@ use constant info_arrayref =>
     ]
   },
   {
+    'anum' => 'A118277',
+    'class' => 'Math::NumSeq::Polygonal',
+    'parameters' => [
+      'polygonal',
+      9,
+      'pairs',
+      'both'
+    ]
+  },
+  {
     'anum' => 'A001107',
     'class' => 'Math::NumSeq::Polygonal',
     'parameters' => [
       'polygonal',
       10
+    ]
+  },
+  {
+    'anum' => 'A033954',
+    'class' => 'Math::NumSeq::Polygonal',
+    'parameters' => [
+      'polygonal',
+      10,
+      'pairs',
+      'second'
+    ]
+  },
+  {
+    'anum' => 'A074377',
+    'class' => 'Math::NumSeq::Polygonal',
+    'parameters' => [
+      'polygonal',
+      10,
+      'pairs',
+      'both'
     ]
   },
   {
@@ -1439,11 +1531,51 @@ use constant info_arrayref =>
     ]
   },
   {
+    'anum' => 'A062728',
+    'class' => 'Math::NumSeq::Polygonal',
+    'parameters' => [
+      'polygonal',
+      11,
+      'pairs',
+      'second'
+    ]
+  },
+  {
+    'anum' => 'A195160',
+    'class' => 'Math::NumSeq::Polygonal',
+    'parameters' => [
+      'polygonal',
+      11,
+      'pairs',
+      'both'
+    ]
+  },
+  {
     'anum' => 'A051624',
     'class' => 'Math::NumSeq::Polygonal',
     'parameters' => [
       'polygonal',
       12
+    ]
+  },
+  {
+    'anum' => 'A135705',
+    'class' => 'Math::NumSeq::Polygonal',
+    'parameters' => [
+      'polygonal',
+      12,
+      'pairs',
+      'second'
+    ]
+  },
+  {
+    'anum' => 'A195162',
+    'class' => 'Math::NumSeq::Polygonal',
+    'parameters' => [
+      'polygonal',
+      12,
+      'pairs',
+      'both'
     ]
   },
   {
@@ -1540,14 +1672,6 @@ use constant info_arrayref =>
     'parameters' => [
       'polygonal',
       24
-    ]
-  },
-  {
-    'anum' => 'A161935',
-    'class' => 'Math::NumSeq::Polygonal',
-    'parameters' => [
-      'polygonal',
-      28
     ]
   },
   {
@@ -1873,6 +1997,120 @@ use constant info_arrayref =>
     ]
   },
   {
+    'anum' => 'A020657',
+    'class' => 'Math::NumSeq::RadixWithoutDigit',
+    'parameters' => [
+      'radix',
+      7,
+      'digit',
+      6
+    ]
+  },
+  {
+    'anum' => 'A052382',
+    'class' => 'Math::NumSeq::RadixWithoutDigit',
+    'parameters' => [
+      'radix',
+      10,
+      'digit',
+      0
+    ]
+  },
+  {
+    'anum' => 'A052383',
+    'class' => 'Math::NumSeq::RadixWithoutDigit',
+    'parameters' => [
+      'radix',
+      10,
+      'digit',
+      1
+    ]
+  },
+  {
+    'anum' => 'A052404',
+    'class' => 'Math::NumSeq::RadixWithoutDigit',
+    'parameters' => [
+      'radix',
+      10,
+      'digit',
+      2
+    ]
+  },
+  {
+    'anum' => 'A052405',
+    'class' => 'Math::NumSeq::RadixWithoutDigit',
+    'parameters' => [
+      'radix',
+      10,
+      'digit',
+      3
+    ]
+  },
+  {
+    'anum' => 'A052406',
+    'class' => 'Math::NumSeq::RadixWithoutDigit',
+    'parameters' => [
+      'radix',
+      10,
+      'digit',
+      4
+    ]
+  },
+  {
+    'anum' => 'A052413',
+    'class' => 'Math::NumSeq::RadixWithoutDigit',
+    'parameters' => [
+      'radix',
+      10,
+      'digit',
+      5
+    ]
+  },
+  {
+    'anum' => 'A052414',
+    'class' => 'Math::NumSeq::RadixWithoutDigit',
+    'parameters' => [
+      'radix',
+      10,
+      'digit',
+      6
+    ]
+  },
+  {
+    'anum' => 'A052419',
+    'class' => 'Math::NumSeq::RadixWithoutDigit',
+    'parameters' => [
+      'radix',
+      10,
+      'digit',
+      7
+    ]
+  },
+  {
+    'anum' => 'A052421',
+    'class' => 'Math::NumSeq::RadixWithoutDigit',
+    'parameters' => [
+      'radix',
+      10,
+      'digit',
+      8
+    ]
+  },
+  {
+    'anum' => 'A007095',
+    'class' => 'Math::NumSeq::RadixWithoutDigit',
+    'parameters' => [
+      'radix',
+      10,
+      'digit',
+      9
+    ]
+  },
+  {
+    'anum' => 'A167782',
+    'class' => 'Math::NumSeq::RepdigitAny'
+  },
+  {
     'anum' => 'A010785',
     'class' => 'Math::NumSeq::Repdigits',
     'parameters' => [
@@ -1938,6 +2176,16 @@ use constant info_arrayref =>
       2,
       'start',
       775
+    ]
+  },
+  {
+    'anum' => 'A035523',
+    'class' => 'Math::NumSeq::ReverseAdd',
+    'parameters' => [
+      'radix',
+      3,
+      'start',
+      1
     ]
   },
   {
@@ -2027,6 +2275,30 @@ use constant info_arrayref =>
     ]
   },
   {
+    'anum' => 'A033649',
+    'class' => 'Math::NumSeq::ReverseAdd',
+    'parameters' => [
+      'start',
+      5
+    ]
+  },
+  {
+    'anum' => 'A033650',
+    'class' => 'Math::NumSeq::ReverseAdd',
+    'parameters' => [
+      'start',
+      7
+    ]
+  },
+  {
+    'anum' => 'A033651',
+    'class' => 'Math::NumSeq::ReverseAdd',
+    'parameters' => [
+      'start',
+      9
+    ]
+  },
+  {
     'anum' => 'A033670',
     'class' => 'Math::NumSeq::ReverseAdd',
     'parameters' => [
@@ -2051,26 +2323,6 @@ use constant info_arrayref =>
     'class' => 'Math::NumSeq::SophieGermainPrimes'
   },
   {
-    'anum' => 'A004539',
-    'class' => 'Math::NumSeq::SqrtDigits',
-    'parameters' => [
-      'sqrt',
-      2,
-      'radix',
-      2
-    ]
-  },
-  {
-    'anum' => 'A004547',
-    'class' => 'Math::NumSeq::SqrtDigits',
-    'parameters' => [
-      'sqrt',
-      3,
-      'radix',
-      2
-    ]
-  },
-  {
     'anum' => 'A004555',
     'class' => 'Math::NumSeq::SqrtDigits',
     'parameters' => [
@@ -2086,6 +2338,26 @@ use constant info_arrayref =>
     'parameters' => [
       'sqrt',
       6,
+      'radix',
+      2
+    ]
+  },
+  {
+    'anum' => 'A004569',
+    'class' => 'Math::NumSeq::SqrtDigits',
+    'parameters' => [
+      'sqrt',
+      7,
+      'radix',
+      2
+    ]
+  },
+  {
+    'anum' => 'A004539',
+    'class' => 'Math::NumSeq::SqrtDigits',
+    'parameters' => [
+      'sqrt',
+      2,
       'radix',
       2
     ]
@@ -2116,6 +2388,96 @@ use constant info_arrayref =>
     'parameters' => [
       'sqrt',
       2,
+      'radix',
+      5
+    ]
+  },
+  {
+    'anum' => 'A004548',
+    'class' => 'Math::NumSeq::SqrtDigits',
+    'parameters' => [
+      'sqrt',
+      3,
+      'radix',
+      3
+    ]
+  },
+  {
+    'anum' => 'A004547',
+    'class' => 'Math::NumSeq::SqrtDigits',
+    'parameters' => [
+      'sqrt',
+      3,
+      'radix',
+      2
+    ]
+  },
+  {
+    'anum' => 'A004582',
+    'class' => 'Math::NumSeq::SqrtDigits',
+    'parameters' => [
+      'sqrt',
+      8,
+      'radix',
+      7
+    ]
+  },
+  {
+    'anum' => 'A004583',
+    'class' => 'Math::NumSeq::SqrtDigits',
+    'parameters' => [
+      'sqrt',
+      8,
+      'radix',
+      8
+    ]
+  },
+  {
+    'anum' => 'A004584',
+    'class' => 'Math::NumSeq::SqrtDigits',
+    'parameters' => [
+      'sqrt',
+      8,
+      'radix',
+      9
+    ]
+  },
+  {
+    'anum' => 'A004585',
+    'class' => 'Math::NumSeq::SqrtDigits',
+    'parameters' => [
+      'sqrt',
+      10,
+      'radix',
+      2
+    ]
+  },
+  {
+    'anum' => 'A004586',
+    'class' => 'Math::NumSeq::SqrtDigits',
+    'parameters' => [
+      'sqrt',
+      10,
+      'radix',
+      3
+    ]
+  },
+  {
+    'anum' => 'A004587',
+    'class' => 'Math::NumSeq::SqrtDigits',
+    'parameters' => [
+      'sqrt',
+      10,
+      'radix',
+      4
+    ]
+  },
+  {
+    'anum' => 'A004588',
+    'class' => 'Math::NumSeq::SqrtDigits',
+    'parameters' => [
+      'sqrt',
+      10,
       'radix',
       5
     ]
@@ -2814,6 +3176,42 @@ use constant info_arrayref =>
     'parameters' => [
       'sqrt',
       99
+    ]
+  },
+  {
+    'anum' => 'A028254',
+    'class' => 'Math::NumSeq::SqrtEngel'
+  },
+  {
+    'anum' => 'A028257',
+    'class' => 'Math::NumSeq::SqrtEngel',
+    'parameters' => [
+      'sqrt',
+      3
+    ]
+  },
+  {
+    'anum' => 'A059176',
+    'class' => 'Math::NumSeq::SqrtEngel',
+    'parameters' => [
+      'sqrt',
+      5
+    ]
+  },
+  {
+    'anum' => 'A161368',
+    'class' => 'Math::NumSeq::SqrtEngel',
+    'parameters' => [
+      'sqrt',
+      7
+    ]
+  },
+  {
+    'anum' => 'A059177',
+    'class' => 'Math::NumSeq::SqrtEngel',
+    'parameters' => [
+      'sqrt',
+      10
     ]
   },
   {

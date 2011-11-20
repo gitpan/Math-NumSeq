@@ -24,7 +24,7 @@ use Math::Libm;
 use Module::Util;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 15;
+$VERSION = 16;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -139,10 +139,11 @@ sub oeis_anum {
 {
   package Math::NumSeq::Expression::LanguageExpr;
   use List::Util 'min', 'max';
-  our $pi = Math::Libm::M_PI();
-  our $e = Math::Libm::M_E();
-  our $phi = (1+sqrt(5))/2;
-  our $gam = 0.5772156649015328606065120;
+  use vars '$pi', '$e', '$phi', '$gam';
+  $pi = Math::Libm::M_PI();
+  $e = Math::Libm::M_E();
+  $phi = (1+sqrt(5))/2;
+  $gam = 0.5772156649015328606065120;
 }
 
 sub new {

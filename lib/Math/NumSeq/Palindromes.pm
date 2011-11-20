@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 15;
+$VERSION = 16;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -253,7 +253,7 @@ Return the C<$i>'th palindrome number.
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> is a palindrome, ie. its digits read the same
-forwards and backwards.
+forwards and backwards (in the given C<radix>).
 
 =back
 

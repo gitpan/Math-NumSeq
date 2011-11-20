@@ -25,57 +25,74 @@ use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 use vars '$VERSION';
-$VERSION = 15;
+$VERSION = 16;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
+
 use constant num_first => 21022;   # A021022 1/18
 use constant num_last  => 21999;   # A021999 1/995
 
-my %exclude = (21029 => 1,  # 1/25
+my %exclude = (21029 => 1,  # A021029 is not 1/25
+               21129 => 1,  # A021129 is not 1/125
               );
 sub anum_after {
   my ($class, $anum) = @_;
-  (my $num = $anum) =~ s/^A0*//g;
-  $num ||= 0;
-  $num++;
+  ### anum_after(): $anum
+
+  my $num = _anum_to_num($anum) + 1;
+  ### $num
   if (($class->num_to_denominator($num) % 10) == 0
       || $exclude{$num}) {
+    ### skip ...
     $num++;
   }
   if ($num > $class->num_last) {
     return undef;
   }
+    ### ret: $num
   return sprintf 'A%06d', max ($num, $class->num_first);
 }
+
 sub anum_before {
   my ($class, $anum) = @_;
-  (my $num = $anum) =~ s/^A0*//g;
-  $num ||= 0;
-  $num--;
+  ### anum_before(): $anum
+
+  my $num = _anum_to_num($anum) - 1;
   if (($class->num_to_denominator($num) % 10) == 0
       || $exclude{$num}) {
+    ### skip ...
     $num--;
   }
   if ($num <= $class->num_first) {
     return undef;
   }
+  ### ret: $num
   return sprintf 'A%06d', min ($num, $class->num_last);
+}
+
+sub _anum_to_num {
+  my ($anum) = @_;
+  if ($anum =~ /A0*([0-9]+)/ || $anum =~ /([1-9][0-9]*)/) {
+    return $1;
+  } else {
+    return 0;
+  }
 }
 
 sub anum_to_info {
   my ($class, $anum) = @_;
-  ### Catalogue-BuiltinCalc num_to_info(): @_
+  ### FractionDigits anum_to_info(): $anum
 
   # Math::NumSeq::FractionDigits
   # fraction=1/k radix=10 for k=11 to 995 is anum=21004+k,
   # being A021015 through A021999, though 1/11 is also A010680 and prefer
   # that one (in BuiltinTable.pm)
 
-  my $num = $anum;
-  if (($num =~ s/^A0*//g)
-      && ($class->num_to_denominator($num) % 10) != 0
+  my $num = _anum_to_num($anum);
+  ### $num
+  if (($class->num_to_denominator($num) % 10) != 0
       && ! $exclude{$num}
       && $num >= $class->num_first
       && $num <= $class->num_last) {

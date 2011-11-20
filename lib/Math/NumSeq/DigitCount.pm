@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 15;
+$VERSION = 16;
 use Math::NumSeq;
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
@@ -64,10 +64,12 @@ BEGIN {
   # OEIS-Catalogue: A000120 radix=2 digit=1
 
   # cf A077267 starts i=1
-  $oeis_anum[3]->[0] = 'A081602'; # base 3 count 0s, start i=0
+  #    A081602 starts i=0 but considers i=0 to have 1 zero, unlike other counts
+  # $oeis_anum[3]->[0] = 'A081602'; # base 3 count 0s, start i=0
+  # # OEIS-Catalogue: A081602 radix=3 digit=0
+  #
   $oeis_anum[3]->[1] = 'A062756'; # base 3 count 1s, start i=0
   $oeis_anum[3]->[2] = 'A081603'; # base 3 count 2s, start i=0
-  # OEIS-Catalogue: A081602 radix=3 digit=0
   # OEIS-Catalogue: A062756 radix=3 digit=1
   # OEIS-Catalogue: A081603 radix=3 digit=2
 
@@ -80,6 +82,8 @@ BEGIN {
   # OEIS-Catalogue: A160382 radix=4 digit=2
   # OEIS-Catalogue: A160383 radix=4 digit=3
 
+  # almost A055641 decimal count 9s, but it starts i=0 has 1 zero
+
   $oeis_anum[10]->[9] = 'A102683'; # base 10 count 9s, start i=0
   # OEIS-Catalogue: A102683 radix=10 digit=9
 }
@@ -89,6 +93,8 @@ sub oeis_anum {
   my $digit = $self->{'digit'};
   if ($digit == -1) {
     $digit = $radix-1;
+  } elsif ($digit >= $radix) {
+    return 'A000004'; # all zeros, 
   }
   return $oeis_anum[$radix]->[$digit];
 }
@@ -159,14 +165,16 @@ See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 Create and return a new sequence object.
 
+C<digit> can be -1 to mean digit radix-1, the highest digit in the radix.
+
 =item C<$value = $seq-E<gt>ith($i)>
 
 Return how many of the given C<digit> is in C<$i> written in C<radix>.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value> might occur as value in the sequence, which means
-simply C<$value>=0>.
+Return true if C<$value> might occur as a digit count, which means simply
+C<$valueE<gt>=0>.
 
 =back
 

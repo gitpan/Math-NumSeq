@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 15;
+$VERSION = 16;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -38,11 +38,27 @@ use constant values_min => 0;
 use Math::NumSeq::Base::Digits;
 *parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
 
+my @oeis_anum = (undef, # 0
+                 undef, # 1
+                 undef, # 2
+                 'A048328', # 3
+                 'A048329', # 4
+                 'A048330', # 5
+                 'A048331', # 6
+                 'A048332', # 7
+                 'A048333', # 8
+                 'A048334', # 9 
+                 'A010785', # 10, starting from i=0
+                 'A048335', # 11
+                 'A048336', # 12
+                 'A048337', # 13
+                 'A048338', # 14
+                 'A048339', # 15
+                 'A048340', # 16
+                );
 sub oeis_anum {
   my ($self) = @_;
-  return ($self->{'radix'} == 10
-          ? 'A010785'  # starting from i=0
-          : undef);
+  return $oeis_anum[$self->{'radix'}];
 }
 # OEIS-Catalogue: A010785 radix=10
 
@@ -170,13 +186,14 @@ Return the C<$i>'th repdigit.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value> is a repdigit.
+Return true if C<$value> is a repdigit in the given C<radix>.
 
 =back
 
 =head1 SEE ALSO
 
 L<Math::NumSeq>,
+L<Math::NumSeq::RepdigitAny>,
 L<Math::NumSeq::Beastly>
 
 =head1 HOME PAGE

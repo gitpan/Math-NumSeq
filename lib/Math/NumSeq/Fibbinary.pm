@@ -16,8 +16,6 @@
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# math-image --values=Fibbinary
-#
 # ZOrderCurve, ImaginaryBase tree shape
 # DragonCurve repeating runs
 #
@@ -29,7 +27,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 15;
+$VERSION = 16;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -45,6 +43,7 @@ use constant description => Math::NumSeq::__('Fibbinary numbers 0,1,2,4,5,8,9,et
 # cf A000119 - number of fibonacci sums forms
 #    A003622 - n with odd Zeckendorf,  cf golden seq
 #    A037011 - baum-sweet cubic, might be 1 iff i is in the fibbinary seq
+#    A014417 - n in fibonacci base, the fibbinaries written out in binary
 #
 use constant oeis_anum => 'A003714';  # Fibbinary
 
@@ -81,28 +80,36 @@ sub ith {
     return $i;
   }
 
-  my $f0 = 1;
-  my $f1 = 1;
-  ### above: "$f1,$f0"
-  while ($i >= $f1) {
-    ($f1,$f0) = ($f1+$f0,$f1);
+  # f1+f0 > i
+  # f0 > i-f1
+  # check i-f1 as the stopping point, so that if i=UV_MAX then won't
+  # overflow a UV trying to get to f1>=i
+  #
+  my @fibs;
+  {
+    my $f0 = ($i * 0);  # inherit bignum 0
+    my $f1 = $f0 + 1;   # inherit bignum 1
+    @fibs = ($f0);
+    while ($f0 <= $i-$f1) {
+      ($f1,$f0) = ($f1+$f0,$f1);
+      push @fibs, $f1;
+    }
   }
-  ### above: "$f1,$f0"
+  ### @fibs
 
   my $value = 0;
-  while ($f0 > 0) {
-    ### at: "$f1,$f0  value=$value"
+  while (my $f = pop @fibs) {
+    ### at: "$f i=$i  value=$value"
     $value *= 2;
-    if ($i >= $f1) {
-      $i -= $f1;
+    if ($i >= $f) {
       $value += 1;
-      ### sub: "$f1 to i=$i value=$value"
+      $i -= $f;
+      ### sub: "$f to i=$i value=$value"
 
-      ($f1,$f0) = ($f0,$f1-$f0);
-      last unless $f0 > 0;
+      # never consecutive fibs, so pop without comparing to i
+      pop @fibs || last;
       $value *= 2;
     }
-    ($f1,$f0) = ($f0,$f1-$f0);
   }
   return $value;
 }
@@ -117,7 +124,9 @@ sub pred {
     return 0;
   }
 
-  if ($int > ~0) {
+  # go to BigInt if floating point integer bigger than UV, since "&"
+  # operator will cast to a UV and lose bits
+  if ($int > ~0 && ! ref $int) {
     require Math::BigInt;
     $int = Math::BigInt->new(sprintf('%.0f',$int));
     ### use BigInt: $int
@@ -180,7 +189,7 @@ __END__
 
 
 
-=for stopwords Ryde Math-NumSeq fibbinary Zeckendorf k's Ith i'th
+=for stopwords Ryde Math-NumSeq fibbinary Zeckendorf k's Ith i'th OR-ing incrementing Fibonaccis BigInt BigFloat BigRat eg ie
 
 =head1 NAME
 
@@ -213,9 +222,9 @@ have no adjacent 1 bits in binary.
 For example at i=4 fibbinary 5 the next fibbinary is not 6 or 7 because they
 have adjacent 1 bits (110 and 111), the next is 8 (100).
 
-Since the two highest bits must be "10..." and "11..." is all skipped
-there's effectively a run of 2^k values (not all of them used of course)
-followed by a 2^k gap.
+Since the two highest bits must be "10...", skipping any high "11...",
+there's effectively a block of 2^k values (though not all of them used)
+followed by a gap of 2^k values, etc.
 
 =head2 Zeckendorf Base
 
@@ -234,9 +243,15 @@ The k's are then assembled as 1 bits in binary to encode the representation,
 
     fibbinary(20) = 2^5 + 2^3 + 2^0 = 41
 
-The spacing between Fibonacci numbers means after subtracting F(k) the next
-cannot be F(k-1), only F(k-2) or less, which means no adjacent 1 bits in the
-fibbinary numbers.
+The spacing between Fibonacci numbers means that after subtracting F(k) the
+next cannot be F(k-1), only F(k-2) or less.  For that reason there's no
+adjacent 1 bits in the fibbinary numbers.
+
+The connection between no adjacent 1s and the Fibonacci sequence can be seen
+from the values that have a high bit 2^k.  New values with that high bit not
+with high 2^(k-1) but only 2^(k-2), so effectively the new values are not
+the previous k-1 but the second previous k-2, the same way as the Fibonacci
+sequence adds not the previous term but the one before.
 
 =head1 FUNCTIONS
 
@@ -244,7 +259,7 @@ See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 =over 4
 
-=item C<$seq = Math::NumSeq::All-E<gt>new (key=E<gt>value,...)>
+=item C<$seq = Math::NumSeq::Fibbinary-E<gt>new ()>
 
 Create and return a new sequence object.
 
@@ -255,10 +270,7 @@ Return the C<$i>'th fibbinary number.
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> is a fibbinary number, which means that in binary
-it doesn't have any consecutive 1 bits.  Meaning simply a positive integer
-with
-
-    ($value & ($value<<1)) == 0
+it doesn't have any consecutive 1 bits.
 
 =back
 
@@ -267,67 +279,78 @@ with
 =head2 Next Value
 
 For a given fibbinary number, the next number is simply +1 if the lowest bit
-is 2^2=4 or more.  If the low bit is 2^1=2 or 2^0=1 then the run of trailing
-...0101 or ...1010 must be cleared and the bit above incremented.  For
-example 1001010 becomes 1010000.  This can be done with some bit twiddling
+is 2^2=4 or more.  If the low bit is 2^1=2 or 2^0=1 then the run of low
+alternating ...101 or ...1010 must be cleared and the bit above set.  For
+example 1001010 becomes 1010000.  All cases can be handled quite easily with
+some bit twiddling
 
-    filled  = (value >> 1) | value
+    filled = (value >> 1) | value
     mask = ((filled+1) ^ filled) >> 1
     next value = (value | mask) + 1
 
 For example
 
     value  = 1001010
-    filled = 1001111
+    filled = 1101111
     mask   =    1111
     next   = 1010000
 
 "filled" means any ...01010 ending has the zeros filled in to ...01111, then
-those low ones can be picked out with +1 and XOR.  The +1 includes the bit
-above that filled part so ...11111, but a shift drops back to a "mask" of
-just 01111.  OR-ing and incrementing then clears those low bits and sets the
-next higher to make ...10000.
+those low ones can be extracted with +1 and XOR (the usual trick for getting
+low ones).  +1 means the bit above the filled part is included ...11111, but
+a shift drops back to "mask" of just 01111.  OR-ing and incrementing then
+clears those low bits and sets the next higher to make ...10000.
 
-This works for both a ...0101 and ...1010 ending.  In fact it also works
-when the ending has no 01 or 10 run but all zeros ...0000.  In that case the
-result is just a +1 for ...0001.
-
-Note the calculation only works starting from an existing fibbinary value.
-It won't go from an arbitrary starting value to the next fibbinary as it
-acts only on the low bits (up to the lowest "00" pair), leaving the higher
-bits perhaps still with adjacent 1s.
+This works for any fibbinary value inputs, both "...10101" and "...1010"
+endings and also zeros "...0000" ending.  In the zeros case the result is
+just a +1 for "...0001", including input=0 giving next=1.
 
 =head2 Ith Value
 
 The i'th fibbinary number can be calculated by the Zeckendorf breakdown
-described above.
+described above.  Reckoning the Fibonacci numbers as F(0)=1, F(1)=2, F(2)=3,
+F(3)=5, etc,
 
     find the biggest F(k) <= i
     subtract i -= F(k)
     fibbinary result += 2^k
     repeat until i=0
 
-To find each F(k) either just work downwards through the Fibonacci numbers,
-or alternatively since the Fibonaccis grow as (phi^k)/sqrt(5) where
-phi=(sqrt(5)+1)/2 is the golden ratio, an F(k) could be found by a log base
-phi of i.  Or taking log(2) for the highest bit in i might give 2 or 3
-candidates for k.  A log base phi is unlikely to be faster, but the log 2
-high bit might jump to a nearly-correct place in a table.
+To find each F(k)E<lt>=i either just work downwards through the Fibonacci
+numbers, or perhaps alternatively the Fibonaccis grow as (phi^k)/sqrt(5)
+with phi=(sqrt(5)+1)/2 the golden ratio, so an F(k) could be found by a log
+base phi of i.  Or taking log2 of i (the highest bit in i) might give 2 or 3
+candidates for k.  Log base phi is unlikely to be faster, but log 2 high bit
+might quickly go to a nearly-correct place in a table.
 
 =head2 Predicate
 
 Testing for a fibbinary value can be done by a shift and AND,
 
-    is_fibbinary = (value & (value >> 1)) == 0
+    is_fibbinary = ((value & (value >> 1)) == 0)
 
-Any adjacent 1 bits will overlap and come through the AND as non-zero.
+Any adjacent 1 bits overlap in the shift+AND and come through as non-zero.
 
-In Perl C<&> converts float to int so to test a value bigger than an int
-requires conversion to C<Math::BigInt> or similar.  (Floats which are
-integers but bigger than an UV/IV might be of interest, or it might be
-thought any float means rounded-off and therefore inaccurate and not of
-interest.  The current code has some experimental BigInt which works, and
-can accept BigFloat or BigRat integers, but don't rely on this yet.)
+In Perl C<&> converts NV float to UV/IV integer.  If a value in an NV
+mantissa is an integer but bigger than a UV then bits will be lost in an
+C<&>.  Conversion to C<Math::BigInt> or similar is necessary to preserve the
+full value.  Floats which are integers but bigger than an UV/IV might be of
+interest, or it might be thought any float means rounded-off and therefore
+inaccurate and not of interest.  The current code has some experimental
+automatic BigInt conversion which works and which accepts BigFloat or BigRat
+integers too, but don't rely on this quite yet.  (A BigInt input directly is
+fine of course.)
+
+=head2 Value Below
+
+If a number is not a fibbinary, eg. 11000110, then the next lower fibbinary
+can be had by finding the highest 11 pair and changing it and all the bits
+below to 101010...etc.  There's nothing in the code here doing this though.
+
+Offending 11 pairs can be picked out by an AND per the predicate above.
+After a shift and AND the highest 1 bit is from the highest 11 pair and is
+the lower of the two bits in that pair.  That position should then become a
+0 etc, ie. "01010...".  The higher 1 in the highest 11 pair is unchanged.
 
 =head1 SEE ALSO
 
@@ -357,3 +380,7 @@ You should have received a copy of the GNU General Public License along with
 Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 =cut
+
+# Local variables:
+# compile-command: "math-image --values=Fibbinary"
+# End:

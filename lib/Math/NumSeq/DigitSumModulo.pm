@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 15;
+$VERSION = 16;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -96,6 +96,9 @@ my @oeis_anum = (undef,
                 );
 sub oeis_anum {
   my ($self) = @_;
+  if ($self->{'modulus'} == 1) {
+    return 'A000004'; # all zeros
+  }
   return $oeis_anum[$self->{'radix'}];
 }
 
@@ -197,8 +200,8 @@ C<modulus>.
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> might occur as value in the sequence, which means
-simply C<$value >= 0> and C<$value E<lt>= modulus> (the given modulus or the
-radix if modulus=0).
+simply C<$value >= 0> and C<$value E<lt>= modulus> (the given C<modulus> or
+the C<radix> if modulus=0).
 
 =back
 

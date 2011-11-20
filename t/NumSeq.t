@@ -25,7 +25,7 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
-my $test_count = (tests => 264)[1];
+my $test_count = (tests => 287)[1];
 plan tests => $test_count;
 
 # uncomment this to run the ### lines
@@ -118,7 +118,170 @@ foreach my $elem
    # Ln2Bits.pm
    # MobiusFunction.pm
    # PiBits.pm
-   # Repdigits.pm
+
+   [ 'Math::NumSeq::SqrtEngel', 0,
+     [ 1, 3, 5, 5, 16, ],
+     { sqrt => 2 } ],
+   [ 'Math::NumSeq::SqrtEngel', 0,
+     [ 1, 1 ],
+     { sqrt => 4 } ],
+   [ 'Math::NumSeq::SqrtEngel', 0,
+     [ 1, 1, 1 ],
+     { sqrt => 9 } ],
+
+   [ 'Math::NumSeq::DigitCountHigh', 0,
+     [ 0,  # 0
+       0,  # 1
+       0,  # 10
+       0,  # 11
+       0,  # 100
+       0,  # 101
+     ],
+     { radix => 2,
+       digit => 0,
+     } ],
+
+   [ 'Math::NumSeq::DigitCountHigh', 0,
+     [ 0,  # 0
+       1,  # 1
+       1,  # 10
+       2,  # 11
+       1,  # 100
+       1,  # 101
+       2,  # 110
+       3,  # 111
+       1,  # 1000
+       1,  # 1001
+       1,  # 1010
+       1,  # 1011
+       2,  # 1100
+       2,  # 1101
+       3,  # 111
+       4,  # 1111
+       1,  # 10000
+     ],
+     { radix => 2,
+       digit => 1,
+     } ],
+
+   [ 'Math::NumSeq::DigitCountHigh', 0,
+     [ 0,  # 0
+       1,  # 1
+       0,  # 2
+       0,  # 3
+       0,  # 4
+       1,  # 10
+       2,  # 11
+       1,  # 12
+       1,  # 13
+       1,  # 14
+       0,  # 20
+       0,  # 21
+       0,  # 22
+       0,  # 23
+       0,  # 24
+       0,  # 30
+       0,  # 31
+       0,  # 32
+       0,  # 33
+       0,  # 34
+       0,  # 40
+       0,  # 31
+       0,  # 31
+       0,  # 31
+     ],
+     { radix => 5,
+       digit => 1,
+     } ],
+
+   [ 'Math::NumSeq::DigitCountLow', 0,
+     [ 0,  # 0
+       0,  # 1
+       1,  # 10
+       0,  # 11
+       2,  # 100
+       0,  # 101
+       1,  # 110
+       0,  # 111
+       3,  # 1000
+     ],
+     { radix => 2,
+       digit => 0,
+     } ],
+   [ 'Math::NumSeq::DigitCountLow', 0,
+     [ 0,  # 0
+       1,  # 1
+       0,  # 10
+       2,  # 11
+       0,  # 100
+       1,  # 101
+       0,  # 110
+       3,  # 111
+     ],
+     { radix => 2,
+       digit => 1,
+     } ],
+   [ 'Math::NumSeq::DigitCountLow', 0,
+     [ 0,  # 0
+       0,  # 1
+       0,  # 2
+       1,  # 10
+       0,  # 11
+       0,  # 12
+       1,  # 20
+       0,  # 21
+       0,  # 22
+       2,  # 100
+     ],
+     { radix => 3,
+       digit => 0,
+     } ],
+   [ 'Math::NumSeq::DigitCountLow', 0,
+     [ 0,  # 0
+       0,  # 1
+       0,  # 2
+       0,  # 3
+       0,  # 4
+       1,  # 10
+       0,  # 11
+       0,  # 12
+       0,  # 13
+       0,  # 14
+       1,  # 20
+       0,  # 21
+       0,  # 22
+       0,  # 23
+       0,  # 24
+       1,  # 30
+     ],
+     { radix => 5,
+       digit => 0,
+     } ],
+
+
+   [ 'Math::NumSeq::RepdigitAny', 0,
+     [  0,
+        7,  # 111 base 2
+        13, # 111 base 3
+        15, # 1111 base 2
+        21, # 111 base 4
+        26, # 222 base 3
+        31, # 11111 base 2
+     ],
+   ],
+
+   [ 'Math::NumSeq::AlmostPrimes', 0,
+     [ 4, 6, 9, 10, 14, 15, 21, 22, 25, 26, 33, 34, 35, 38,
+       39, 46, 49, 51, 55, 57, 58, 62, 65, 69, 74, 77, 82,
+       85, 86, 87, 91, 93, 94, 95, 106, 111, 115, 118, 119,
+       121, 122, 123, 129, 133, 134, 141, 142, 143, 145,
+       146, 155, 158, 159, 161, 166, 169, 177, 178, 183,
+       185, 187 ] ],
+   #
+   # # [ 'Math::NumSeq::SemiPrimesOdd', 0,
+   # #   [ 9, 15, 21, 25, 33, 35,
+   # #     39, 49, 51, 55, 57, 65, 69, 77,
+   # #   ] ],
 
    [ 'Math::NumSeq::FibonacciWord', 0,
      [ 0,1,
@@ -381,71 +544,6 @@ foreach my $elem
        digit => 9,
      } ],
 
-   # [ 'Math::NumSeq::DigitCountLow', 0,
-   #   [ 0,  # 0
-   #     0,  # 1
-   #     1,  # 10
-   #     0,  # 11
-   #     2,  # 100
-   #     0,  # 101
-   #     1,  # 110
-   #     0,  # 111
-   #     3,  # 1000
-   #   ],
-   #   { radix => 2,
-   #     digit => 0,
-   #   } ],
-   # [ 'Math::NumSeq::DigitCountLow', 0,
-   #   [ 0,  # 0
-   #     1,  # 1
-   #     0,  # 10
-   #     2,  # 11
-   #     0,  # 100
-   #     1,  # 101
-   #     0,  # 110
-   #     3,  # 111
-   #   ],
-   #   { radix => 2,
-   #     digit => 1,
-   #   } ],
-   # [ 'Math::NumSeq::DigitCountLow', 0,
-   #   [ 0,  # 0
-   #     0,  # 1
-   #     0,  # 2
-   #     1,  # 10
-   #     0,  # 11
-   #     0,  # 12
-   #     1,  # 20
-   #     0,  # 21
-   #     0,  # 22
-   #     2,  # 100
-   #   ],
-   #   { radix => 3,
-   #     digit => 0,
-   #   } ],
-   # [ 'Math::NumSeq::DigitCountLow', 0,
-   #   [ 0,  # 0
-   #     0,  # 1
-   #     0,  # 2
-   #     0,  # 3
-   #     0,  # 4
-   #     1,  # 10
-   #     0,  # 11
-   #     0,  # 12
-   #     0,  # 13
-   #     0,  # 14
-   #     1,  # 20
-   #     0,  # 21
-   #     0,  # 22
-   #     0,  # 23
-   #     0,  # 24
-   #     1,  # 30
-   #   ],
-   #   { radix => 5,
-   #     digit => 0,
-   #   } ],
-
-
    [ 'Math::NumSeq::CullenNumbers', 0,
      [ 1, 3, 9, 25, 65, 161, 385, 897, 2049, 4609, ] ],
 
@@ -576,17 +674,6 @@ foreach my $elem
 
    # [ 'Math::NumSeq::Obstinate', 1,
    #   [ 1, 3, 127, ] ],
-
-   # [ 'Math::NumSeq::RepdigitAnyBase', 0,
-   #   [  0,
-   #      7,  # 111 base 2
-   #      13, # 111 base 3
-   #      15, # 1111 base 2
-   #      21, # 111 base 4
-   #      26, # 222 base 3
-   #      31, # 11111 base 2
-   #   ],
-   # ],
 
    [ 'Math::NumSeq::RadixWithoutDigit', 0,
      [ 1, 2,    # 1,2
@@ -847,19 +934,6 @@ foreach my $elem
    #   { pairs => 'second' },
    # ],
 
-   [ 'Math::NumSeq::AlmostPrimes', 0,
-     [ 4, 6, 9, 10, 14, 15, 21, 22, 25, 26, 33, 34, 35, 38,
-       39, 46, 49, 51, 55, 57, 58, 62, 65, 69, 74, 77, 82,
-       85, 86, 87, 91, 93, 94, 95, 106, 111, 115, 118, 119,
-       121, 122, 123, 129, 133, 134, 141, 142, 143, 145,
-       146, 155, 158, 159, 161, 166, 169, 177, 178, 183,
-       185, 187 ] ],
-   #
-   # # [ 'Math::NumSeq::SemiPrimesOdd', 0,
-   # #   [ 9, 15, 21, 25, 33, 35,
-   # #     39, 49, 51, 55, 57, 65, 69, 77,
-   # #   ] ],
-
    # http://oeis.org/A005384
    [ 'Math::NumSeq::SophieGermainPrimes', 0,
      [ 2, 3, 5, 11, 23, 29, 41, 53, 83, 89, 113, 131, 173,
@@ -1038,7 +1112,7 @@ foreach my $elem
       my ($i, $value) = $seq->next;
       (defined $value ? $value : $i)
     } 0 .. $#$want ];
-    foreach (@$got) { if ($_ == 0) { $_ = 0 } }  # avoid "-0"
+    foreach (@$got) { if (defined $_ && $_ == 0) { $_ = 0 } }  # avoid "-0"
 
     my $got_str = join(',', map {defined() ? $_ : 'undef'} @$got);
     my $want_str = join(',', map {defined() ? $_ : 'undef'} @$want);
@@ -1091,7 +1165,14 @@ foreach my $elem
       $seq->pred($neg_infinity);
     }
     if (defined $nan) {
-      $seq->pred($nan);
+      if ($seq->pred($nan)) {
+        $good = 0;
+        MyTestHelpers::diag ($name, " -- pred(nan) should be false");
+      }
+      if ($seq->pred(-$nan)) {
+        $good = 0;
+        MyTestHelpers::diag ($name, " -- pred(-nan) should be false");
+      }
     }
 
     {

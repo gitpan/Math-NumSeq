@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 15;
+$VERSION = 16;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -224,7 +224,8 @@ Return the number of reverse-add steps required to reach a palindrome.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value E<gt>= 0>, since any count of steps is possible.
+Return true if C<$value> occurs in the sequence, which simply means C<$value
+E<gt>= 0> since any count of steps is possible.
 
 =back
 

@@ -22,7 +22,7 @@ use Carp;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 15;
+$VERSION = 16;
 
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
@@ -66,42 +66,63 @@ use constant parameter_info_array =>
 my @oeis_anum;
 
 # base 2 binary
-$oeis_anum[2]->[2] = 'A004539';   # base 2, sqrt2
-$oeis_anum[2]->[3] = 'A004547';   # base 2, sqrt3
 $oeis_anum[2]->[5] = 'A004555';   # base 2, sqrt5
 $oeis_anum[2]->[6] = 'A004609';   # base 2, sqrt6
-# OEIS-Catalogue: A004539 sqrt=2 radix=2
-# OEIS-Catalogue: A004547 sqrt=3 radix=2
+$oeis_anum[2]->[7] = 'A004569';   # base 2, sqrt7
 # OEIS-Catalogue: A004555 sqrt=5 radix=2
 # OEIS-Catalogue: A004609 sqrt=6 radix=2
+# OEIS-Catalogue: A004569 sqrt=7 radix=2
+#
+# OEIS-Other: A004569 sqrt=28 radix=2
 
-# base 3 ternary
+# sqrt 2
+$oeis_anum[2]->[2] = 'A004539';   # base 2, sqrt2
 $oeis_anum[3]->[2] = 'A004540';   # base 3, sqrt2
-# OEIS-Catalogue: A004540 sqrt=2 radix=3
-
-# base 4
 $oeis_anum[4]->[2] = 'A004541';   # base 4, sqrt2
-# OEIS-Catalogue: A004541 sqrt=2 radix=4
-
-# base 5
 $oeis_anum[5]->[2] = 'A004542';   # base 5, sqrt2
+# OEIS-Catalogue: A004539 sqrt=2 radix=2
+# OEIS-Catalogue: A004540 sqrt=2 radix=3
+# OEIS-Catalogue: A004541 sqrt=2 radix=4
 # OEIS-Catalogue: A004542 sqrt=2 radix=5
+#
+# OEIS-Other: A004539 sqrt=8 radix=2
+
+# sqrt 3
+$oeis_anum[2]->[3] = 'A004547';   # base 2, sqrt3
+$oeis_anum[3]->[3] = 'A004548';   # base 3, sqrt3
+# OEIS-Catalogue: A004548 sqrt=3 radix=3
+# OEIS-Catalogue: A004547 sqrt=3 radix=2
+#
+# OEIS-Other: A004547 sqrt=12 radix=2
+
+# sqrt 8
+$oeis_anum[7]->[8] = 'A004582';   # base 7, sqrt8
+$oeis_anum[8]->[8] = 'A004583';   # base 8, sqrt8
+$oeis_anum[9]->[8] = 'A004584';   # base 9, sqrt8
+# OEIS-Catalogue: A004582 sqrt=8 radix=7
+# OEIS-Catalogue: A004583 sqrt=8 radix=8
+# OEIS-Catalogue: A004584 sqrt=8 radix=9
+
+# sqrt 10
+$oeis_anum[2]->[10] = 'A004585';   # base 2, sqrt10
+$oeis_anum[3]->[10] = 'A004586';   # base 3, sqrt10
+$oeis_anum[4]->[10] = 'A004587';   # base 4, sqrt10
+$oeis_anum[5]->[10] = 'A004588';   # base 5, sqrt10
+# OEIS-Catalogue: A004585 sqrt=10 radix=2
+# OEIS-Catalogue: A004586 sqrt=10 radix=3
+# OEIS-Catalogue: A004587 sqrt=10 radix=4
+# OEIS-Catalogue: A004588 sqrt=10 radix=5
+#
+# OEIS-Other: A004585 sqrt=40 radix=2
 
 # base 10 decimal
-$oeis_anum[10]
-  = [ undef,       # 0
-      undef,       # 1
-      'A002193',   # sqrt2
-      # OEIS-Catalogue: A002193 sqrt=2
+$oeis_anum[10]->[2] = 'A002193';   # sqrt2
+$oeis_anum[10]->[3] = 'A002194';   # sqrt3
+$oeis_anum[10]->[5] = 'A002163';   # sqrt5
+# OEIS-Catalogue: A002193 sqrt=2
+# OEIS-Catalogue: A002194 sqrt=3
+# OEIS-Catalogue: A002163 sqrt=5
 
-      'A002194',   # sqrt3
-      # OEIS-Catalogue: A002194 sqrt=3
-
-      undef,       # 4
-
-      'A002163',   # sqrt5
-      # OEIS-Catalogue: A002163 sqrt=5
-    ];
 my %perfect_square = (16 => 1,
                       25 => 1,
                       36 => 1,
@@ -113,6 +134,15 @@ sub oeis_anum {
   ### oeis_anum() ...
   my $sqrt = $self->{'sqrt'};
   my $radix = $self->{'radix'};
+
+  # so that sqrt(8) gives A-num of sqrt(2), etc
+  {
+    my $radix_squared = $radix * $radix;
+    while (($sqrt % $radix_squared) == 0) {
+      $sqrt /= $radix_squared;
+    }
+  }
+
   if ($radix == 10
       && $sqrt >= 10 && $sqrt <= 99
       && ! $perfect_square{$sqrt}) {
@@ -386,10 +416,6 @@ See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 Create and return a new sequence object giving the digits of C<sqrt($s)>.
 
-=item C<$value = $seq-E<gt>ith($i)>
-
-Return C<$i ** 2>.
-
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> might occurs as a digit in the square root.
@@ -403,11 +429,12 @@ non-square do all digits in fact occur?
 =head1 BUGS
 
 The current code requires C<Math::BigInt> C<bsqrt()>, which may mean BigInt
-1.60 (in Perl 5.8.0) or higher.
+1.60 or higher (which comes with Perl 5.8.0 and up).
 
 =head1 SEE ALSO
 
 L<Math::NumSeq>,
+L<Math::NumSeq::SqrtEngel>,
 L<Math::NumSeq::FractionDigits>
 
 =head1 HOME PAGE

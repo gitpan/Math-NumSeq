@@ -35,7 +35,7 @@ use Math::NumSeq::FibonacciWord;
 # VERSION
 
 {
-  my $want_version = 15;
+  my $want_version = 16;
   ok ($Math::NumSeq::FibonacciWord::VERSION, $want_version, 'VERSION variable');
   ok (Math::NumSeq::FibonacciWord->VERSION,  $want_version, 'VERSION class method');
 

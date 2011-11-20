@@ -90,6 +90,16 @@ sub _min {
   }
   return $ret;
 }
+sub _max {
+  my $ret = shift;
+  while (@_) {
+    my $next = shift;
+    if ($next > $ret) {
+      $ret = $next;
+    }
+  }
+  return $ret;
+}
 
 my %duplicate_anum = (A021015 => 'A010680',
                      );
@@ -104,6 +114,15 @@ sub check_class {
   ### $class
   ### $parameters
 
+  return if $class eq 'Math::NumSeq::PlanePathCoord'; # tested in its dist
+
+
+  # skip all except ...
+  #
+  # return unless $class =~ /AlmostPrimes/;
+  # return unless $class =~ /Fib/;
+  # return unless $class =~ /Fraction/;
+
   eval "require $class" or die;
 
   my $name = join(',',
@@ -112,7 +131,9 @@ sub check_class {
 
   my $max_value = undef;
   if ($class->isa('Math::NumSeq::Factorials')
-      || $class->isa('Math::NumSeq::Primorials')) {
+      || $class->isa('Math::NumSeq::Primorials')
+      || $class eq 'Math::NumSeq::Fibonacci' # not LucasNumbers yet
+     ) {
     $max_value = 'unlimited';
   }
 
@@ -156,11 +177,26 @@ sub check_class {
 
   } elsif ($class =~ /AlmostPrimes/) {
     # AlmostPrimes shorten for now
-    @$want = grep {$_ < 1_000_000} @$want;
+    @$want = grep {$_ < 10_000_000} @$want;
 
   } elsif ($anum eq 'A006567') {
     # emirps shorten for now
     @$want = grep {$_ < 100_000} @$want;
+
+  } elsif ($anum eq 'A004583') {
+    # last digit of sample values octal sqrt(8) seems is 4 think should be 5,
+    # trim it off for now
+    pop @$want;
+  } elsif ($anum eq 'A004582') {
+    # last few of sample values sqrt(8) base 7 seem bad, trim
+    splice @$want, -27;
+  } elsif ($anum eq 'A004584') {
+    # last few of sample values sqrt(8) base 9 seem bad, trim
+    splice @$want, -4;
+  } elsif ($anum eq 'A004588') {
+    # last 3,3,0,2,3,4,2,4,1,2,4,4,1 sample values sqrt(10) base 5 seem bad,
+    # trim
+    splice @$want, -13;
 
   } elsif ($anum eq 'A004542') {  # sqrt(2) in base 5
     MyTestHelpers::diag ("skip doubtful $anum $name");
@@ -173,15 +209,18 @@ sub check_class {
   # skip all except ...
   #
   # return unless $anum eq 'A006512';
-  # return unless $class =~ /Almost/;
 
 
   my $want_count = scalar(@$want);
-  MyTestHelpers::diag ("$anum $name  ($want_count values to $want->[-1])");
+  MyTestHelpers::diag ("$anum $name  $want_count values to ",
+                       (@$want ? $want->[-1] : '[none]'));
 
-  my $hi = $want->[-1];
-  if ($hi < @$want) {
-    $hi = @$want;
+  my $hi = 10;
+  if (@$want) {
+    $hi = $want->[-1];
+    if ($hi < @$want) {
+      $hi = @$want;
+    }
   }
   ### $hi
   # hi => $hi
@@ -221,11 +260,9 @@ sub check_class {
     ### by next() ...
     my @got;
     my $got = \@got;
-    while (my ($i, $value) = $seq->next) {
+    while (@got < @$want
+           && (my ($i, $value) = $seq->next)) {
       push @got, $value;
-      if (@got >= @$want) {
-        last;
-      }
     }
 
     my $diff = diff_nums($got, $want);
@@ -249,13 +286,9 @@ sub check_class {
 
     my @got;
     my $got = \@got;
-    while (my ($i, $value) = $seq->next) {
-      # ### $i
-      # ### $value
+    while (@got < @$want
+           && (my ($i, $value) = $seq->next)) {
       push @got, $value;
-      if (@got >= @$want) {
-        last;
-      }
     }
 
     my $diff = diff_nums($got, $want);
@@ -341,9 +374,29 @@ sub check_class {
       MyTestHelpers::diag ("got  ". join(',', map {defined() ? $_ : 'undef'} @$got));
       MyTestHelpers::diag ("want ". join(',', map {defined() ? $_ : 'undef'} @$want));
     }
+
+    {
+      my $data_min = _min(@$want);
+      my $values_min = $seq->values_min;
+      if (defined $values_min
+          && defined $data_min
+          && $values_min != $data_min) {
+        $good = 0;
+        MyTestHelpers::diag ("bad: $name values_min $values_min but data min $data_min");
+      }
+    }
+    {
+      my $data_max = _max(@$want);
+      my $values_max = $seq->values_max;
+      if (defined $values_max && $values_max != $data_max) {
+        $good = 0;
+        MyTestHelpers::diag ("bad: $name values_max $values_max not seen in data, only $data_max");
+      }
+    }
   }
 
   $total_checks++;
+  # MyTestHelpers::diag ("done");
 }
 
 #------------------------------------------------------------------------------
@@ -358,77 +411,65 @@ sub check_class {
 #------------------------------------------------------------------------------
 # duplicates or uncatalogued
 
-check_class ('A000004', 'Math::NumSeq::Multiples',
-             [ multiples => 0 ]);
-
-check_class ('A000004', 'Math::NumSeq::ReverseAdd',
-             [ radix => 2, start => 0 ]);
-check_class ('A000004', 'Math::NumSeq::ReverseAdd',
-             [ radix => 9, start => 0 ]);
-
-check_class ('A000120', 'Math::NumSeq::DigitSum',
-             [ radix => 2 ]);
-check_class ('A000120', 'Math::NumSeq::DigitSum',
-             [ radix => 2, power => 3 ]);
 
 # check_class ('A010701',
 #              'Math::NumSeq::FractionDigits',
 #              [ fraction => '10/3', radix => 10 ]);
 
-check_class ('A000217', # triangular numbers
-             'Math::NumSeq::Polygonal',
-             [ polygonal => 3 ]);
-check_class ('A000217', # triangular numbers
-             'Math::NumSeq::Polygonal',
-             [ polygonal => 3, pairs => 'second' ]);
-check_class ('A000290', # squares
-             'Math::NumSeq::Polygonal',
-             [ polygonal => 4 ]);
-check_class ('A000290', # squares
-             'Math::NumSeq::Polygonal',
-             [ polygonal => 4, pairs => 'average' ]);
-check_class ('A000217', # hexagonal both are triangular numbers
-             'Math::NumSeq::Polygonal',
-             [ polygonal => 6, pairs => 'both' ]);
-
 # check_class ('A010701', 'Math::NumSeq::FractionDigits',
 #              [ fraction => '10/3' ]);
 
-check_class ('A005843', 'Math::NumSeq::Multiples',
-             [ multiples => 2 ]);
 
-check_class ('A000004', 'Math::NumSeq::Modulo',
-             [ modulus => 1 ]);
+#------------------------------------------------------------------------------
+# OEIS-Other vs files
 
-check_class ('A000027', 'Math::NumSeq::HappyNumbers',
-             [ radix => 2 ]);
+{
+  system("perl ../ns/tools/make-oeis-catalogue.pl --module=TempOther --other=only") == 0
+    or die;
+  require 'lib/Math/NumSeq/OEIS/Catalogue/Plugin/TempOther.pm';
+  unlink  'lib/Math/NumSeq/OEIS/Catalogue/Plugin/TempOther.pm' or die;
+
+  MyTestHelpers::diag ("\"Other\" uncatalogued sequences:");
+  my $aref = Math::NumSeq::OEIS::Catalogue::Plugin::TempOther::info_arrayref();
+  foreach my $info (@$aref) {
+    ### $info
+    check_class ($info->{'anum'},
+                 $info->{'class'},
+                 $info->{'parameters'});
+  }
+  MyTestHelpers::diag ("");
+}
+
 
 #------------------------------------------------------------------------------
 # OEIS-Catalogue generated vs files
 
-for (my $anum = Math::NumSeq::OEIS::Catalogue->anum_first;  #  'A007770';
-     defined $anum;
-     $anum = Math::NumSeq::OEIS::Catalogue->anum_after($anum)) {
-  ### $anum
+{
+  MyTestHelpers::diag ("Catalogued sequences:");
+  for (my $anum = Math::NumSeq::OEIS::Catalogue->anum_first;  #  'A007770';
+       defined $anum;
+       $anum = Math::NumSeq::OEIS::Catalogue->anum_after($anum)) {
+    ### $anum
 
-  my $info = Math::NumSeq::OEIS::Catalogue->anum_to_info($anum);
-  if (! $info) {
-    $good = 0;
-    MyTestHelpers::diag ("bad: $anum");
-    MyTestHelpers::diag ("info false: ",$info);
-    next;
-  }
-  if ($info->{'class'} eq 'Math::NumSeq::OEIS::File') {
-    next;
-  }
-  ### $info
+    my $info = Math::NumSeq::OEIS::Catalogue->anum_to_info($anum);
+    if (! $info) {
+      $good = 0;
+      MyTestHelpers::diag ("bad: $anum");
+      MyTestHelpers::diag ("info false: ",$info);
+      next;
+    }
+    if ($info->{'class'} eq 'Math::NumSeq::OEIS::File') {
+      next;
+    }
+    ### $info
 
-  check_class ($info->{'anum'},
-               $info->{'class'},
-               $info->{'parameters'});
+    check_class ($info->{'anum'},
+                 $info->{'class'},
+                 $info->{'parameters'});
+  }
 }
 
 MyTestHelpers::diag ("total checks $total_checks");
-$good = 1;
 ok ($good);
+
 exit 0;

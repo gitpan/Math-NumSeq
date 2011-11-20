@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 15;
+$VERSION = 16;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
@@ -56,9 +56,15 @@ use Math::NumSeq::Base::Digits;
 #    A122065 start 74169
 #
 my @oeis_anum;
-$oeis_anum[2] = 'A000027'; # all integers 1 upwards, everything happy in base 2
+$oeis_anum[2] = 'A000027'; # 1,2,3,4, everything happy in base 2
+# OEIS-Other: A000027 radix=2
+
+$oeis_anum[4] = 'A000027'; # 1,2,3,4, everything happy in base 4
+# OEIS-Other: A000027 radix=4
+
 $oeis_anum[10] = 'A007770';
 # OEIS-Catalogue: A007770 radix=10
+
 sub oeis_anum {
   my ($self) = @_;
   return $oeis_anum[$self->{'radix'}];
@@ -140,7 +146,7 @@ Create and return a new sequence object.
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> is a happy number, meaning repeated sum of squares
-of digits reaches 1.
+of its digits reaches 1.
 
 =back
 

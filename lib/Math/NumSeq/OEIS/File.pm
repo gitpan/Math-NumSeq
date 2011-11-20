@@ -24,13 +24,13 @@ use POSIX ();
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 15;
+$VERSION = 16;
 
 use Math::NumSeq::Base::Array;
 @ISA = ('Math::NumSeq::Base::Array');
 
 use vars '$VERSION';
-$VERSION = 15;
+$VERSION = 16;
 
 # uncomment this to run the ### lines
 #use Devel::Comments;
@@ -113,6 +113,15 @@ sub _read_values {
     my $filename = File::Spec->catfile (oeis_dir(), $basefile);
     ### $basefile
     ### $filename
+
+    # a003849.txt has replication level words rather than the individual
+    # sequence values
+    next if $basefile eq 'a003849.txt';
+
+    # a027750.txt is unflattened divisors
+    next if $basefile eq 'a027750.txt';
+
+
     if (! open FH, "< $filename") {
       ### no bfile: $!
       next;

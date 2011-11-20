@@ -21,7 +21,7 @@ use strict;
 use POSIX 'ceil';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 15;
+$VERSION = 16;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -56,6 +56,8 @@ my %oeis_anum = (0 => 'A000004',  # 0,  all zeros
 
                  1  => 'A001477',  # 1,  integers 0,1,2,...
                  2  => 'A005843',  # 2 even 0,2,4,...
+                 # OEIS-Other: A001477 multiples=1
+                 # OEIS-Other: A005843 multiples=2
 
                  3  => 'A008585',  # 3 starting from i=0
                  4  => 'A008586',  # 4 starting from i=0
@@ -134,7 +136,7 @@ See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 =over 4
 
-=item C<$seq = Math::NumSeq::Multiples-E<gt>new (multiples =E<gt> $number)>
+=item C<$seq = Math::NumSeq::Multiples-E<gt>new (multiples =E<gt> $num)>
 
 Create and return a new sequence object.
 
@@ -144,7 +146,7 @@ Return C<$multiples * $i>.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value> is an integer multiple of the given C<$multiples>.
+Return true if C<$value> is an integer multiple of the given C<multiples>.
 
 =back
 

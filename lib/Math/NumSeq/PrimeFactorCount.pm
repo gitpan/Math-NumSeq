@@ -21,7 +21,7 @@ use strict;
 use List::Util 'min', 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 15;
+$VERSION = 16;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -39,7 +39,7 @@ use Math::NumSeq;
 use constant description => Math::NumSeq::__('Count of prime factors.');
 use constant characteristic_count => 1;
 use constant characteristic_monotonic => 0;
-use constant values_min => 1;
+use constant values_min => 0;
 use constant i_start => 1;
 
 use constant parameter_info_array =>
@@ -217,8 +217,8 @@ Return the number of prime factors in C<$i>.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value E<gt>= 0>, being possible counts of prime factors
-which can occur in the sequence.
+Return true if C<$value> occurs in the sequence, which means simply C<$value
+E<gt>= 0>.
 
 =back
 

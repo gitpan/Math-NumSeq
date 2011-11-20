@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 15;
+$VERSION = 16;
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
 
@@ -58,6 +58,9 @@ BEGIN {
 
   $oeis_anum[5] = 'A110592';  # 5
   # OEIS-Catalogue: A110592 radix=5
+
+  $oeis_anum[10] = 'A055642';  # 10
+  # OEIS-Catalogue: A055642 radix=10
 }
 sub oeis_anum {
   my ($self) = @_;
@@ -142,7 +145,8 @@ Return length in digits of C<$i>.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value E<gt>= 1>, all lengths being 1 or more.
+Return true if C<$value> occurs as a digit length.  This means simply
+C<$value E<gt>= 1> since lengths are 1 or more.
 
 =back
 

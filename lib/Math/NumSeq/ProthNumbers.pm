@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 15;
+$VERSION = 16;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -159,7 +159,7 @@ Return the C<$i>'th Proth number.  The first number is 3 at C<$i==1>.
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> is a Proth number, meaning is equal to k*2^n+1 for
-some k and n.
+some k and n with k E<lt> 2^n.
 
 =back
 

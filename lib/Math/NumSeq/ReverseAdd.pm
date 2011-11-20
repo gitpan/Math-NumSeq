@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 15;
+$VERSION = 16;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -83,6 +83,9 @@ $oeis_anum{'2'}->{'537'} = 'A077076';
 $oeis_anum{'2'}->{'775'} = 'A077077';
 # OEIS-Catalogue: A077077 radix=2 start=775
 
+$oeis_anum{'3'}->{'1'} = 'A035523';
+# OEIS-Catalogue: A035523 radix=3 start=1
+
 $oeis_anum{'4'}->{'1'} = 'A035524';
 # OEIS-Catalogue: A035524 radix=4 start=1
 $oeis_anum{'4'}->{'290'} = 'A075299';
@@ -102,6 +105,12 @@ $oeis_anum{'10'}->{'1'} = 'A001127';
 # OEIS-Catalogue: A001127 start=1
 $oeis_anum{'10'}->{'3'} = 'A033648';
 # OEIS-Catalogue: A033648 start=3
+$oeis_anum{'10'}->{'5'} = 'A033649';
+# OEIS-Catalogue: A033649 start=5
+$oeis_anum{'10'}->{'7'} = 'A033650';
+# OEIS-Catalogue: A033650 start=7
+$oeis_anum{'10'}->{'9'} = 'A033651';
+# OEIS-Catalogue: A033651 start=9
 $oeis_anum{'10'}->{'89'} = 'A033670';
 # OEIS-Catalogue: A033670 start=89
 $oeis_anum{'10'}->{'196'} = 'A006960';
@@ -112,7 +121,13 @@ $oeis_anum{'10'}->{'196'} = 'A006960';
 sub oeis_anum {
   my ($self) = @_;
   my $start = $self->{'start'};
+
   if ($start == 0) { return 'A000004'; } # all zeros
+  # some sample radixes to exercise
+  # OEIS-Other: A000004 radix=2 start=0
+  # OEIS-Other: A000004 radix=9 start=0
+
+
   return $oeis_anum{$self->{'radix'}}->{$start};
 }
 #------------------------------------------------------------------------------

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 15;
+$VERSION = 16;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -29,7 +29,6 @@ use Math::NumSeq;
 
 # use constant name => Math::NumSeq::__('All Integers');
 use constant description => Math::NumSeq::__('All integers 0,1,2,3,etc.');
-use constant values_min => 0;
 use constant characteristic_monotonic => 2;
 
 # experimental i_start to get natural numbers ... probably not very important
@@ -43,6 +42,10 @@ sub oeis_anum {
   return ($i_start == 0   ? 'A001477'
           : $i_start == 1 ? 'A000027'
           : undef);
+}
+sub values_min {
+  my ($self) = @_;
+  return $self->i_start;
 }
 
 sub rewind {
@@ -93,7 +96,7 @@ See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 =over 4
 
-=item C<$seq = Math::NumSeq::All-E<gt>new (key=E<gt>value,...)>
+=item C<$seq = Math::NumSeq::All-E<gt>new ()>
 
 Create and return a new sequence object.
 

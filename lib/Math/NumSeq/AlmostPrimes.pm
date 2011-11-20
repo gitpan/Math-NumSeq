@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 15;
+$VERSION = 16;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -28,7 +28,7 @@ use Math::NumSeq::Primes;
 use Math::NumSeq::Primorials;
 
 # uncomment this to run the ### lines
-#use Devel::Comments;
+#use Smart::Comments;
 
 use constant description => Math::NumSeq::__('Products of a fixed number of primes, default the semi-primes, 4, 6, 9, 10, 14 15, etc with just two prime factors P*Q.');
 use constant characteristic_monotonic => 2;
@@ -55,48 +55,48 @@ use constant parameter_info_array =>
 # cf A068318 - sum of the prime factors of the nth semiprime
 #
 my %oeis_anum
-  = (repeated
-     => [ undef,
-          undef,
-          'A001358',  # 2 with repeats
-          'A014612',  # 3 with repeats
-          'A014613',  # 4 with repeats
-          'A014614',  # 5 with repeats
-          'A046306',  # 6 with repeats
-          'A046308',  # 7 with repeats
-          'A046310',  # 8 with repeats
-          'A046312',  # 9 with repeats
-          'A046314',  # 10 with repeats
-          'A069272',  # 11 with repeats
-          'A069273',  # 12 with repeats
-          'A069274',  # 13 with repeats
-          'A069275',  # 14 with repeats
-          'A069276',  # 15 with repeats
-          'A069277',  # 16 with repeats
-          'A069278',  # 17 with repeats
-          'A069279',  # 18 with repeats
-          'A069280',  # 19 with repeats
-          'A069281',  # 20 with repeats
-          # OEIS-Catalogue: A001358
-          # OEIS-Catalogue: A014612 factor_count=3
-          # OEIS-Catalogue: A014613 factor_count=4
-          # OEIS-Catalogue: A014614 factor_count=5
-          # OEIS-Catalogue: A046306 factor_count=6
-          # OEIS-Catalogue: A046308 factor_count=7
-          # OEIS-Catalogue: A046310 factor_count=8
-          # OEIS-Catalogue: A046312 factor_count=9
-          # OEIS-Catalogue: A046314 factor_count=10
-          # OEIS-Catalogue: A069272 factor_count=11
-          # OEIS-Catalogue: A069273 factor_count=12
-          # OEIS-Catalogue: A069274 factor_count=13
-          # OEIS-Catalogue: A069275 factor_count=14
-          # OEIS-Catalogue: A069276 factor_count=15
-          # OEIS-Catalogue: A069277 factor_count=16
-          # OEIS-Catalogue: A069278 factor_count=17
-          # OEIS-Catalogue: A069279 factor_count=18
-          # OEIS-Catalogue: A069280 factor_count=19
-          # OEIS-Catalogue: A069281 factor_count=20
-        ],
+  = (repeated =>
+     [ undef,
+       undef,
+       'A001358',  # 2 with repeats
+       'A014612',  # 3 with repeats
+       'A014613',  # 4 with repeats
+       'A014614',  # 5 with repeats
+       'A046306',  # 6 with repeats
+       'A046308',  # 7 with repeats
+       'A046310',  # 8 with repeats
+       'A046312',  # 9 with repeats
+       'A046314',  # 10 with repeats
+       'A069272',  # 11 with repeats
+       'A069273',  # 12 with repeats
+       'A069274',  # 13 with repeats
+       'A069275',  # 14 with repeats
+       'A069276',  # 15 with repeats
+       'A069277',  # 16 with repeats
+       'A069278',  # 17 with repeats
+       'A069279',  # 18 with repeats
+       'A069280',  # 19 with repeats
+       'A069281',  # 20 with repeats
+       # OEIS-Catalogue: A001358
+       # OEIS-Catalogue: A014612 factor_count=3
+       # OEIS-Catalogue: A014613 factor_count=4
+       # OEIS-Catalogue: A014614 factor_count=5
+       # OEIS-Catalogue: A046306 factor_count=6
+       # OEIS-Catalogue: A046308 factor_count=7
+       # OEIS-Catalogue: A046310 factor_count=8
+       # OEIS-Catalogue: A046312 factor_count=9
+       # OEIS-Catalogue: A046314 factor_count=10
+       # OEIS-Catalogue: A069272 factor_count=11
+       # OEIS-Catalogue: A069273 factor_count=12
+       # OEIS-Catalogue: A069274 factor_count=13
+       # OEIS-Catalogue: A069275 factor_count=14
+       # OEIS-Catalogue: A069276 factor_count=15
+       # OEIS-Catalogue: A069277 factor_count=16
+       # OEIS-Catalogue: A069278 factor_count=17
+       # OEIS-Catalogue: A069279 factor_count=18
+       # OEIS-Catalogue: A069280 factor_count=19
+       # OEIS-Catalogue: A069281 factor_count=20
+     ],
      distinct =>
      [ undef,
        undef,
@@ -109,13 +109,13 @@ my %oeis_anum
        'A123322', # 8 distinct primes
        'A115343', # 9 distinct primes
        # OEIS-Catalogue: A006881 multiplicity=distinct
-       # OEIS-Catalogue: A007304 factor_count=3 multiplicity=distinct
-       # OEIS-Catalogue: A046386 factor_count=4 multiplicity=distinct
-       # OEIS-Catalogue: A046387 factor_count=5 multiplicity=distinct
-       # OEIS-Catalogue: A067885 factor_count=6 multiplicity=distinct
-       # OEIS-Catalogue: A123321 factor_count=7 multiplicity=distinct
-       # OEIS-Catalogue: A123322 factor_count=8 multiplicity=distinct
-       # OEIS-Catalogue: A115343 factor_count=9 multiplicity=distinct
+       # OEIS-Catalogue: A007304 multiplicity=distinct factor_count=3
+       # OEIS-Catalogue: A046386 multiplicity=distinct factor_count=4
+       # OEIS-Catalogue: A046387 multiplicity=distinct factor_count=5
+       # OEIS-Catalogue: A067885 multiplicity=distinct factor_count=6
+       # OEIS-Catalogue: A123321 multiplicity=distinct factor_count=7
+       # OEIS-Catalogue: A123322 multiplicity=distinct factor_count=8
+       # OEIS-Catalogue: A115343 multiplicity=distinct factor_count=9
      ],
     );
 sub oeis_anum {
@@ -155,7 +155,7 @@ sub next {
               ($self->{'done'} = shift @$pending));
     }
 
-    ### refill pending ...
+    ### refill pending array ...
 
     my $factor_count = $self->{'factor_count'};
     my $distinct = ($self->{'multiplicity'} eq 'distinct');
@@ -165,9 +165,10 @@ sub next {
     my $hi = $self->{'hi'} = ($self->{'hi'} == 0
                               ? 500 + $self->values_min
                               : $self->{'hi'} * 2);
-    my $primes_hi = int ($hi / ($distinct
-                                ? Math::NumSeq::Primorials->ith($factor_count-1)
-                                : 2 ** ($factor_count-1)));
+    my $primes_hi
+      = int ($hi / ($distinct
+                    ? Math::NumSeq::Primorials->ith($factor_count-1)
+                    : 2 ** ($factor_count-1)));
     ### $hi
     ### $primes_hi
 
@@ -177,84 +178,114 @@ sub next {
       ### not enough primes, go bigger ...
       next;
     }
+    ### primes count: scalar(@primes)
 
-    my @prev_pos = ($distinct
-                    ? (0 .. $factor_count-2)
-                    : ((0) x ($factor_count-1)));
-    my @prev_prod;
-    my $prod = 1;
-    foreach my $k (0 .. $#prev_pos) {
-      $prev_prod[$k] = ($prod *= $primes[$prev_pos[$k]]);
-    }
-    ### @prev_pos
-    ### @prev_prod
 
-    my $pos = $prev_pos[-1] + $distinct;
-    if ($prod * $primes[$pos] > $hi) {
-      ### minimum product past hi, go bigger ...
-      next;
-    }
+    # This is an iterative array based descent so as not to hit the "deep
+    # recursion" warnings if factor_count is 100 or more.  Though quite how
+    # well such a large count works in practice is another matter.  Ought to
+    # break out bignums for 2^100 etc to keep accuracy.
+    #
+    # The @any flags track whether any products were added by the descent.
+    # It allows big chunks of the descent to be pruned back at a low depth
+    # when the products get close to $hi.
 
-    @$pending = ();
+    my @prod = (1);
+    my @upto = (-1);
+    my @any;
 
+    my $depth = 0;
   OUTER: for (;;) {
-      ### outer ...
-      ### $pos
-      ### pos prime: $primes[$pos]
-      ### prev_prod: $prev_prod[-1]
-      ### this prod: $prev_prod[-1] * ($primes[$pos]||0)
-
-      if ($pos <= $#primes
-          && (($prod = $prev_prod[-1] * $primes[$pos]) <= $hi)) {
-        ### found: $prod
-        if ($prod > $done) {
-          push @$pending, $prod;
+      my $prod = $prod[$depth];
+      if ($depth >= $factor_count-1) {
+        ### lowest level: "prod=$prod and ".($upto[$depth]+1)." to $#primes"
+        my $prev_len = @$pending;
+        foreach my $i ($upto[$depth]+1 .. $#primes) {
+          my $new_prod = $prod * $primes[$i];
+          ### $new_prod
+          if ($new_prod > $hi) {
+            last;
+          }
+          if ($new_prod > $done) {
+            push @$pending, $new_prod;
+          }
         }
-        if (++$pos < @primes) {
-          next;
+        ### pushed: "was $prev_len  count ".(@$pending-$prev_len)."  ".((@$pending>$prev_len) && $pending->[$prev_len])." to ".((@$pending>$prev_len) && $pending->[-1])
+        ### pending: @$pending
+
+        if ($depth > 0) {
+          $any[$depth] ||= (@$pending != $prev_len);
+        }
+
+      } else {
+        ### increment at: "depth=$depth"
+        my $upto = ++$upto[$depth];
+        if ($upto <= $#primes) {
+          $prod *= $primes[$upto];
+          if ($prod < $hi) {
+            ### descend to: "upto=".($upto+$distinct)." prod=$prod"
+            $depth++;
+            $prod[$depth] = $prod;
+            $upto[$depth] = $upto + $distinct - 1;
+            $any[$depth] = 0;
+            next;
+          }
         }
       }
 
       ### backtrack ...
-      ### $prod
-      ### @prev_pos
-      ### @prev_prod
-
-      my $k = $#prev_pos;
       for (;;) {
-        $pos = ++$prev_pos[$k];
-        ### $k
-        ### increment to pos: $pos
-
-        if ($pos > $#primes) {
-          ### pos past primes list ...
-          if (--$k < 0) { last OUTER; }
-          next;
+        if (--$depth < 0) {
+          last OUTER;
         }
-        $prod = $primes[$pos];
-        if ($k > 0) {
-          $prod *= $prev_prod[$k-1];
-          if ($prod > $hi) {
-            ### prod bigger than hi ...
-            if (--$k < 0) { last OUTER; }
-            next;
-          }
+        $any[$depth] ||= $any[$depth+1];
+        if ($any[$depth]) {
+          ### continue at this depth ...
+          last;
+        } else {
+          ### not any, backtrack further ...
         }
-
-        ### forward ...
-        ### set prev_prod: $prod
-
-        $prev_prod[$k] = $prod;
-        $pos += $distinct;
-        if (++$k >= @prev_prod) {
-          ### outer with prod: $prod
-          next OUTER;
-        }
-        $prev_pos[$k] = $pos - 1;
-        ### new prev_pos: $prev_pos[$k]
-        ### which is prime: $primes[$prev_pos[$k]]
       }
     }
+
+
+    # my $descend;
+    # $descend = sub {
+    #   my ($prod, $start, $depth) = @_;
+    #   ### descend: "$prod $start $depth"
+    #   my $any = 0;
+    #   if ($depth > 0) {
+    #     foreach my $i ($start .. $#primes) {
+    #       my $new_prod = $prod * $primes[$i];
+    #       if ($new_prod > $hi) {
+    #         last;
+    #       }
+    #       if (! &$descend ($new_prod,
+    #                        $distinct ? $i+1 : $i,
+    #                        $depth-1)) {
+    #         ### nothing added, break out ...
+    #         last;
+    #       }
+    #       $any = 1;
+    #     }
+    #   } else {
+    #     foreach my $i ($start .. $#primes) {
+    #       my $new_prod = $prod * $primes[$i];
+    #       if ($new_prod > $hi) {
+    #         last;
+    #       }
+    #       $any = 1;
+    #       if ($new_prod > $done) {
+    #         push @$pending, $new_prod;
+    #       }
+    #     }
+    #   }
+    #   ### $any
+    #   return $any;
+    # };
+    # &$descend (1, 0, $factor_count-1);
+
+
     @$pending = sort {$a<=>$b} @$pending;
   }
 }

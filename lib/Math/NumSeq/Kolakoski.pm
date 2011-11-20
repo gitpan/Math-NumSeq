@@ -23,7 +23,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 15;
+$VERSION = 16;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -49,6 +49,7 @@ use constant i_start => 1;
 #    A013949 substitute
 #    A156077 digits ...
 #    A078929 A(n+k) = A(n)
+#    A081592 - runs of n many 1 or 2
 #
 # A156253 kol supp
 # A064353 kol 1/3

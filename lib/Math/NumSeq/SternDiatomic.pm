@@ -28,7 +28,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 15;
+$VERSION = 16;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -83,7 +83,7 @@ sub pred {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq radix
+=for stopwords Ryde Math-NumSeq radix Moritz
 
 =head1 NAME
 
@@ -97,8 +97,18 @@ Math::NumSeq::SternDiatomic -- Stern's diatomic sequence
 
 =head1 DESCRIPTION
 
-The count of how many of a given digit is in C<$i> when written out in a
-given radix.  The default is to count how many 9s in decimal.
+Moritz Stern's diatomic sequence 0,1,1,2,1,3,2,3,etc.  It's constructed by
+successive levels as D(2*i)=D(i) and D(2*i+1)=D(i+1), so effectively the
+sequence is extended by interleaving the previous level with sums of
+adjacent terms,
+
+   1,            i=0
+   1,2,          i=1,2
+   1,3,2,3,      i=3,4,5,6
+
+The last row is a copy of 1,2 interleaving the sums 1+2 and 2+1.  For the
+latter it's the end 2 at i=2 and then the 1 at the start of the next row
+i=3.
 
 =head1 FUNCTIONS
 
@@ -112,7 +122,7 @@ Create and return a new sequence object.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value> occurs as value in the sequence, which means simply
+Return true if C<$value> occurs in the sequence, which means simply
 C<$value>=0>.
 
 =back

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 15;
+$VERSION = 16;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -69,7 +69,7 @@ sub pred {
   my ($self, $value) = @_;
   ### Sparse pred(): $value
   if (_is_infinite($value)) {
-    return $value;
+    return 0;
   }
   while ($self->{'pred_value'} < $value
          || $self->{'pred_value'} < 10) {

@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 15;
+$VERSION = 16;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -133,8 +133,8 @@ Return the product of the digits of C<$i>.
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> is the product of some set of digits.  This means
-its factors (prime factors) are all less than the radix, since anything
-bigger cannot occur.
+its factors (prime factors) are all less than the radix, since nothing
+bigger can occur.
 
 =back
 

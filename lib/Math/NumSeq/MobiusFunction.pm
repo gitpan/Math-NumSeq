@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 15;
+$VERSION = 16;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -206,7 +206,8 @@ factors of C<$i>.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value> is 1, 0 or -1.
+Return true if C<$value> occurs in the sequence, which means simply 1, 0
+or -1.
 
 =back
 

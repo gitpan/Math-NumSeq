@@ -22,7 +22,7 @@ use strict;
 use warnings;
 use POSIX;
 
-#use Devel::Comments;
+#use Smart::Comments;
 
 use lib 'devel/lib';
 
@@ -54,7 +54,6 @@ $|=1;
   # $values_class = $gen->values_class('Odd');
   # $values_class = $gen->values_class('Factorials');
   # $values_class = $gen->values_class('SumTwoSquares');
-  # $values_class = $gen->values_class('PlanePathCoord');
   # $values_class = $gen->values_class('Palindromes');
   # # $values_class = $gen->values_class('MathSequence');
   # $values_class = $gen->values_class('DigitLength');
@@ -66,92 +65,109 @@ $|=1;
   # $values_class = $gen->values_class('ProthNumbers');
   # $values_class = $gen->values_class('DigitSumModulo');
   # $values_class = $gen->values_class('PrimeFactorCount');
-  # $values_class = $gen->values_class('RadixWithoutDigit');
   # $values_class = $gen->values_class('ReverseAddSteps');
   # $values_class = $gen->values_class('Harshad');
   # $values_class = $gen->values_class('TotientPerfect');
   # $values_class = $gen->values_class('TotientStepsSum');
   # $values_class = $gen->values_class('FractionDigits');
-  # $values_class = $gen->values_class('RepdigitBase');
   require Math::NumSeq::DigitLength;
   $values_class = 'Math::NumSeq::OEIS';
   $values_class = 'Math::NumSeq::SqrtDigits';
   $values_class = 'Math::NumSeq::DigitLength';
   $values_class = 'Math::NumSeq::DigitProduct';
   $values_class = 'App::MathImage::NumSeq::UndulatingNumbers';
-  $values_class = 'App::MathImage::NumSeq::SternDiatomic';
-  $values_class = 'App::MathImage::NumSeq::CunninghamChain';
   $values_class = 'App::MathImage::NumSeq::MobiusFunction';
   $values_class = 'Math::NumSeq::TwinPrimes';
-  $values_class = 'App::MathImage::NumSeq::PrimeFactorCount';
   $values_class = 'Math::NumSeq::NumAronson';
   $values_class = 'Math::NumSeq::Expression';
   $values_class = 'Math::NumSeq::ReverseAdd';
   $values_class = 'App::MathImage::NumSeq::HofstadterDiff';
-  $values_class = 'App::MathImage::NumSeq::ReRound';
   $values_class = 'App::MathImage::NumSeq::Pell';
   $values_class = 'Math::NumSeq::Factorials';
-  $values_class = 'Math::NumSeq::Polygonal';
   $values_class = 'App::MathImage::NumSeq::ReverseAddSteps';
   $values_class = 'App::MathImage::NumSeq::KlarnerRado';
   $values_class = 'App::MathImage::NumSeq::PlanePath';
   $values_class = 'App::MathImage::NumSeq::DigitCountLow';
   $values_class = 'App::MathImage::NumSeq::DivisorCount';
   $values_class = 'Math::NumSeq::AsciiSelf';
-  $values_class = 'App::MathImage::NumSeq::LiouvilleFunction';
+  $values_class = 'Math::NumSeq::LiouvilleFunction';
   $values_class = 'Math::NumSeq::DigitCount';
   $values_class = 'App::MathImage::NumSeq::JugglerSteps';
-  $values_class = 'App::MathImage::NumSeq::Kolakoski';
+  $values_class = 'Math::NumSeq::Kolakoski';
   $values_class = 'App::MathImage::NumSeq::GolombSequence';
   $values_class = 'Math::NumSeq::Primorials';
-  $values_class = 'App::MathImage::NumSeq::SemiPrimes';
-  $values_class = 'App::MathImage::NumSeq::MephistoWaltz';
+  $values_class = 'Math::NumSeq::MephistoWaltz';
   $values_class = 'App::MathImage::NumSeq::UlamSequence';
   $values_class = 'Math::NumSeq::Fibonacci';
   $values_class = 'App::MathImage::NumSeq::ReplicateDigits';
   $values_class = 'App::MathImage::NumSeq::HappySteps';
-  $values_class = 'Math::NumSeq::Fibbinary';
-  $values_class = 'Math::NumSeq::FibonacciWord';
-  $values_class = 'Math::NumSeq::PlanePathCoord';
   $values_class = 'App::MathImage::NumSeq::SumTwoSquares';
+  $values_class = 'Math::NumSeq::Polygonal';
+  $values_class = 'App::MathImage::NumSeq::CunninghamChain';
+  $values_class = 'App::MathImage::NumSeq::CunninghamPrimes';
+  $values_class = 'Math::NumSeq::RadixWithoutDigit';
+  $values_class = 'Math::NumSeq::FibonacciWord';
+  $values_class = 'App::MathImage::NumSeq::FibbinaryBitCount';
+  $values_class = 'Math::NumSeq::Fibbinary';
+  $values_class = 'App::MathImage::NumSeq::ReRound';
+  $values_class = 'Math::NumSeq::AlmostPrimes';
+  $values_class = 'App::MathImage::NumSeq::DigitMiddle';
+  $values_class = 'Math::NumSeq::PrimeFactorCount';
+  $values_class = 'Math::NumSeq::PlanePathCoord';
+  $values_class = 'Math::NumSeq::SternDiatomic';
+  $values_class = 'App::MathImage::NumSeq::RepdigitRadix';
+  $values_class = 'Math::NumSeq::SqrtEngel';
+  $values_class = 'App::MathImage::NumSeq::Runs';
 
   eval "require $values_class; 1" or die $@;
   print Math::NumSeq::DigitLength->VERSION,"\n";
   my $seq = $values_class->new (
-                                # planepath => 'HilbertCurve',
-                                # planepath => 'RationalsTree,tree_type=Bird',
+                                runs_type => 'rep3',
+                                #sqrt => 3,
+                                # factor_count => 8,
+                                # multiplicity => 'distinct',
+                                #
+                                # round => 'lower',
+                                # radix => 10,
+                                #
+                                # length => 2,
+                                # which => 'last',
+
+                                # polygonal => 6,
+                                # pairs => 'average',
+
+                                # planepath => 'SquareSpiral',
+                                # coordinate_type => 'AbsDiff',
+                                #planepath => 'CoprimeColumns',
+                                #coordinate_type => 'DiffXY',
+                                #i_start => 1,
+                                #planepath => 'Diagonals',
+                                # planepath => 'ZOrderCurve,radix=10',
+                                # i_start => 1,
+                                # planepath => 'PythagoreanTree,coordinates=BA',
                                 # planepath=>'RationalsTree,tree_type=CW',
-                                # coordinate_type => 'X',
-                                planepath => 'SierpinskiTriangle',
-                                coordinate_type => 'Y',
+                                # planepath => 'DivisibleColumns,divisor_type=proper',
 
-                                distinct => 1,
-                                including_zero => 1,
-                                factor_count => 2,
-                                # divisors_type => 'proper',
-                                # algorithm_type => '1/2-3/2',
-                                # algorithm_type => '1/3-3/2',
-                                start => 1,
-                                length => 1,
-                                fraction => '1/975',
-                                polygonal => 8,
-                                pairs => 'second',
-                                lo => 0,
-                                hi => 10, # 200*$rep,
-                                radix => 10,
+                                # including_zero => 1,
+                                # # divisors_type => 'proper',
+                                # # algorithm_type => '1/2-3/2',
+                                # # algorithm_type => '1/3-3/2',
+                                # start => 1,
+                                # fraction => '1/975',
+                                # lo => 0,
+                                # hi => 10, # 200*$rep,
                                 # digit => 1,
-                                sqrt => 2,
-                                where => 'low',
-                                # expression => 'z=3; z*x^2 + 3*x + 2',
-                                # expression => 'x^2 + 3*x + 2',
-                                # expression => 'atan(x)',
-                                expression => '9*i*i',
-                                # expression_evaluator => 'Perl',
-                                oeis_anum  => 'A000396',
-                                multiplicity => 'distinct',
+                                # where => 'low',
+                                # # expression => 'z=3; z*x^2 + 3*x + 2',
+                                # # expression => 'x^2 + 3*x + 2',
+                                # # expression => 'atan(x)',
+                                # expression => '9*i*i',
+                                # # expression_evaluator => 'Perl',
+                                # oeis_anum  => 'A000396',
                                );
-  my $hi = 20;
+  my $hi = 78;
 
+  print "i_start ",$seq->i_start,"\n";
   print "anum ",($seq->oeis_anum//'[undef]'),"\n";
   print "values_min ",($seq->values_min//'[undef]'),"\n";
   print "values_max ",($seq->values_max//'[undef]'),"\n";
@@ -203,6 +219,7 @@ $|=1;
           print " oops, pred($value) false\n";
         }
         unless ($seq->characteristic('count')
+                || $seq->characteristic('smaller')
                 || $value - $pred_upto > 1000) {
           while ($pred_upto < $value) {
             if ($seq->pred($pred_upto)) {
@@ -274,6 +291,45 @@ $|=1;
     }
     print "\n";
   }
+
+  foreach my $method ('ith','pred') {
+    if ($seq->can($method)) {
+      require Data::Float;
+      print "$method(pos_infinity): ";
+      print $seq->$method(Data::Float::pos_infinity())//'undef',"\n";
+      print "$method(neg_infinity): ";
+      print $seq->$method(Data::Float::neg_infinity())//'undef',"\n";
+      {
+        print "$method(nan): ";
+        my $pred = $seq->$method(Data::Float::nan());
+        print $pred//'undef',"\n";
+        if ($method eq 'pred' && $pred) {
+          print "     **** oops\n";
+        }
+        # if ($method eq 'ith' && defined $pred) {
+        #   print "     **** maybe oops\n";
+        # }
+      }
+
+      require Math::BigFloat;
+      print "$method(biginf): ";
+      print $seq->$method(Math::BigFloat->binf())//'undef',"\n";
+      print "$method(neg biginf): ";
+      print $seq->$method(Math::BigFloat->binf('-'))//'undef',"\n";
+      {
+        print "$method(bignan): ";
+        my $pred = $seq->$method(Math::BigFloat->bnan);
+        print $pred//'undef',"\n";
+        if ($method eq 'pred' && $pred) {
+          print "     **** oops\n";
+        }
+        if ($method eq 'ith' && defined $pred) {
+          print "     **** maybe oops\n";
+        }
+      }
+    }
+  }
+  print "done\n";
   exit 0;
 }
 

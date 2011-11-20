@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 15;
+$VERSION = 16;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -61,13 +61,25 @@ use constant parameter_info_array =>
 #------------------------------------------------------------------------------
 my %oeis_anum;
 
-# main generator Triangular.pm ... A000217 polygonal=3  pairs=first
-$oeis_anum{'first'}->[3]  = 'A000217';  # 3 triangular
-$oeis_anum{'second'}->[3] = 'A000217';  # triangular same as "first"
+# cf A008795 molien from naive interleaved unsorted "average" polygonal=3
+#
+$oeis_anum{'first'}->[3]   = 'A000217';  # 3 triangular
+$oeis_anum{'second'}->[3]  = 'A000217';  # triangular same as "first"
+$oeis_anum{'both'}->[3]    = 'A000217';  # no duplicates
+$oeis_anum{'average'}->[3] = 'A000217';  # first==second so average same
+# OEIS-Other: A000217 polygonal=3
+# OEIS-Other: A000217 polygonal=3 pairs=second
+# OEIS-Other: A000217 polygonal=3 pairs=both
+# OEIS-Other: A000217 polygonal=3 pairs=average
 
-# main generator Squares.pm    ... A000290 polygonal=4  pairs=first
 $oeis_anum{'first'}->[4]   = 'A000290'; # 4 squares
+$oeis_anum{'second'}->[4]  = 'A000290'; # squares, same as "first"
+$oeis_anum{'both'}->[4]    = 'A000290'; # no duplicates
 $oeis_anum{'average'}->[4] = 'A000290'; # squares, same as "first"
+# OEIS-Other: A000290 polygonal=4
+# OEIS-Other: A000290 polygonal=4 pairs=second
+# OEIS-Other: A000290 polygonal=4 pairs=both
+# OEIS-Other: A000290 polygonal=4 pairs=average
 
 $oeis_anum{'first'}->[5]  = 'A000326';   # 5 pentagonal
 $oeis_anum{'second'}->[5] = 'A005449';
@@ -81,6 +93,7 @@ $oeis_anum{'second'}->[6] = 'A014105';
 $oeis_anum{'both'}->[6]   = 'A000217';   # together triangular numbers
 # OEIS-Catalogue: A000384 polygonal=6  pairs=first
 # OEIS-Catalogue: A014105 polygonal=6  pairs=second
+# OEIS-Other:     A000217 polygonal=6  pairs=both
 
 $oeis_anum{'first'}->[7]  = 'A000566'; # 7 heptagonal
 $oeis_anum{'second'}->[7] = 'A147875'; # (5n-2)(n-1)/2
@@ -98,17 +111,31 @@ $oeis_anum{'both'}->[8]   = 'A001082'; # n(3n-4)/4 or (n-1)(3n+1)/4
 
 $oeis_anum{'first'}->[9]  = 'A001106'; # 9 nonagonal
 $oeis_anum{'second'}->[9] = 'A179986'; # 9 nonagonal second n*(7*n+5)/2
+$oeis_anum{'both'}->[9]   = 'A118277'; # 9 nonagonal "generalized"
 # OEIS-Catalogue: A001106 polygonal=9
 # OEIS-Catalogue: A179986 polygonal=9 pairs=second
+# OEIS-Catalogue: A118277 polygonal=9 pairs=both
 
-$oeis_anum{'first'}->[10]  =  'A001107'; # 10 decogaonal
+$oeis_anum{'first'}->[10]  = 'A001107'; # 10 decogaonal
+$oeis_anum{'second'}->[10] = 'A033954'; # 10 second n*(4*n+3)
+$oeis_anum{'both'}->[10]   = 'A074377'; # 10 both "generalized"
 # OEIS-Catalogue: A001107 polygonal=10
+# OEIS-Catalogue: A033954 polygonal=10 pairs=second
+# OEIS-Catalogue: A074377 polygonal=10 pairs=both
 
-$oeis_anum{'first'}->[11]  =  'A051682'; # 11 hendecagonal
+$oeis_anum{'first'}->[11]  = 'A051682'; # 11 hendecagonal
+$oeis_anum{'second'}->[11] = 'A062728'; # 11 second n*(9n+7)/2
+$oeis_anum{'both'}->[11]   = 'A195160'; # 11 generalized
 # OEIS-Catalogue: A051682 polygonal=11
+# OEIS-Catalogue: A062728 polygonal=11 pairs=second
+# OEIS-Catalogue: A195160 polygonal=11 pairs=both
 
-$oeis_anum{'first'}->[12]  =  'A051624'; # 12-gonal
+$oeis_anum{'first'}->[12]  = 'A051624'; # 12-gonal
+$oeis_anum{'second'}->[12] = 'A135705'; # 12-gonal second
+$oeis_anum{'both'}->[12]   = 'A195162'; # 12-gonal generalized
 # OEIS-Catalogue: A051624 polygonal=12
+# OEIS-Catalogue: A135705 polygonal=12 pairs=second
+# OEIS-Catalogue: A195162 polygonal=12 pairs=both
 
 # these in sequence ...
 $oeis_anum{'first'}->[13]  =  'A051865'; # 13 tridecagonal
@@ -136,8 +163,8 @@ $oeis_anum{'first'}->[24]  =  'A051876'; # 24
 # OEIS-Catalogue: A051875 polygonal=23   # 23
 # OEIS-Catalogue: A051876 polygonal=24   # 24
 
-$oeis_anum{'first'}->[28] = 'A161935'; # (n+1)*(13*n+1)
-# OEIS-Catalogue: A161935 polygonal=28   # 28
+# A161935 (n+1)*(13*n+1) gives the 28-gonals starting from i=1, ie. the n
+# has an extra +1
 
 $oeis_anum{'second'}->[30] = 'A195028';
 # OEIS-Catalogue: A195028 polygonal=30 pairs=second   # 30 second
@@ -267,7 +294,7 @@ sub ith {
     }
   }
   my $pairs = $self->{'pairs'};
-  if ($pairs eq 'both') {
+  if ($k >= 5 && $pairs eq 'both') {
     if ($i & 1) {
       $i = ($i+1)/2;
     } else {
@@ -323,7 +350,7 @@ sub pred {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq 3-gonals 4-gonals 5-gonals pentagonals polygonals
+=for stopwords Ryde Math-NumSeq 3-gonals 4-gonals 5-gonals k-gonals pentagonals polygonals
 
 =head1 NAME
 
@@ -372,17 +399,25 @@ See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 =over 4
 
-=item C<$seq = Math::NumSeq::Polygonal-E<gt>new (key=E<gt>value,...)>
+=item C<$seq = Math::NumSeq::Polygonal-E<gt>new ()>
 
-Create and return a new sequence object.
+=item C<$seq = Math::NumSeq::Polygonal-E<gt>new (pairs =E<gt> $str)>
+
+Create and return a new sequence object.  The default is the polygonals of
+the "first" kind, or the C<pairs> option (a string) can be
+
+    "first"
+    "second"
+    "both"
+    "average"
 
 =item C<$value = $seq-E<gt>ith($i)>
 
-Return C<$i ** 2>.
+Return the C<$i>'th polygonal value
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value> is a perfect square.
+Return true if C<$value> is a polygonal number of the given C<pairs> type.
 
 =back
 

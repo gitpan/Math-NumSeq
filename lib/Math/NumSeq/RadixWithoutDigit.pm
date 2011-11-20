@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 15;
+$VERSION = 16;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -52,6 +52,9 @@ use constant parameter_info_array =>
 #------------------------------------------------------------------------------
 my @oeis_anum;
 
+# A000225 is 2^n-1 but starting from 2^0-1 = 0, whereas RadixWithoutDigit
+# here starts from 1, per other OEIS "radix without" ...
+
 $oeis_anum[3]->[0] = 'A032924'; # base 3 no 0
 $oeis_anum[3]->[1] = 'A005823'; # base 3 no 1
 $oeis_anum[3]->[2] = 'A005836'; # base 3 no 2
@@ -80,6 +83,38 @@ $oeis_anum[5]->[4] = 'A023737'; # base 5 no 4
 # OEIS-Catalogue: A023737 radix=5 digit=4  # base 5 no 4
 
 # cf A037465 base 6 no 5, starting i=1
+
+$oeis_anum[7]->[6] = 'A020657'; # "no 7-term arithmetic progression"...
+# OEIS-Catalogue: A020657 radix=7 digit=6
+
+# starting from n=1 ...
+# $oeis_anum[8]->[7] = 'A037474'; # base 7 written out in octal
+# # OEIS-Catalogue: A037474 radix=8 digit=7 i_start=1
+
+# starting from n=1 ...
+# $oeis_anum[9]->[8] = 'A037477'; # base 8 written out in base 9
+# # OEIS-Catalogue: A037477 radix=9 digit=8 i_start=1
+
+$oeis_anum[10]->[0] = 'A052382'; # decimal numbers without 0
+# OEIS-Catalogue: A052382 radix=10 digit=0
+$oeis_anum[10]->[1] = 'A052383'; # decimal numbers without 1
+# OEIS-Catalogue: A052383 radix=10 digit=1
+$oeis_anum[10]->[2] = 'A052404'; # decimal numbers without 2
+# OEIS-Catalogue: A052404 radix=10 digit=2
+$oeis_anum[10]->[3] = 'A052405'; # decimal numbers without 3
+# OEIS-Catalogue: A052405 radix=10 digit=3
+$oeis_anum[10]->[4] = 'A052406'; # decimal numbers without 4
+# OEIS-Catalogue: A052406 radix=10 digit=4
+$oeis_anum[10]->[5] = 'A052413';
+# OEIS-Catalogue: A052413 radix=10 digit=5
+$oeis_anum[10]->[6] = 'A052414';
+# OEIS-Catalogue: A052414 radix=10 digit=6
+$oeis_anum[10]->[7] = 'A052419';
+# OEIS-Catalogue: A052419 radix=10 digit=7
+$oeis_anum[10]->[8] = 'A052421';
+# OEIS-Catalogue: A052421 radix=10 digit=8
+$oeis_anum[10]->[9] = 'A007095'; # base 10 no 9 "numbers in base 9"
+# OEIS-Catalogue: A007095 radix=10 digit=9  # base 10 no 9
 
 sub oeis_anum {
   my ($self) = @_;
@@ -310,7 +345,7 @@ Return the C<$i>'th number which doesn't have the digit.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value> doesn't have the given digit.
+Return true if C<$value> doesn't have the given C<digit>.
 
 =back
 

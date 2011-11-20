@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 15;
+$VERSION = 16;
 
 use Math::NumSeq::Primes;
 @ISA = ('Math::NumSeq::Primes');
@@ -31,7 +31,6 @@ use Math::NumSeq::Primes;
 
 # use constant name => Math::NumSeq::__('Twin Primes');
 use constant description => Math::NumSeq::__('The twin primes, 3, 5, 7, 11, 13, being numbers where both K and K+2 are primes.');
-use constant values_min => 3;
 use constant characteristic_monotonic => 2;
 use constant parameter_info_array =>
   [
@@ -47,6 +46,15 @@ use constant parameter_info_array =>
      description => Math::NumSeq::__('Which of a pair of values to show.'),
    },
   ];
+
+my %values_min = (first   => 3,
+                  second  => 5,
+                  both    => 3,
+                  average => 4);
+sub values_min {
+  my ($self) = @_;
+  return $values_min{$self->{'pairs'}};
+}
 
 # cf A077800 both, with repetition, so 3,5, 5,7, 11,13, ...
 #
@@ -208,9 +216,9 @@ string) controls which of each twin-prime pair of values is returned
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value> is a twin prime etc.  This follows any C<pairs>
-parameter, so for example "second" means C<pred()> returns true only when
-C<$value> is the second of a pair, ie.  C<$value-2> is also a prime.
+Return true if C<$value> is a twin prime of the given C<pairs> type.  For
+example with "second" C<pred()> returns true when C<$value> is the second of
+a pair, ie. C<$value-2> is also a prime.
 
 =back
 

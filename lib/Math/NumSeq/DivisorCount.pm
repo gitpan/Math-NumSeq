@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 15;
+$VERSION = 16;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -33,6 +33,9 @@ use constant characteristic_count => 1;
 use constant characteristic_monotonic => 0;
 use constant i_start => 1;
 
+# "proper" divisors just means 1 less in each value, not sure much value in
+# that.
+#
 # use constant parameter_info_array =>
 #   [ { name    => 'divisor_type',
 #       display => Math::NumSeq::__('Divisor Type'),
@@ -55,12 +58,15 @@ sub values_min {
 # cf A032741 - 1 <= d < n starting n=0
 #    A147588 - 1 < d < n starting n=1
 #
-# A001227 - count odd divisors
-# A001826 - count 4k+1 divisors
-# A038548 - count divisors <= sqrt(n)
-# A070824 - proper divisors starting n=2
-# A002182 - number with new highest number of divisors
-# A002183 -    that count of divisors
+#    A006218 - cumulative count of divisors
+#    A002541 - cumulative proper divisors
+#
+#    A001227 - count odd divisors
+#    A001826 - count 4k+1 divisors
+#    A038548 - count divisors <= sqrt(n)
+#    A070824 - proper divisors starting n=2
+#    A002182 - number with new highest number of divisors
+#    A002183 -    that count of divisors
 #
 sub oeis_anum {
   my ($self) = @_;
@@ -156,7 +162,7 @@ sub ith {
         $i /= $d;
         $count++;
       } until ($i % $d);
-      my $limit = sqrt($i);
+      $limit = sqrt($i);
       $ret *= $count;
     }
   }
@@ -215,7 +221,7 @@ Return the number of prime factors in C<$i>.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value> occurs as a divisor count, which means simply
+Return true if C<$value> occurs as a divisor count, which simply means
 C<$value E<gt>= 1>.
 
 =back

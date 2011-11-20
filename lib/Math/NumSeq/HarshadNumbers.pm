@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 15;
+$VERSION = 16;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
@@ -116,7 +116,7 @@ for the digits.
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> is a harshad number, ie. is divisible by the sum of
-its digits.
+its digits (in the given C<radix>).
 
 =back
 

@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 15;
+$VERSION = 16;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -51,20 +51,35 @@ use constant description => Math::NumSeq::__('0/1 values related to Fibonacci nu
 #
 use constant oeis_anum => 'A003849';  # 0/1 values Fibonacci word starting 0,1
 
-use Math::NumSeq::Fibbinary;
-*rewind = \&Math::NumSeq::Fibbinary::rewind;
+sub rewind {
+  my ($self) = @_;
+  $self->{'i'} = 0;
+  $self->{'value'} = 0;
+}
 sub next {
   my ($self) = @_;
-  my ($i, $value) = $self->Math::NumSeq::Fibbinary::next;
-  return ($i, $value & 1);
+  ### FibonacciWord next() ...
+
+  my $v = $self->{'value'};
+  my $filled = ($v >> 1) | $v;
+  my $mask = (($filled+1) ^ $filled) >> 1;
+  $self->{'value'} = ($v | $mask) + 1;
+
+  ### value : sprintf('0b %6b',$v)
+  ### filled: sprintf('0b %6b',$filled)
+  ### mask  : sprintf('0b %6b',$mask)
+  ### bit   : sprintf('0b %6b',$mask+1)
+  ### newv  : sprintf('0b %6b',$self->{'value'})
+
+  return ($self->{'i'}++, $v & 1);
 }
 
 sub ith {
   my ($self, $i) = @_;
   ### FibonacciWord ith(): $i
 
-  # if $i is inf or nan then $i*0 is nan, while loop zero-trips and return
-  # is nan
+  # if $i is inf or nan then $i*0 is nan and the while loop zero-trips and
+  # return is nan
 
   my $f0 = ($i * 0) + 1;  # inherit bignum 1
   my $f1 = $f0 + 1;       # inherit bignum 2
@@ -160,6 +175,8 @@ Return true if C<$value> occurs in the sequence, which simply means 0 or 1.
 L<Math::NumSeq>,
 L<Math::NumSeq::Fibonacci>,
 L<Math::NumSeq::Fibbinary>
+
+L<Math::PlanePath::FibonacciWordFractal>
 
 =head1 HOME PAGE
 

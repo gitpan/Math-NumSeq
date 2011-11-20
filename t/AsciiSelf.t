@@ -35,7 +35,7 @@ use Math::NumSeq::AsciiSelf;
 # VERSION
 
 {
-  my $want_version = 15;
+  my $want_version = 16;
   ok ($Math::NumSeq::AsciiSelf::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::AsciiSelf->VERSION, $want_version,
@@ -92,12 +92,13 @@ foreach my $radix (2 .. 35) {
 # ith()
 
 foreach my $radix (2 .. 35) {
-
-  my $skip = ($radix == 7
-              ? 'ith() buggy in base 7'
-              : undef);
-
   my $seq = Math::NumSeq::AsciiSelf->new (radix => $radix);
+
+  ### can ith(): $seq->can('ith')
+  my $skip = ($seq->can('ith')
+              ? undef  # ith() available, no skip
+              : 'ith() not available (eg. base 7)');
+
   my @got;
   my @ascii;
   foreach my $i (1 .. 50) {

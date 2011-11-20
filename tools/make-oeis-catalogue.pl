@@ -28,7 +28,7 @@ use ExtUtils::Manifest;
 use Module::Util;
 
 use vars '$VERSION';
-$VERSION = 15;
+$VERSION = 16;
 
 # uncomment this to run the ### lines
 #use Devel::Comments;
@@ -36,11 +36,13 @@ $VERSION = 15;
 my $outmodule = 'BuiltinTable';
 my $distname = 'Math-NumSeq';
 my $outversion = $VERSION;
+my $other = '';
 
 Getopt::Long::GetOptions
   ('dist=s'       => \$distname,
    'module=s'     => \$outmodule,
    'outversion=s' => \$outversion,
+   'other=s'      => \$other,
   );
 if (@ARGV) {
   die "Unrecognised options ",join(' ',@ARGV);
@@ -76,11 +78,12 @@ foreach my $filename (@filenames) {
   while (<$in>) {
     chomp;
     my $where = "$filename:$.";
+    my $type = 'Catalogue';
     my ($anum, $parameters, $comment);
-    if (/^[ \t]*# OEIS-Catalogue: /) {
+    if (/^[ \t]*# OEIS-(Catalogue|Other): /) {
       ### OEIS-Catalogue
-      ($anum, $parameters, $comment)
-        = /^[ \t]*# OEIS-Catalogue: (A[0-9]+)\s*(.*?)(#.*)?$/
+      ($type, $anum, $parameters, $comment)
+        = /^[ \t]*# OEIS-(Catalogue|Other): +(A[0-9]+)\s*(.*?)(#.*)?$/
           or die "$where: oops, bad OEIS line: $_";
     } elsif (/^use constant oeis_anum\W/) {
       ### use constant
@@ -90,9 +93,19 @@ foreach my $filename (@filenames) {
     } else {
       next;
     }
+    ### $type
     ### $anum
     ### $parameters
     ### $comment
+
+    if ($other eq '') {
+      next if $type eq 'Other';
+    } elsif ($other eq 'only') {
+      next if $type ne 'Other';
+    } elsif ($other eq 'both') {
+    } else {
+      die "Unrecognised --other";
+    }
 
     $anum or die "$where: oops, no OEIS number: $_";
 
@@ -107,12 +120,16 @@ foreach my $filename (@filenames) {
     }
     defined $class
       or die "$filename:$.: oops, no \"package\" line";
-    if ($seen{$anum}) {
-      print STDERR "$where: duplicate of $anum\n$seen{$anum}: is here\n";
-      $exit_code = 1;
-      next;
+
+    if ($type ne 'Other') {
+      if ($seen{$anum}) {
+        print STDERR "$where: duplicate of $anum\n$seen{$anum}: is here\n";
+        $exit_code = 1;
+        next;
+      }
+      $seen{$anum} = $where;
     }
-    $seen{$anum} = $where;
+
     push @info_arrayref,
       {
        anum  => $anum,

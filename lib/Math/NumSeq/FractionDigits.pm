@@ -22,7 +22,7 @@ use List::Util 'max';
 use Math::NumSeq;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 15;
+$VERSION = 16;
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
 
@@ -64,7 +64,7 @@ $oeis_anum[10] =
    '1/11'  => 'A010680',   # 1/11 decimal
    # OEIS-Catalogue: A010680 fraction=1/11
 
-   # OEIS-Catalogue: A021015 fraction=1/11  # duplicate of A010680
+   # OEIS-Catalogue: A021015 fraction=1/11 # duplicate of A010680
    # OEIS-Catalogue: A021016 fraction=1/12
    # OEIS-Catalogue: A021017 fraction=1/13
    # OEIS-Catalogue: A021018 fraction=1/14
@@ -76,7 +76,7 @@ $oeis_anum[10] =
 
    # Math::NumSeq::OEIS::Catalogue::Plugin::FractionDigits has A021022
    # through A021999, being 1/18 to 1/995.  1/996 missing apparently.
-   #
+
    # OEIS-Catalogue: A022001 fraction=1/997
    # OEIS-Catalogue: A022002 fraction=1/998
    # OEIS-Catalogue: A022003 fraction=1/999
@@ -91,9 +91,9 @@ $oeis_anum[10] =
 
    # constant digits 3,3,3,...
    '10/3' => 'A010701',
-   # ENHANCE-ME: of course could generate 3s more efficiently
-   # just as a constant sequence, in which case would prefer that
-   # over this for the catalogue.
+   # ENHANCE-ME: of course can generate 3s more efficiently just as a
+   # constant sequence, in which case would prefer that over this for the
+   # catalogue.
    # OEIS-Catalogue: A010701 fraction=10/3
   };
 sub oeis_anum {

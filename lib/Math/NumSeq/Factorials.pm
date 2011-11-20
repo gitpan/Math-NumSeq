@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 15;
+$VERSION = 16;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -122,7 +122,8 @@ the return is 1.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value> is equal to C<1*2*...*i> for some i.
+Return true if C<$value> is a factorial, ie. equal to C<1*2*...*i> for
+some i.
 
 =back
 

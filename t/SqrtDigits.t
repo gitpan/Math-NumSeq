@@ -30,7 +30,7 @@ use Math::NumSeq::SqrtDigits;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-my $test_count = (tests => 41)[1];
+my $test_count = (tests => 43)[1];
 plan tests => $test_count;
 
 {
@@ -53,7 +53,7 @@ plan tests => $test_count;
 # VERSION
 
 {
-  my $want_version = 15;
+  my $want_version = 16;
   ok ($Math::NumSeq::SqrtDigits::VERSION, $want_version, 'VERSION variable');
   ok (Math::NumSeq::SqrtDigits->VERSION,  $want_version, 'VERSION class method');
 
@@ -68,11 +68,17 @@ plan tests => $test_count;
 
 
 #------------------------------------------------------------------------------
-# characteristic()
+# characteristic(), i_start(), parameters
 
 {
   my $seq = Math::NumSeq::SqrtDigits->new;
   ok ($seq->characteristic('digits'), 10, 'characteristic(digits)');
+
+  ok ($seq->i_start, 1, 'i_start()');
+
+  my @pnames = map {$_->{'name'}} $seq->parameter_info_list;
+  ok (join(',',@pnames),
+      'sqrt,radix');
 }
 
 

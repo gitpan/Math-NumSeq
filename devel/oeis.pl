@@ -25,6 +25,25 @@ use POSIX;
 use Smart::Comments;
 
 {
+  # speed of anum_after();
+
+  require Math::NumSeq::OEIS::Catalogue;
+
+  require Devel::TimeThis;
+  my $t = Devel::TimeThis->new('x');
+
+  my $count = 0;
+  for (my $anum = 'A00000';
+       defined $anum;
+       $anum = Math::NumSeq::OEIS::Catalogue->anum_after($anum)) {
+    # ### $anum
+    $count++;
+  }
+  ### $count
+  exit 0;
+}
+
+{
   require Math::NumSeq::OEIS;
   my $seq = Math::NumSeq::OEIS->new(anum=>'A009000');
   # ### $seq

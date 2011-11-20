@@ -26,10 +26,10 @@ use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 use vars '$VERSION';
-$VERSION = 15;
+$VERSION = 16;
 
 # uncomment this to run the ### lines
-#use Devel::Comments;
+#use Smart::Comments;
 
 sub _make_info {
   my ($anum) = @_;
@@ -41,7 +41,7 @@ sub _make_info {
 
 sub anum_to_info {
   my ($class, $anum) = @_;
-  ### Catalogue-ZFiles num_to_info(): @_
+  ### Catalogue-ZZ_Files num_to_info(): @_
 
   my $dir = Math::NumSeq::OEIS::File::oeis_dir();
   foreach my $basename
@@ -59,10 +59,37 @@ sub anum_to_info {
   return undef;
 }
 
+# on getting up to perhaps 2000 files of 500 anums it becomes a bit slow
+# re-reading the directory on every anum_next(), cache a bit for speed
+
+my $cached_arrayref = [];
+my $cached_mtime = '';
+my $cached_time = '';
+
 sub info_arrayref {
   my ($class) = @_;
-  my $dir = Math::NumSeq::OEIS::File::oeis_dir();
-  ### $dir
+
+  # stat() at most once per second
+  my $time = time();
+  if ($cached_time ne $time) {
+    $cached_time = $time;
+
+    # if $dir mtime changed then re-read
+    my $dir = Math::NumSeq::OEIS::File::oeis_dir();
+    my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
+        $atime,$mtime,$ctime,$blksize,$blocks) = stat($dir);
+    if ($cached_mtime ne $mtime) {
+      $cached_mtime = $mtime;
+      $cached_arrayref = _info_arrayref($dir);
+    }
+  }
+  return $cached_arrayref;
+}
+
+sub _info_arrayref {
+  my ($dir) = @_;
+  ### _info_arrayref(): $dir
+
   my @ret;
   my %seen;
   if (! opendir DIR, $dir) {
@@ -84,7 +111,45 @@ sub info_arrayref {
   return \@ret;
 }
 
-
 1;
 __END__
+
+
+# sub anum_after {
+#   my ($class, $anum) = @_;
+#   ### anum_after(): $anum
+# 
+#   my $dir = Math::NumSeq::OEIS::File::oeis_dir();
+# 
+#   if (! opendir DIR, $dir) {
+#     ### cannot opendir: $!
+#     return undef;
+#   }
+# 
+#   $anum =~ /([0-9]+)/;
+#   my $anum_num = $1 || 0;
+# 
+#   my $after_num;
+#   while (defined (my $basename = readdir DIR)) {
+#     # ### $basename
+#     # FIXME: case insensitive ?
+#     if ($basename =~ /^A(\d*)\.(html?|internal)
+#                     |[ab](\d*)\.txt/x) {
+#       my $num = ($1||$3);
+#       if ($num > $anum_num
+#           && (! defined $after_num
+#               || $after_num > $num)) {
+#         $after_num = $num;
+#       }
+#     }
+#   }
+#   closedir DIR or die "Error closing $dir: $!";
+# 
+#   if (defined $after_num) {
+#     $after_num = "A$after_num";
+#   }
+# 
+#   ### $after_num
+#   return $after_num;
+# }
 
