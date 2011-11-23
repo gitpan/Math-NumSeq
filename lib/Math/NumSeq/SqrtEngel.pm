@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 16;
+$VERSION = 17;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -203,14 +203,18 @@ The sequence values are each successive a[i].  For example sqrt(2)
    sqrt(2) = --- + --- + ----- + ------- + ---------- + ...
               1    1*3   1*3*5   1*3*5*5   1*3*5*5*16
 
-is 1, 3, 5, 5, 16, etc.
+is
+
+    1, 3, 5, 5, 16, etc
 
 Each new 1/prod term is the biggest which keeps the total below sqrt(s),
 which means each a[i] is the smallest possible.
 
-For a perfect square the expansion is a trivial 1s sequence 1/1+1/1+...+1/1
-terms adding up to the root.  This is unlikely to be interesting but it
-works.
+For a perfect square the expansion is a trivial 1s sequence adding up to the
+root.  This is unlikely to be interesting but it works.
+
+    1/1+1/1+...+1/1 = sqrt(perfect square)
+
 
 =head1 FUNCTIONS
 
@@ -241,7 +245,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2010, 2011 Kevin Ryde
+Copyright 2011 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

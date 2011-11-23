@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 16;
+$VERSION = 17;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 401 A-numbers in 69 modules
+# total 405 A-numbers in 70 modules
 
 use constant info_arrayref =>
 [
@@ -979,6 +979,18 @@ use constant info_arrayref =>
     ]
   },
   {
+    'anum' => 'A078627',
+    'class' => 'Math::NumSeq::HappySteps',
+    'parameters' => [
+      'radix',
+      2
+    ]
+  },
+  {
+    'anum' => 'A193995',
+    'class' => 'Math::NumSeq::HappySteps'
+  },
+  {
     'anum' => 'A049445',
     'class' => 'Math::NumSeq::HarshadNumbers',
     'parameters' => [
@@ -1574,6 +1586,26 @@ use constant info_arrayref =>
     'parameters' => [
       'polygonal',
       12,
+      'pairs',
+      'both'
+    ]
+  },
+  {
+    'anum' => 'A195313',
+    'class' => 'Math::NumSeq::Polygonal',
+    'parameters' => [
+      'polygonal',
+      13,
+      'pairs',
+      'both'
+    ]
+  },
+  {
+    'anum' => 'A195818',
+    'class' => 'Math::NumSeq::Polygonal',
+    'parameters' => [
+      'polygonal',
+      14,
       'pairs',
       'both'
     ]

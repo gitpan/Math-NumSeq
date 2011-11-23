@@ -28,7 +28,7 @@ use ExtUtils::Manifest;
 use Module::Util;
 
 use vars '$VERSION';
-$VERSION = 16;
+$VERSION = 17;
 
 # uncomment this to run the ### lines
 #use Devel::Comments;

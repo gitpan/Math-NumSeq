@@ -53,7 +53,7 @@ MyMakeMakerExtras::WriteMakefile
      { homepage => 'http://user42.tuxfamily.org/math-numseq/index.html',
      },
      recommends =>
-     { 'Math::Prime::XS' => '0.25_01', # v.25 or v.25_01 for faster is_prime()
+     { 'Math::Prime::XS' => '0.26', # v.26 for faster is_prime()
      },
      optional_features =>
      { maximum_interoperation =>

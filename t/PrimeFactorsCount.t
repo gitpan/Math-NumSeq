@@ -34,7 +34,7 @@ plan tests => 7;
 # VERSION
 
 {
-  my $want_version = 16;
+  my $want_version = 17;
   ok ($Math::NumSeq::PrimeFactorCount::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::PrimeFactorCount->VERSION,  $want_version,

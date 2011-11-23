@@ -100,7 +100,6 @@ $|=1;
   $values_class = 'App::MathImage::NumSeq::UlamSequence';
   $values_class = 'Math::NumSeq::Fibonacci';
   $values_class = 'App::MathImage::NumSeq::ReplicateDigits';
-  $values_class = 'App::MathImage::NumSeq::HappySteps';
   $values_class = 'App::MathImage::NumSeq::SumTwoSquares';
   $values_class = 'Math::NumSeq::Polygonal';
   $values_class = 'App::MathImage::NumSeq::CunninghamChain';
@@ -118,6 +117,7 @@ $|=1;
   $values_class = 'App::MathImage::NumSeq::RepdigitRadix';
   $values_class = 'Math::NumSeq::SqrtEngel';
   $values_class = 'App::MathImage::NumSeq::Runs';
+  $values_class = 'App::MathImage::NumSeq::HappySteps';
 
   eval "require $values_class; 1" or die $@;
   print Math::NumSeq::DigitLength->VERSION,"\n";
@@ -172,6 +172,7 @@ $|=1;
   print "values_min ",($seq->values_min//'[undef]'),"\n";
   print "values_max ",($seq->values_max//'[undef]'),"\n";
   print "characteristic(monotonic) ",($seq->characteristic('monotonic')//'[undef]'),"\n";
+  print "parameters: ",join(', ',map{$_->{'name'}}$seq->parameter_info_list),"\n";
   print "\n";
 
   my $values_min = $seq->values_min;

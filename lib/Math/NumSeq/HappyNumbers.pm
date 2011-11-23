@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 16;
+$VERSION = 17;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
@@ -123,12 +123,12 @@ This sequence is the happy numbers 1,7,10,13,19,23,etc, which are the
 numbers eventually reaching 1 on repeatedly taking the sum of the squares of
 the digits.
 
-For example 23 is a happy number because the sum of squares of its digits (2
-and 3) is 2*2+3*3=13, then the same sum of squares again 1*1+3*3=10, then
-1*1+0*0=1 reaches 1.
+For example 23 is a happy number because the sum of squares of its digits
+(ie. 2 and 3) is 2*2+3*3=13, then the same sum of squares again 1*1+3*3=10,
+then 1*1+0*0=1 reaches 1.
 
 In decimal it can be shown that for a non-zero starting point this procedure
-always reaches either 1 or a cycle 4,16,37,58,89,145,42,20.  The values
+always reaches either 1 or the cycle 4,16,37,58,89,145,42,20.  The values
 which reach 1 are called happy numbers.
 
 An optional C<radix> parameter can select a base other than decimal.  Base 2
@@ -139,7 +139,9 @@ happy.
 
 =over 4
 
-=item C<$seq = Math::NumSeq::HappyNumbers-E<gt>new (key=E<gt>value,...)>
+=item C<$seq = Math::NumSeq::HappyNumbers-E<gt>new ()>
+
+=item C<$seq = Math::NumSeq::HappyNumbers-E<gt>new (radix =E<gt> $r)>
 
 Create and return a new sequence object.
 
@@ -153,6 +155,7 @@ of its digits reaches 1.
 =head1 SEE ALSO
 
 L<Math::NumSeq>,
+L<Math::NumSeq::HappySteps>,
 L<Math::NumSeq::DigitSum>
 
 =head1 HOME PAGE

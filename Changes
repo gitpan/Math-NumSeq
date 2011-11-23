@@ -16,6 +16,9 @@ You should have received a copy of the GNU General Public License along
 with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 17, November 2011
+    - new HappySteps
+
 Version 16, November 2011
     - document $seq->characteristic("count")
     - new DigitCountLow, DigitCountHigh, RepdigitSome, SqrtEngel

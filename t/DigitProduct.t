@@ -35,7 +35,7 @@ use Math::NumSeq::DigitProduct;
 # VERSION
 
 {
-  my $want_version = 16;
+  my $want_version = 17;
   ok ($Math::NumSeq::DigitProduct::VERSION, $want_version, 'VERSION variable');
   ok (Math::NumSeq::DigitProduct->VERSION,  $want_version, 'VERSION class method');
 

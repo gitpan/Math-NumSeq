@@ -18,6 +18,7 @@ devel/expression.pl
 devel/fibbinary.pl
 devel/fibonacci-word.pl
 devel/golden-sequence.pl
+devel/happy.pl
 devel/juggler.pl
 devel/kimberling.pl
 devel/klarner.pl
@@ -83,6 +84,7 @@ lib/Math/NumSeq/File.pm
 lib/Math/NumSeq/FractionDigits.pm
 lib/Math/NumSeq/GolombSequence.pm
 lib/Math/NumSeq/HappyNumbers.pm
+lib/Math/NumSeq/HappySteps.pm
 lib/Math/NumSeq/HarshadNumbers.pm
 lib/Math/NumSeq/JugglerSteps.pm
 lib/Math/NumSeq/KlarnerRado.pm

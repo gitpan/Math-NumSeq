@@ -34,8 +34,7 @@ $VERSION = 38;
 use constant description => Math::NumSeq::__('Sum of the digits in the given radix, modulo that radix.  Eg. for binary this is the bitwise parity.');
 
 use Math::NumSeq::Base::Digits;
-use constant parameter_info_array =>
-  [ Math::NumSeq::Base::Digits::parameter_common_radix() ];
+*parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
 
 # use constant parameter_info_array => [{ name    => 'parity',
 #                                   display => Math::NumSeq::__('Parity'),

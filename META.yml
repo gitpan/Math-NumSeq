@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Math-NumSeq
-version:            16
+version:            17
 abstract:           Number sequences.
 author:
     - Kevin Ryde <user42@zip.com.au>
@@ -79,4 +79,4 @@ optional_features:
         requires:
             Data::Float:  0
 recommends:
-    Math::Prime::XS:  0.25_01
+    Math::Prime::XS:  0.26

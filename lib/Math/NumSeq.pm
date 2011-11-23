@@ -46,7 +46,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 16;
+$VERSION = 17;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -222,7 +222,7 @@ Rewind the sequence to its starting point.
 =item C<$i = $seq-E<gt>i_start()>
 
 Return the first index C<$i> in the sequence.  This is the position
-C<rewind> returns to.
+C<rewind()> returns to.
 
 =item C<$str = $seq-E<gt>description()>
 

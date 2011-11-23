@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 16;
+$VERSION = 17;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -137,6 +137,12 @@ $oeis_anum{'both'}->[12]   = 'A195162'; # 12-gonal generalized
 # OEIS-Catalogue: A135705 polygonal=12 pairs=second
 # OEIS-Catalogue: A195162 polygonal=12 pairs=both
 
+$oeis_anum{'both'}->[13]   = 'A195313'; # 13-gonal generalized
+# OEIS-Catalogue: A195313 polygonal=13 pairs=both
+
+$oeis_anum{'both'}->[14]   = 'A195818'; # 14-gonal generalized
+# OEIS-Catalogue: A195818 polygonal=14 pairs=both
+
 # these in sequence ...
 $oeis_anum{'first'}->[13]  =  'A051865'; # 13 tridecagonal
 $oeis_anum{'first'}->[14]  =  'A051866'; # 14-gonal
@@ -150,18 +156,18 @@ $oeis_anum{'first'}->[21]  =  'A051873'; # 21
 $oeis_anum{'first'}->[22]  =  'A051874'; # 22
 $oeis_anum{'first'}->[23]  =  'A051875'; # 23
 $oeis_anum{'first'}->[24]  =  'A051876'; # 24
-# OEIS-Catalogue: A051865 polygonal=13   # 13 tridecagonal
-# OEIS-Catalogue: A051866 polygonal=14   # 14-gonal
-# OEIS-Catalogue: A051867 polygonal=15   # 15
-# OEIS-Catalogue: A051868 polygonal=16   # 16
-# OEIS-Catalogue: A051869 polygonal=17   # 17
-# OEIS-Catalogue: A051870 polygonal=18   # 18
-# OEIS-Catalogue: A051871 polygonal=19   # 19
-# OEIS-Catalogue: A051872 polygonal=20   # 20
-# OEIS-Catalogue: A051873 polygonal=21   # 21
-# OEIS-Catalogue: A051874 polygonal=22   # 22
-# OEIS-Catalogue: A051875 polygonal=23   # 23
-# OEIS-Catalogue: A051876 polygonal=24   # 24
+# OEIS-Catalogue: A051865 polygonal=13
+# OEIS-Catalogue: A051866 polygonal=14
+# OEIS-Catalogue: A051867 polygonal=15
+# OEIS-Catalogue: A051868 polygonal=16
+# OEIS-Catalogue: A051869 polygonal=17
+# OEIS-Catalogue: A051870 polygonal=18
+# OEIS-Catalogue: A051871 polygonal=19
+# OEIS-Catalogue: A051872 polygonal=20
+# OEIS-Catalogue: A051873 polygonal=21
+# OEIS-Catalogue: A051874 polygonal=22
+# OEIS-Catalogue: A051875 polygonal=23
+# OEIS-Catalogue: A051876 polygonal=24
 
 # A161935 (n+1)*(13*n+1) gives the 28-gonals starting from i=1, ie. the n
 # has an extra +1

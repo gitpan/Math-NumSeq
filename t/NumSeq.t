@@ -25,7 +25,7 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
-my $test_count = (tests => 287)[1];
+my $test_count = (tests => 288)[1];
 plan tests => $test_count;
 
 # uncomment this to run the ### lines
@@ -118,6 +118,22 @@ foreach my $elem
    # Ln2Bits.pm
    # MobiusFunction.pm
    # PiBits.pm
+
+   [ 'Math::NumSeq::HappySteps', 0,
+     [ 1, 9, 13, 8, 12, 17, 6, 13, 12, 2, ], # per POD
+   ],
+   [ 'Math::NumSeq::HappySteps', 0,
+     [ 1,  #    1
+       2,  #   10
+       3,  #   11
+       2,  #  100
+       3,  #  101
+       3,  #  110
+       4,  #  111
+       2,  # 1000
+     ],
+     { radix => 2 },
+   ],
 
    [ 'Math::NumSeq::SqrtEngel', 0,
      [ 1, 3, 5, 5, 16, ],
@@ -409,10 +425,6 @@ foreach my $elem
        0x15, #  10101
        0x20, # 100000
      ],
-   ],
-
-   [ 'Math::NumSeq::HappyNumbers', 0,
-     [ 1,7,10,13,19,23, ],
    ],
 
    [ 'Math::NumSeq::DigitSum', 0,
