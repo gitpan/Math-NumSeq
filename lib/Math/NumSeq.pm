@@ -46,7 +46,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 17;
+$VERSION = 18;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -357,6 +357,7 @@ L<Math::NumSeq::Primorials>,
 L<Math::NumSeq::Fibonacci>,
 L<Math::NumSeq::LucasNumbers>,
 L<Math::NumSeq::Fibbinary>,
+L<Math::NumSeq::FibbinaryBitCount>,
 L<Math::NumSeq::Pell>,
 L<Math::NumSeq::Tribonacci>
 
@@ -379,6 +380,7 @@ L<Math::NumSeq::Palindromes>,
 L<Math::NumSeq::Beastly>,
 L<Math::NumSeq::Repdigits>,
 L<Math::NumSeq::RepdigitAny>,
+L<Math::NumSeq::RepdigitRadix>,
 L<Math::NumSeq::HarshadNumbers>,
 L<Math::NumSeq::HappyNumbers>
 

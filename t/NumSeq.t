@@ -25,7 +25,7 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
-my $test_count = (tests => 288)[1];
+my $test_count = (tests => 292)[1];
 plan tests => $test_count;
 
 # uncomment this to run the ### lines
@@ -118,6 +118,66 @@ foreach my $elem
    # Ln2Bits.pm
    # MobiusFunction.pm
    # PiBits.pm
+
+   [ 'Math::NumSeq::Fibbinary', 0,
+     [ 0x0,  #      0
+       0x1,  #      1
+       0x2,  #     10
+       0x4,  #    100
+       0x5,  #    101
+       0x8,  #   1000
+       0x9,  #   1001
+       0xA,  #   1010
+       0x10, #  10000
+       0x11, #  10001
+       0x12, #  10010
+       0x14, #  10100
+       0x15, #  10101
+       0x20, # 100000
+     ],
+   ],
+   [ 'Math::NumSeq::FibbinaryBitCount', 0,
+     [ 0, #      0
+       1, #      1
+       1, #     10
+       1, #    100
+       2, #    101
+       1, #   1000
+       2, #   1001
+       2, #   1010
+       1, #  10000
+       2, #  10001
+       2, #  10010
+       2, #  10100
+       3, #  10101
+       1, # 100000
+     ],
+   ],
+
+   [ 'Math::NumSeq::RepdigitRadix', 0,
+     [  2,  # 0
+        0,  # 1
+        0,  # 2
+        2,  # 3
+        3,  # 4
+        4,  # 5
+        5,  # 6
+        2,  # 7
+        3,  # 8
+     ],
+   ],
+
+   [ 'Math::NumSeq::RepdigitAny', 0,
+     [  0,
+        7,  # 111 base 2
+        13, # 111 base 3
+        15, # 1111 base 2
+        21, # 111 base 4
+        26, # 222 base 3
+        31, # 11111 base 2
+     ],
+   ],
+
 
    [ 'Math::NumSeq::HappySteps', 0,
      [ 1, 9, 13, 8, 12, 17, 6, 13, 12, 2, ], # per POD
@@ -275,17 +335,6 @@ foreach my $elem
      } ],
 
 
-   [ 'Math::NumSeq::RepdigitAny', 0,
-     [  0,
-        7,  # 111 base 2
-        13, # 111 base 3
-        15, # 1111 base 2
-        21, # 111 base 4
-        26, # 222 base 3
-        31, # 11111 base 2
-     ],
-   ],
-
    [ 'Math::NumSeq::AlmostPrimes', 0,
      [ 4, 6, 9, 10, 14, 15, 21, 22, 25, 26, 33, 34, 35, 38,
        39, 46, 49, 51, 55, 57, 58, 62, 65, 69, 74, 77, 82,
@@ -407,24 +456,6 @@ foreach my $elem
 
    [ 'Math::NumSeq::Tribonacci', 0,
      [ 0, 0, 1, 1, 2, 4, 7, 13, 24, ],
-   ],
-
-   [ 'Math::NumSeq::Fibbinary', 0,
-     [ 0x0,  #      0
-       0x1,  #      1
-       0x2,  #     10
-       0x4,  #    100
-       0x5,  #    101
-       0x8,  #   1000
-       0x9,  #   1001
-       0xA,  #   1010
-       0x10, #  10000
-       0x11, #  10001
-       0x12, #  10010
-       0x14, #  10100
-       0x15, #  10101
-       0x20, # 100000
-     ],
    ],
 
    [ 'Math::NumSeq::DigitSum', 0,

@@ -42,6 +42,7 @@ devel/old/ThueMorse.pm
 devel/old/ThueMorseEvil.pm
 devel/old/ThueMorseOdious.pm
 devel/primes.pl
+devel/repdigit-radix.pl
 devel/repdigit.pl
 devel/reverse-add.pl
 devel/run.pl
@@ -78,6 +79,7 @@ lib/Math/NumSeq/Even.pm
 lib/Math/NumSeq/Expression.pm
 lib/Math/NumSeq/Factorials.pm
 lib/Math/NumSeq/Fibbinary.pm
+lib/Math/NumSeq/FibbinaryBitCount.pm
 lib/Math/NumSeq/Fibonacci.pm
 lib/Math/NumSeq/FibonacciWord.pm
 lib/Math/NumSeq/File.pm
@@ -114,6 +116,7 @@ lib/Math/NumSeq/Pronic.pm
 lib/Math/NumSeq/ProthNumbers.pm
 lib/Math/NumSeq/RadixWithoutDigit.pm
 lib/Math/NumSeq/RepdigitAny.pm
+lib/Math/NumSeq/RepdigitRadix.pm
 lib/Math/NumSeq/Repdigits.pm
 lib/Math/NumSeq/ReverseAdd.pm
 lib/Math/NumSeq/ReverseAddSteps.pm

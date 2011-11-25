@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 17;
+$VERSION = 18;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 405 A-numbers in 70 modules
+# total 407 A-numbers in 72 modules
 
 use constant info_arrayref =>
 [
@@ -829,6 +829,10 @@ use constant info_arrayref =>
   {
     'anum' => 'A003714',
     'class' => 'Math::NumSeq::Fibbinary'
+  },
+  {
+    'anum' => 'A007895',
+    'class' => 'Math::NumSeq::FibbinaryBitCount'
   },
   {
     'anum' => 'A000045',
@@ -2141,6 +2145,14 @@ use constant info_arrayref =>
   {
     'anum' => 'A167782',
     'class' => 'Math::NumSeq::RepdigitAny'
+  },
+  {
+    'anum' => 'A059711',
+    'class' => 'Math::NumSeq::RepdigitRadix',
+    'parameters' => [
+      'i_start',
+      3
+    ]
   },
   {
     'anum' => 'A010785',

@@ -114,10 +114,10 @@ $|=1;
   $values_class = 'Math::NumSeq::PrimeFactorCount';
   $values_class = 'Math::NumSeq::PlanePathCoord';
   $values_class = 'Math::NumSeq::SternDiatomic';
-  $values_class = 'App::MathImage::NumSeq::RepdigitRadix';
   $values_class = 'Math::NumSeq::SqrtEngel';
   $values_class = 'App::MathImage::NumSeq::Runs';
   $values_class = 'App::MathImage::NumSeq::HappySteps';
+  $values_class = 'App::MathImage::NumSeq::RepdigitRadix';
 
   eval "require $values_class; 1" or die $@;
   print Math::NumSeq::DigitLength->VERSION,"\n";

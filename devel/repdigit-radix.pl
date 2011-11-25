@@ -1,3 +1,5 @@
+#!/usr/bin/perl -w
+
 # Copyright 2011 Kevin Ryde
 
 # This file is part of Math-NumSeq.
@@ -15,22 +17,29 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
-package Math::NumSeq::Base::IterateIth;
-use 5.004;
+use 5.010;
 use strict;
+use warnings;
 
-use vars '$VERSION';
-$VERSION = 18;
+# uncomment this to run the ### lines
+use Smart::Comments;
 
-sub rewind {
-  my ($self) = @_;
-  $self->{'i'} = $self->i_start;
+
+{
+  require App::MathImage::NumSeq::RepdigitRadix;
+  my $seq = App::MathImage::NumSeq::RepdigitRadix->new;
+  my @seen;
+  foreach (1 .. 5000) {
+    my ($i,$value) = $seq->next;
+    $seen[$value] = 1;
+  }
+  foreach my $radix (2 .. $#seen) {
+    if (! $seen[$radix]) {
+      print "$radix, ";
+    }
+  }
+  print "\n";
+  exit 0;
 }
-sub next {
-  my ($self) = @_;
-  my $i = $self->{'i'}++;
-  return ($i, $self->ith($i));
-}
 
-1;
-__END__
+

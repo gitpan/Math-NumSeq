@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 17;
+$VERSION = 18;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -48,6 +48,11 @@ use constant description => Math::NumSeq::__('0/1 values related to Fibonacci nu
 #    A003622 positions of 1s ??
 #    A036299 values 0/1 inverse, concatenating
 #    A008352 values 1/2 inverse, concatenating
+#
+#    A135817 whythoff repres 0s
+#    A135818 whythoff repres 1s
+#    A189921 whythoff form
+#    A135817 whythoff length A+B
 #
 use constant oeis_anum => 'A003849';  # 0/1 values Fibonacci word starting 0,1
 
