@@ -160,6 +160,7 @@ t/OEIS-File.t
 t/PrimeFactorsCount.t
 t/Primes.t
 t/RepdigitAny.t
+t/RepdigitRadix.t
 t/SophieGermainPrimes.t
 t/SqrtDigits.t
 t/SqrtEngel.t

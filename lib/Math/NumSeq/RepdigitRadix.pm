@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 18;
+$VERSION = 19;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -84,7 +84,7 @@ sub next {
   my $digits = $self->{'digits'};
 
   if ($i < 3) {
-    return $small[$i];
+    return ($i, $small[$i]);
   }
 
   for (my $radix = 2; ; $radix++) {

@@ -25,7 +25,7 @@ use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 use vars '$VERSION';
-$VERSION = 18;
+$VERSION = 19;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -35,6 +35,7 @@ use constant num_first => 21022;   # A021022 1/18
 use constant num_last  => 21999;   # A021999 1/995
 
 my %exclude = (21029 => 1,  # A021029 is not 1/25 (0.0400000...)
+               21048 => 1,  # A021048 is not 1/44 (0.0227272...)
                21049 => 1,  # A021049 is not 1/45 (0.0222222...)
                21079 => 1,  # A021079 is not 1/75 (0.0133333...)
                21129 => 1,  # A021129 is not 1/125

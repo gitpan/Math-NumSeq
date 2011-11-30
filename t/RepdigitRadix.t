@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010, 2011 Kevin Ryde
+# Copyright 2011 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,46 +20,75 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 5;
+plan tests => 1507;
 
 use lib 't';
 use MyTestHelpers;
-MyTestHelpers::nowarnings();
+BEGIN { MyTestHelpers::nowarnings(); }
 
-use Math::NumSeq::TotientCumulative;
+use Math::NumSeq::RepdigitRadix;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
+
 
 #------------------------------------------------------------------------------
 # VERSION
 
 {
   my $want_version = 19;
-  ok ($Math::NumSeq::TotientCumulative::VERSION, $want_version,
-      'VERSION variable');
-  ok (Math::NumSeq::TotientCumulative->VERSION,  $want_version,
-      'VERSION class method');
+  ok ($Math::NumSeq::RepdigitRadix::VERSION, $want_version, 'VERSION variable');
+  ok (Math::NumSeq::RepdigitRadix->VERSION,  $want_version, 'VERSION class method');
 
-  ok (eval { Math::NumSeq::TotientCumulative->VERSION($want_version); 1 },
+  ok (eval { Math::NumSeq::RepdigitRadix->VERSION($want_version); 1 },
       1,
       "VERSION class check $want_version");
   my $check_version = $want_version + 1000;
-  ok (! eval { Math::NumSeq::TotientCumulative->VERSION($check_version); 1 },
+  ok (! eval { Math::NumSeq::RepdigitRadix->VERSION($check_version); 1 },
       1,
       "VERSION class check $check_version");
 }
 
 
 #------------------------------------------------------------------------------
-# characteristic()
+# next() and ith()
 
-{
-  my $values_obj = Math::NumSeq::TotientCumulative->new;
-  ok (! $values_obj->characteristic('count'), 1, 'characteristic(count)');
+sub is_a_repdigit {
+  my ($n, $radix) = @_;
+  ### is_a_repdigit: "$n, $radix"
+
+  if ($radix < 2) {
+    die "radix < 2";
+  }
+  if ($n == 0) {
+    return 1;
+  }
+
+  my $digit = $n % $radix;
+  for (;;) {
+    $n = int($n/$radix);
+    if ($n) {
+      if (($n % $radix) != $digit) {
+        ### no ...
+        return 0;
+      }
+    } else {
+        ### yes ...
+      return 1;
+    }
+  }
 }
 
+{
+  my $seq = Math::NumSeq::RepdigitRadix->new;
+  foreach my $i ($seq->i_start .. 500) {
+    my ($got_i, $radix) = $seq->next;
+    ok ($got_i, $i, "next() i");
+    ok ($radix == 0 || is_a_repdigit($i,$radix));
+
+    my $ith_radix = $seq->ith($i);
+    ok ($radix, $ith_radix, "ith($i) value");
+  }
+}
 
 exit 0;
-
-

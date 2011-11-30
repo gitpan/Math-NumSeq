@@ -81,7 +81,6 @@ $|=1;
   $values_class = 'Math::NumSeq::NumAronson';
   $values_class = 'Math::NumSeq::Expression';
   $values_class = 'Math::NumSeq::ReverseAdd';
-  $values_class = 'App::MathImage::NumSeq::HofstadterDiff';
   $values_class = 'App::MathImage::NumSeq::Pell';
   $values_class = 'Math::NumSeq::Factorials';
   $values_class = 'App::MathImage::NumSeq::ReverseAddSteps';
@@ -115,14 +114,17 @@ $|=1;
   $values_class = 'Math::NumSeq::PlanePathCoord';
   $values_class = 'Math::NumSeq::SternDiatomic';
   $values_class = 'Math::NumSeq::SqrtEngel';
-  $values_class = 'App::MathImage::NumSeq::Runs';
   $values_class = 'App::MathImage::NumSeq::HappySteps';
   $values_class = 'App::MathImage::NumSeq::RepdigitRadix';
+  $values_class = 'App::MathImage::NumSeq::Runs';
+  $values_class = 'App::MathImage::NumSeq::HofstadterDiff';
+  $values_class = 'App::MathImage::NumSeq::AllDigits';
+  $values_class = 'App::MathImage::NumSeq::ConcatNumbers';
 
   eval "require $values_class; 1" or die $@;
   print Math::NumSeq::DigitLength->VERSION,"\n";
   my $seq = $values_class->new (
-                                runs_type => 'rep3',
+                                runs_type => '1to2N',
                                 #sqrt => 3,
                                 # factor_count => 8,
                                 # multiplicity => 'distinct',
@@ -140,7 +142,9 @@ $|=1;
                                 # coordinate_type => 'AbsDiff',
                                 #planepath => 'CoprimeColumns',
                                 #coordinate_type => 'DiffXY',
-                                #i_start => 1,
+                                i_start => 1,
+                                endian => 'little',
+
                                 #planepath => 'Diagonals',
                                 # planepath => 'ZOrderCurve,radix=10',
                                 # i_start => 1,

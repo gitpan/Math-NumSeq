@@ -23,7 +23,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 18;
+$VERSION = 19;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -51,17 +51,21 @@ use constant i_start => 1;
 #    A078929 A(n+k) = A(n)
 #    A081592 - runs of n many 1 or 2
 #
-# A156253 kol supp
-# A064353 kol 1/3
-# A001083 A00002 lengths after iterating 1,2,3,5,7,10,15
-# A006928 lengths ...
-# A042942 1,2,1,1 lengths after iterating 1,2,4,6,9,14,22
-# A079729 1,2,3 starting 1,2,2
-# A079730 1,2,3,4 starting 1,2,2
+#    A156253 kol supp
+#    A064353 kol 1/3
+#    A001083 A00002 lengths after iterating 1,2,3,5,7,10,15
+#    A006928 lengths ...
+#    A042942 1,2,1,1 lengths after iterating 1,2,4,6,9,14,22
+#    A079729 1,2,3 starting 1,2,2
+#    A079730 1,2,3,4 starting 1,2,2
+#
+#    A074290 - diff from n mod 2
+#    A074291 - positions of n odd having 1 or n even having 2
 #
 #    A025142,A025143 - invert 1,2 so opposite run length
 #
-#    A074293 most populous digit,
+#    A074292 most populous digit in groups of 3
+#    A074293 most populous digit in groups of 5
 #    A074295 most populous digit in groups of 7
 #
 #    A171899 van eck transform of A000002
@@ -71,8 +75,8 @@ use constant oeis_anum => 'A000002';
 sub rewind {
   my ($self) = @_;
   $self->{'i'} = 1;
-  @{$self->{'digits'}} = (1);
-  @{$self->{'counts'}} = (2);
+  $self->{'digits'} = [1];
+  $self->{'counts'} = [2];
 }
 
 sub next {

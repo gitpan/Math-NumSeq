@@ -31,11 +31,15 @@ use Math::NumSeq::Expression;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
+
+# is Language::Expr meant to load this itself
+eval { require Tie::Hash::NamedCapture };
+
 #------------------------------------------------------------------------------
 # VERSION
 
 {
-  my $want_version = 18;
+  my $want_version = 19;
   ok ($Math::NumSeq::Expression::VERSION, $want_version, 'VERSION variable');
   ok (Math::NumSeq::Expression->VERSION,  $want_version, 'VERSION class method');
 
