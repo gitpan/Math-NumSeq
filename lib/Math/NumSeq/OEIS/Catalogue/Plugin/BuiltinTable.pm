@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 19;
+$VERSION = 20;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 407 A-numbers in 72 modules
+# total 409 A-numbers in 73 modules
 
 use constant info_arrayref =>
 [
@@ -3289,6 +3289,22 @@ use constant info_arrayref =>
   {
     'anum' => 'A003434',
     'class' => 'Math::NumSeq::TotientSteps'
+  },
+  {
+    'anum' => 'A053478',
+    'class' => 'Math::NumSeq::TotientStepsSum',
+    'parameters' => [
+      'including_self',
+      1
+    ]
+  },
+  {
+    'anum' => 'A092693',
+    'class' => 'Math::NumSeq::TotientStepsSum',
+    'parameters' => [
+      'including_self',
+      0
+    ]
   },
   {
     'anum' => 'A000217',

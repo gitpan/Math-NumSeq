@@ -68,7 +68,6 @@ $|=1;
   # $values_class = $gen->values_class('ReverseAddSteps');
   # $values_class = $gen->values_class('Harshad');
   # $values_class = $gen->values_class('TotientPerfect');
-  # $values_class = $gen->values_class('TotientStepsSum');
   # $values_class = $gen->values_class('FractionDigits');
   require Math::NumSeq::DigitLength;
   $values_class = 'Math::NumSeq::OEIS';
@@ -79,7 +78,6 @@ $|=1;
   $values_class = 'App::MathImage::NumSeq::MobiusFunction';
   $values_class = 'Math::NumSeq::TwinPrimes';
   $values_class = 'Math::NumSeq::NumAronson';
-  $values_class = 'Math::NumSeq::Expression';
   $values_class = 'Math::NumSeq::ReverseAdd';
   $values_class = 'App::MathImage::NumSeq::Pell';
   $values_class = 'Math::NumSeq::Factorials';
@@ -120,10 +118,22 @@ $|=1;
   $values_class = 'App::MathImage::NumSeq::HofstadterDiff';
   $values_class = 'App::MathImage::NumSeq::AllDigits';
   $values_class = 'App::MathImage::NumSeq::ConcatNumbers';
+  $values_class = 'Math::NumSeq::Expression';
+  $values_class = 'Math::NumSeq::TotientStepsSum';
+  $values_class = 'App::MathImage::NumSeq::KolakoskiMajority';
 
   eval "require $values_class; 1" or die $@;
   print Math::NumSeq::DigitLength->VERSION,"\n";
   my $seq = $values_class->new (
+                                including_self => 0,
+
+                                expression_evaluator => 'LE',
+                                expression => '123',
+                                # # expression => 'z=3; z*x^2 + 3*x + 2',
+                                # # expression => 'x^2 + 3*x + 2',
+                                # # expression => 'atan(x)',
+                                # expression => '9*i*i',
+
                                 runs_type => '1to2N',
                                 #sqrt => 3,
                                 # factor_count => 8,
@@ -162,11 +172,6 @@ $|=1;
                                 # hi => 10, # 200*$rep,
                                 # digit => 1,
                                 # where => 'low',
-                                # # expression => 'z=3; z*x^2 + 3*x + 2',
-                                # # expression => 'x^2 + 3*x + 2',
-                                # # expression => 'atan(x)',
-                                # expression => '9*i*i',
-                                # # expression_evaluator => 'Perl',
                                 # oeis_anum  => 'A000396',
                                );
   my $hi = 78;

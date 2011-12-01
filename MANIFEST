@@ -48,6 +48,7 @@ devel/reverse-add.pl
 devel/run.pl
 devel/SafePrimes.pm
 devel/SafePrimes.t
+devel/totient.pl
 devel/triangular.pl
 inc/my_pod2html
 inc/MyMakeMakerExtras.pm
@@ -131,6 +132,7 @@ lib/Math/NumSeq/Totient.pm
 lib/Math/NumSeq/TotientCumulative.pm
 lib/Math/NumSeq/TotientPerfect.pm
 lib/Math/NumSeq/TotientSteps.pm
+lib/Math/NumSeq/TotientStepsSum.pm
 lib/Math/NumSeq/Triangular.pm
 lib/Math/NumSeq/Tribonacci.pm
 lib/Math/NumSeq/TwinPrimes.pm

@@ -23,7 +23,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 19;
+$VERSION = 20;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -32,7 +32,7 @@ use Math::NumSeq;
 #use Devel::Comments;
 
 use constant description => Math::NumSeq::__('Kolakoski sequence 1,2,2,1,1,2,1,etc its own run lengths.');
-use constant characteristic_monotonic => 1;
+use constant characteristic_monotonic => 0;
 use constant values_min => 1;
 use constant values_max => 2;
 use constant i_start => 1;
@@ -63,10 +63,6 @@ use constant i_start => 1;
 #    A074291 - positions of n odd having 1 or n even having 2
 #
 #    A025142,A025143 - invert 1,2 so opposite run length
-#
-#    A074292 most populous digit in groups of 3
-#    A074293 most populous digit in groups of 5
-#    A074295 most populous digit in groups of 7
 #
 #    A171899 van eck transform of A000002
 #

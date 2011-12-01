@@ -20,17 +20,19 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 19;
+$VERSION = 20;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
+*_is_infinite = \&Math::NumSeq::_is_infinite;
 
 use Math::NumSeq::Totient;
 *_totient_by_sieve = \&Math::NumSeq::Totient::_totient_by_sieve;
 
 # uncomment this to run the ### lines
 #use Devel::Comments;
+
 
 use constant description => Math::NumSeq::__('Number of repeated applications of the totient function to reach 1.');
 use constant characteristic_count => 1;
@@ -42,6 +44,11 @@ use constant oeis_anum => 'A003434';
 sub ith {
   my ($self, $i) = @_;
   ### TotientSteps ith(): $i
+
+  if (_is_infinite($i)) {
+    return $i;
+  }
+
   my $count = 0;
   for (;;) {
     if ($i <= 1) {
@@ -54,7 +61,7 @@ sub ith {
 
 sub pred {
   my ($self, $value) = @_;
-  return ($value >= 1);
+  return ($value==int($value) && $value >= 1);
 }
 
 1;
@@ -64,7 +71,7 @@ __END__
 
 =head1 NAME
 
-Math::NumSeq::TotientSteps -- repeated totients to reach 1
+Math::NumSeq::TotientSteps -- count of repeated totients to reach 1
 
 =head1 SYNOPSIS
 
@@ -90,14 +97,21 @@ Create and return a new sequence object.
 
 =item C<$value = $seq-E<gt>ith($i)>
 
-Return totient(i).
+Return the count totient of steps to run i down to 1.
+
+=item C<$value = $seq-E<gt>pred($value)>
+
+Return true if C<$value> occurs in the sequence, which simply means a count
+C<$value E<gt>= 1>.
 
 =back
 
 =head1 SEE ALSO
 
 L<Math::NumSeq>,
-L<Math::NumSeq::TotientStepsCumulative>
+L<Math::NumSeq::Totient>,
+L<Math::NumSeq::TotientPerfect>,
+L<Math::NumSeq::TotientStepsSum>
 
 =head1 HOME PAGE
 

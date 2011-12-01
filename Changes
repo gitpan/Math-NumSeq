@@ -17,6 +17,11 @@ with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 20, December 2011
+    - new TotientStepSum
+    - Expression workaround for Safe.pm vs regexp named captures
+    - SqrtDigits allow for older BigInt without as_oct()
+
 Version 19, November 2011
     - RepdigitRadix fix next() i=0,1,2 returns
 

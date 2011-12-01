@@ -24,13 +24,13 @@ use POSIX ();
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 19;
+$VERSION = 20;
 
 use Math::NumSeq::Base::Array;
 @ISA = ('Math::NumSeq::Base::Array');
 
 use vars '$VERSION';
-$VERSION = 19;
+$VERSION = 20;
 
 # uncomment this to run the ### lines
 #use Devel::Comments;

@@ -15,76 +15,86 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
-
-# math-image --values=BaumSweet --path=ZOrderCurve
-#
-# radix parameter ?
-
-
-package Math::NumSeq::BaumSweet;
+package Math::NumSeq::TotientStepsSum;
 use 5.004;
 use strict;
 
-use vars '$VERSION','@ISA';
+use vars '$VERSION', '@ISA';
 $VERSION = 20;
-use Math::NumSeq 7; # v.7 for _is_infinite()
+use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
-use constant description => Math::NumSeq::__('Baum-Sweet sequence, 1 if i contains no odd-length run of 0 bits, 0 if it does.');
+use Math::NumSeq::Totient 13;
+*_totient_by_sieve = \&Math::NumSeq::Totient::_totient_by_sieve;
+
+# uncomment this to run the ### lines
+#use Devel::Comments;
+
+
+use constant description => Math::NumSeq::__('Sum of totients when repeatedly applying until reach 1.');
 use constant values_min => 0;
-use constant values_max => 1;
-# use constant characteristic_smaller => 1; # undocumented
-# use constant characteristic_boolean => 1; # undocumented
-use constant oeis_anum => 'A086747';
+use constant characteristic_monotonic => 0;
+use constant i_start => 1;
+use constant parameter_info_array =>
+  [ { name        => 'including_self',
+      type        => 'boolean',
+      display     => Math::NumSeq::__('Inc Self'),
+      default     => 1,
+      description => Math::NumSeq::__('Whether to include N itself in the sum.'),
+    },
+  ];
+
+# OEIS-Catalogue: A053478 including_self=1
+# OEIS-Catalogue: A092693 including_self=0
+sub oeis_anum {
+  my ($self) = @_;
+  return ($self->{'including_self'} ? 'A053478' : 'A092693');
+}
 
 sub ith {
   my ($self, $i) = @_;
+
   if (_is_infinite($i)) {
     return $i;
   }
-  while ($i) {
-    if (($i % 2) == 0) {
-      my $oddzeros = 0;
-      do {
-        $oddzeros ^= 1;
-        $i /= 2;
-      } until ($i % 2);
-      if ($oddzeros) {
-        return 0;
-      }
-    }
-    $i = int($i/2);
-  }
-  return 1;
-}
 
-sub pred {
-  my ($self, $value) = @_;
-  return ($value == 0 || $value == 1);
+  my $sum = ($self->{'including_self'} ? $i : $i*0);
+  while ($i > 1) {
+    $sum += ($i = _totient_by_sieve($self,$i));
+  }
+  return $sum;
 }
 
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq BaumSweet ie
+=for stopwords Ryde Math-NumSeq totient totients
 
 =head1 NAME
 
-Math::NumSeq::BaumSweet -- Baum-Sweet sequence
+Math::NumSeq::TotientStepsSum -- sum of repeated totients to reach 1
 
 =head1 SYNOPSIS
 
- use Math::NumSeq::BaumSweet;
- my $seq = Math::NumSeq::BaumSweet->new;
+ use Math::NumSeq::TotientStepsSum;
+ my $seq = Math::NumSeq::TotientStepsSum->new;
  my ($i, $value) = $seq->next;
 
 =head1 DESCRIPTION
 
-The Baum-Sweet sequence numbers 1,1,0,1,1,0,0,1,0,1,0,0,etc, being 1 if the
-index i contains no odd-length run of 0 bits, or 0 if it does.
+The sum of the totients on repeatedly applying the totient function to
+reach 1.  For example i=5 applying the totient function goes 5- E<gt> 4
+-E<gt> 2 -E<gt> 1 so total value=5+4+2+1=12.
+
+The default is to include the initial i value itself in the sum, with
+C<including_self =E<gt> 0> it's excluded, in which case i=5 has
+value=4+2+1=7.
+
+See L<Math::NumSeq::TotientPerfect> for starting i values which have a sum
+equal to i itself.
 
 =head1 FUNCTIONS
 
@@ -92,25 +102,21 @@ See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 =over 4
 
-=item C<$seq = Math::NumSeq::BaumSweet-E<gt>new ()>
+=item C<$seq = Math::NumSeq::TotientStepsSum-E<gt>new ()>
 
 Create and return a new sequence object.
 
 =item C<$value = $seq-E<gt>ith($i)>
 
-Return the C<$i>'th BaumSweet number, ie. 1 or 0 according to whether C<$i>
-is without or with an odd-length run of 0 bits.
-
-=item C<$bool = $seq-E<gt>pred($value)>
-
-Return true if C<$value> occurs in the sequence, which simply means 0 or 1.
+Return the totient steps sum running i down to 1.
 
 =back
 
 =head1 SEE ALSO
 
 L<Math::NumSeq>,
-L<Math::NumSeq::Fibbinary>
+L<Math::NumSeq::Totient>,
+L<Math::NumSeq::TotientSteps>
 
 =head1 HOME PAGE
 
@@ -134,3 +140,7 @@ You should have received a copy of the GNU General Public License along with
 Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 =cut
+
+# Local variables:
+# compile-command: "math-image --values=TotientStepsSumSum"
+# End:

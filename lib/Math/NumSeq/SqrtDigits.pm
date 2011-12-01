@@ -22,7 +22,7 @@ use Carp;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 19;
+$VERSION = 20;
 
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
@@ -249,9 +249,12 @@ sub oeis_anum {
 
 #------------------------------------------------------------------------------
 
-my %radix_to_stringize = (2  => 'as_bin',
-                          8  => 'as_oct',
-                          10 => 'bstr');
+my %radix_to_stringize = ((Math::NumSeq::_bigint()->can('as_bin')
+                           ? (2  => 'as_bin') : ()),
+                          (Math::NumSeq::_bigint()->can('as_oct')
+                           ? (8  => 'as_oct') : ()),
+                          (Math::NumSeq::_bigint()->can('bstr')
+                           ? (10 => 'bstr') : ()));
 
 sub rewind {
   my ($self) = @_;
@@ -272,11 +275,6 @@ sub _extend {
     $sqrt = $self->parameter_default('sqrt');
   }
 
-  unless (Math::BigInt->can('new')) {
-    # pure-perl Calc.pm is very slow
-    eval 'use Math::BigInt try => "GMP"; 1'
-      || require Math::BigInt;
-  }
   my $calcdigits = int(2*$self->{'i_extended'} + 32);
 
   my $radix = $self->{'radix'};
@@ -284,12 +282,12 @@ sub _extend {
   my $root;
   my $halfdigits = int($calcdigits/2);
   if ($radix == 2) {
-    $root = Math::BigInt->new(1);
+    $root = Math::NumSeq::_bigint()->new(1);
     $root->blsft ($calcdigits);
   } else {
-    $power = Math::BigInt->new($radix);
+    $power = Math::NumSeq::_bigint()->new($radix);
     $power->bpow ($halfdigits);
-    $root = Math::BigInt->new($power);
+    $root = Math::NumSeq::_bigint()->new($power);
     $root->bmul ($root);
   }
   $root->bmul ($sqrt);

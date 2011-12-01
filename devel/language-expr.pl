@@ -20,11 +20,48 @@
 use 5.010;
 use strict;
 use warnings;
-use Language::Expr;
 
 use Smart::Comments;
 
 # Language::Expr::Manual::Syntax
+
+
+
+{
+  require Safe;
+  my $safe = Safe->new;
+  my $str = 'axb';
+  $str =~ /(?<foo>x)/;
+
+  eval << 'HERE' or die;
+  print $+{'foo'},"\n";
+1;
+HERE
+  exit 0;
+}
+
+{
+  require Safe;
+  my $safe = Safe->new;
+
+  require Language::Expr;
+  my $le = new Language::Expr;
+  my @ret = $le->enum_vars ('123');
+  ### @ret
+  exit 0;
+}
+
+{
+  require Language::Expr;
+  my $le = new Language::Expr;
+  $le->var('a' => 1, 'b' => 2);
+
+  # evaluate expression
+  say $le->eval('$a + $b');
+
+  exit 0;
+}
+
 {
   my $le = Language::Expr->new (interpreted => 1);
   $le->var (num => 123);
@@ -50,17 +87,6 @@ HERE
 }
 
 {
-  use Language::Expr;
-  my $le = new Language::Expr;
-  $le->var('a' => 1, 'b' => 2);
-
-  # evaluate expression
-  say $le->eval('$a + $b');
-
-  exit 0;
-}
-
-{
   my $le = Language::Expr->new (interpreted => 1);
   $le->func (sqr => sub { $_[0] ** 2 });
   $le->compiler->func_mapping->{'sqr'} = sub { $_[0] ** 2 };
@@ -75,14 +101,14 @@ HERE
 }
 
 {
-  use Language::Expr::Compiler::Perl;
+  require Language::Expr::Compiler::Perl;
   my $plc = Language::Expr::Compiler::Perl->new;
   ### perl: $plc->perl('-123 + 2*$x')
   exit 0;
 }
 
 {
-  use Language::Expr;
+  require Language::Expr;
   my $le = new Language::Expr;
   $le->var('a' => 1, 'b' => 2);
   $le->func(sqr => sub { $_[0] ** 2 });

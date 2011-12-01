@@ -32,14 +32,11 @@ use Math::NumSeq::Expression;
 #use Smart::Comments;
 
 
-# is Language::Expr meant to load this itself
-eval { require Tie::Hash::NamedCapture };
-
 #------------------------------------------------------------------------------
 # VERSION
 
 {
-  my $want_version = 19;
+  my $want_version = 20;
   ok ($Math::NumSeq::Expression::VERSION, $want_version, 'VERSION variable');
   ok (Math::NumSeq::Expression->VERSION,  $want_version, 'VERSION class method');
 
@@ -50,23 +47,6 @@ eval { require Tie::Hash::NamedCapture };
   ok (! eval { Math::NumSeq::Expression->VERSION($check_version); 1 },
       1,
       "VERSION class check $check_version");
-}
-
-
-#------------------------------------------------------------------------------
-# Perl expressions
-
-{
-  my $seq = Math::NumSeq::Expression->new (expression => '2*i');
-  ok (join(',',map {$seq->next} 1,2,3), '0,0,1,2,2,4');
-}
-{
-  my $seq = Math::NumSeq::Expression->new (expression => 'i*2');
-  ok (join(',',map {$seq->next} 1,2,3), '0,0,1,2,2,4');
-}
-{
-  my $seq = Math::NumSeq::Expression->new (expression => '2*$i');
-  ok (join(',',map {$seq->next} 1,2,3), '0,0,1,2,2,4');
 }
 
 
@@ -86,6 +66,23 @@ eval { require Tie::Hash::NamedCapture };
   }
   ok ($good, 1);
 }
+
+#------------------------------------------------------------------------------
+# Perl expressions
+
+{
+  my $seq = Math::NumSeq::Expression->new (expression => '2*i');
+  ok (join(',',map {$seq->next} 1,2,3), '0,0,1,2,2,4');
+}
+{
+  my $seq = Math::NumSeq::Expression->new (expression => 'i*2');
+  ok (join(',',map {$seq->next} 1,2,3), '0,0,1,2,2,4');
+}
+{
+  my $seq = Math::NumSeq::Expression->new (expression => '2*$i');
+  ok (join(',',map {$seq->next} 1,2,3), '0,0,1,2,2,4');
+}
+
 
 exit 0;
 

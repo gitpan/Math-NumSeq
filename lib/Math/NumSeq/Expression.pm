@@ -24,7 +24,7 @@ use Math::Libm;
 use Module::Util;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 19;
+$VERSION = 20;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -161,6 +161,14 @@ sub new {
 
   my $subr;
   if ($evaluator eq 'Perl') {
+
+    # Workaround: Something fishy in perl 5.14.2 means that after
+    # Safe->new() subsequently loaded code using %- named captures fails to
+    # load Tie::Hash::NamedCapture.  Load it now, if it exists.  This
+    # affects Language::Expr which uses Regexp::Grammars which has
+    # $-{'foo'}.
+    eval { require Tie::Hash::NamedCapture };
+
     require Safe;
     my $safe = Safe->new;
     $safe->permit('print',

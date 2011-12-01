@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION';
-$VERSION = 19;
+$VERSION = 20;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;

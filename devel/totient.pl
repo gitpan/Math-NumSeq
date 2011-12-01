@@ -1,3 +1,5 @@
+#!/usr/bin/perl -w
+
 # Copyright 2011 Kevin Ryde
 
 # This file is part of Math-NumSeq.
@@ -15,22 +17,28 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
-package Math::NumSeq::Base::IterateIth;
-use 5.004;
+require 5;
 use strict;
 
-use vars '$VERSION';
-$VERSION = 20;
+# uncomment this to run the ### lines
+use Smart::Comments;
 
-sub rewind {
-  my ($self) = @_;
-  $self->{'i'} = $self->i_start;
+{
+  require Math::NumSeq::TotientStepsSum;
+  my $seq = Math::NumSeq::TotientStepsSum->new;
+  my $value_prev = 0;
+  my $decr = 0;
+  for (1 .. 500) {
+    my ($i,$value) = $seq->next;
+    if ($value < $value_prev) {
+      $decr++;
+    } else {
+      if ($decr) {
+        print "$i decr $decr\n";
+      }
+      $decr = 0;
+    }
+    $value_prev = $value;
+  }
+  exit 0;
 }
-sub next {
-  my ($self) = @_;
-  my $i = $self->{'i'}++;
-  return ($i, $self->ith($i));
-}
-
-1;
-__END__
