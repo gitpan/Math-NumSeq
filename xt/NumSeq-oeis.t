@@ -42,7 +42,7 @@ use POSIX ();
 POSIX::setlocale(POSIX::LC_ALL(), 'C'); # no message translations
 
 # uncomment this to run the ### lines
-#use Devel::Comments '###';
+#use Smart::Comments '###';
 
 use constant DBL_INT_MAX => (POSIX::FLT_RADIX() ** POSIX::DBL_MANT_DIG());
 use constant MY_MAX => (POSIX::FLT_RADIX() ** (POSIX::DBL_MANT_DIG()-5));
@@ -59,15 +59,20 @@ sub diff_nums {
       next;
     }
     if (! defined $got || ! defined $want) {
-      return "different pos=$i got=".(defined $got ? $got : '[undef]')
-        ." want=".(defined $want ? $want : '[undef]');
+      return ("different pos=$i def/undef"
+              . "\n  got=".(defined $got ? $got : '[undef]')
+              . "\n want=".(defined $want ? $want : '[undef]'));
     }
     $got =~ /^[0-9.-]+$/
       or return "not a number pos=$i got='$got'";
     $want =~ /^[0-9.-]+$/
       or return "not a number pos=$i want='$want'";
     if ($got != $want) {
-      return "different pos=$i numbers got=$got want=$want";
+      ### $got
+      ### $want
+      return ("different pos=$i numbers"
+              . "\n  got=".(defined $got ? $got : '[undef]')
+              . "\n want=".(defined $want ? $want : '[undef]'));
     }
   }
   return undef;
@@ -122,6 +127,10 @@ sub check_class {
   # return unless $class =~ /AlmostPrimes/;
   # return unless $class =~ /Fib/;
   # return unless $class =~ /Fraction/;
+  # return unless $class =~ /Fib/;
+  # return unless $class =~ /Star/;
+  # return unless $class =~ /Luc|Fib/;
+  # return unless $class =~ /ReverseAddSteps/;
 
   eval "require $class" or die;
 
@@ -132,7 +141,7 @@ sub check_class {
   my $max_value = undef;
   if ($class->isa('Math::NumSeq::Factorials')
       || $class->isa('Math::NumSeq::Primorials')
-      || $class eq 'Math::NumSeq::Fibonacci' # not LucasNumbers yet
+      || $class->isa('Math::NumSeq::Fibonacci') # incl LucasNumbers
      ) {
     $max_value = 'unlimited';
   }
@@ -308,6 +317,70 @@ sub check_class {
   }
 
   {
+    ### by ith() ...
+    $seq->can('ith')
+      or next;
+
+    my $i_start = $seq->i_start;
+    my $i = $i_start;
+    if (($max_value||'') eq 'unlimited') {
+      $i = Math::NumSeq::_bigint()->new($i);
+    }
+
+    my @got;
+    while (@got < @$want) {
+      my $value = $seq->ith($i++);
+      ### got: "$i $value, towards want size ".@$want
+      last if (! defined $value);
+      push @got, $value;
+    }
+    my $got = \@got;
+    ### $got
+
+    my $diff = diff_nums($got, $want);
+    if (defined $diff) {
+      $good = 0;
+      MyTestHelpers::diag ("bad: $name by ith() from i_start=$i_start");
+      MyTestHelpers::diag ($diff);
+      MyTestHelpers::diag (ref $seq);
+      MyTestHelpers::diag ($filename);
+      MyTestHelpers::diag ("got  len ".scalar(@$got));
+      MyTestHelpers::diag ("want len ".scalar(@$want));
+      if ($#$got > 200) { $#$got = 200 }
+      if ($#$want > 200) { $#$want = 200 }
+      MyTestHelpers::diag ("got  ". join(',', map {defined() ? $_ : 'undef'} @$got));
+      MyTestHelpers::diag ("want ". join(',', map {defined() ? $_ : 'undef'} @$want));
+    }
+
+    {
+      my $data_min = _min(@$want);
+      if ($seq->isa('Math::NumSeq::ReverseAddSteps')) {
+        # 196 infinite value -1 not reached
+        if ($data_min > -1) {
+          $data_min = -1;
+        }
+      }
+      my $values_min = $seq->values_min;
+      if (defined $values_min
+          && defined $data_min
+          && $values_min != $data_min) {
+        $good = 0;
+        MyTestHelpers::diag ("bad: $name values_min $values_min but data min $data_min");
+      }
+    }
+    {
+      my $values_max = $seq->values_max;
+      if (defined $values_max) {
+        my $data_max = _max(@$want);
+        if ($values_max != $data_max) {
+          # $good = 0;
+          MyTestHelpers::diag ("bad: $name values_max=$values_max not seen in data, only $data_max");
+        }
+      }
+    }
+  }
+
+  {
     ### by pred() ...
     $seq->can('pred')
       or next;
@@ -386,11 +459,13 @@ sub check_class {
       }
     }
     {
-      my $data_max = _max(@$want);
       my $values_max = $seq->values_max;
-      if (defined $values_max && $values_max != $data_max) {
-        $good = 0;
-        MyTestHelpers::diag ("bad: $name values_max $values_max not seen in data, only $data_max");
+      if (defined $values_max) {
+        my $data_max = _max(@$want);
+        if ($values_max != $data_max) {
+          $good = 0;
+          MyTestHelpers::diag ("bad: $name values_max=$values_max not seen in data, only $data_max");
+        }
       }
     }
   }

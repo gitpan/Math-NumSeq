@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 20;
+$VERSION = 21;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -35,7 +35,7 @@ use constant description => Math::NumSeq::__('Totient function, the count of how
 use constant characteristic_count => 1;
 use constant characteristic_smaller => 1;
 use constant characteristic_monotonic => 0;
-use constant values_min => 0;
+use constant values_min => 1;
 use constant i_start => 1;
 
 use constant oeis_anum => 'A000010';

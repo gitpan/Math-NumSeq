@@ -20,12 +20,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 20;
+$VERSION = 21;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
+*_is_infinite = \&Math::NumSeq::_is_infinite;
 
 # uncomment this to run the ### lines
 #use Devel::Comments;
@@ -96,6 +97,11 @@ sub next {
 sub ith {
   my ($self, $k) = @_;
   ### ReverseAddSteps ith(): $k
+
+  if (_is_infinite($k) || $k < 0) {
+    return $k;
+  }
+
   my $radix = $self->{'radix'};
   my $uv_limit = $self->{'uv_limit'};
 
@@ -170,7 +176,7 @@ sub ith {
 
 sub pred {
   my ($self, $value) = @_;
-  return ($value >= 0);
+  return ($value == int($value) && $value >= -1);
 }
 
 1;
@@ -225,7 +231,8 @@ Return the number of reverse-add steps required to reach a palindrome.
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> occurs in the sequence, which simply means C<$value
-E<gt>= 0> since any count of steps is possible.
+E<gt>= 0> since any count of steps is possible, or C<$value==-1> for
+infinite.
 
 =back
 

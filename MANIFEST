@@ -154,6 +154,7 @@ t/FibonacciWord.t
 t/File-1.txt
 t/File.t
 t/FractionDigits-Catalogue.t
+t/FractionDigits.t
 t/MephistoWaltz.t
 t/MobiusFunction.t
 t/MyTestHelpers.pm

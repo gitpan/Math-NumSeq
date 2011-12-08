@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 20;
+$VERSION = 21;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -34,13 +34,14 @@ use constant characteristic_pn1 => 1;
 use constant characteristic_monotonic => 0;
 use constant values_min => -1;
 use constant values_max => 1;
+use constant i_start => 1;
 
-# cf A030059 the -1 positions, odd number of distinct primes
-#    A030229 the 1 positions, even number of distinct primes
-#    A013929 the 0 positions, square factor, ie. non-square-frees
-#    A005117 the square frees, mobius -1 or +1
+# cf A030059 the -1 positions, being odd number of distinct primes
+#    A030229 the 1 positions, being even number of distinct primes
+#    A013929 the 0 positions, being square factor, ie. the non-square-frees
+#    A005117 square free numbers, mobius -1 or +1
 #
-use constant oeis_anum => 'A008683'; # mobius -1,0,1
+use constant oeis_anum => 'A008683'; # mobius -1,0,1 starting i=1
 
 
 # each 2-bit vec() value is

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 20;
+$VERSION = 21;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -44,7 +44,7 @@ use constant values_min => 1;
 sub values_max {
   my ($self) = @_;
   return ($self->Math::NumSeq::Squares::pred($self->{'sqrt'})
-          ? 1
+          ? 1   # perfect square, only some 1s
           : undef);
 }
 
@@ -56,18 +56,18 @@ sub values_max {
 my @oeis_anum = (undef,     # 0
                  undef,     # 1
                  'A028254', # 2
-                 # OEIS-Catalogue: A028254
                  'A028257', # 3
-                 # OEIS-Catalogue: A028257 sqrt=3
                  undef,     # 4
                  'A059176', # 5
-                 # OEIS-Catalogue: A059176 sqrt=5
                  undef,     # 6
                  'A161368', # 7
-                 # OEIS-Catalogue: A161368 sqrt=7
                  undef,     # 8
                  undef,     # 9
                  'A059177', # 10
+                 # OEIS-Catalogue: A028254
+                 # OEIS-Catalogue: A028257 sqrt=3
+                 # OEIS-Catalogue: A059176 sqrt=5
+                 # OEIS-Catalogue: A161368 sqrt=7
                  # OEIS-Catalogue: A059177 sqrt=10
                 );
 sub oeis_anum {
@@ -140,7 +140,8 @@ sub next {
     ### num: (sqrt($self->{'sb2'}) + $self->{'a'}).''
     ### den: ($self->{'sb2'} - $self->{'a'}**2).''
 
-    # always "+ 1" to round up because sqrt() is not an integer so the numerator is not divisible by the denominator
+    # always "+ 1" to round up because sqrt() is not an integer so the
+    # numerator is not divisible by the denominator
     #
     $value = (sqrt($self->{'sb2'}) + $a) / ($self->{'sb2'} - $a*$a) + 1;
     $self->{'a'} = $a*$value + 1;
@@ -176,7 +177,7 @@ sub next {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq radicand BigInt radix Engel
+=for stopwords Ryde Math-NumSeq BigInt Engel
 
 =head1 NAME
 
@@ -214,7 +215,6 @@ For a perfect square the expansion is a trivial 1s sequence adding up to the
 root.  This is unlikely to be interesting but it works.
 
     1/1+1/1+...+1/1 = sqrt(perfect square)
-
 
 =head1 FUNCTIONS
 

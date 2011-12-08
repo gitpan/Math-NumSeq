@@ -21,7 +21,7 @@ use strict;
 use POSIX 'ceil';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 20;
+$VERSION = 21;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -31,7 +31,22 @@ use Math::NumSeq;
 
 use constant name => Math::NumSeq::__('Multiples of a given K');
 use constant description => Math::NumSeq::__('The multiples K, 2*K, 3*K, 4*K, etc of a given number.');
-use constant values_min => 0;
+sub values_min {
+  my ($self) = @_;
+  if ((my $multiples = $self->{'multiples'}) >= 0) {
+    return $multiples * $self->i_start;
+  } else {
+    return undef;
+  }
+}
+sub values_max {
+  my ($self) = @_;
+  if ((my $multiples = $self->{'multiples'}) <= 0) {
+    return $multiples * $self->i_start;
+  } else {
+    return undef;
+  }
+}
 sub characteristic_monotonic {
   my ($self) = @_;
   # strictly monotonic if multiples of 1 or more

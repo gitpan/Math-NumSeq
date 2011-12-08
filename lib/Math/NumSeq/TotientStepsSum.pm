@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 20;
+$VERSION = 21;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -35,17 +35,21 @@ use Math::NumSeq::Totient 13;
 
 
 use constant description => Math::NumSeq::__('Sum of totients when repeatedly applying until reach 1.');
-use constant values_min => 0;
 use constant characteristic_monotonic => 0;
 use constant i_start => 1;
 use constant parameter_info_array =>
   [ { name        => 'including_self',
       type        => 'boolean',
-      display     => Math::NumSeq::__('Inc Self'),
+      display     => Math::NumSeq::__('Incl Self'),
       default     => 1,
       description => Math::NumSeq::__('Whether to include N itself in the sum.'),
     },
   ];
+sub values_min {
+  my ($self) = @_;
+  return ($self->{'including_self'} ? 1 : 0);
+}
+
 
 # OEIS-Catalogue: A053478 including_self=1
 # OEIS-Catalogue: A092693 including_self=0

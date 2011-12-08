@@ -21,6 +21,26 @@ use 5.004;
 use strict;
 use Math::BigInt try => 'GMP';
 
+# use Math::BigInt try => 'Calc';
+
+{
+  require Math::NumSeq;
+  require Math::BigFloat;
+  Math::BigFloat->import;
+  my $x = Math::BigFloat->binf();
+  my $ret = ($x != $x);
+  print "$ret\n";
+
+  # # my $ret = Math::NumSeq::_is_infinite($biginf);
+  # print "$ret\n";
+  #
+  # # return (
+  # #         || ($x != 0 && $x == 2*$x));  # inf
+
+  exit 0;
+}
+
+
 #my $bits = 100;
 
 # my $factor = Math::BigInt->new(1);

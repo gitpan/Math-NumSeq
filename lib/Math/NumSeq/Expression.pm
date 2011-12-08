@@ -24,7 +24,7 @@ use Math::Libm;
 use Module::Util;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 20;
+$VERSION = 21;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -162,12 +162,18 @@ sub new {
   my $subr;
   if ($evaluator eq 'Perl') {
 
-    # Workaround: Something fishy in perl 5.14.2 means that after
-    # Safe->new() subsequently loaded code using %- named captures fails to
-    # load Tie::Hash::NamedCapture.  Load it now, if it exists.  This
-    # affects Language::Expr which uses Regexp::Grammars which has
-    # $-{'foo'}.
-    eval { require Tie::Hash::NamedCapture };
+    # Workaround: Something fishy in Safe 2.29 and perl 5.14.2 meant that
+    # after a Safe->new(), any subsequently loaded code dragging in %- named
+    # captures fails to load Tie::Hash::NamedCapture.  Load it now, if it
+    # exists.  This affects Language::Expr which uses Regexp::Grammars which
+    # has $-{'foo'}.
+    #
+    # Safe 2.30 has it fixed, so can skip there, unless or until want to
+    # depend outright on that version
+    # http://perl5.git.perl.org/perl.git/commitdiff/ad084f51cd17539ef55b510228156cd4f83c9729
+    #
+    eval { Safe->VERSION(2.30); 1 }
+      or eval { require Tie::Hash::NamedCapture };
 
     require Safe;
     my $safe = Safe->new;
@@ -407,20 +413,20 @@ Math::NumSeq::Expression -- mathematical expression values
 
 =head1 DESCRIPTION
 
-A string expression evaluated at i=0, 1, 2, etc, by a choice of evaluator
-modules.
+A string expression evaluated at i=0, 1, 2, etc, by Perl or a choice of
+evaluator modules.
 
-This is designed to take expression strings from user input, though could be
+This is designed to take expression strings from user input though could be
 used for something quick from program code too.
 
 =head2 Perl
 
 The default C<expression_evaluator =E<gt> 'Perl'> evaluates with Perl
-itself.  This is always available.  Expressions are with the C<Safe> module
-to restrict to arithmetic.
+itself.  This is always available.  Expressions are run with the C<Safe>
+module to restrict to arithmetic (see L<Safe>).
 
-The i value is in a C<$i> variable and an C<i> function.  The C<i> function
-is prototyped like a constant.
+The i index is in a C<$i> variable and an C<i()> function.  The C<i()>
+function is prototyped like a constant.
 
     i+1
     2*$i - 2
@@ -447,34 +453,41 @@ The functions made available include
 C<expression_evaluator =E<gt> 'MS'> selects the C<Math::Symbolic> module, if
 available.
 
-The expression should use a single variable, which can be any name, and
-takes the C<$i> index in the sequence.
+The expression is parsed with C<Math::Symbolic-E<gt>parse_from_string()> and
+should use a single variable for the i index in the sequence.  The variable
+can be any name, not just  "i"
 
-The usual C<Math::Symbolic> C<simplify()> is applied to perhaps reduce the
-expression a bit, then its C<to_sub()> for actual evaluation.
+    2*i+1
+    x^2 + x + 1           # any single variable
+
+The usual C<$ms-E<gt>simplify()> is applied to perhaps reduce the expression
+a bit, then C<to_sub()> for actual evaluation.
 
 =head2 Math-Expression-Evaluator
 
 C<expression_evaluator =E<gt> 'MEE'> selects the
-C<Math::Expression::Evaluator> module, if
-available.
+C<Math::Expression::Evaluator> module, if available.
 
 The expression should use a single input variable, which can be any name,
-and takes the C<$i> index in the sequence.  Temporary variables can be
-assigned to, as for instance
+and takes the i index in the sequence.  Temporary variables can be used by
+assigning to them,
 
-    t=2*i; t^2
+    x^2 + x + 1      # any single variable
+    t=2*i; t^2       # temporary variables assigned
 
-The expression is compiled with the C<Math::Expression::Evaluator>
-C<compiled()> method for actual evaluation.
+The expression is run with C<$mee-E<gt>compiled()>.  It turns the expression
+into a Perl subr for actual evaluation.
 
 =head2 Language-Expr
 
 C<expression_evaluator =E<gt> 'LE'> selects the C<Language::Expr> module, if
-available.  See L<Language::Expr::Manual::Syntax> for its expression syntax.
+available.
 
 The expression should use a single variable, of any name, which will be the
-C<$i> index in the sequence.
+i index in the sequence.  See L<Language::Expr::Manual::Syntax> for the
+expression syntax.
+
+    $x*$x + $x + 1
 
 The expression is compiled with L<Language::Expr::Compiler::Perl> for
 evaluation.

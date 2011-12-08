@@ -28,7 +28,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 20;
+$VERSION = 21;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -66,7 +66,7 @@ sub ith {
   }
   my $sum = 0;
   foreach my $n (1 .. $i) {
-    $sum += _totient($n);
+    $sum += _totient_by_sieve($self,$n);
   }
   return $sum;
 }

@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 20;
+$VERSION = 21;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -34,6 +34,8 @@ use constant description => Math::NumSeq::__('Sequence is itself in ASCII.');
 use constant characteristic_monotonic => 1;
 use constant i_start => 1;
 use constant values_min => 48;
+# my @values_max;
+# $values_max[10] = 57;
 sub values_max {
   my ($self) = @_;
   my $radix = $self->{'radix'};
@@ -197,8 +199,9 @@ Math::NumSeq::AsciiSelf -- sequence is its own ASCII digits
 
 =head1 DESCRIPTION
 
-A sequence which is itself in ASCII, 53,51,53,49,53,51,52,57,etc, being Neil
-Sloane's OEIS A109733.
+A sequence which is itself in ASCII, Sloane's OEIS A109733.
+
+    53, 51, 53, 49, 53, 51, 52, 57, etc
 
 The first value 53 is digits 5,3 which in ASCII is the initial 53 and append
 51.  That new 51 is digits 5,1 which is ASCII 53 and 49 which are appended.

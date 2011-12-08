@@ -46,7 +46,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 20;
+$VERSION = 21;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -74,7 +74,10 @@ HERE
 # }
 
 use constant description => undef;
-use constant oeis_anum => undef;
+sub oeis_anum {
+  my ($self) = @_;
+  return $self->{'oeis_anum'} || undef;
+}
 sub i_start {
   my ($self) = @_;
   return $self->{'i_start'} || 0;

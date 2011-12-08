@@ -25,12 +25,12 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings(); }
 
-use Math::NumSeq::SqrtDigits;
+use Math::NumSeq::FractionDigits;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-my $test_count = (tests => 43)[1];
+my $test_count = (tests => 260)[1];
 plan tests => $test_count;
 
 {
@@ -54,73 +54,70 @@ plan tests => $test_count;
 
 {
   my $want_version = 21;
-  ok ($Math::NumSeq::SqrtDigits::VERSION, $want_version, 'VERSION variable');
-  ok (Math::NumSeq::SqrtDigits->VERSION,  $want_version, 'VERSION class method');
+  ok ($Math::NumSeq::FractionDigits::VERSION, $want_version,
+      'VERSION variable');
+  ok (Math::NumSeq::FractionDigits->VERSION,  $want_version,
+      'VERSION class method');
 
-  ok (eval { Math::NumSeq::SqrtDigits->VERSION($want_version); 1 },
+  ok (eval { Math::NumSeq::FractionDigits->VERSION($want_version); 1 },
       1,
       "VERSION class check $want_version");
   my $check_version = $want_version + 1000;
-  ok (! eval { Math::NumSeq::SqrtDigits->VERSION($check_version); 1 },
+  ok (! eval { Math::NumSeq::FractionDigits->VERSION($check_version); 1 },
       1,
       "VERSION class check $check_version");
 }
 
 
 #------------------------------------------------------------------------------
-# characteristic(), i_start(), parameters
+# _to_int_and_decimals()
 
 {
-  my $seq = Math::NumSeq::SqrtDigits->new;
-  ok ($seq->characteristic('digits'), 10, 'characteristic(digits)');
-
-  ok ($seq->i_start, 1, 'i_start()');
-
-  my @pnames = map {$_->{'name'}} $seq->parameter_info_list;
-  ok (join(',',@pnames),
-      'sqrt,radix');
+  foreach my $elem (['1', '1',0],
+                    ['1.', '1',0],
+                    ['1.5', '15',1],
+                    ['1.50', '15',1],
+                    ['1.500', '15',1],
+                    ['1.005', '1005',3],
+                    ['1.0050', '1005',3],
+                    ['1.00500', '1005',3],
+                   ) {
+    my ($n, $want, $want_decimals) = @$elem;
+    my ($got, $got_decimals)
+      = Math::NumSeq::FractionDigits::_to_int_and_decimals($n);
+    ok ($got, $want, "$n");
+    ok ($got_decimals, $want_decimals, "$n");
+  }
 }
 
 
 #------------------------------------------------------------------------------
+# BigInt
 
-require Math::BigInt;
-foreach my $sqrt (2,7,123456) {
-  foreach my $radix (2,3,4,5,8,9,10,11,15,16,17,12345) {
-    my $root = Math::BigInt->new($radix);
-    $root->bpow(2 * 200);  # past the 150 digit extending step
-    $root->bmul($sqrt);
-    $root->bsqrt;
-    my @digits;
-    while ($root != 0) {
-      push @digits, $root % $radix;
-      $root->bdiv($radix);
+{
+  my $uv_len = length(~0);
+  my $num = '257'x$uv_len;
+  my $den = '9'x(3*$uv_len);
+  my $frac = "$num/$den";
+  # MyTestHelpers::diag ("uv_len $uv_len, frac $frac");
+
+  my $seq = Math::NumSeq::FractionDigits->new(fraction => $frac);
+  my $want_i = 0;
+  foreach (1 .. 2*$uv_len) {
+    { my ($i,$value) = $seq->next;
+      ok ($i, $want_i++);
+      ok ($value, 2);
     }
-    @digits = reverse @digits;
-    my $want = join(',',@digits);
-
-    my $seq = Math::NumSeq::SqrtDigits->new (sqrt => $sqrt, radix => $radix);
-    my @got;
-    foreach (1 .. @digits) {
-      my ($i,$value) = $seq->next;
-      push @got, $value;
+    { my ($i,$value) = $seq->next;
+      ok ($i, $want_i++);
+      ok ($value, 5);
     }
-    my $got = join(',',@got);
-
-    ok ($got,$want, "sqrt($sqrt) radix $radix");
-    if ($got ne $want) {
-      my $i = 0;
-      while ($i < length($got) && $i < length($want)) {
-        if (substr($got,$i,1) ne substr($want,$i,1)) {
-          MyTestHelpers::diag("differ at char $i");
-          last;
-        }
-        $i++;
-      }
+    { my ($i,$value) = $seq->next;
+      ok ($i, $want_i++);
+      ok ($value, 7);
     }
   }
 }
 
+
 exit 0;
-
-

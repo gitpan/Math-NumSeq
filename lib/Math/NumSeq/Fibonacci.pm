@@ -21,7 +21,7 @@ use strict;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 20;
+$VERSION = 21;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
 
@@ -29,14 +29,16 @@ use Math::NumSeq;
 *_bigint = \&Math::NumSeq::_bigint;
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
+# uncomment this to run the ### lines
+#use Smart::Comments;
+
+
 # use constant name => Math::NumSeq::__('Fibonacci Numbers');
 use constant description => Math::NumSeq::__('The Fibonacci numbers 1,1,2,3,5,8,13,21, etc, each F(i) = F(i-1) + F(i-2), starting from 1,1.');
+
 use constant values_min => 0;
 use constant characteristic_monotonic => 2;
 use constant oeis_anum => 'A000045'; # fibonacci starting at i=0 0,1,1,2,3
-
-# uncomment this to run the ### lines
-#use Smart::Comments;
 
 my $uv_limit = do {
   # f1+f0 > i
@@ -47,7 +49,8 @@ my $uv_limit = do {
   my $f0 = 1;
   my $f1 = 1;
   my $prev_f0;
-  while ($f0 <= ~0 - $f1) {
+  my $max = ~0;
+  while ($f0 <= $max - $f1) {
     $prev_f0 = $f0;
     ($f1,$f0) = ($f1+$f0,$f1);
   }

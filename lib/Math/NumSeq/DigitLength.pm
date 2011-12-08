@@ -20,9 +20,9 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 20;
-use Math::NumSeq::Base::Digits;
-@ISA = ('Math::NumSeq::Base::Digits');
+$VERSION = 21;
+use Math::NumSeq;
+@ISA = ('Math::NumSeq');
 
 use Math::NumSeq;
 *_is_infinite = \&Math::NumSeq::_is_infinite;

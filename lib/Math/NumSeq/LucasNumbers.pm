@@ -21,16 +21,19 @@ use strict;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 20;
+$VERSION = 21;
+use Math::NumSeq::Base::Sparse;
+@ISA = ('Math::NumSeq::Base::Sparse');
 
-use Math::NumSeq::Fibonacci;
-@ISA = ('Math::NumSeq::Fibonacci');
+use Math::NumSeq;
+*_is_infinite = \&Math::NumSeq::_is_infinite;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-# use constant name => Math::NumSeq::__('Lucas Numbers');
+
 use constant description => Math::NumSeq::__('Lucas numbers 1, 3, 4, 7, 11, 18, 29, etc, being L(i) = L(i-1) + L(i-2) starting from 1,3.  This is the same recurrence as the Fibonacci numbers, but a different starting point.');
+
 use constant values_min => 1;
 use constant characteristic_monotonic => 2;
 use constant oeis_anum => 'A000204'; # lucas starting at 1,3,...
@@ -38,10 +41,72 @@ use constant i_start => 1;
 
 sub rewind {
   my ($self) = @_;
-  ### Lucas rewind()
-  $self->SUPER::rewind;
+  ### LucasNumbers rewind() ...
   $self->{'f0'} = 1;
   $self->{'f1'} = 3;
+  $self->{'i'} = $self->i_start;
+}
+
+my $uv_limit = do {
+  # f1+f0 > i
+  # f0 > i-f1
+  # check i-f1 as the stopping point, so that if i=UV_MAX then won't
+  # overflow a UV trying to get to f1>=i
+  #
+  my $f0 = 1;
+  my $f1 = 3;
+  my $prev_f0;
+  my $max = ~0;
+  while ($f0 <= $max - $f1) {
+    $prev_f0 = $f0;
+    ($f1,$f0) = ($f1+$f0,$f1);
+  }
+  ### $prev_f0
+  ### $f0
+  ### $f1
+  ### ~0 : ~0
+
+  $prev_f0
+};
+
+sub next {
+  my ($self) = @_;
+  ### LucasNumbers next(): "f0=$self->{'f0'}, f1=$self->{'f1'}"
+
+  (my $ret,
+   $self->{'f0'},
+   $self->{'f1'})
+    = ($self->{'f0'},
+       $self->{'f1'},
+       $self->{'f0'}+$self->{'f1'});
+  ### $ret
+
+  if ($ret == $uv_limit) {
+    $self->{'f1'} = _bigint()->new("$self->{'f1'}");
+  }
+
+  return ($self->{'i'}++, $ret);
+}
+
+# ENHANCE-ME: powering ...
+sub ith {
+  my ($self, $i) = @_;
+  ### LucasNumbers ith(): $i
+  if ($i <= 1 || _is_infinite($i)) {
+    return $i;
+  }
+  $i--;
+  my $f0 = ($i * 0) + 1;  # inherit bignum 1
+  my $f1 = $f0 + 2;       # inherit bignum 3
+  while (--$i > 0) {
+    $f0 += $f1;
+
+    unless (--$i > 0) {
+      return $f0;
+    }
+    $f1 += $f0;
+  }
+  return $f1;
 }
 
 1;

@@ -178,6 +178,8 @@ sub info_extend_parameters {
   if ($info->{'name'} eq 'planepath') {
     my @strings;
     foreach my $choice (@{$info->{'choices'}}) {
+      next if $choice eq 'MathImageCellularRule'; # not working yet
+
       my $path_class = "Math::PlanePath::$choice";
       Module::Load::load($path_class);
 

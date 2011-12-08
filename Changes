@@ -17,6 +17,11 @@ with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 21, December 2011
+    - LucasNumbers,TotientCumulative fixes for ith()
+    - DigitLength fix values_max()
+    - FractionDigits automatic BigInt where necessary
+
 Version 20, December 2011
     - new TotientStepSum
     - Expression workaround for Safe.pm vs regexp named captures

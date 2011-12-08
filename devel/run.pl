@@ -37,7 +37,6 @@ $|=1;
   my $values_class;
   # $values_class = $gen->values_class('Abundant');
   # $values_class = $gen->values_class('Obstinate');
-  # $values_class = $gen->values_class('Lucas');
   # $values_class = $gen->values_class('Emirps');
   # $values_class = $gen->values_class('Repdigits');
   # $values_class = $gen->values_class('UndulatingNumbers');
@@ -81,9 +80,7 @@ $|=1;
   $values_class = 'Math::NumSeq::ReverseAdd';
   $values_class = 'App::MathImage::NumSeq::Pell';
   $values_class = 'Math::NumSeq::Factorials';
-  $values_class = 'App::MathImage::NumSeq::ReverseAddSteps';
   $values_class = 'App::MathImage::NumSeq::KlarnerRado';
-  $values_class = 'App::MathImage::NumSeq::PlanePath';
   $values_class = 'App::MathImage::NumSeq::DigitCountLow';
   $values_class = 'App::MathImage::NumSeq::DivisorCount';
   $values_class = 'Math::NumSeq::AsciiSelf';
@@ -118,24 +115,29 @@ $|=1;
   $values_class = 'App::MathImage::NumSeq::HofstadterDiff';
   $values_class = 'App::MathImage::NumSeq::AllDigits';
   $values_class = 'App::MathImage::NumSeq::ConcatNumbers';
-  $values_class = 'Math::NumSeq::Expression';
   $values_class = 'Math::NumSeq::TotientStepsSum';
   $values_class = 'App::MathImage::NumSeq::KolakoskiMajority';
+  $values_class = 'App::MathImage::NumSeq::PlanePathDelta';
+  $values_class = 'App::MathImage::NumSeq::SqrtContfrac';
+  $values_class = 'Math::NumSeq::LucasNumbers';
+  $values_class = 'Math::NumSeq::StarNumbers';
+  $values_class = 'Math::NumSeq::ReverseAddSteps';
+  $values_class = 'Math::NumSeq::Expression';
 
   eval "require $values_class; 1" or die $@;
   print Math::NumSeq::DigitLength->VERSION,"\n";
   my $seq = $values_class->new (
+                                sqrt => 46,
                                 including_self => 0,
 
-                                expression_evaluator => 'LE',
-                                expression => '123',
+                                expression_evaluator => 'MS',
+                                expression => '2*i+1',
                                 # # expression => 'z=3; z*x^2 + 3*x + 2',
                                 # # expression => 'x^2 + 3*x + 2',
                                 # # expression => 'atan(x)',
                                 # expression => '9*i*i',
 
                                 runs_type => '1to2N',
-                                #sqrt => 3,
                                 # factor_count => 8,
                                 # multiplicity => 'distinct',
                                 #
@@ -161,6 +163,8 @@ $|=1;
                                 # planepath => 'PythagoreanTree,coordinates=BA',
                                 # planepath=>'RationalsTree,tree_type=CW',
                                 # planepath => 'DivisibleColumns,divisor_type=proper',
+                                planepath => 'HilbertCurve',
+                                delta_type=>'Dir4',
 
                                 # including_zero => 1,
                                 # # divisors_type => 'proper',
@@ -174,9 +178,10 @@ $|=1;
                                 # where => 'low',
                                 # oeis_anum  => 'A000396',
                                );
-  my $hi = 78;
-
-  print "i_start ",$seq->i_start,"\n";
+  my $hi = 278;
+  
+  my $i_start = $seq->i_start;
+  print "i_start $i_start\n";
   print "anum ",($seq->oeis_anum//'[undef]'),"\n";
   print "values_min ",($seq->values_min//'[undef]'),"\n";
   print "values_max ",($seq->values_max//'[undef]'),"\n";
@@ -198,8 +203,12 @@ $|=1;
 
     my $check_pred_upto = ! $seq->characteristic('digits')
       && ! $seq->characteristic('count');
-    foreach (1 .. $hi) {
+    foreach my $want_i ($i_start .. $i_start + $hi) {
       my ($i,$value) = $seq->next;
+      if (! defined $i) {
+        print "undef\n";
+        last;
+      }
       if (! defined $i) {
         print "undef\n";
         last;
@@ -217,6 +226,9 @@ $|=1;
       }
       if (! defined $saw_value_min || $value < $saw_value_min) {
         $saw_value_min = $value;
+      }
+      if ($i != $want_i) {
+        print " oops, i=$i expected $want_i\n";
       }
 
       if ($value > DBL_INT_MAX) {
@@ -321,7 +333,9 @@ $|=1;
         # }
       }
 
-      require Math::BigFloat;
+      # Note: not "require Math::BigFloat" since it does tie-ins to BigInt
+      # in its import
+      eval "use Math::BigFloat; 1" or die;
       print "$method(biginf): ";
       print $seq->$method(Math::BigFloat->binf())//'undef',"\n";
       print "$method(neg biginf): ";

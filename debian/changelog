@@ -1,5 +1,5 @@
-libmath-numseq-perl (20-1) unstable; urgency=low
+libmath-numseq-perl (21-1) unstable; urgency=low
 
   * Packaged version.
 
- -- Kevin Ryde <user42@zip.com.au>  Fri, 02 Dec 2011 08:09:27 +1100
+ -- Kevin Ryde <user42@zip.com.au>  Mon, 05 Dec 2011 17:51:43 +1100

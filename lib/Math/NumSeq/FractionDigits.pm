@@ -22,7 +22,7 @@ use List::Util 'max';
 use Math::NumSeq;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 20;
+$VERSION = 21;
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
 
@@ -137,22 +137,24 @@ sub rewind {
   ### $den
   $fraction = "$num/$den";
 
-  my $num_decimals = 0;
-  my $den_decimals = 0;
-  if ($num =~ m{(\d*)\.(\d+)}) {
-    $num = $1 . $2;
-    $num_decimals = length($2);
+  # decimals like 1.5/2.75 become 150/275
+  {
+    ($num, my $num_decimals) = _to_int_and_decimals ($num);
+    ($den, my $den_decimals) = _to_int_and_decimals ($den);
+    $num .= '0' x max(0, $den_decimals - $num_decimals);
+    $den .= '0' x max(0, $num_decimals - $den_decimals);
   }
-  if ($den =~ m{(\d*)\.(\d+)}) {
-    $den = $1 . $2;
-    $den_decimals = length($2);
-  }
-  $num .= '0' x max(0, $den_decimals - $num_decimals);
-  $den .= '0' x max(0, $num_decimals - $den_decimals);
 
+  if (max(length($num),length($den)) >= length(int (~0 / $radix))) {
+    $num = Math::NumSeq::_bigint()->new("$num");
+    $den = Math::NumSeq::_bigint()->new("$den");
+  }
+
+  # increase den so first digit is 0 to radix-1
   while ($den != 0 && $num >= $den) {
     $den *= $radix;
   }
+
   # while ($num && $num < $den) {
   #   $num *= $radix;
   # }
@@ -164,6 +166,16 @@ sub rewind {
   $self->{'num'} = $num;
   $self->{'den'} = $den;
   $self->{'i'} = 0;
+}
+
+sub _to_int_and_decimals {
+  my ($n) = @_;
+  if ($n =~ m{^(\d*)\.(\d*?)0*$}) {
+    return ($1 . $2,
+            length($2));
+  } else {
+    return ($n, 0);
+  }
 }
 
 sub next {
@@ -184,7 +196,8 @@ sub next {
   return ($self->{'i'}++, $quot);
 }
 
-# FIXME: only some digits occur, being the mod den residue class containing num.
+# FIXME: only some digits occur, being the modulo den residue class
+# containing num.
 # sub pred {
 #   my ($self, $value) = @_;
 # }
@@ -211,12 +224,14 @@ Math::NumSeq::FractionDigits -- the digits of a fraction p/q
 =head1 DESCRIPTION
 
 The sequence of digits which are a given fraction.  For example 1/7 in
-decimal 1,4,2,8,5,7,1,4, etc, being 0.14285714...
+decimal, being 0.14285714...
+
+    1, 4, 2, 8, 5, 7, 1, 4, etc
 
 The digits are always a repeating sequence of length no more than den-1.  In
-fact for a given repeating sequence a,b,c,a,b,c,etc the fraction is abc/999,
-if you want to cook up a sequence like that.  In a base other than decimal
-the "9" is radix-1, ie. the highest digit.
+fact if you want to cook up a repeating sequence a,b,c,a,b,c,etc then the
+fraction is abc/999.  In a base other than decimal the "9" is radix-1,
+ie. the highest digit.
 
 =head1 FUNCTIONS
 
@@ -232,11 +247,14 @@ Create and return a new sequence object giving the digits of C<$f>.  C<$f>
 is a string "num/den", or a decimal "xx.yy",
 
     2/29
-    1.5/3.25
     29.125
+    1.5/3.25
 
-The default is digits in decimal, or with the C<radix> parameter in another
-base.
+The default sequence values are decimal digits, or the C<radix> parameter
+can select another base.  (But the C<fraction> parameter is still decimal.)
+
+If the numerator or denominator of the fraction is bigger than fits Perl
+integer calculations then C<Math::BigInt> is used automatically.
 
 =back
 

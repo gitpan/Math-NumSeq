@@ -26,7 +26,7 @@ use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 use vars '$VERSION';
-$VERSION = 20;
+$VERSION = 21;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -63,22 +63,23 @@ sub anum_to_info {
 # re-reading the directory on every anum_next(), cache a bit for speed
 
 my $cached_arrayref = [];
-my $cached_mtime = '';
-my $cached_time = '';
+my $cached_mtime = -1;
+my $cached_time = -1;
 
 sub info_arrayref {
   my ($class) = @_;
 
   # stat() at most once per second
   my $time = time();
-  if ($cached_time ne $time) {
+  if ($cached_time != $time) {
     $cached_time = $time;
 
     # if $dir mtime changed then re-read
     my $dir = Math::NumSeq::OEIS::File::oeis_dir();
     my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
         $atime,$mtime,$ctime,$blksize,$blocks) = stat($dir);
-    if ($cached_mtime ne $mtime) {
+    if (! defined $mtime) { $mtime = -1; } # if $dir doesn't exist
+    if ($cached_mtime != $mtime) {
       $cached_mtime = $mtime;
       $cached_arrayref = _info_arrayref($dir);
     }
