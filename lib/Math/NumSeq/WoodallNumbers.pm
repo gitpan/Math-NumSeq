@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -32,7 +32,7 @@ use Math::NumSeq::Base::IterateIth;
 
 # use constant name => Math::NumSeq::__('Woodall Numbers');
 use constant description => Math::NumSeq::__('Woodall numbers n*2^n-1.');
-use constant characteristic_monotonic => 2;
+use constant characteristic_increasing => 1;
 use constant values_min => 1;
 use constant i_start => 1; # from 1*2^1-1==1
 

@@ -25,7 +25,7 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
-my $test_count = (tests => 292)[1];
+my $test_count = (tests => 291)[1];
 plan tests => $test_count;
 
 # uncomment this to run the ### lines
@@ -1233,8 +1233,8 @@ foreach my $elem
       # MyTestHelpers::diag ($name, "-- no pred() on characteristic(count)");
     } elsif ($seq->characteristic('digits')) {
       # MyTestHelpers::diag ($name, "-- no pred() on characteristic(digits)");
-    } elsif (! $seq->characteristic('monotonic')) {
-      # MyTestHelpers::diag ($name, "-- no pred() on not characteristic(monotonic)");
+    } elsif (! $seq->characteristic('increasing')) {
+      # MyTestHelpers::diag ($name, "-- no pred() on not characteristic(increasing)");
     } elsif ($seq->characteristic('modulus')) {
       # MyTestHelpers::diag ($name, "-- no pred() on characteristic(modulus)");
     } else {

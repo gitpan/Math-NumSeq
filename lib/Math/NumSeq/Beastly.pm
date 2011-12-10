@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -32,7 +32,7 @@ use Math::NumSeq;
 
 # use constant name => Math::NumSeq::__('Beastly Numbers');
 use constant description => Math::NumSeq::__('Numbers which contain "666".  The default is decimal, or select a radix.');
-use constant characteristic_monotonic => 1;
+use constant characteristic_increasing => 1;
 
 use constant parameter_info_array =>
   [

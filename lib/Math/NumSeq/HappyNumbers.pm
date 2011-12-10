@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
@@ -34,7 +34,7 @@ use Math::NumSeq::Base::IteratePred;
 # use constant name => Math::NumSeq::__('Happy Numbers');
 use constant description => Math::NumSeq::__('Happy numbers 1,7,10,13,19,23,etc, reaching 1 under iterating sum of squares of digits.');
 use constant values_min => 1;
-use constant characteristic_monotonic => 1;
+use constant characteristic_increasing => 1;
 use constant i_start => 1;
 
 use Math::NumSeq::Base::Digits;

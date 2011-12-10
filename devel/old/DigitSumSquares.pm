@@ -34,7 +34,7 @@ use Math::NumSeq::Base::IterateIth;
 use constant name => Math::NumSeq::__('Digit Sum of Squares');
 use constant description => Math::NumSeq::__('Sum of the squares of the digits in the given radix.  (For binary this is how many 1 bits.)');
 use constant values_min => 0;
-use constant characteristic_monotonic => 0;
+use constant characteristic_increasing => 0;
 use constant characteristic_smaller => 1;
 
 use Math::NumSeq::Base::Digits;

@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -32,7 +32,7 @@ use Math::NumSeq;
 
 # use constant name => Math::NumSeq::__('Palindromes');
 use constant values_min => 0;
-use constant characteristic_monotonic => 2;
+use constant characteristic_increasing => 2;
 use constant description => Math::NumSeq::__('Numbers which are "palindromes" reading the same backwards or forwards, like 153351.  Default is decimal, or select a radix.');
 
 use Math::NumSeq::Base::Digits;

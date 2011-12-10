@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
@@ -34,7 +34,7 @@ use Math::NumSeq::Base::IteratePred;
 use constant description => Math::NumSeq::__('Harshad numbers, divisible by the sum of their digits.');
 use constant values_min => 1;
 use constant i_start => 1;
-use constant characteristic_monotonic => 1;
+use constant characteristic_increasing => 1;
 
 use Math::NumSeq::Base::Digits;
 *parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;

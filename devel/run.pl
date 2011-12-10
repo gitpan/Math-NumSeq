@@ -185,7 +185,7 @@ $|=1;
   print "anum ",($seq->oeis_anum//'[undef]'),"\n";
   print "values_min ",($seq->values_min//'[undef]'),"\n";
   print "values_max ",($seq->values_max//'[undef]'),"\n";
-  print "characteristic(monotonic) ",($seq->characteristic('monotonic')//'[undef]'),"\n";
+  print "characteristic(increasing) ",($seq->characteristic('increasing')//'[undef]'),"\n";
   print "parameters: ",join(', ',map{$_->{'name'}}$seq->parameter_info_list),"\n";
   print "\n";
 

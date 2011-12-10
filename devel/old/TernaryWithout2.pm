@@ -27,7 +27,7 @@ $VERSION = 66;
 
 # use constant name => Math::NumSeq::__('Ternary without 2s');
 use constant description => Math::NumSeq::__('The integers without any 2 digits when written out in ternary (base 3).');
-use constant characteristic_monotonic => 2;
+use constant characteristic_increasing => 1;
 use constant values_min => 1;
 use constant oeis_anum => 'A005836';
 

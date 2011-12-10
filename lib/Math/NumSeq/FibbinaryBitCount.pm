@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -33,7 +33,7 @@ use Math::NumSeq::Base::IterateIth;
 #use Smart::Comments;
 
 use constant values_min => 0;
-use constant characteristic_monotonic => 0;
+use constant characteristic_increasing => 0;
 use constant characteristic_count => 1;
 use constant description => Math::NumSeq::__('Bit count of fibbinary numbers (the numbers without adjacent 1 bits).');
 

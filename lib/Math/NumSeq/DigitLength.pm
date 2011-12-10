@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 21;
+$VERSION = 22;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -35,7 +35,7 @@ use Math::NumSeq;
 use constant description => Math::NumSeq::__('How many digits the number requires in the given radix.  For example binary 1,1,2,2,3,3,3,3,4, etc.');
 use constant values_min => 1;
 use constant characteristic_count => 1;
-use constant characteristic_monotonic => 1;
+use constant characteristic_increasing => 1;
 
 use Math::NumSeq::Base::Digits;
 *parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;

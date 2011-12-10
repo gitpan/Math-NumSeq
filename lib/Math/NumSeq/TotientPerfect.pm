@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
 @ISA = ('Math::NumSeq::Base::IteratePred',
@@ -33,7 +33,7 @@ use Math::NumSeq::Totient;
 #use Devel::Comments;
 
 use constant description => Math::NumSeq::__('Numbers for which the sum of repeated applications of the totient function equals N.  Eg. 9 because phi(9)=6, phi(6)=2, phi(2)=1 and their sum 6+2+1 = 9.');
-use constant characteristic_monotonic => 2;
+use constant characteristic_increasing => 2;
 use constant values_min => 3;
 use constant i_start => 1;
 use constant oeis_anum => 'A082897';

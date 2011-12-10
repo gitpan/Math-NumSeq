@@ -17,6 +17,10 @@ with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 22, December 2011
+    - new characteristic() smaller, increasing, non_decreasing,
+      increasing_from_i, non_decreasing_from_i
+
 Version 21, December 2011
     - LucasNumbers,TotientCumulative fixes for ith()
     - DigitLength fix values_max()

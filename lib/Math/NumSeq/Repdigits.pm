@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -32,7 +32,7 @@ use Math::NumSeq;
 
 # use constant name => Math::NumSeq::__('Repdigits');
 use constant description => Math::NumSeq::__('Numbers which are a "repdigit", meaning 0, 1 ... 9, 11, 22, 33, ... 99, 111, 222, 333, ..., 999, etc.  The default is decimal, or select a radix.');
-use constant characteristic_monotonic => 1;
+use constant characteristic_increasing => 1;
 use constant values_min => 0;
 
 use Math::NumSeq::Base::Digits;

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 21;
+$VERSION = 22;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -31,7 +31,7 @@ use Math::NumSeq;
 # use constant name => Math::NumSeq::__('Mobius Function');
 use constant description => Math::NumSeq::__('The Mobius function, being 1 for an even number of prime factors, -1 for an odd number, or 0 if any repeated factors (ie. not square-free).');
 use constant characteristic_pn1 => 1;
-use constant characteristic_monotonic => 0;
+use constant characteristic_increasing => 0;
 use constant values_min => -1;
 use constant values_max => 1;
 use constant i_start => 1;

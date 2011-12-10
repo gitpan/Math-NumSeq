@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -28,7 +28,7 @@ use Math::NumSeq;
 # use constant name => Math::NumSeq::__('Odd Integers');
 use constant description => Math::NumSeq::__('The odd integers 1, 3, 5, 7, 9, etc.');
 use constant values_min => 1;
-use constant characteristic_monotonic => 2;
+use constant characteristic_increasing => 1;
 use constant oeis_anum => 'A005408'; # odd 1,3,5,...
 
 # uncomment this to run the ### lines

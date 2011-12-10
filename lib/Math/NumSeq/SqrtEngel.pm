@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -31,7 +31,8 @@ use Math::NumSeq::Squares;
 
 
 use constant description => Math::NumSeq::__('Engel expansion for a square root.');
-use constant characteristic_monotonic => 1;
+use constant characteristic_increasing => 0; # in general
+use constant characteristic_non_decreasing => 1;
 use constant i_start => 1;
 
 use Math::NumSeq::SqrtDigits;

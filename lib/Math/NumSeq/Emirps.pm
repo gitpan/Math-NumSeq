@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 use Math::NumSeq::Primes;
 @ISA = ('Math::NumSeq::Primes');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -35,7 +35,7 @@ use constant description => Math::NumSeq::__('Numbers which are primes forwards 
 use Math::NumSeq::Base::Digits;
 *parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
 
-use constant characteristic_monotonic => 1;
+use constant characteristic_increasing => 1;
 
 # A006567 - decimal reversal is a prime and different
 # A007500 - decimal reversal is a prime, so palindromes which are primes too

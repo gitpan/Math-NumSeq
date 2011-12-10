@@ -16,7 +16,7 @@
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# characteristic('monotonic')
+# characteristic('increasing')
 #    only by reading the whole file
 #    assume seekable
 
@@ -29,7 +29,7 @@ use Carp;
 use Fcntl;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 

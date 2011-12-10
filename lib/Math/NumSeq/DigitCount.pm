@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 use Math::NumSeq;
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
@@ -35,7 +35,7 @@ use Math::NumSeq::Base::IterateIth;
 use constant description => Math::NumSeq::__('How many of a given digit in each number, in a given radix, for example how many 1 bits in binary.');
 use constant values_min => 0;
 use constant characteristic_count => 1;
-use constant characteristic_monotonic => 0;
+use constant characteristic_increasing => 0;
 
 use Math::NumSeq::Base::Digits;
 use constant parameter_info_array =>

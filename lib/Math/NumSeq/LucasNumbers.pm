@@ -21,7 +21,7 @@ use strict;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 21;
+$VERSION = 22;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
 
@@ -35,7 +35,7 @@ use Math::NumSeq;
 use constant description => Math::NumSeq::__('Lucas numbers 1, 3, 4, 7, 11, 18, 29, etc, being L(i) = L(i-1) + L(i-2) starting from 1,3.  This is the same recurrence as the Fibonacci numbers, but a different starting point.');
 
 use constant values_min => 1;
-use constant characteristic_monotonic => 2;
+use constant characteristic_increasing => 2;
 use constant oeis_anum => 'A000204'; # lucas starting at 1,3,...
 use constant i_start => 1;
 

@@ -385,23 +385,23 @@ sub check_class {
     $seq->can('pred')
       or next;
     if ($seq->characteristic('count')) {
-      ### no pred on characteristic(count) ..
+      ### no pred on characteristic(count) ...
       next;
     }
-    if (! $seq->characteristic('monotonic')) {
-      ### no pred on not characteristic(monotonic) ..
+    if (! $seq->characteristic('increasing')) {
+      ### no pred on not characteristic(increasing) ...
       next;
     }
     if ($seq->characteristic('digits')) {
-      ### no pred on characteristic(digits) ..
+      ### no pred on characteristic(digits) ...
       next;
     }
     if ($seq->characteristic('modulus')) {
-      ### no pred on characteristic(modulus) ..
+      ### no pred on characteristic(modulus) ...
       next;
     }
     if ($seq->characteristic('pn1')) {
-      ### no pred on characteristic(pn1) ..
+      ### no pred on characteristic(pn1) ...
       next;
     }
 

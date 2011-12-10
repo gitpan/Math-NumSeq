@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 
 use Math::NumSeq::Primes;
 @ISA = ('Math::NumSeq::Primes');
@@ -31,7 +31,7 @@ use Math::NumSeq::Primes;
 
 # use constant name => Math::NumSeq::__('Sophie Germain Primes');
 use constant description => Math::NumSeq::__('The Sophie Germain primes 3,5,7,11,23,29, being primes P where 2*P+1 is also prime (those latter being the "safe" primes).');
-use constant characteristic_monotonic => 2;
+use constant characteristic_increasing => 2;
 use constant values_min => 2; # at i=0 2*2+1=5
 
 # cf. A007700 for n,2n+1,4n+3 all primes - or something?

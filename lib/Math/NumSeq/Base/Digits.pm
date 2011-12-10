@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -29,7 +29,7 @@ sub characteristic_digits {
   my ($self) = @_;
   return $self->{'radix'};
 }
-use constant characteristic_monotonic => 0;
+use constant characteristic_increasing => 0;
 use constant characteristic_smaller => 1;
 use constant values_min => 0;
 sub values_max {

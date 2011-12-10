@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 21;
+$VERSION = 22;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -34,7 +34,7 @@ use Math::NumSeq::Base::IterateIth;
 
 # use constant name => Math::NumSeq::__('Pronic Numbers');
 use constant description => Math::NumSeq::__('The pronic numbers 0, 2, 6, 12, 20, 30, etc, etc, i*(i+1).  These are twice the triangular numbers, and half way between perfect squares.');
-use constant characteristic_monotonic => 2;
+use constant characteristic_increasing => 1;
 use constant values_min => 0; # at i=0
 use constant oeis_anum => 'A002378'; # pronic, starting from 0
 

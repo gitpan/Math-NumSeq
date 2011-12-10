@@ -22,7 +22,7 @@ use List::Util 'max';
 use Math::NumSeq;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
 
@@ -80,6 +80,9 @@ $oeis_anum[10] =
    # OEIS-Catalogue: A022001 fraction=1/997
    # OEIS-Catalogue: A022002 fraction=1/998
    # OEIS-Catalogue: A022003 fraction=1/999
+
+   '1/999999'  => 'A172051',
+   # OEIS-Catalogue: A172051 fraction=1/999999
 
    #---------------
 

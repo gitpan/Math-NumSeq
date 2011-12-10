@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -33,7 +33,7 @@ use Math::NumSeq::Base::IterateIth;
 
 # use constant name => Math::NumSeq::__('Without chosen digit');
 use constant description => Math::NumSeq::__('Integers which don\'t have a given digit when written out in a radix.');
-use constant characteristic_monotonic => 2;
+use constant characteristic_increasing => 1;
 
 use Math::NumSeq::Base::Digits;
 use constant parameter_info_array =>

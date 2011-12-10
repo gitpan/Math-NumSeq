@@ -21,14 +21,14 @@ use strict;
 use Math::Prime::XS;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
 # use constant name => Math::NumSeq::__('Primorials');
 use constant description => Math::NumSeq::__('The primorials 1, 2, 6, 30, 210, etc, 2*3*5*7*...Prime(n).');
-use constant characteristic_monotonic => 2;
+use constant characteristic_increasing => 1;
 use constant values_min => 1;
 
 # cf A034386 product of primes p <= i, so repeating 1, 2, 6, 6, 30, 30,

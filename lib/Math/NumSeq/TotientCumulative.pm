@@ -28,7 +28,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -41,7 +41,7 @@ use Math::NumSeq::Totient;
 #use Devel::Comments;
 
 use constant description => Math::NumSeq::__('Cumulative totient(1..n).');
-use constant characteristic_monotonic => 2;
+use constant characteristic_increasing => 2;
 use constant values_min => 0;
 
 use constant oeis_anum => 'A002088';

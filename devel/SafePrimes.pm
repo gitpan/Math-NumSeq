@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 
 use Math::NumSeq::Primes;
 @ISA = ('Math::NumSeq::Primes');
@@ -31,7 +31,7 @@ use Math::NumSeq::Primes;
 
 use constant description => Math::NumSeq::__('The safe primes 5,7,11,23,47, being primes where (P-1)/2 is also prime (those are the Sophie Germain primes).');
 use constant values_min => 5;
-use constant characteristic_monotonic => 2;
+use constant characteristic_increasing => 1;
 use constant oeis_anum => 'A005385';
 
 sub rewind {

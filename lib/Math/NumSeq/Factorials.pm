@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 21;
+$VERSION = 22;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -28,7 +28,7 @@ use Math::NumSeq;
 # use constant name => Math::NumSeq::__('Factorials');
 use constant description => Math::NumSeq::__('The factorials 1, 2, 6, 24, 120, etc, 1*2*...*N.');
 use constant values_min => 1;
-use constant characteristic_monotonic => 2;
+use constant characteristic_increasing => 1;
 use constant oeis_anum => 'A000142'; # factorials 1,1,2,6,24, including 0!==1
 
 # uncomment this to run the ### lines

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -35,7 +35,7 @@ use Math::NumSeq::Base::IterateIth;
 # use constant name => Math::NumSeq::__('Cullen Numbers');
 use constant description => Math::NumSeq::__('Cullen numbers n*2^n+1.');
 use constant values_min => 1;
-use constant characteristic_monotonic => 1;
+use constant characteristic_increasing => 1;
 use constant oeis_anum => 'A002064';
 
 sub ith {

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 
 use Math::NumSeq::Primes;
 @ISA = ('Math::NumSeq::Primes');
@@ -31,7 +31,7 @@ use Math::NumSeq::Primes;
 
 # use constant name => Math::NumSeq::__('Twin Primes');
 use constant description => Math::NumSeq::__('The twin primes, 3, 5, 7, 11, 13, being numbers where both K and K+2 are primes.');
-use constant characteristic_monotonic => 2;
+use constant characteristic_increasing => 2;
 use constant parameter_info_array =>
   [
    { name    => 'pairs',

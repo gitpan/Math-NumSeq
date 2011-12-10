@@ -29,7 +29,7 @@ use Math::NumSeq;
 use constant description => Math::NumSeq::__('The integers without any 3 digits when written out in base 4.');
 use constant values_min => 0;
 use constant oeis_anum => 'A023717'; # no 3s in base 4
-use constant characteristic_monotonic => 1;
+use constant characteristic_increasing => 1;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;

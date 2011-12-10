@@ -21,7 +21,7 @@ use strict;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 21;
+$VERSION = 22;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
 
@@ -37,7 +37,7 @@ use Math::NumSeq;
 use constant description => Math::NumSeq::__('The Fibonacci numbers 1,1,2,3,5,8,13,21, etc, each F(i) = F(i-1) + F(i-2), starting from 1,1.');
 
 use constant values_min => 0;
-use constant characteristic_monotonic => 2;
+use constant characteristic_increasing => 1;
 use constant oeis_anum => 'A000045'; # fibonacci starting at i=0 0,1,1,2,3
 
 my $uv_limit = do {

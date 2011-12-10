@@ -24,13 +24,13 @@ use POSIX ();
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 21;
+$VERSION = 22;
 
 use Math::NumSeq::Base::Array;
 @ISA = ('Math::NumSeq::Base::Array');
 
 use vars '$VERSION';
-$VERSION = 21;
+$VERSION = 22;
 
 # uncomment this to run the ### lines
 #use Devel::Comments;
@@ -173,31 +173,26 @@ sub _read_values {
   return;
 }
 
-sub characteristic_monotonic {
+sub characteristic_increasing {
   my ($self) = @_;
-  ### OEIS-File characteristic_monotonic() ...
+  ### OEIS-File characteristic_increasing() ...
 
-  if (! defined $self->{'characteristic'}->{'monotonic'}) {
-    my $monotonic = 2;
+  if (! defined $self->{'characteristic'}->{'increasing'}) {
+    my $increasing = 1;
     my $aref = $self->{'array'};
     my $prev;
     foreach my $i (0 .. $#$aref) {
       next unless defined (my $value = $aref->[$i]);
-      if (defined $prev) {
-        if ($value < $prev) {
-          $monotonic = 0;
-          last;
-        }
-        if ($value eq $prev) {
-          $monotonic = 1;
-        }
+      if (defined $prev && $value <= $prev) {
+        $increasing = 0;
+        last;
       }
       $prev = $value;
     }
-    ### $monotonic
-    $self->{'characteristic'}->{'monotonic'} = $monotonic;
+    ### $increasing
+    $self->{'characteristic'}->{'increasing'} = $increasing;
   }
-  return $self->{'characteristic'}->{'monotonic'};
+  return $self->{'characteristic'}->{'increasing'};
 }
 
 sub characteristic_smaller {

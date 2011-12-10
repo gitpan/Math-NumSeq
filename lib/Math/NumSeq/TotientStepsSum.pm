@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -35,7 +35,7 @@ use Math::NumSeq::Totient 13;
 
 
 use constant description => Math::NumSeq::__('Sum of totients when repeatedly applying until reach 1.');
-use constant characteristic_monotonic => 0;
+use constant characteristic_increasing => 0;
 use constant i_start => 1;
 use constant parameter_info_array =>
   [ { name        => 'including_self',

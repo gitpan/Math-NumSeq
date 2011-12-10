@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -31,7 +31,7 @@ use Math::NumSeq;
 # use constant name => Math::NumSeq::__('Even Integers');
 use constant description => Math::NumSeq::__('The even integers 0, 2, 4, 6, 8, 10, etc.');
 use constant values_min => 0;
-use constant characteristic_monotonic => 1;
+use constant characteristic_increasing => 1;
 use constant oeis_anum => 'A005843'; # even 0,2,4
 
 sub rewind {

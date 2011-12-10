@@ -28,10 +28,10 @@ use ExtUtils::Manifest;
 use Module::Util;
 
 use vars '$VERSION';
-$VERSION = 21;
+$VERSION = 22;
 
 # uncomment this to run the ### lines
-#use Devel::Comments;
+#use Smart::Comments;
 
 my $outmodule = 'BuiltinTable';
 my $distname = 'Math-NumSeq';
@@ -90,6 +90,12 @@ foreach my $filename (@filenames) {
       ($anum, $comment) = /^use constant oeis_anum\s*=>\s*['"]?(.*?)['"].*?(#.*)?/
         or die "$where: oops, bad OEIS line: $_";
       $parameters = '';
+    } elsif (/OEIS-Catalogue array begin/ .. /OEIS-Catalogue array end/) {
+      next if /^\s*undef/;
+      next if /^\s*# OEIS-Catalogue array/;
+      next if /^\s*$/;
+      ($anum,$parameters,$comment) = /^\s*'(A\d+)',?\s*(?:#\s*(.*?)(#.*)?)?$/
+        or die "$where: oops, bad OEIS array line: $_";
     } else {
       next;
     }

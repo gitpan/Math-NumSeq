@@ -25,7 +25,7 @@ use strict;
 use List::Util;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
@@ -35,7 +35,7 @@ use Math::NumSeq::Base::IteratePred;
 #use Devel::Comments;
 
 use constant description => Math::NumSeq::__('Klarner-Rado sequence 1,2,4,5,8,9,etc being 1 and then if n in the sequence so are 2n, 3n+2 and 6n+3.');
-use constant characteristic_monotonic => 1;
+use constant characteristic_increasing => 1;
 use constant i_start => 1;
 
 sub values_min {

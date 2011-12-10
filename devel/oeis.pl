@@ -48,7 +48,7 @@ use Smart::Comments;
   my $seq = Math::NumSeq::OEIS->new(anum=>'A009000');
   # ### $seq
   ### description: $seq->description
-  ### characteristic(monotonic): $seq->characteristic('monotonic')
+  ### characteristic(increasing): $seq->characteristic('increasing')
   ### characteristic(smaller): $seq->characteristic('smaller')
   ### values_min: $seq->values_min
   ### values_max: $seq->values_max

@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -31,7 +31,7 @@ use Math::NumSeq;
 
 
 use constant description => Math::NumSeq::__('Sequence is itself in ASCII.');
-use constant characteristic_monotonic => 1;
+use constant characteristic_increasing => 0;
 use constant i_start => 1;
 use constant values_min => 48;
 # my @values_max;

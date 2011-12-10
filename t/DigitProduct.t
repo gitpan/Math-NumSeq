@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 28;
+plan tests => 32;
 
 use lib 't';
 use MyTestHelpers;
@@ -35,7 +35,7 @@ use Math::NumSeq::DigitProduct;
 # VERSION
 
 {
-  my $want_version = 21;
+  my $want_version = 22;
   ok ($Math::NumSeq::DigitProduct::VERSION, $want_version, 'VERSION variable');
   ok (Math::NumSeq::DigitProduct->VERSION,  $want_version, 'VERSION class method');
 
@@ -55,6 +55,15 @@ use Math::NumSeq::DigitProduct;
 {
   my $seq = Math::NumSeq::DigitProduct->new;
   ok ($seq->characteristic('smaller'), 1, 'characteristic(smaller)');
+
+  ok (! $seq->characteristic('increasing'), 1,
+      'characteristic(increasing)');
+  ok (! $seq->characteristic('non_decreasing'), 1,
+      'characteristic(non_decreasing)');
+  ok ($seq->characteristic('increasing_from_i'), undef,
+      'characteristic(increasing_from_i)');
+  ok ($seq->characteristic('non_decreasing_from_i'), undef,
+      'characteristic(non_decreasing_from_i)');
 }
 
 

@@ -23,7 +23,7 @@ use POSIX 'floor','ceil';
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -33,7 +33,7 @@ use Math::NumSeq;
 # use constant name => Math::NumSeq::__('Cubes');
 use constant description => Math::NumSeq::__('The cubes 1, 8, 27, 64, 125, etc, k*k*k.');
 use constant values_min => 0;
-use constant characteristic_monotonic => 1;
+use constant characteristic_increasing => 1;
 use constant oeis_anum => 'A000578';
 
 sub rewind {

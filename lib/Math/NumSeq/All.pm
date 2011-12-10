@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -29,7 +29,7 @@ use Math::NumSeq;
 
 # use constant name => Math::NumSeq::__('All Integers');
 use constant description => Math::NumSeq::__('All integers 0,1,2,3,etc.');
-use constant characteristic_monotonic => 2;
+use constant characteristic_increasing => 2;
 
 # experimental i_start to get natural numbers ... probably not very important
 # OEIS-Catalogue: A000027 i_start=1

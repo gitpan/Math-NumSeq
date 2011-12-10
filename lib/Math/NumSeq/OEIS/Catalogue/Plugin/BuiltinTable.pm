@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 409 A-numbers in 73 modules
+# total 410 A-numbers in 73 modules
 
 use constant info_arrayref =>
 [
@@ -952,6 +952,14 @@ use constant info_arrayref =>
     'parameters' => [
       'fraction',
       '1/999'
+    ]
+  },
+  {
+    'anum' => 'A172051',
+    'class' => 'Math::NumSeq::FractionDigits',
+    'parameters' => [
+      'fraction',
+      '1/999999'
     ]
   },
   {

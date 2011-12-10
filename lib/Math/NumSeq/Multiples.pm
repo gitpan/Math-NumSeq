@@ -21,7 +21,7 @@ use strict;
 use POSIX 'ceil';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -47,10 +47,13 @@ sub values_max {
     return undef;
   }
 }
-sub characteristic_monotonic {
+sub characteristic_non_decreasing {
   my ($self) = @_;
-  # strictly monotonic if multiples of 1 or more
-  return 1 + ($self->{'multiples'} >= 1);
+  return ($self->{'multiples'} >= 0);
+}
+sub characteristic_increasing {
+  my ($self) = @_;
+  return ($self->{'multiples'} > 0);
 }
 use constant parameter_info_array =>
   [ { name => 'multiples',

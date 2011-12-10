@@ -45,7 +45,6 @@ HERE
     next if $module eq 'Expression';
     next if $module eq 'OEIS';
     next if $module eq 'CunninghamPrimes'; # broken
-    next if $module eq 'PlanePathDelta'; # not yet
     next if $module eq 'PlanePathN'; # not yet
     next if $module eq 'PlanePathTurn'; # not yet
     my $class = App::MathImage::Generator->values_class($module);

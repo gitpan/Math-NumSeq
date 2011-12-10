@@ -30,7 +30,7 @@ use Math::NumSeq::FractionDigits;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-my $test_count = (tests => 260)[1];
+my $test_count = (tests => 28)[1];
 plan tests => $test_count;
 
 {
@@ -53,7 +53,7 @@ plan tests => $test_count;
 # VERSION
 
 {
-  my $want_version = 21;
+  my $want_version = 22;
   ok ($Math::NumSeq::FractionDigits::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::FractionDigits->VERSION,  $want_version,
@@ -92,6 +92,26 @@ plan tests => $test_count;
 
 
 #------------------------------------------------------------------------------
+# characteristic()
+
+{
+  my $seq = Math::NumSeq::FractionDigits->new (fraction => '1/29');
+  ok ($seq->characteristic('digits'), 10, 'characteristic(digits)');
+  ok ($seq->characteristic('smaller'), 1, 'characteristic(smaller)');
+  ok (! $seq->characteristic('count'), 1, 'characteristic(count)');
+
+  ok (! $seq->characteristic('increasing'), 1,
+      'characteristic(increasing)');
+  ok (! $seq->characteristic('non_decreasing'), 1,
+      'characteristic(non_decreasing)');
+  ok ($seq->characteristic('increasing_from_i'), undef,
+      'characteristic(increasing_from_i)');
+  ok ($seq->characteristic('non_decreasing_from_i'), undef,
+      'characteristic(non_decreasing_from_i)');
+}
+
+
+#------------------------------------------------------------------------------
 # BigInt
 
 {
@@ -103,20 +123,40 @@ plan tests => $test_count;
 
   my $seq = Math::NumSeq::FractionDigits->new(fraction => $frac);
   my $want_i = 0;
+  my $bad = 0;
   foreach (1 .. 2*$uv_len) {
     { my ($i,$value) = $seq->next;
-      ok ($i, $want_i++);
-      ok ($value, 2);
+      if ($i != $want_i++) {
+        MyTestHelpers::diag ("i=$i want_i=$want_i");
+        last if ++$bad > 10;
+      }
+      if ($value != 2) {
+        MyTestHelpers::diag ("value=$value want 2");
+        last if ++$bad > 10;
+      }
     }
     { my ($i,$value) = $seq->next;
-      ok ($i, $want_i++);
-      ok ($value, 5);
+      if ($i != $want_i++) {
+        MyTestHelpers::diag ("i=$i want_i=$want_i");
+        last if ++$bad > 10;
+      }
+      if ($value != 5) {
+        MyTestHelpers::diag ("value=$value want 5");
+        last if ++$bad > 10;
+      }
     }
     { my ($i,$value) = $seq->next;
-      ok ($i, $want_i++);
-      ok ($value, 7);
+      if ($i != $want_i++) {
+        MyTestHelpers::diag ("i=$i want_i=$want_i");
+        last if ++$bad > 10;
+      }
+      if ($value != 7) {
+        MyTestHelpers::diag ("value=$value want 7");
+        last if ++$bad > 10;
+      }
     }
   }
+  ok ($bad, 0);
 }
 
 

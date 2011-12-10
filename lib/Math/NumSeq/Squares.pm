@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 21;
+$VERSION = 22;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -32,7 +32,7 @@ use Math::NumSeq;
 
 # use constant name =>  Math::NumSeq::__('Perfect Squares');
 use constant description => Math::NumSeq::__('The squares 1,4,9,16,25, etc k*k.');
-use constant characteristic_monotonic => 2;
+use constant characteristic_increasing => 1;
 use constant values_min => 0;
 use constant oeis_anum => 'A000290'; # squares
 

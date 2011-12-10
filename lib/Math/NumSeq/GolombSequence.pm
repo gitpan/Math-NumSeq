@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -30,7 +30,7 @@ use Math::NumSeq;
 
 use constant description => Math::NumSeq::__('Golomb sequence 1,2,2,3,3,4,4,4,etc, its own repetition count.');
 use constant characteristic_smaller => 1;
-use constant characteristic_monotonic => 1;
+use constant characteristic_non_decreasing => 1;
 use constant values_min => 1;
 use constant i_start => 1;
 

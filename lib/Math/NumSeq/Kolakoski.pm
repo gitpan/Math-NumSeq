@@ -23,7 +23,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -32,7 +32,7 @@ use Math::NumSeq;
 #use Devel::Comments;
 
 use constant description => Math::NumSeq::__('Kolakoski sequence 1,2,2,1,1,2,1,etc its own run lengths.');
-use constant characteristic_monotonic => 0;
+use constant characteristic_increasing => 0;
 use constant values_min => 1;
 use constant values_max => 2;
 use constant i_start => 1;

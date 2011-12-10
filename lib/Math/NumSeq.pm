@@ -16,10 +16,6 @@
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# characteristic('monotonic')      strictly non-decreasing
-# characteristic('monotonic_from_i')   beyond a given value or i
-
-
 # ->add ->sub   of sequence or constant
 # ->mul
 # ->mod($k)    of constant
@@ -46,7 +42,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 21;
+$VERSION = 22;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -135,7 +131,27 @@ sub characteristic {
   }
   return undef;
 }
-# use constant finish => undef;
+
+# default i_start if "increasing"
+sub characteristic_increasing_from_i {
+  my ($self) = @_;
+  return ($self->characteristic('increasing')
+          ? $self->i_start
+          : undef);
+}
+
+# default from the stronger condition "increasing"
+sub characteristic_non_decreasing {
+  my ($self) = @_;
+  return $self->characteristic('increasing');
+}
+sub characteristic_non_decreasing_from_i {
+  my ($self) = @_;
+  return ($self->characteristic('non_decreasing')
+          ? $self->i_start
+          : undef);
+}
+
 
 sub new {
   my ($class, %self) = @_;
@@ -244,13 +260,20 @@ Return something if the sequence has a C<$key> (a string) characteristic, or
 C<undef> if not.  This is intended as a loose set of features or properties
 a sequence might have.
 
-    digits      integer or undef, the radix if sequence is digits
-    count       boolean, true if values are counts of something
+    digits            integer or undef, the radix if seq is digits
+    count             boolean, true if values are counts of something
+    smaller           boolean, true if v[i] < i, in general
+
+    increasing        boolean, true if v[i+1] > v[i] always
+    non_decreasing    boolean, true if v[i+1] >= v[i] always
+    increasing_from_i     integer, i for which v[i+1] > v[i]
+    non_decreasing_from_i integer, i for which v[i+1] >= v[i]
 
 =item C<$str = $seq-E<gt>oeis_anum()>
 
-Return Sloane's Online Encyclopedia of Integer Sequences A-number (a string)
-of C<$seq>, or C<undef> if not in the OEIS or not known.  For example
+Return the A-number (a string) for Sloane's Online Encyclopedia of Integer
+Sequences of C<$seq>, or return C<undef> if not in the OEIS or not known.
+For example
 
     my $seq = Math::NumSeq::Squares->new;
     my $anum = $seq->oeis_anum;
@@ -261,9 +284,8 @@ The web page for that is then
     http://oeis.org/A000290
 
 Sometimes the OEIS has duplicates, ie. two A-numbers which are the same
-sequence.  C<$seq-E<gt>oeis_anum()> generally returns whichever is the
-primary one (at least in cases where the duplication is accidental or
-historical).
+sequence.  C<$seq-E<gt>oeis_anum()> is generally the primary one in cases
+where the duplication is accidental or historical.
 
 =item C<$aref = Math::NumSeq::Foo-E<gt>parameter_info_array()>
 

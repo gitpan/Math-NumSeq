@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 21;
+$VERSION = 22;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -37,7 +37,7 @@ sub characteristic_modulus {
   my ($self) = @_;
   return $self->{'modulus'};
 }
-use constant characteristic_monotonic => 0;
+use constant characteristic_increasing => 0;
 use constant parameter_info_array =>
   [ { name        => 'modulus',
       type        => 'integer',

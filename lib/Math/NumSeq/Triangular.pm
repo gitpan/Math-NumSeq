@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 21;
+$VERSION = 22;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -31,7 +31,7 @@ use Math::NumSeq::Base::IterateIth;
 
 # use constant name => Math::NumSeq::__('Triangular Numbers');
 use constant description => Math::NumSeq::__('The triangular numbers 0, 1, 3, 6, 10, 15, 21, 28, etc, i*(i+1)/2.');
-use constant characteristic_monotonic => 2;
+use constant characteristic_increasing => 1;
 use constant values_min => 0;  # at i=0
 use constant oeis_anum => 'A000217'; # starting from i=0
 
