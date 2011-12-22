@@ -42,7 +42,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 22;
+$VERSION = 23;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -74,9 +74,13 @@ sub oeis_anum {
   my ($self) = @_;
   return $self->{'oeis_anum'} || undef;
 }
+
+use constant default_i_start => 1;
 sub i_start {
   my ($self) = @_;
-  return $self->{'i_start'} || 0;
+  return (defined $self->{'i_start'}
+          ? $self->{'i_start'}
+          : $self->default_i_start);
 }
 sub values_min {
   my ($self) = @_;
@@ -152,6 +156,15 @@ sub characteristic_non_decreasing_from_i {
           : undef);
 }
 
+# default "count" is integer
+sub characteristic_integer {
+  my ($self) = @_;
+  return $self->characteristic_count;
+}
+use constant characteristic_count => undef; # don't know
+
+
+#------------------------------------------------------------------------------
 
 sub new {
   my ($class, %self) = @_;
@@ -263,6 +276,7 @@ a sequence might have.
     digits            integer or undef, the radix if seq is digits
     count             boolean, true if values are counts of something
     smaller           boolean, true if v[i] < i, in general
+    integer           boolean, true if all values are integers
 
     increasing        boolean, true if v[i+1] > v[i] always
     non_decreasing    boolean, true if v[i+1] >= v[i] always
@@ -362,6 +376,7 @@ L<Math::NumSeq::StarNumbers>,
 L<Math::NumSeq::Even>,
 L<Math::NumSeq::Odd>,
 L<Math::NumSeq::All>
+L<Math::NumSeq::AllDigits>
 
 L<Math::NumSeq::Primes>,
 L<Math::NumSeq::TwinPrimes>,
@@ -384,7 +399,8 @@ L<Math::NumSeq::LucasNumbers>,
 L<Math::NumSeq::Fibbinary>,
 L<Math::NumSeq::FibbinaryBitCount>,
 L<Math::NumSeq::Pell>,
-L<Math::NumSeq::Tribonacci>
+L<Math::NumSeq::Tribonacci>,
+L<Math::NumSeq::Perrin>
 
 L<Math::NumSeq::FractionDigits>,
 L<Math::NumSeq::SqrtDigits>,

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 22;
+$VERSION = 23;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -34,6 +34,7 @@ use Math::NumSeq;
 # use constant name => Math::NumSeq::__('Digit Length');
 use constant description => Math::NumSeq::__('How many digits the number requires in the given radix.  For example binary 1,1,2,2,3,3,3,3,4, etc.');
 use constant values_min => 1;
+use constant i_start => 0;
 use constant characteristic_count => 1;
 use constant characteristic_increasing => 1;
 
@@ -69,7 +70,7 @@ sub oeis_anum {
 
 sub rewind {
   my ($self) = @_;
-  $self->{'i'} = 0;
+  $self->{'i'} = $self->i_start;
   $self->{'length'} = 1;
   $self->{'limit'} = $self->{'radix'};
 }

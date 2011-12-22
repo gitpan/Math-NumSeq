@@ -31,6 +31,9 @@ devel/oeis-find.pl
 devel/oeis.pl
 devel/OeisCatalogue-SqrtDigits.pm
 devel/old/Base4Without3.pm
+devel/old/ChampernowneBinary.pm
+devel/old/ChampernowneBinary.t
+devel/old/ChampernowneBinaryLsb.pm
 devel/old/DigitSumSquares.pm
 devel/old/FractionBits.pm
 devel/old/Pentagonal.pm
@@ -54,6 +57,7 @@ inc/my_pod2html
 inc/MyMakeMakerExtras.pm
 lib/Math/NumSeq.pm
 lib/Math/NumSeq/All.pm
+lib/Math/NumSeq/AllDigits.pm
 lib/Math/NumSeq/AlmostPrimes.pm
 lib/Math/NumSeq/AsciiSelf.pm
 lib/Math/NumSeq/Base/Array.pm
@@ -109,6 +113,7 @@ lib/Math/NumSeq/OEIS/Catalogue/Plugin/ZZ_Files.pm
 lib/Math/NumSeq/OEIS/File.pm
 lib/Math/NumSeq/Palindromes.pm
 lib/Math/NumSeq/Pell.pm
+lib/Math/NumSeq/Perrin.pm
 lib/Math/NumSeq/Polygonal.pm
 lib/Math/NumSeq/PrimeFactorCount.pm
 lib/Math/NumSeq/Primes.pm

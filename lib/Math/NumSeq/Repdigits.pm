@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 22;
+$VERSION = 23;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -32,7 +32,9 @@ use Math::NumSeq;
 
 # use constant name => Math::NumSeq::__('Repdigits');
 use constant description => Math::NumSeq::__('Numbers which are a "repdigit", meaning 0, 1 ... 9, 11, 22, 33, ... 99, 111, 222, 333, ..., 999, etc.  The default is decimal, or select a radix.');
+use constant i_start => 0;
 use constant characteristic_increasing => 1;
+use constant characteristic_integer => 1;
 use constant values_min => 0;
 
 use Math::NumSeq::Base::Digits;
@@ -68,7 +70,7 @@ sub rewind {
   if ($radix < 2) { $radix = $self->{'radix'} = 10; }
 
   if ($radix == 2) {
-    $self->{'i'} = 0;
+    $self->{'i'} = $self->i_start;
   } else {
     $self->{'n'} = -1;
     $self->{'inc'} = 1;

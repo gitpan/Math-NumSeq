@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 22;
+$VERSION = 23;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -32,9 +32,10 @@ use Math::NumSeq;
 
 # use constant name => Math::NumSeq::__('Star Numbers');
 use constant description =>  Math::NumSeq::__('The star numbers 1, 13, 37, 73, 121, etc, 6*n*(n-1)+1, also called the centred 12-gonals.');
-use constant characteristic_increasing => 1;
-use constant values_min => 1;
 use constant i_start => 1;
+use constant values_min => 1;
+use constant characteristic_increasing => 1;
+use constant characteristic_integer => 1;
 
 # cf
 # A006060 - which are also triangular numbers

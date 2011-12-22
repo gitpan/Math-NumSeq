@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 22;
+$VERSION = 23;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -33,7 +33,9 @@ use Math::NumSeq::Emirps;
 
 
 use constant description => Math::NumSeq::__('Reverse-add sequence, reverse the digits and add.');
+use constant i_start => 0;
 
+use constant characteristic_integer => 1;
 sub characteristic_increasing {
   my ($self) = @_;
   # any non-zero start always increases
@@ -123,10 +125,9 @@ sub oeis_anum {
   my $start = $self->{'start'};
 
   if ($start == 0) { return 'A000004'; } # all zeros
-  # some sample radixes to exercise
+  # some sample zeros to exercise
   # OEIS-Other: A000004 radix=2 start=0
   # OEIS-Other: A000004 radix=9 start=0
-
 
   return $oeis_anum{$self->{'radix'}}->{$start};
 }
@@ -134,7 +135,7 @@ sub oeis_anum {
 
 sub rewind {
   my ($self) = @_;
-  $self->{'i'} = 0;
+  $self->{'i'} = $self->i_start;
   $self->{'value'} = $self->{'start'};
 }
 sub next {

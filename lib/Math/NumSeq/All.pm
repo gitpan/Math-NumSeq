@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 22;
+$VERSION = 23;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -29,7 +29,9 @@ use Math::NumSeq;
 
 # use constant name => Math::NumSeq::__('All Integers');
 use constant description => Math::NumSeq::__('All integers 0,1,2,3,etc.');
+use constant default_i_start => 0;
 use constant characteristic_increasing => 2;
+use constant characteristic_integer => 1;
 
 # experimental i_start to get natural numbers ... probably not very important
 # OEIS-Catalogue: A000027 i_start=1
@@ -38,10 +40,7 @@ my %oeis_anum = (0 => 'A001477',  # non-negatives,  starting 0
                  1 => 'A000027'); # natural numbers starting 1
 sub oeis_anum {
   my ($self) = @_;
-  my $i_start = $self->i_start;
-  return ($i_start == 0   ? 'A001477'
-          : $i_start == 1 ? 'A000027'
-          : undef);
+  return $oeis_anum{$self->i_start};
 }
 sub values_min {
   my ($self) = @_;

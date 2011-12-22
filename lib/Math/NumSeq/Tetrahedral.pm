@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 22;
+$VERSION = 23;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -35,7 +35,9 @@ use Math::NumSeq::Cubes;
 
 # use constant name => Math::NumSeq::__('Tetrahedral');
 use constant description => Math::NumSeq::__('The tetrahedral numbers 0, 1, 4, 10, 20, 35, 56, 84, 120, etc, i*(i+1)*(i+2)/6.');
+use constant i_start => 0;
 use constant characteristic_increasing => 1;
+use constant characteristic_integer => 1;
 use constant oeis_anum => 'A000292'; # tetrahedrals
 
 sub rewind {

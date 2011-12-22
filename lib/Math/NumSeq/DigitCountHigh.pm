@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 22;
+$VERSION = 23;
 
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IterateIth;
@@ -34,14 +34,13 @@ use Math::NumSeq::Base::IterateIth;
 
 use constant description => Math::NumSeq::__('Count of how many of a given digit at the high end of a number, in a given radix.');
 use constant values_min => 0;
+use constant i_start => 0;
 use constant characteristic_increasing => 0;
 use constant characteristic_count => 1;
 
 use Math::NumSeq::DigitCount 4;
 *parameter_info_array = \&Math::NumSeq::DigitCount::parameter_info_array;
 
-# cf
-# 
 my @oeis_anum;
 
 $oeis_anum[2]->[1] = 'A090996'; # leading 1 bits

@@ -17,6 +17,10 @@ with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 23, December 2011
+    - new AllDigits, Perrin
+    - new characteristic('integer')
+
 Version 22, December 2011
     - new characteristic() smaller, increasing, non_decreasing,
       increasing_from_i, non_decreasing_from_i

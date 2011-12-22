@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 22;
+$VERSION = 23;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -31,8 +31,10 @@ use Math::NumSeq;
 #use Smart::Comments;
 
 # use constant name => Math::NumSeq::__('Palindromes');
+use constant i_start => 1;
 use constant values_min => 0;
 use constant characteristic_increasing => 2;
+use constant characteristic_integer => 1;
 use constant description => Math::NumSeq::__('Numbers which are "palindromes" reading the same backwards or forwards, like 153351.  Default is decimal, or select a radix.');
 
 use Math::NumSeq::Base::Digits;
@@ -113,7 +115,7 @@ sub oeis_anum {
   # ...
 sub rewind {
   my ($self) = @_;
-  $self->{'i'} = 0;
+  $self->{'i'} = $self->i_start;
 
   my $radix = $self->{'radix'};
   if ($radix < 2) { $radix = 10; }
@@ -138,7 +140,7 @@ sub ith {
   if ($i < 1) {
     return 0;
   }
-  $i--;
+  $i -= 2;
 
   my $digits = 1;
   my $limit = $radix-1;

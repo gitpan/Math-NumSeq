@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Math-NumSeq
-version:            22
+version:            23
 abstract:           Number sequences.
 author:
     - Kevin Ryde <user42@zip.com.au>
@@ -39,34 +39,6 @@ meta-spec:
     url:      http://module-build.sourceforge.net/META-spec-v1.4.html
     version:  1.4
 optional_features:
-    maximum_devel:
-        description:  Stuff used variously for development.
-        requires:
-            B::Concise:           0
-            Bit::Vector:          0
-            Devel::Comments:      0
-            Devel::TimeThis:      1
-            File::Spec:           0
-            Math::BigRat:         0
-            Math::Fibonacci:      0
-            Math::Polynomial:     1
-            Math::Prime::TiedArray:  1
-            Math::TriangularNumbers:  1
-            Parse::CPAN::Meta:    0
-            Path::Class:          0
-            Pod::Simple::HTML:    0
-            Smart::Comments:      0
-            String::BitCount:     0
-            String::Parity:       0
-            Test::DistManifest:   0
-            Test::Pod:            1.00
-            Test::Synopsis:       0
-            Test::YAML::Meta:     0.15
-            warnings::unused:     0
-            YAML:                 0
-            YAML::Syck:           0
-            YAML::Tiny:           0
-            YAML::XS:             0
     maximum_interoperation:
         description:  Have maximum inter-operation with other modules (optional other stuff).
         requires:

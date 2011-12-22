@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 22;
+$VERSION = 23;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
 
@@ -32,12 +32,14 @@ use Math::NumSeq::Base::Sparse;
 use constant description => Math::NumSeq::__('Tribonacci numbers 0, 0, 1, 1, 2, 4, 7, 13, 24, being T(i) = T(i-1) + T(i-2) + T(i-3) starting from 0,0,1.');
 use constant characteristic_non_decreasing => 1;
 use constant characteristic_increasing_from_i => 3;
+use constant characteristic_integer => 1;
 use constant values_min => 0;
+use constant i_start => 0;
 use constant oeis_anum => 'A000073'; # tribonacci
 
 sub rewind {
   my ($self) = @_;
-  $self->{'i'} = 0;
+  $self->{'i'} = $self->i_start;
   $self->{'f0'} = 0;
   $self->{'f1'} = 0;
   $self->{'f2'} = 1;

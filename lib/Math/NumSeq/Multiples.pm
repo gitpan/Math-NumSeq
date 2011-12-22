@@ -21,7 +21,7 @@ use strict;
 use POSIX 'ceil';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 22;
+$VERSION = 23;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -31,6 +31,8 @@ use Math::NumSeq;
 
 use constant name => Math::NumSeq::__('Multiples of a given K');
 use constant description => Math::NumSeq::__('The multiples K, 2*K, 3*K, 4*K, etc of a given number.');
+use constant default_i_start => 0;
+
 sub values_min {
   my ($self) = @_;
   if ((my $multiples = $self->{'multiples'}) >= 0) {
@@ -55,6 +57,11 @@ sub characteristic_increasing {
   my ($self) = @_;
   return ($self->{'multiples'} > 0);
 }
+sub characteristic_integer {
+  my ($self) = @_;
+  return (int($self->{'multiples'}) == $self->{'multiples'});
+}
+
 use constant parameter_info_array =>
   [ { name => 'multiples',
       type => 'float',
@@ -68,43 +75,48 @@ use constant parameter_info_array =>
     },
   ];
 
+#------------------------------------------------------------------------------
+
 # cf A017173 9n+1
-my %oeis_anum = (0 => 'A000004',  # 0,  all zeros
-                 # OEIS-Catalogue: A000004 multiples=0
+my %oeis_anum =
+  (0 => { 0 => 'A000004',  # 0,  all zeros
+          # OEIS-Catalogue: A000004 multiples=0
 
-                 1  => 'A001477',  # 1,  integers 0,1,2,...
-                 2  => 'A005843',  # 2 even 0,2,4,...
-                 # OEIS-Other: A001477 multiples=1
-                 # OEIS-Other: A005843 multiples=2
+          1  => 'A001477',  # 1,  integers 0,1,2,...
+          2  => 'A005843',  # 2 even 0,2,4,...
+          # OEIS-Other: A001477 multiples=1
+          # OEIS-Other: A005843 multiples=2
 
-                 3  => 'A008585',  # 3 starting from i=0
-                 4  => 'A008586',  # 4 starting from i=0
-                 5  => 'A008587',  # 5 starting from i=0
-                 6  => 'A008588',  # 6 starting from i=0
-                 7  => 'A008589',  # 7 starting from i=0
-                 8  => 'A008590',  # 8 starting from i=0
-                 9  => 'A008591',  # 9 starting from i=0
-                 10 => 'A008592',  # 10 starting from i=0
-                 # OEIS-Catalogue: A008585 multiples=3
-                 # OEIS-Catalogue: A008586 multiples=4
-                 # OEIS-Catalogue: A008587 multiples=5
-                 # OEIS-Catalogue: A008588 multiples=6
-                 # OEIS-Catalogue: A008589 multiples=7
-                 # OEIS-Catalogue: A008590 multiples=8
-                 # OEIS-Catalogue: A008591 multiples=9
-                 # OEIS-Catalogue: A008592 multiples=10
-
-                 3018 => 'A086746', # multiples of 3018, starting from 1
-                 # OEIS-Catalogue: A086746 multiples=3018 i_start=1
-                );
+          3  => 'A008585',  # 3 starting from i=0
+          4  => 'A008586',  # 4 starting from i=0
+          5  => 'A008587',  # 5 starting from i=0
+          6  => 'A008588',  # 6 starting from i=0
+          7  => 'A008589',  # 7 starting from i=0
+          8  => 'A008590',  # 8 starting from i=0
+          9  => 'A008591',  # 9 starting from i=0
+          10 => 'A008592',  # 10 starting from i=0
+          # OEIS-Catalogue: A008585 multiples=3
+          # OEIS-Catalogue: A008586 multiples=4
+          # OEIS-Catalogue: A008587 multiples=5
+          # OEIS-Catalogue: A008588 multiples=6
+          # OEIS-Catalogue: A008589 multiples=7
+          # OEIS-Catalogue: A008590 multiples=8
+          # OEIS-Catalogue: A008591 multiples=9
+          # OEIS-Catalogue: A008592 multiples=10
+        },
+   1 => {
+         3018 => 'A086746', # multiples of 3018, start OFFSET=1 value=3018
+         # OEIS-Catalogue: A086746 multiples=3018 i_start=1
+        },
+  );
 sub oeis_anum {
   my ($self) = @_;
-  return ($oeis_anum{$self->{'multiples'}});
-
-  # ($multiples = $self->{'multiples'}) > 0
-  #           && $multiples == int($multiples)
-  #           &&
+  my $i_start = $self->i_start;
+  if ($i_start < 0) { return undef; }
+  return $oeis_anum{$i_start}->{$self->{'multiples'}};
 }
+
+#------------------------------------------------------------------------------
 
 sub rewind {
   my ($self) = @_;

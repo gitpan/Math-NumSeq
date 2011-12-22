@@ -24,7 +24,7 @@ use Math::Libm;
 use Module::Util;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 22;
+$VERSION = 23;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -52,7 +52,8 @@ BEGIN {
     ### @evaluators
   }
 
-  use constant name => Math::NumSeq::__('Arbitrary Expression');
+#  use constant name => Math::NumSeq::__('Arbitrary Expression');
+use constant i_start => 0;
   use constant description =>
     join ("\n",
           Math::NumSeq::__('An arbitrary expression.  It should be a function of \"i\" at 0,1,2, etc.  For example (2*i)^2 would give the even perfect squares.
@@ -339,7 +340,7 @@ HERE
 
 sub rewind {
   my ($self) = @_;
-  $self->{'i'} = 0;
+  $self->{'i'} = $self->i_start;
   $self->{'above'} = 0;
 }
 

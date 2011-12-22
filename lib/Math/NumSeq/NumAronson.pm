@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 22;
+$VERSION = 23;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -31,6 +31,7 @@ use Math::NumSeq;
 use constant description => Math::NumSeq::__('Numerical version of Aronson\'s sequence');
 use constant values_min => 1;
 use constant characteristic_increasing => 2; # strictly
+use constant characteristic_integer => 1;
 use constant i_start => 1;
 
 # cf A080596 - a(1)=1

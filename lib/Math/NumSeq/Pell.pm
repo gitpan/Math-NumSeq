@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 22;
+$VERSION = 23;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
 
@@ -30,8 +30,10 @@ use Math::NumSeq 7; # v.7 for _is_infinite()
 
 # use constant name => Math::NumSeq::__('Pell Numbers');
 use constant description => Math::NumSeq::__('The Pell numbers 0, 1, 2, 5, 12, 29, 70, etc, being P(k)=2*P(k-1)+P(k-2) starting from 0,1.');
+use constant i_start => 0;
 use constant values_min => 0;
 use constant characteristic_increasing => 2; # strictly
+use constant characteristic_integer => 1;
 use constant oeis_anum => 'A000129'; # pell
 
 # uncomment this to run the ### lines
@@ -40,7 +42,7 @@ use constant oeis_anum => 'A000129'; # pell
 sub rewind {
   my ($self) = @_;
   ### Pell rewind() ...
-  $self->{'i'} = 0;
+  $self->{'i'} = $self->i_start;
   $self->{'f0'} = 0;
   $self->{'f1'} = 1;
 }

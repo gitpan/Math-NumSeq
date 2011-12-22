@@ -26,7 +26,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 22;
+$VERSION = 23;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -38,7 +38,9 @@ use constant values_min => 0;
 use constant values_max => 1;
 # use constant characteristic_smaller => 1; # undocumented
 # use constant characteristic_boolean => 1; # undocumented
-use constant oeis_anum => 'A086747';
+use constant i_start => 0;
+use constant characteristic_integer => 1;
+use constant oeis_anum => 'A086747'; # starting OFFSET=0 value 1
 
 sub ith {
   my ($self, $i) = @_;

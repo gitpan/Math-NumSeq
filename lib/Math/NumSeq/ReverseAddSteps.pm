@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 22;
+$VERSION = 23;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -34,10 +34,10 @@ use Math::NumSeq::Base::IterateIth;
 
 # use constant name => Math::NumSeq::__('Reverse Add Steps');
 use constant description => Math::NumSeq::__('How many steps of reverse and add until a palindrome is reached (sometimes called the 196-algorithm).');
+use constant i_start => 1;
+use constant values_min => -1;
 use constant characteristic_count => 1;
 use constant characteristic_increasing => 0;
-use constant values_min => -1;
-use constant i_start => 1;
 
 use Math::NumSeq::Base::Digits;
 *parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;

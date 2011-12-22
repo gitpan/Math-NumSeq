@@ -19,6 +19,40 @@
 
 require 5;
 use strict;
+use List::Util 'min','max';
+
+{
+  require Math::NumSeq::AsciiSelf;
+  foreach my $radix (2 .. 35) {
+    my $seq = Math::NumSeq::AsciiSelf->new (radix => $radix);
+    my $min = 999;
+    my $max = 0;
+    foreach (1 .. 100000) {
+      my ($i,$value) = $seq->next;
+      $min = min($min,$value);
+      $max = max($max,$value);
+    }
+    my $defmax = $radix + ($radix <= 10 ? 47 : 65-10);
+    my $minxx = ($min != 48 ? '**' : '');
+    my $maxxx = ($max != $defmax ? '**' : '');
+    print "$radix  $min$minxx $max$maxxx\n";
+  }
+  exit 0;
+}
+
+{
+  require Math::NumSeq::AsciiSelf;
+  foreach my $radix (2 .. 35) {
+    my $seq = Math::NumSeq::AsciiSelf->new (radix => $radix);
+    print "$radix: ";
+    foreach (1 .. 20) {
+      my ($i,$value) = $seq->next;
+      print "$value,";
+    }
+    print "\n";
+  }
+  exit 0;
+}
 
 {
   require Math::NumSeq::AsciiSelf;

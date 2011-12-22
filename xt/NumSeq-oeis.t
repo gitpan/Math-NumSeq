@@ -67,7 +67,7 @@ sub diff_nums {
       or return "not a number pos=$i got='$got'";
     $want =~ /^[0-9.-]+$/
       or return "not a number pos=$i want='$want'";
-    if ($got != $want) {
+    if ($got ne $want) {
       ### $got
       ### $want
       return ("different pos=$i numbers"
@@ -131,6 +131,9 @@ sub check_class {
   # return unless $class =~ /Star/;
   # return unless $class =~ /Luc|Fib/;
   # return unless $class =~ /ReverseAddSteps/;
+  # return unless $class =~ /RadixWithout/;
+  # return unless $class =~ /Perrin/;
+  # return unless $class =~ /Sqrt/;
 
   eval "require $class" or die;
 
@@ -139,9 +142,11 @@ sub check_class {
                   map {defined $_ ? $_ : '[undef]'} @$parameters);
 
   my $max_value = undef;
-  if ($class->isa('Math::NumSeq::Factorials')
-      || $class->isa('Math::NumSeq::Primorials')
+  if ($class eq 'Math::NumSeq::Factorials'
+      || $class eq 'Math::NumSeq::Primorials'
       || $class->isa('Math::NumSeq::Fibonacci') # incl LucasNumbers
+      || $class eq 'Math::NumSeq::Perrin'
+      || $class eq 'Math::NumSeq::Cubes'
      ) {
     $max_value = 'unlimited';
   }
@@ -196,23 +201,35 @@ sub check_class {
     # last digit of sample values octal sqrt(8) seems is 4 think should be 5,
     # trim it off for now
     pop @$want;
+    MyTestHelpers::diag ("trim doubtful end $anum $name");
   } elsif ($anum eq 'A004582') {
     # last few of sample values sqrt(8) base 7 seem bad, trim
     splice @$want, -27;
+    MyTestHelpers::diag ("trim doubtful end $anum $name");
   } elsif ($anum eq 'A004584') {
     # last few of sample values sqrt(8) base 9 seem bad, trim
     splice @$want, -4;
+    MyTestHelpers::diag ("trim doubtful end $anum $name");
   } elsif ($anum eq 'A004588') {
     # last 3,3,0,2,3,4,2,4,1,2,4,4,1 sample values sqrt(10) base 5 seem bad,
     # trim
     splice @$want, -13;
-
+    MyTestHelpers::diag ("trim doubtful end $anum $name");
   } elsif ($anum eq 'A004542') {  # sqrt(2) in base 5
-    MyTestHelpers::diag ("skip doubtful $anum $name");
-    return;
+    # trim seeming bad end
+    splice @$want, -15;
+    MyTestHelpers::diag ("trim doubtful end $anum $name");
+
   } elsif ($anum eq 'A022000') {  # FIXME: not 1/996 ???
     MyTestHelpers::diag ("skip doubtful $anum $name");
     return;
+  }
+  if ($class =~ /SqrtDigits/) {
+    unless (Math::BigInt::GMP->VERSION) {  # plain Calc sqrt a bit slow
+      if ($#$want > 1000) {
+        $#$want = 1000;
+      }
+    }
   }
 
   # skip all except ...
@@ -255,15 +272,25 @@ sub check_class {
     }
   }
 
-  # {
-  #   my $got_i_start = $seq->i_start;
-  #   if ($got_i_start != $want_i_start) {
-  #     diag "note: $name";
-  #     diag ref $seq;
-  #     diag "got  i_start  $got_i_start";
-  #     diag "want i_start  $want_i_start";
-  #   }
-  # }
+  {
+    my $got_i_start = $seq->i_start;
+    if ($got_i_start != $want_i_start
+        && $anum ne 'A000004' # offset=0, but allow other i_start here
+        && $anum ne 'A000012' # offset=0, but allow other i_start here
+       ) {
+      if ($class =~ /RadixWithout/  # FIXME
+          || $class =~ /SqrtDigits/ # FIXME
+          || $anum eq 'A064150'    # harshad base 3
+         ) {
+        MyTestHelpers::diag ("todo i_start: got $got_i_start want $want_i_start  $name");
+      } else {
+        $good = 0;
+        MyTestHelpers::diag ("bad: $name");
+        MyTestHelpers::diag ("got  i_start  $got_i_start");
+        MyTestHelpers::diag ("want i_start  $want_i_start");
+      }
+    }
+  }
 
   {
     ### by next() ...

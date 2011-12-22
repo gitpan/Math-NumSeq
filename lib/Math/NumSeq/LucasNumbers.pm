@@ -21,7 +21,7 @@ use strict;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 22;
+$VERSION = 23;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
 
@@ -36,6 +36,7 @@ use constant description => Math::NumSeq::__('Lucas numbers 1, 3, 4, 7, 11, 18, 
 
 use constant values_min => 1;
 use constant characteristic_increasing => 2;
+use constant characteristic_integer => 1;
 use constant oeis_anum => 'A000204'; # lucas starting at 1,3,...
 use constant i_start => 1;
 
@@ -48,6 +49,18 @@ sub rewind {
 }
 
 my $uv_limit = do {
+  # Float integers too in 32 bits ?
+  # my $max = 1;
+  # for (1 .. 256) {
+  #   my $try = $max*2 + 1;
+  #   ### $try
+  #   if ($try == 2*$max || $try == 2*$max+2) {
+  #     last;
+  #   }
+  #   $max = $try;
+  # }
+  my $max = ~0;
+
   # f1+f0 > i
   # f0 > i-f1
   # check i-f1 as the stopping point, so that if i=UV_MAX then won't
@@ -56,7 +69,6 @@ my $uv_limit = do {
   my $f0 = 1;
   my $f1 = 3;
   my $prev_f0;
-  my $max = ~0;
   while ($f0 <= $max - $f1) {
     $prev_f0 = $f0;
     ($f1,$f0) = ($f1+$f0,$f1);

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 22;
+$VERSION = 23;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -31,7 +31,9 @@ use Math::NumSeq::Primorials;
 #use Smart::Comments;
 
 use constant description => Math::NumSeq::__('Products of a fixed number of primes, default the semi-primes, 4, 6, 9, 10, 14 15, etc with just two prime factors P*Q.');
+use constant i_start => 1;
 use constant characteristic_increasing => 2;
+use constant characteristic_integer => 1;
 
 use constant parameter_info_array =>
   [

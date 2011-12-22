@@ -27,7 +27,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 22;
+$VERSION = 23;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -38,19 +38,21 @@ use Math::NumSeq;
 
 use constant values_min => 0;
 use constant characteristic_increasing => 2;
+use constant characteristic_integer => 1;
 use constant description => Math::NumSeq::__('Fibbinary numbers 0,1,2,4,5,8,9,etc, without adjacent 1 bits.');
+use constant i_start => 0;
 
 # cf A000119 - number of fibonacci sums forms
 #    A003622 - n with odd Zeckendorf,  cf golden seq
 #    A037011 - baum-sweet cubic, might be 1 iff i is in the fibbinary seq
 #    A014417 - n in fibonacci base, the fibbinaries written out in binary
 #
-use constant oeis_anum => 'A003714';  # Fibbinary
+use constant oeis_anum => 'A003714';  # Fibbinary, OFFSET=0 start value=0
 
 
 sub rewind {
   my ($self) = @_;
-  $self->{'i'} = 0;
+  $self->{'i'} = $self->i_start;
   $self->{'value'} = 0;
 }
 

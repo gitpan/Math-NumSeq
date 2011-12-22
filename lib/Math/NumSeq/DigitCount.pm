@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 22;
+$VERSION = 23;
 use Math::NumSeq;
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
@@ -34,6 +34,7 @@ use Math::NumSeq::Base::IterateIth;
 
 use constant description => Math::NumSeq::__('How many of a given digit in each number, in a given radix, for example how many 1 bits in binary.');
 use constant values_min => 0;
+use constant default_i_start => 0;
 use constant characteristic_count => 1;
 use constant characteristic_increasing => 0;
 
@@ -58,25 +59,26 @@ use constant parameter_info_array =>
 my @oeis_anum;
 BEGIN {
   # cf A023416 treating "0" as a single digit zero
-  $oeis_anum[2]->[0] = 'A080791'; # base 2 count 0s, start i=0
-  $oeis_anum[2]->[1] = 'A000120'; # base 2 count 1s, start i=0
+  $oeis_anum[0]->[2]->[0] = 'A080791'; # base 2 count 0s, start i=0
+  $oeis_anum[0]->[2]->[1] = 'A000120'; # base 2 count 1s, start i=0
   # OEIS-Catalogue: A080791 radix=2 digit=0
   # OEIS-Catalogue: A000120 radix=2 digit=1
 
-  # cf A077267 starts i=1
-  #    A081602 starts i=0 but considers i=0 to have 1 zero, unlike other counts
-  # $oeis_anum[3]->[0] = 'A081602'; # base 3 count 0s, start i=0
-  # # OEIS-Catalogue: A081602 radix=3 digit=0
-  #
-  $oeis_anum[3]->[1] = 'A062756'; # base 3 count 1s, start i=0
-  $oeis_anum[3]->[2] = 'A081603'; # base 3 count 2s, start i=0
+  $oeis_anum[1]->[3]->[0] = 'A077267'; # base 3 count 0s, start i=1
+  $oeis_anum[0]->[3]->[1] = 'A062756'; # base 3 count 1s, start i=0
+  $oeis_anum[0]->[3]->[2] = 'A081603'; # base 3 count 2s, start i=0
+  # OEIS-Catalogue: A077267 radix=3 digit=0 i_start=1
   # OEIS-Catalogue: A062756 radix=3 digit=1
   # OEIS-Catalogue: A081603 radix=3 digit=2
+  #
+  # cf A081602 start i=0 but considers i=0 to have 1 zero, unlike other counts
+  # $oeis_anum[0]->[3]->[0] = 'A081602'; # base 3 count 0s, start i=0
+  # # OEIS-Catalogue: A081602 radix=3 digit=0
 
-  $oeis_anum[4]->[0] = 'A160380'; # base 4 count 0s, start i=0
-  $oeis_anum[4]->[1] = 'A160381'; # base 4 count 1s, start i=0
-  $oeis_anum[4]->[2] = 'A160382'; # base 4 count 2s, start i=0
-  $oeis_anum[4]->[3] = 'A160383'; # base 4 count 3s, start i=0
+  $oeis_anum[0]->[4]->[0] = 'A160380'; # base 4 count 0s, start i=0
+  $oeis_anum[0]->[4]->[1] = 'A160381'; # base 4 count 1s, start i=0
+  $oeis_anum[0]->[4]->[2] = 'A160382'; # base 4 count 2s, start i=0
+  $oeis_anum[0]->[4]->[3] = 'A160383'; # base 4 count 3s, start i=0
   # OEIS-Catalogue: A160380 radix=4 digit=0
   # OEIS-Catalogue: A160381 radix=4 digit=1
   # OEIS-Catalogue: A160382 radix=4 digit=2
@@ -84,7 +86,7 @@ BEGIN {
 
   # almost A055641 decimal count 9s, but it starts i=0 has 1 zero
 
-  $oeis_anum[10]->[9] = 'A102683'; # base 10 count 9s, start i=0
+  $oeis_anum[0]->[10]->[9] = 'A102683'; # base 10 count 9s, start i=0
   # OEIS-Catalogue: A102683 radix=10 digit=9
 }
 sub oeis_anum {
@@ -96,7 +98,7 @@ sub oeis_anum {
   } elsif ($digit >= $radix) {
     return 'A000004'; # all zeros, 
   }
-  return $oeis_anum[$radix]->[$digit];
+  return $oeis_anum[$self->i_start]->[$radix]->[$digit];
 }
 
 sub ith {

@@ -22,7 +22,7 @@ use List::Util 'max';
 use Math::NumSeq;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 22;
+$VERSION = 23;
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
 
@@ -32,6 +32,8 @@ use Math::NumSeq::Base::Digits;
 
 # use constant name => Math::NumSeq::__('Fraction Digits');
 use constant description => Math::NumSeq::__('A given fraction number written out in binary.');
+use constant i_start => 0;
+
 use constant parameter_info_array =>
   [ Math::NumSeq::Base::Digits->parameter_info_list,
     { name       => 'fraction',
@@ -44,6 +46,8 @@ use constant parameter_info_array =>
     },
   ];
 
+#------------------------------------------------------------------------------
+
 my @oeis_anum;
 
 $oeis_anum[10] =
@@ -54,8 +58,10 @@ $oeis_anum[10] =
 
    '1/7'   => 'A020806',   # 1/7 decimal
    # OEIS-Catalogue: A020806 fraction=1/7
-   '22/7'  => 'A068028',   # 22/7 decimal
-   # OEIS-Catalogue: A068028 fraction=22/7
+
+   # OFFSET=1, unlike other fractions which are OFFSET=0
+   # # '22/7'  => 'A068028',   # 22/7 decimal
+   # # # OEIS-Catalogue: A068028 fraction=22/7
 
    '1/9'   => 'A000012',   # 1/9 decimal, is just 1,1,1,1
    # pending something better for a constant sequence
@@ -119,6 +125,8 @@ sub oeis_anum {
   return undef;
 }
 
+#------------------------------------------------------------------------------
+
 sub rewind {
   my ($self) = @_;
 
@@ -168,7 +176,7 @@ sub rewind {
   $self->{'fraction'} = $fraction;
   $self->{'num'} = $num;
   $self->{'den'} = $den;
-  $self->{'i'} = 0;
+  $self->{'i'} = $self->i_start;
 }
 
 sub _to_int_and_decimals {

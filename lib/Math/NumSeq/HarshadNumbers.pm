@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 22;
+$VERSION = 23;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
@@ -32,20 +32,21 @@ use Math::NumSeq::Base::IteratePred;
 
 # use constant name => Math::NumSeq::__('Harshad Numbers');
 use constant description => Math::NumSeq::__('Harshad numbers, divisible by the sum of their digits.');
-use constant values_min => 1;
 use constant i_start => 1;
+use constant values_min => 1;
 use constant characteristic_increasing => 1;
+use constant characteristic_integer => 1;
 
 use Math::NumSeq::Base::Digits;
 *parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
 
 my @oeis_anum;
 
-$oeis_anum[2]  = 'A049445';  # binary 1s divide N
-$oeis_anum[3]  = 'A064150';  # base 3
-$oeis_anum[4]  = 'A064438';  # base 4
-$oeis_anum[5]  = 'A064481';  # base 5
-$oeis_anum[10] = 'A005349';  # decimal sum digits divide N
+$oeis_anum[2]  = 'A049445';  # binary 1s divide N  OFFSET=1
+$oeis_anum[3]  = 'A064150';  # base 3              OFFSET=0
+$oeis_anum[4]  = 'A064438';  # base 4              OFFSET=1
+$oeis_anum[5]  = 'A064481';  # base 5              OFFSET=1
+$oeis_anum[10] = 'A005349';  # decimal sum digits divide N  OFFSET=1
 # OEIS-Catalogue: A049445 radix=2
 # OEIS-Catalogue: A064150 radix=3
 # OEIS-Catalogue: A064438 radix=4

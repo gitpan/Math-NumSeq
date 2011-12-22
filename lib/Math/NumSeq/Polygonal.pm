@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 22;
+$VERSION = 23;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -32,8 +32,10 @@ use Math::NumSeq::Base::IterateIth;
 
 # use constant name => Math::NumSeq::__('Polygonal Numbers');
 use constant description => Math::NumSeq::__('Polygonal numbers');
+use constant i_start => 0;
 use constant values_min => 0;
 use constant characteristic_increasing => 1;
+use constant characteristic_integer => 1;
 use constant parameter_info_array =>
   [
    { name    => 'polygonal',
@@ -95,19 +97,25 @@ $oeis_anum{'both'}->[6]   = 'A000217';   # together triangular numbers
 # OEIS-Catalogue: A014105 polygonal=6  pairs=second
 # OEIS-Other:     A000217 polygonal=6  pairs=both
 
-$oeis_anum{'first'}->[7]  = 'A000566'; # 7 heptagonal
-$oeis_anum{'second'}->[7] = 'A147875'; # (5n-2)(n-1)/2
+$oeis_anum{'first'}->[7]  = 'A000566'; # 7 heptagonal n(5n-3)/2
 $oeis_anum{'both'}->[7]   = 'A085787';
 # OEIS-Catalogue: A000566 polygonal=7
-# OEIS-Catalogue: A147875 polygonal=7 pairs=second
 # OEIS-Catalogue: A085787 polygonal=7 pairs=both
+#
+# Not quite, (5n-2)(n-1)/2 starting n=1 is the same values, whereas
+# Polygonal seconds starting n=0 would be (-n)(5*-n-3)/2=n(5n+3)
+# # $oeis_anum{'second'}->[7] = 'A147875'; # (5n-2)(n-1)/2
+# # # OEIS-Catalogue: A147875 polygonal=7 pairs=second
 
 $oeis_anum{'first'}->[8]  = 'A000567'; # 8 octagonal
 $oeis_anum{'second'}->[8] = 'A045944'; # Rhombic matchstick n*(3*n+2)
-$oeis_anum{'both'}->[8]   = 'A001082'; # n(3n-4)/4 or (n-1)(3n+1)/4
 # OEIS-Catalogue: A000567 polygonal=8
 # OEIS-Catalogue: A045944 polygonal=8 pairs=second
-# OEIS-Catalogue: A001082 polygonal=8 pairs=both
+#
+# Not quite, has OFFSET=1 start n=1, unlike generalized pentagonals.
+# Would be n*(3n-2) for n=0,1,-1,2,-2,etc
+# $oeis_anum{'both'}->[8]   = 'A001082'; # n(3n-4)/4 or (n-1)(3n+1)/4
+# # OEIS-Catalogue: A001082 polygonal=8 pairs=both
 
 $oeis_anum{'first'}->[9]  = 'A001106'; # 9 nonagonal
 $oeis_anum{'second'}->[9] = 'A179986'; # 9 nonagonal second n*(7*n+5)/2

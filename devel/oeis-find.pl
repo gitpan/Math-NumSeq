@@ -45,7 +45,6 @@ HERE
     next if $module eq 'Expression';
     next if $module eq 'OEIS';
     next if $module eq 'CunninghamPrimes'; # broken
-    next if $module eq 'PlanePathN'; # not yet
     next if $module eq 'PlanePathTurn'; # not yet
     my $class = App::MathImage::Generator->values_class($module);
     print "$class\n";
@@ -177,8 +176,6 @@ sub info_extend_parameters {
   if ($info->{'name'} eq 'planepath') {
     my @strings;
     foreach my $choice (@{$info->{'choices'}}) {
-      next if $choice eq 'MathImageCellularRule'; # not working yet
-
       my $path_class = "Math::PlanePath::$choice";
       Module::Load::load($path_class);
 

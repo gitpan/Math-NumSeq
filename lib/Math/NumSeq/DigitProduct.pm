@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 22;
+$VERSION = 23;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -31,8 +31,10 @@ use Math::NumSeq::Base::IterateIth;
 
 use constant name => Math::NumSeq::__('Digit Product');
 use constant description => Math::NumSeq::__('Product of digits a given radix.');
+use constant i_start => 0;
 use constant characteristic_smaller => 1;
 use constant characteristic_increasing => 0;
+use constant characteristic_integer => 1;
 
 use Math::NumSeq::Base::Digits;
 *parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;

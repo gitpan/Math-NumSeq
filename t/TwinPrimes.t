@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 14;
+plan tests => 13;
 
 use lib 't';
 use MyTestHelpers;
@@ -35,7 +35,7 @@ use Math::NumSeq::TwinPrimes;
 # VERSION
 
 {
-  my $want_version = 22;
+  my $want_version = 23;
   ok ($Math::NumSeq::TwinPrimes::VERSION, $want_version, 'VERSION variable');
   ok (Math::NumSeq::TwinPrimes->VERSION,  $want_version, 'VERSION class method');
 
@@ -82,7 +82,7 @@ sub collect {
 }
 {
   my $seq = Math::NumSeq::TwinPrimes->new (pairs => 'average');
-  ok ($seq->oeis_anum, 'A014574');
+  # ok ($seq->oeis_anum, 'A014574');  # different OFFSET
   ok (collect($seq), '1,2,3,4,5 -- 4,6,12,18,30');
 }
 {

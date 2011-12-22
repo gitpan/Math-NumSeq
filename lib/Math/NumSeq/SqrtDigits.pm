@@ -22,7 +22,7 @@ use Carp;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 22;
+$VERSION = 23;
 
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
@@ -72,8 +72,6 @@ $oeis_anum[2]->[7] = 'A004569';   # base 2, sqrt7
 # OEIS-Catalogue: A004555 sqrt=5 radix=2
 # OEIS-Catalogue: A004609 sqrt=6 radix=2
 # OEIS-Catalogue: A004569 sqrt=7 radix=2
-#
-# OEIS-Other: A004569 sqrt=28 radix=2
 
 # sqrt 2
 $oeis_anum[2]->[2] = 'A004539';   # base 2, sqrt2
@@ -84,16 +82,12 @@ $oeis_anum[5]->[2] = 'A004542';   # base 5, sqrt2
 # OEIS-Catalogue: A004540 sqrt=2 radix=3
 # OEIS-Catalogue: A004541 sqrt=2 radix=4
 # OEIS-Catalogue: A004542 sqrt=2 radix=5
-#
-# OEIS-Other: A004539 sqrt=8 radix=2
 
 # sqrt 3
 $oeis_anum[2]->[3] = 'A004547';   # base 2, sqrt3
 $oeis_anum[3]->[3] = 'A004548';   # base 3, sqrt3
 # OEIS-Catalogue: A004548 sqrt=3 radix=3
 # OEIS-Catalogue: A004547 sqrt=3 radix=2
-#
-# OEIS-Other: A004547 sqrt=12 radix=2
 
 # sqrt 8
 $oeis_anum[7]->[8] = 'A004582';   # base 7, sqrt8
@@ -112,8 +106,6 @@ $oeis_anum[5]->[10] = 'A004588';   # base 5, sqrt10
 # OEIS-Catalogue: A004586 sqrt=10 radix=3
 # OEIS-Catalogue: A004587 sqrt=10 radix=4
 # OEIS-Catalogue: A004588 sqrt=10 radix=5
-#
-# OEIS-Other: A004585 sqrt=40 radix=2
 
 # base 10 decimal
 $oeis_anum[10]->[2] = 'A002193';   # sqrt2
@@ -135,16 +127,22 @@ sub oeis_anum {
   my $sqrt = $self->{'sqrt'};
   my $radix = $self->{'radix'};
 
-  # so that sqrt(8) gives A-num of sqrt(2), etc
-  {
-    my $radix_squared = $radix * $radix;
-    while (($sqrt % $radix_squared) == 0) {
-      $sqrt /= $radix_squared;
-    }
-  }
+  # No, the values are the same, but i is offset by the power removed ...
+  # # so that sqrt(8) gives A-num of sqrt(2), etc
+  # {
+  #   my $radix_squared = $radix * $radix;
+  #   while (($sqrt % $radix_squared) == 0) {
+  #     $sqrt /= $radix_squared;
+  #   }
+  # }
+  # # OEIS-Other: A004539 sqrt=8 radix=2
+  # # OEIS-Other: A004547 sqrt=12 radix=2
+  # # OEIS-Other: A004569 sqrt=28 radix=2
+  # # OEIS-Other: A004585 sqrt=40 radix=2
 
   if ($radix == 10
       && $sqrt >= 10 && $sqrt <= 99
+      && $sqrt != 50 && $sqrt != 75      
       && ! $perfect_square{$sqrt}) {
     ### calculated ...
     my $offset = 0;
@@ -195,7 +193,7 @@ sub oeis_anum {
 # OEIS-Catalogue: A010500 sqrt=46
 # OEIS-Catalogue: A010501 sqrt=47
 # OEIS-Catalogue: A010502 sqrt=48
-# OEIS-Catalogue: A010503 sqrt=50
+# # OEIS-Catalogue: A010503 sqrt=50   OFFSET=0 ...
 # OEIS-Catalogue: A010504 sqrt=51
 # OEIS-Catalogue: A010505 sqrt=52
 # OEIS-Catalogue: A010506 sqrt=53
@@ -220,7 +218,7 @@ sub oeis_anum {
 # OEIS-Catalogue: A010524 sqrt=72
 # OEIS-Catalogue: A010525 sqrt=73
 # OEIS-Catalogue: A010526 sqrt=74
-# OEIS-Catalogue: A010527 sqrt=75
+# # OEIS-Catalogue: A010527 sqrt=75   OFFSET=0 ...
 # OEIS-Catalogue: A010528 sqrt=76
 # OEIS-Catalogue: A010529 sqrt=77
 # OEIS-Catalogue: A010530 sqrt=78
@@ -249,12 +247,15 @@ sub oeis_anum {
 
 #------------------------------------------------------------------------------
 
-my %radix_to_stringize = ((Math::NumSeq::_bigint()->can('as_bin')
-                           ? (2  => 'as_bin') : ()),
-                          (Math::NumSeq::_bigint()->can('as_oct')
-                           ? (8  => 'as_oct') : ()),
-                          (Math::NumSeq::_bigint()->can('bstr')
-                           ? (10 => 'bstr') : ()));
+my %radix_to_stringize_method = ((Math::NumSeq::_bigint()->can('as_bin')
+                                  ? (2  => 'as_bin')
+                                  : ()),
+                                 (Math::NumSeq::_bigint()->can('as_oct')
+                                  ? (8  => 'as_oct')
+                                  : ()),
+                                 (Math::NumSeq::_bigint()->can('bstr')
+                                  ? (10 => 'bstr')
+                                  : ()));
 
 sub rewind {
   my ($self) = @_;
@@ -297,7 +298,7 @@ sub _extend {
   $root->bsqrt();
   ### root is: "$root"
 
-  if (my $method = $radix_to_stringize{$radix}) {
+  if (my $method = $radix_to_stringize_method{$radix}) {
     $self->{'string'} = $root->$method();
     ### string: $self->{'string'}
 

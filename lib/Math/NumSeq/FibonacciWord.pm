@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 22;
+$VERSION = 23;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -31,9 +31,11 @@ use Math::NumSeq::Base::IterateIth;
 #use Smart::Comments;
 
 
+use constant description => Math::NumSeq::__('0/1 values related to Fibonacci numbers, 0,1,0,0,1,0,1,0,etc.');
+use constant i_start => 0;
 use constant values_min => 0;
 use constant values_max => 1;
-use constant description => Math::NumSeq::__('0/1 values related to Fibonacci numbers, 0,1,0,0,1,0,1,0,etc.');
+use constant characteristic_integer => 1;
 
 # cf A003842 same with values 1/2 instead of 0/1
 #    A014675 same with values 2/1 instead of 0/1
@@ -58,7 +60,7 @@ use constant oeis_anum => 'A003849';  # 0/1 values Fibonacci word starting 0,1
 
 sub rewind {
   my ($self) = @_;
-  $self->{'i'} = 0;
+  $self->{'i'} = $self->i_start;
   $self->{'value'} = 0;
 }
 sub next {

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 22;
+$VERSION = 23;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -33,7 +33,9 @@ use Math::NumSeq::Base::IterateIth;
 
 # use constant name => Math::NumSeq::__('Without chosen digit');
 use constant description => Math::NumSeq::__('Integers which don\'t have a given digit when written out in a radix.');
+use constant default_i_start => 1;
 use constant characteristic_increasing => 1;
+use constant characteristic_integer => 1;
 
 use Math::NumSeq::Base::Digits;
 use constant parameter_info_array =>
@@ -52,30 +54,30 @@ use constant parameter_info_array =>
 #------------------------------------------------------------------------------
 my @oeis_anum;
 
-# A000225 is 2^n-1 but starting from 2^0-1 = 0, whereas RadixWithoutDigit
-# here starts from 1, per other OEIS "radix without" ...
+# A000225 is 2^n-1 base 2 without 0, but starting from 2^0-1 = 0, whereas
+# RadixWithoutDigit here starts from 1, per other OEIS "radix without" ...
 
-$oeis_anum[3]->[0] = 'A032924'; # base 3 no 0
-$oeis_anum[3]->[1] = 'A005823'; # base 3 no 1
-$oeis_anum[3]->[2] = 'A005836'; # base 3 no 2
+$oeis_anum[3]->[0] = 'A032924'; # base 3 no 0    OFFSET=1
+$oeis_anum[3]->[1] = 'A005823'; # base 3 no 1    OFFSET=1
+$oeis_anum[3]->[2] = 'A005836'; # base 3 no 2    OFFSET=1
 # OEIS-Catalogue: A032924 radix=3 digit=0  # base 3 no 0
 # OEIS-Catalogue: A005823 radix=3 digit=1  # base 3 no 1
 # OEIS-Catalogue: A005836 radix=3 digit=2  # base 3 no 2
 
-$oeis_anum[4]->[0] = 'A023705'; # base 4 no 0
-$oeis_anum[4]->[1] = 'A023709'; # base 4 no 1
-$oeis_anum[4]->[2] = 'A023713'; # base 4 no 2
-$oeis_anum[4]->[3] = 'A023717'; # base 4 no 3
+$oeis_anum[4]->[0] = 'A023705'; # base 4 no 0    OFFSET=1
+$oeis_anum[4]->[1] = 'A023709'; # base 4 no 1    OFFSET=1
+$oeis_anum[4]->[2] = 'A023713'; # base 4 no 2    OFFSET=1
+$oeis_anum[4]->[3] = 'A023717'; # base 4 no 3    OFFSET=0
 # OEIS-Catalogue: A023705 radix=4 digit=0  # base 4 no 0
 # OEIS-Catalogue: A023709 radix=4 digit=1  # base 4 no 1
 # OEIS-Catalogue: A023713 radix=4 digit=2  # base 4 no 2
 # OEIS-Catalogue: A023717 radix=4 digit=3  # base 4 no 3
 
-$oeis_anum[5]->[0] = 'A023721'; # base 5 no 0
-$oeis_anum[5]->[1] = 'A023725'; # base 5 no 1
-$oeis_anum[5]->[2] = 'A023729'; # base 5 no 2
-$oeis_anum[5]->[3] = 'A023733'; # base 5 no 3
-$oeis_anum[5]->[4] = 'A023737'; # base 5 no 4
+$oeis_anum[5]->[0] = 'A023721'; # base 5 no 0    OFFSET=1
+$oeis_anum[5]->[1] = 'A023725'; # base 5 no 1    OFFSET=1
+$oeis_anum[5]->[2] = 'A023729'; # base 5 no 2    OFFSET=1
+$oeis_anum[5]->[3] = 'A023733'; # base 5 no 3    OFFSET=1
+$oeis_anum[5]->[4] = 'A023737'; # base 5 no 4    OFFSET=1
 # OEIS-Catalogue: A023721 radix=5 digit=0  # base 5 no 0
 # OEIS-Catalogue: A023725 radix=5 digit=1  # base 5 no 1
 # OEIS-Catalogue: A023729 radix=5 digit=2  # base 5 no 2
@@ -84,36 +86,36 @@ $oeis_anum[5]->[4] = 'A023737'; # base 5 no 4
 
 # cf A037465 base 6 no 5, starting i=1
 
-$oeis_anum[7]->[6] = 'A020657'; # "no 7-term arithmetic progression"...
+$oeis_anum[7]->[6] = 'A020657'; # "no 7-term arithmetic progression" OFFSET=1
 # OEIS-Catalogue: A020657 radix=7 digit=6
 
-# starting from n=1 ...
+# starting OFFSET=1 value=1
 # $oeis_anum[8]->[7] = 'A037474'; # base 7 written out in octal
 # # OEIS-Catalogue: A037474 radix=8 digit=7 i_start=1
 
-# starting from n=1 ...
+# starting OFFSET=1 value=1
 # $oeis_anum[9]->[8] = 'A037477'; # base 8 written out in base 9
 # # OEIS-Catalogue: A037477 radix=9 digit=8 i_start=1
 
-$oeis_anum[10]->[0] = 'A052382'; # decimal numbers without 0
+$oeis_anum[10]->[0] = 'A052382'; # decimal numbers without 0, OFFSET=1
+$oeis_anum[10]->[1] = 'A052383'; # decimal numbers without 1, OFFSET=1 start 0
+$oeis_anum[10]->[2] = 'A052404'; # decimal numbers without 2, OFFSET=0 start 0
+$oeis_anum[10]->[3] = 'A052405'; # decimal numbers without 3, OFFSET=0 start 0
+$oeis_anum[10]->[4] = 'A052406'; # decimal numbers without 4, OFFSET=1 start 0
+$oeis_anum[10]->[5] = 'A052413'; #                            OFFSET=0 start 0
+$oeis_anum[10]->[6] = 'A052414'; #                            OFFSET=0
+$oeis_anum[10]->[7] = 'A052419'; #                            OFFSET=0
+$oeis_anum[10]->[8] = 'A052421'; #                            OFFSET=0
+$oeis_anum[10]->[9] = 'A007095'; # "numbers in base 9"        OFFSET=0
 # OEIS-Catalogue: A052382 radix=10 digit=0
-$oeis_anum[10]->[1] = 'A052383'; # decimal numbers without 1
 # OEIS-Catalogue: A052383 radix=10 digit=1
-$oeis_anum[10]->[2] = 'A052404'; # decimal numbers without 2
 # OEIS-Catalogue: A052404 radix=10 digit=2
-$oeis_anum[10]->[3] = 'A052405'; # decimal numbers without 3
 # OEIS-Catalogue: A052405 radix=10 digit=3
-$oeis_anum[10]->[4] = 'A052406'; # decimal numbers without 4
 # OEIS-Catalogue: A052406 radix=10 digit=4
-$oeis_anum[10]->[5] = 'A052413';
 # OEIS-Catalogue: A052413 radix=10 digit=5
-$oeis_anum[10]->[6] = 'A052414';
 # OEIS-Catalogue: A052414 radix=10 digit=6
-$oeis_anum[10]->[7] = 'A052419';
 # OEIS-Catalogue: A052419 radix=10 digit=7
-$oeis_anum[10]->[8] = 'A052421';
 # OEIS-Catalogue: A052421 radix=10 digit=8
-$oeis_anum[10]->[9] = 'A007095'; # base 10 no 9 "numbers in base 9"
 # OEIS-Catalogue: A007095 radix=10 digit=9  # base 10 no 9
 
 sub oeis_anum {
@@ -139,7 +141,7 @@ sub rewind {
   my $lo = $self->{'lo'} || 0;
   my $n = abs($lo);
 
-  my $i = 0;
+  my $i = $self->i_start;
   if ($radix == 2) {
     if ($digit == 1) {
       my $n = 1;
@@ -201,6 +203,7 @@ sub ith {
 
   my $radix = $self->{'radix'};
   my $digit = $self->{'digit'};
+  $i -= 1;
 
   if ($radix == 2) {
     if ($digit == 0) {

@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 22;
+$VERSION = 23;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -32,7 +32,9 @@ use Math::NumSeq;
 
 # use constant name => Math::NumSeq::__('Beastly Numbers');
 use constant description => Math::NumSeq::__('Numbers which contain "666".  The default is decimal, or select a radix.');
+use constant i_start => 1;
 use constant characteristic_increasing => 1;
+use constant characteristic_integer => 1;
 
 use constant parameter_info_array =>
   [
@@ -47,12 +49,7 @@ use constant parameter_info_array =>
    },
   ];
 
-
-sub values_min {
-  my ($self) = @_;
-  my $radix = $self->{'radix'};
-  return (6*$radix+6)*$radix+6;   # at i=0
-}
+#------------------------------------------------------------------------------
 
 # cf A131645 the beastly primes
 sub oeis_anum {
@@ -63,13 +60,21 @@ sub oeis_anum {
 }
 # OEIS-Catalogue: A051003 radix=10
 
+#------------------------------------------------------------------------------
+
+sub values_min {
+  my ($self) = @_;
+  my $radix = $self->{'radix'};
+  return (6*$radix+6)*$radix+6;   # at i=0
+}
+
 sub rewind {
   my ($self) = @_;
   my $lo = $self->{'lo'};
 
   my $radix = $self->{'radix'};
 
-  $self->{'i'}      = 0;
+  $self->{'i'}      = $self->i_start;
   $self->{'target'} = (6*$radix+6)*$radix+6;
   $self->{'cube'}   = $radix*$radix*$radix;
   $self->{'value'}  = max($lo,$self->{'target'}) - 1;

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 22;
+$VERSION = 23;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -28,7 +28,9 @@ use Math::NumSeq;
 # use constant name => Math::NumSeq::__('Factorials');
 use constant description => Math::NumSeq::__('The factorials 1, 2, 6, 24, 120, etc, 1*2*...*N.');
 use constant values_min => 1;
+use constant i_start => 0;
 use constant characteristic_increasing => 1;
+use constant characteristic_integer => 1;
 use constant oeis_anum => 'A000142'; # factorials 1,1,2,6,24, including 0!==1
 
 # uncomment this to run the ### lines
@@ -55,7 +57,7 @@ use constant _UV_LIMIT => do {
 sub rewind {
   my ($self) = @_;
   ### Factorials rewind()
-  $self->{'i'} = 0;
+  $self->{'i'} = $self->i_start;
   $self->{'f'} = 1;
 }
 sub next {

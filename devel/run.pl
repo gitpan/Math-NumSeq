@@ -83,7 +83,6 @@ $|=1;
   $values_class = 'App::MathImage::NumSeq::KlarnerRado';
   $values_class = 'App::MathImage::NumSeq::DigitCountLow';
   $values_class = 'App::MathImage::NumSeq::DivisorCount';
-  $values_class = 'Math::NumSeq::AsciiSelf';
   $values_class = 'Math::NumSeq::LiouvilleFunction';
   $values_class = 'Math::NumSeq::DigitCount';
   $values_class = 'App::MathImage::NumSeq::JugglerSteps';
@@ -98,7 +97,6 @@ $|=1;
   $values_class = 'Math::NumSeq::Polygonal';
   $values_class = 'App::MathImage::NumSeq::CunninghamChain';
   $values_class = 'App::MathImage::NumSeq::CunninghamPrimes';
-  $values_class = 'Math::NumSeq::RadixWithoutDigit';
   $values_class = 'Math::NumSeq::FibonacciWord';
   $values_class = 'App::MathImage::NumSeq::FibbinaryBitCount';
   $values_class = 'Math::NumSeq::Fibbinary';
@@ -106,14 +104,12 @@ $|=1;
   $values_class = 'Math::NumSeq::AlmostPrimes';
   $values_class = 'App::MathImage::NumSeq::DigitMiddle';
   $values_class = 'Math::NumSeq::PrimeFactorCount';
-  $values_class = 'Math::NumSeq::PlanePathCoord';
   $values_class = 'Math::NumSeq::SternDiatomic';
   $values_class = 'Math::NumSeq::SqrtEngel';
   $values_class = 'App::MathImage::NumSeq::HappySteps';
   $values_class = 'App::MathImage::NumSeq::RepdigitRadix';
   $values_class = 'App::MathImage::NumSeq::Runs';
   $values_class = 'App::MathImage::NumSeq::HofstadterDiff';
-  $values_class = 'App::MathImage::NumSeq::AllDigits';
   $values_class = 'App::MathImage::NumSeq::ConcatNumbers';
   $values_class = 'Math::NumSeq::TotientStepsSum';
   $values_class = 'App::MathImage::NumSeq::KolakoskiMajority';
@@ -123,21 +119,38 @@ $|=1;
   $values_class = 'Math::NumSeq::StarNumbers';
   $values_class = 'Math::NumSeq::ReverseAddSteps';
   $values_class = 'Math::NumSeq::Expression';
+  $values_class = 'App::MathImage::NumSeq::PiDigits';
+  $values_class = 'Math::NumSeq::PlanePathCoord';
+  $values_class = 'Math::NumSeq::AllDigits';
+  $values_class = 'Math::NumSeq::Palindromes';
+  $values_class = 'Math::NumSeq::RadixWithoutDigit';
+  $values_class = 'Math::NumSeq::Tribonacci';
+  $values_class = 'Math::NumSeq::AsciiSelf';
+  $values_class = 'App::MathImage::NumSeq::SquareFree';
+  $values_class = 'App::MathImage::NumSeq::PlanePathN';
 
   eval "require $values_class; 1" or die $@;
   print Math::NumSeq::DigitLength->VERSION,"\n";
   my $seq = $values_class->new (
-                                sqrt => 46,
-                                including_self => 0,
+                                # multiples => 1,
+                                #  radix => 3,
+                                # digit => 1,
 
-                                expression_evaluator => 'MS',
-                                expression => '2*i+1',
-                                # # expression => 'z=3; z*x^2 + 3*x + 2',
-                                # # expression => 'x^2 + 3*x + 2',
-                                # # expression => 'atan(x)',
-                                # expression => '9*i*i',
+                                planepath => 'FactorRationals',
+                                line_type => 'X_axis',
 
-                                runs_type => '1to2N',
+                                # order => 'forward',
+                                # sqrt => 46,
+                                # including_self => 0,
+                                #
+                                # expression_evaluator => 'MS',
+                                # expression => '2*i+1',
+                                # # # expression => 'z=3; z*x^2 + 3*x + 2',
+                                # # # expression => 'x^2 + 3*x + 2',
+                                # # # expression => 'atan(x)',
+                                # # expression => '9*i*i',
+                                #
+                                # runs_type => '1to2N',
                                 # factor_count => 8,
                                 # multiplicity => 'distinct',
                                 #
@@ -153,18 +166,16 @@ $|=1;
                                 # planepath => 'SquareSpiral',
                                 # coordinate_type => 'AbsDiff',
                                 #planepath => 'CoprimeColumns',
-                                #coordinate_type => 'DiffXY',
-                                i_start => 1,
-                                endian => 'little',
+                                # i_start => 1,
+                                # endian => 'little',
 
-                                #planepath => 'Diagonals',
                                 # planepath => 'ZOrderCurve,radix=10',
                                 # i_start => 1,
                                 # planepath => 'PythagoreanTree,coordinates=BA',
                                 # planepath=>'RationalsTree,tree_type=CW',
                                 # planepath => 'DivisibleColumns,divisor_type=proper',
-                                planepath => 'HilbertCurve',
-                                delta_type=>'Dir4',
+                                # planepath => 'HilbertCurve',
+                                # delta_type=>'Dir4',
 
                                 # including_zero => 1,
                                 # # divisors_type => 'proper',
@@ -174,12 +185,11 @@ $|=1;
                                 # fraction => '1/975',
                                 # lo => 0,
                                 # hi => 10, # 200*$rep,
-                                # digit => 1,
                                 # where => 'low',
                                 # oeis_anum  => 'A000396',
                                );
   my $hi = 278;
-  
+
   my $i_start = $seq->i_start;
   print "i_start $i_start\n";
   print "anum ",($seq->oeis_anum//'[undef]'),"\n";
@@ -217,22 +227,25 @@ $|=1;
         print "i=$i ";
         $show_i = 0;
       }
-      print "$value,";
-      if (defined $values_min && $value < $values_min) {
-        print " oops, value < values_min=$values_min\n";
-      }
-      if (defined $values_max && $value > $values_max) {
-        print " oops, value < values_max=$values_max\n";
-      }
-      if (! defined $saw_value_min || $value < $saw_value_min) {
-        $saw_value_min = $value;
+      if (defined $value) {
+        print "$value,";
+        if (defined $values_min && $value < $values_min) {
+          print " oops, value < values_min=$values_min\n";
+        }
+        if (defined $values_max && $value > $values_max) {
+          print " oops, value < values_max=$values_max\n";
+        }
+        if (! defined $saw_value_min || $value < $saw_value_min) {
+          $saw_value_min = $value;
+        }
+        if ($value > DBL_INT_MAX) {
+          last;
+        }
+      } else {
+        print "undef,";
       }
       if ($i != $want_i) {
-        print " oops, i=$i expected $want_i\n";
-      }
-
-      if ($value > DBL_INT_MAX) {
-        last;
+        print " oops, i=$i expected i=$want_i\n";
       }
 
 
@@ -254,7 +267,7 @@ $|=1;
       }
       if ($seq->can('ith')) {
         my $ith_value = $seq->ith($i);
-        if ($ith_value != $value) {
+        if (defined $value && $ith_value != $value) {
           print " oops, ith($i)=$ith_value next=$value\n";
         }
       }

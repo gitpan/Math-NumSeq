@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 22;
+$VERSION = 23;
 
 use Math::NumSeq::Primes;
 @ISA = ('Math::NumSeq::Primes');
@@ -31,7 +31,9 @@ use Math::NumSeq::Primes;
 
 # use constant name => Math::NumSeq::__('Twin Primes');
 use constant description => Math::NumSeq::__('The twin primes, 3, 5, 7, 11, 13, being numbers where both K and K+2 are primes.');
+use constant i_start => 1;
 use constant characteristic_increasing => 2;
+use constant characteristic_integer => 1;
 use constant parameter_info_array =>
   [
    { name    => 'pairs',
@@ -56,7 +58,10 @@ sub values_min {
   return $values_min{$self->{'pairs'}};
 }
 
-# cf A077800 both, with repetition, so 3,5, 5,7, 11,13, ...
+# cf A077800 - both, with repetition, so 3,5, 5,7, 11,13, ...
+#    A040040 - average/2 since the average is always even
+#    A054735 - sum twin primes (OFFSET=1)
+#    A111046 - p^2 - q^2
 #
 my %oeis_anum = (
                  first  => 'A001359',
@@ -68,8 +73,9 @@ my %oeis_anum = (
                  both   => 'A001097', # both, without repetition
                  # OEIS-Catalogue: A001097 pairs=both
 
-                 average => 'A014574', # average
-                 # OEIS-Catalogue: A014574 pairs=average
+                 # but OFFSET=0 and thus a(n) = {A001359(n+1) + A006512(n+1)}/2
+                 # # average => 'A014574', # average
+                 # # # OEIS-Catalogue: A014574 pairs=average
                 );
 sub oeis_anum {
   my ($self) = @_;

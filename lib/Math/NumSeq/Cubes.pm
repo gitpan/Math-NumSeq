@@ -23,18 +23,59 @@ use POSIX 'floor','ceil';
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 22;
+$VERSION = 23;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
 # uncomment this to run the ### lines
-#use Devel::Comments;
+#use Smart::Comments;
+
 
 # use constant name => Math::NumSeq::__('Cubes');
 use constant description => Math::NumSeq::__('The cubes 1, 8, 27, 64, 125, etc, k*k*k.');
+use constant i_start => 0;
 use constant values_min => 0;
 use constant characteristic_increasing => 1;
+use constant characteristic_integer => 1;
 use constant oeis_anum => 'A000578';
+
+my $uv_limit = do {
+  # Float integers too in 32 bits ?
+  # my $max = 1;
+  # for (1 .. 256) {
+  #   my $try = $max*2 + 1;
+  #   ### $try
+  #   if ($try == 2*$max || $try == 2*$max+2) {
+  #     last;
+  #   }
+  #   $max = $try;
+  # }
+  my $max = ~0;
+
+  my $bit = 4;
+  for (my $i = $max; $i != 0; $i=int($i/8)) {
+    $bit *= 2;
+  }
+  ### $bit
+
+  my $cbrt = 0;
+  for ( ; $bit != 0; $bit=int($bit/2)) {
+    my $try = $cbrt + $bit;
+    if ($try * $try <= $max / $try) {
+      $cbrt = $try;
+    }
+  }
+
+  ### $cbrt
+  ### cube: $cbrt*$cbrt*$cbrt
+  ### $max
+  ### cube hex: sprintf '%X', $cbrt*$cbrt*$cbrt
+
+  ### assert: $cbrt*$cbrt <= $max/$cbrt
+  ### assert: ($cbrt+1)*($cbrt+1) > $max/($cbrt+1)
+
+  $cbrt
+};
 
 sub rewind {
   my ($self) = @_;
@@ -43,6 +84,9 @@ sub rewind {
 sub next {
   my ($self) = @_;
   my $i = $self->{'i'}++;
+  if ($i == $uv_limit) {
+    $self->{'i'} = Math::NumSeq::_bigint()->new($self->{'i'});
+  }
   return ($i, $i*$i*$i);
 }
 sub ith {
@@ -50,16 +94,19 @@ sub ith {
   return $i*$i*$i;
 }
 
-# This was a test for cbrt($n) being an integer, but found some amd64 glibc
-# where cbrt(27) was not 3 but instead 3.00000000000000044.  Dunno if an
-# exact integer can be expected from cbrt() on a cube, so instead try
-# multiplying back the integer nearest cbrt().
+# This used to be a test for cbrt($n) being an integer, but found some amd64
+# glibc where cbrt(27) was not 3 but instead 3.00000000000000044.  Dunno if
+# cbrt(cube) ought to be an exact integer, so instead try multiplying back
+# the integer nearest cbrt().
 #
 # Multiplying back should also ensure that a floating point $n bigger than
 # 2^53 won't look like a cube due to rounding.
 #
 sub pred {
   my ($self, $value) = @_;
+  if (int($value) != $value) {
+    return 0;
+  }
   my $i = _cbrt_floor ($value);
   return ($i*$i*$i == $value);
 }
@@ -105,6 +152,10 @@ See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 =item C<$seq = Math::NumSeq::Cubes-E<gt>new ()>
 
 Create and return a new sequence object.
+
+=item C<($i, $value) = $seq-E<gt>next()>
+
+Return the next index and value in the sequence.
 
 =item C<$value = $seq-E<gt>ith($i)>
 

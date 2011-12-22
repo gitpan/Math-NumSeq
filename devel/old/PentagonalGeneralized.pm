@@ -34,7 +34,7 @@ use constant oeis_anum => 'A001318';
 
 sub rewind {
   my ($self) = @_;
-  $self->{'i'} = 0;
+  $self->{'i'} = $self->i_start;
   $self->{'neg'} = 1;
 }
 sub next {

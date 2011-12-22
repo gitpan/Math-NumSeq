@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 22;
+$VERSION = 23;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -47,7 +47,9 @@ use constant parameter_info_array =>
     },
   ];
 
+use constant i_start => 0;
 use constant characteristic_smaller => 1;
+use constant characteristic_integer => 1;
 use constant values_min => 0;
 sub values_max {
   my ($self) = @_;

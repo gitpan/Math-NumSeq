@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 22;
+$VERSION = 23;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -31,6 +31,7 @@ use Math::NumSeq;
 use constant description => Math::NumSeq::__('First base in which i is a repdigit (at most base=i-1 since "11" gives i).');
 use constant characteristic_smaller => 1;
 use constant characteristic_increasing => 0;
+use constant characteristic_integer => 1;
 sub values_min {
   my ($self) = @_;
   return ($self->i_start >= 3 ? 2 : 0);

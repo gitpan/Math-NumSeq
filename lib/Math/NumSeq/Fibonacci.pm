@@ -21,12 +21,11 @@ use strict;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 22;
+$VERSION = 23;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
 
 use Math::NumSeq;
-*_bigint = \&Math::NumSeq::_bigint;
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
 # uncomment this to run the ### lines
@@ -37,10 +36,24 @@ use Math::NumSeq;
 use constant description => Math::NumSeq::__('The Fibonacci numbers 1,1,2,3,5,8,13,21, etc, each F(i) = F(i-1) + F(i-2), starting from 1,1.');
 
 use constant values_min => 0;
+use constant i_start => 0;
 use constant characteristic_increasing => 1;
+use constant characteristic_integer => 1;
 use constant oeis_anum => 'A000045'; # fibonacci starting at i=0 0,1,1,2,3
 
 my $uv_limit = do {
+  # Float integers too in 32 bits ?
+  # my $max = 1;
+  # for (1 .. 256) {
+  #   my $try = $max*2 + 1;
+  #   ### $try
+  #   if ($try == 2*$max || $try == 2*$max+2) {
+  #     last;
+  #   }
+  #   $max = $try;
+  # }
+  my $max = ~0;
+
   # f1+f0 > i
   # f0 > i-f1
   # check i-f1 as the stopping point, so that if i=UV_MAX then won't
@@ -49,7 +62,6 @@ my $uv_limit = do {
   my $f0 = 1;
   my $f1 = 1;
   my $prev_f0;
-  my $max = ~0;
   while ($f0 <= $max - $f1) {
     $prev_f0 = $f0;
     ($f1,$f0) = ($f1+$f0,$f1);
@@ -77,11 +89,12 @@ sub next {
    $self->{'f1'})
     = ($self->{'f0'},
        $self->{'f1'},
-       $self->{'f0'}+$self->{'f1'});
+       $self->{'f0'} + $self->{'f1'});
   ### $ret
 
   if ($ret == $uv_limit) {
-    $self->{'f1'} = _bigint()->new("$self->{'f1'}");
+    ### go to bigint f1 ...
+    $self->{'f1'} = Math::NumSeq::_bigint()->new("$self->{'f1'}");
   }
 
   return ($self->{'i'}++, $ret);

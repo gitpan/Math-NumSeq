@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 22;
+$VERSION = 23;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -34,9 +34,10 @@ use Math::NumSeq::Base::IterateIth;
 
 # use constant name => Math::NumSeq::__('Proth Numbers');
 use constant description => Math::NumSeq::__('Proth numbers k*2^n+1 for odd k and k < 2^n.');
-use constant characteristic_increasing => 1;
-use constant values_min => 3;
 use constant i_start => 1;
+use constant values_min => 3;
+use constant characteristic_increasing => 1;
+use constant characteristic_integer => 1;
 
 # cf A157892 - value of k
 #    A157893 - value of n

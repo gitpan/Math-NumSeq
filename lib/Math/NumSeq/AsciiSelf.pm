@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 22;
+$VERSION = 23;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -31,16 +31,71 @@ use Math::NumSeq;
 
 
 use constant description => Math::NumSeq::__('Sequence is itself in ASCII.');
-use constant characteristic_increasing => 0;
 use constant i_start => 1;
-use constant values_min => 48;
-# my @values_max;
-# $values_max[10] = 57;
-sub values_max {
-  my ($self) = @_;
-  my $radix = $self->{'radix'};
-  return $radix + ($radix < 10 ? 47 : 65-10);
+{
+  my @values_min;
+  my @values_max;
+  $values_min[3] = 49;
+  $values_min[6] = 49;
+  $values_min[8] = $values_max[8] = 54;
+  $values_min[11] = 49;
+  $values_min[12] = 52;
+  $values_min[14] = 49;
+  $values_min[15] = 51;
+  $values_min[16] = $values_max[16] = 51;  # only 51s
+  $values_min[20] = 50;
+  $values_min[21] = 50;
+  $values_min[23] = 50;
+  $values_min[24] = $values_max[24] = 50;  # only 50s
+  $values_min[28] = 49;
+  $values_min[29] = 49;
+  $values_min[30] = 49;
+  $values_min[31] = 49;
+  $values_min[32] = 49;
+  $values_min[33] = 49;
+  $values_min[34] = 49;
+
+  $values_max[6] = 50;
+  $values_max[11] = 65;
+  $values_max[12] = 52;
+  $values_max[13] = 67;
+  $values_max[14] = 68;
+  $values_max[15] = 67;
+  $values_max[16] = 51;
+  $values_max[17] = 71;
+  $values_max[18] = 72;
+  $values_max[19] = 73;
+  $values_max[20] = 72;
+  $values_max[21] = 70;
+  $values_max[22] = 76;
+  $values_max[23] = 75;
+  $values_max[24] = 50;
+  $values_max[25] = 79;
+  $values_max[26] = 80;
+  $values_max[27] = 81;
+  $values_max[28] = 77;
+  $values_max[29] = 83;
+  $values_max[30] = 82;
+  $values_max[31] = 80;
+  $values_max[32] = 80;
+  $values_max[33] = 87;
+  $values_max[34] = 78;
+  $values_max[35] = 89;
+
+  sub values_min {
+    my ($self) = @_;
+    my $radix = $self->{'radix'};
+    return ($values_max[$radix] || 48);
+  }
+  sub values_max {
+    my ($self) = @_;
+    my $radix = $self->{'radix'};
+    return ($values_max[$radix]
+            || $radix + ($radix <= 10 ? 47 : 65-10));
+  }
 }
+use constant characteristic_increasing => 0;
+use constant characteristic_integer => 1;
 
 use Math::NumSeq::Base::Digits;
 *parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;

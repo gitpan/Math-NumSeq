@@ -17,6 +17,7 @@
 
 
 # characteristic('increasing')
+# characteristic('integer')
 #    only by reading the whole file
 #    assume seekable
 
@@ -29,7 +30,7 @@ use Carp;
 use Fcntl;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 22;
+$VERSION = 23;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
