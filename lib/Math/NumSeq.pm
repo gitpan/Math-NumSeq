@@ -42,7 +42,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 23;
+$VERSION = 24;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -390,7 +390,8 @@ L<Math::NumSeq::DivisorCount>,
 L<Math::NumSeq::Totient>,
 L<Math::NumSeq::TotientCumulative>,
 L<Math::NumSeq::TotientSteps>,
-L<Math::NumSeq::TotientPerfect>
+L<Math::NumSeq::TotientPerfect>,
+L<Math::NumSeq::Abundant>
 
 L<Math::NumSeq::Factorials>,
 L<Math::NumSeq::Primorials>,
@@ -404,7 +405,8 @@ L<Math::NumSeq::Perrin>
 
 L<Math::NumSeq::FractionDigits>,
 L<Math::NumSeq::SqrtDigits>,
-L<Math::NumSeq::SqrtEngel>
+L<Math::NumSeq::SqrtEngel>,
+L<Math::NumSeq::SqrtContinuedPeriod>
 
 L<Math::NumSeq::DigitCount>,
 L<Math::NumSeq::DigitCountLow>,

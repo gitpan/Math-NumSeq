@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 8;
+plan tests => 9;
 
 use lib 't';
 use MyTestHelpers;
@@ -35,7 +35,7 @@ use Math::NumSeq::Emirps;
 # VERSION
 
 {
-  my $want_version = 23;
+  my $want_version = 24;
   ok ($Math::NumSeq::Emirps::VERSION, $want_version, 'VERSION variable');
   ok (Math::NumSeq::Emirps->VERSION,  $want_version, 'VERSION class method');
 
@@ -55,6 +55,7 @@ use Math::NumSeq::Emirps;
 {
   my $seq = Math::NumSeq::Emirps->new;
   ok ($seq->characteristic('count'), undef, 'characteristic(count)');
+  ok ($seq->characteristic('integer'), 1, 'characteristic(integer)');
 }
 
 

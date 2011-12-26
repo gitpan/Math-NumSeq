@@ -21,16 +21,17 @@ use strict;
 use Carp;
 
 use vars '$VERSION','@ISA';
-$VERSION = 23;
+$VERSION = 24;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
 # uncomment this to run the ### lines
-#use Devel::Comments;
+#use Smart::Comments;
+
 
 # use constant name => Math::NumSeq::__('OEIS');
-use constant description => Math::NumSeq::__('OEIS sequence, by its A-number.  There\'s code for some sequences, others look in ~/OEIS directory for an A123456.internal, A123456.html and/or b123456.txt download.');
+use constant description => Math::NumSeq::__('OEIS sequence, by its A-number.  There\'s code for some sequences, others look in ~/OEIS directory for downloaded files A123456.internal, A123456.html and/or b123456.txt.');
 use constant characteristic_integer => 1;
 
 # recalculated each time for updated file min/max

@@ -19,10 +19,10 @@ package Math::NumSeq::Primes;
 use 5.004;
 use strict;
 use POSIX ();
-use Math::Prime::XS 0.23; # version 0.23 fix for 1928099
+use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 23;
+$VERSION = 24;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -116,10 +116,7 @@ sub pred {
   return ($value == int($value)
           && ! _is_infinite($value)
           && $value <= 0xFFFF_FFFF
-          && ($value == 2 || ($value % 2))
-          && ($value == 3 || ($value % 3))
-          && ($value == 5 || ($value % 5))
-          && Math::Prime::XS::is_prime($value));
+          && is_prime($value));
 }
 
 # sub ith {

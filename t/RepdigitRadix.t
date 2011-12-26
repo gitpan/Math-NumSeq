@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 1513;
+plan tests => 1514;
 
 use lib 't';
 use MyTestHelpers;
@@ -36,9 +36,11 @@ use Math::NumSeq::RepdigitRadix;
 # VERSION
 
 {
-  my $want_version = 23;
-  ok ($Math::NumSeq::RepdigitRadix::VERSION, $want_version, 'VERSION variable');
-  ok (Math::NumSeq::RepdigitRadix->VERSION,  $want_version, 'VERSION class method');
+  my $want_version = 24;
+  ok ($Math::NumSeq::RepdigitRadix::VERSION, $want_version,
+      'VERSION variable');
+  ok (Math::NumSeq::RepdigitRadix->VERSION,  $want_version,
+      'VERSION class method');
 
   ok (eval { Math::NumSeq::RepdigitRadix->VERSION($want_version); 1 },
       1,
@@ -58,6 +60,7 @@ use Math::NumSeq::RepdigitRadix;
   my $seq = Math::NumSeq::RepdigitRadix->new;
   ok ($seq->characteristic('digits'), undef, 'characteristic(digits)');
   ok ($seq->characteristic('smaller'), 1, 'characteristic(smaller)');
+  ok ($seq->characteristic('integer'), 1, 'characteristic(integer)');
 
   ok (! $seq->characteristic('increasing'), 1,
       'characteristic(increasing)');

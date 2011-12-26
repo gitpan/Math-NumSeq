@@ -21,7 +21,7 @@ use strict;
 use POSIX 'ceil';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 23;
+$VERSION = 24;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 

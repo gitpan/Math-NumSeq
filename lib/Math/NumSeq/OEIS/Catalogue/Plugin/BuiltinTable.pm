@@ -22,16 +22,36 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 23;
+$VERSION = 24;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 424 A-numbers in 75 modules
+# total 428 A-numbers in 77 modules
 
 use constant info_arrayref =>
 [
+  {
+    'anum' => 'A005101',
+    'class' => 'Math::NumSeq::Abundant'
+  },
+  {
+    'anum' => 'A005100',
+    'class' => 'Math::NumSeq::Abundant',
+    'parameters' => [
+      'abundant_type',
+      'deficient'
+    ]
+  },
+  {
+    'anum' => 'A091191',
+    'class' => 'Math::NumSeq::Abundant',
+    'parameters' => [
+      'abundant_type',
+      'primitive'
+    ]
+  },
   {
     'anum' => 'A000027',
     'class' => 'Math::NumSeq::All',
@@ -2553,6 +2573,10 @@ use constant info_arrayref =>
   {
     'anum' => 'A005384',
     'class' => 'Math::NumSeq::SophieGermainPrimes'
+  },
+  {
+    'anum' => 'A003285',
+    'class' => 'Math::NumSeq::SqrtContinuedPeriod'
   },
   {
     'anum' => 'A004555',

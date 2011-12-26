@@ -24,6 +24,7 @@ devel/kimberling.pl
 devel/klarner.pl
 devel/kolakoski.pl
 devel/language-expr.pl
+devel/math-factor.pl
 devel/maybe-decprime.pl
 devel/maybe-ln.pl
 devel/numaronson.pl
@@ -39,6 +40,7 @@ devel/old/FractionBits.pm
 devel/old/Pentagonal.pm
 devel/old/PentagonalGeneralized.pm
 devel/old/PentagonalSecond.pm
+devel/old/pythagorean-columns.pl
 devel/old/SemiPrimesOdd.pm
 devel/old/TernaryWithout2.pm
 devel/old/ThueMorse.pm
@@ -56,6 +58,7 @@ devel/triangular.pl
 inc/my_pod2html
 inc/MyMakeMakerExtras.pm
 lib/Math/NumSeq.pm
+lib/Math/NumSeq/Abundant.pm
 lib/Math/NumSeq/All.pm
 lib/Math/NumSeq/AllDigits.pm
 lib/Math/NumSeq/AlmostPrimes.pm
@@ -127,6 +130,7 @@ lib/Math/NumSeq/Repdigits.pm
 lib/Math/NumSeq/ReverseAdd.pm
 lib/Math/NumSeq/ReverseAddSteps.pm
 lib/Math/NumSeq/SophieGermainPrimes.pm
+lib/Math/NumSeq/SqrtContinuedPeriod.pm
 lib/Math/NumSeq/SqrtDigits.pm
 lib/Math/NumSeq/SqrtEngel.pm
 lib/Math/NumSeq/Squares.pm

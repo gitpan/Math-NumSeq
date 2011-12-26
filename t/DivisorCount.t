@@ -27,14 +27,14 @@ MyTestHelpers::nowarnings();
 
 use Math::NumSeq::DivisorCount;
 
-plan tests => 8;
+plan tests => 9;
 
 
 #------------------------------------------------------------------------------
 # VERSION
 
 {
-  my $want_version = 23;
+  my $want_version = 24;
   ok ($Math::NumSeq::DivisorCount::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::DivisorCount->VERSION,  $want_version,
@@ -55,6 +55,7 @@ plan tests => 8;
 
 my $seq = Math::NumSeq::DivisorCount->new;
 ok ($seq->characteristic('count'), 1, 'characteristic(count)');
+ok ($seq->characteristic('integer'), 1, 'characteristic(integer)');
 
 ok ($seq->ith(0), 0, 'ith(0)');
 ok ($seq->ith(-1), 1, 'ith(-1)');

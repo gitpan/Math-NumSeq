@@ -35,8 +35,6 @@ $|=1;
   my $pred_upto = 0;
 
   my $values_class;
-  # $values_class = $gen->values_class('Abundant');
-  # $values_class = $gen->values_class('Obstinate');
   # $values_class = $gen->values_class('Emirps');
   # $values_class = $gen->values_class('Repdigits');
   # $values_class = $gen->values_class('UndulatingNumbers');
@@ -114,7 +112,6 @@ $|=1;
   $values_class = 'Math::NumSeq::TotientStepsSum';
   $values_class = 'App::MathImage::NumSeq::KolakoskiMajority';
   $values_class = 'App::MathImage::NumSeq::PlanePathDelta';
-  $values_class = 'App::MathImage::NumSeq::SqrtContfrac';
   $values_class = 'Math::NumSeq::LucasNumbers';
   $values_class = 'Math::NumSeq::StarNumbers';
   $values_class = 'Math::NumSeq::ReverseAddSteps';
@@ -128,19 +125,27 @@ $|=1;
   $values_class = 'Math::NumSeq::AsciiSelf';
   $values_class = 'App::MathImage::NumSeq::SquareFree';
   $values_class = 'App::MathImage::NumSeq::PlanePathN';
+  $values_class = 'App::MathImage::NumSeq::Squareful';
+  $values_class = 'App::MathImage::NumSeq::SquareFreeKernel';
+  $values_class = 'App::MathImage::NumSeq::InnerSquareRoot';
+  $values_class = 'Math::NumSeq::MathImageSqrtContinued';
+  $values_class = 'Math::NumSeq::SqrtContinuedPeriod';
+  $values_class = 'Math::NumSeq::MathImageAbundant';
+  $values_class = 'Math::NumSeq::MathImageObstinate';
 
   eval "require $values_class; 1" or die $@;
   print Math::NumSeq::DigitLength->VERSION,"\n";
   my $seq = $values_class->new (
+                                abundant_type => 'primitive',
                                 # multiples => 1,
                                 #  radix => 3,
                                 # digit => 1,
 
+                                # sqrt => 46,
                                 planepath => 'FactorRationals',
                                 line_type => 'X_axis',
 
                                 # order => 'forward',
-                                # sqrt => 46,
                                 # including_self => 0,
                                 #
                                 # expression_evaluator => 'MS',
@@ -254,6 +259,7 @@ $|=1;
           print " oops, pred($value) false\n";
         }
         unless ($seq->characteristic('count')
+                || ! $seq->characteristic('non_decreasing')
                 || $seq->characteristic('smaller')
                 || $value - $pred_upto > 1000) {
           while ($pred_upto < $value) {

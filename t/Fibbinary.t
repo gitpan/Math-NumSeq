@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 10;
+plan tests => 11;
 
 use lib 't';
 use MyTestHelpers;
@@ -33,9 +33,11 @@ use Math::NumSeq::Fibbinary;
 # VERSION
 
 {
-  my $want_version = 23;
-  ok ($Math::NumSeq::Fibbinary::VERSION, $want_version, 'VERSION variable');
-  ok (Math::NumSeq::Fibbinary->VERSION,  $want_version, 'VERSION class method');
+  my $want_version = 24;
+  ok ($Math::NumSeq::Fibbinary::VERSION, $want_version,
+      'VERSION variable');
+  ok (Math::NumSeq::Fibbinary->VERSION,  $want_version,
+      'VERSION class method');
 
   ok (eval { Math::NumSeq::Fibbinary->VERSION($want_version); 1 },
       1,
@@ -46,6 +48,14 @@ use Math::NumSeq::Fibbinary;
       "VERSION class check $check_version");
 }
 
+
+#------------------------------------------------------------------------------
+# characteristic()
+
+{
+  my $seq = Math::NumSeq::Fibbinary->new;
+  ok ($seq->characteristic('integer'), 1, 'characteristic(integer)');
+}
 
 #------------------------------------------------------------------------------
 # pred()

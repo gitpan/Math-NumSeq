@@ -25,7 +25,7 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
-my $test_count = (tests => 299)[1];
+my $test_count = (tests => 301)[1];
 plan tests => $test_count;
 
 # uncomment this to run the ### lines
@@ -566,11 +566,10 @@ foreach my $elem
      [  1, 3, 4, 7, 11, 18, 29 ],
    ],
 
-   # [ 'Math::NumSeq::Abundant', 0,
-   #   [  12, 18, 20, 24, 30 ],
-   # ],
-   #
-
+   [ 'Math::NumSeq::Abundant', 0,
+     [  12, 18, 20, 24, 30 ],
+   ],
+   
    [ 'Math::NumSeq::SternDiatomic', 0,
      [ 0, 1, 1, 2, 1, 3, 2, 3, 1, 4, 3, 5 ],
    ],

@@ -17,6 +17,9 @@ with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 24, December 2011
+    - new Abundant, SqrtContinuedPeriod
+
 Version 23, December 2011
     - new AllDigits, Perrin
     - new characteristic('integer')

@@ -27,14 +27,14 @@ MyTestHelpers::nowarnings();
 
 use Math::NumSeq::PrimeFactorCount;
 
-plan tests => 7;
+plan tests => 8;
 
 
 #------------------------------------------------------------------------------
 # VERSION
 
 {
-  my $want_version = 23;
+  my $want_version = 24;
   ok ($Math::NumSeq::PrimeFactorCount::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::PrimeFactorCount->VERSION,  $want_version,
@@ -56,6 +56,7 @@ plan tests => 7;
 {
   my $seq = Math::NumSeq::PrimeFactorCount->new;
   ok ($seq->characteristic('count'), 1, 'characteristic(count)');
+  ok ($seq->characteristic('integer'), 1, 'characteristic(integer)');
 }
 
 

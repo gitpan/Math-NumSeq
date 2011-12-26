@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 23;
+$VERSION = 24;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -112,10 +112,11 @@ $oeis_anum{'second'}->[8] = 'A045944'; # Rhombic matchstick n*(3*n+2)
 # OEIS-Catalogue: A000567 polygonal=8
 # OEIS-Catalogue: A045944 polygonal=8 pairs=second
 #
-# Not quite, has OFFSET=1 start n=1, unlike generalized pentagonals.
-# Would be n*(3n-2) for n=0,1,-1,2,-2,etc
-# $oeis_anum{'both'}->[8]   = 'A001082'; # n(3n-4)/4 or (n-1)(3n+1)/4
-# # OEIS-Catalogue: A001082 polygonal=8 pairs=both
+# A001082 n(3n-4)/4 if n even, (n-1)(3n+1)/4 if n odd
+# is not quite generalized octagonals
+# Generalized would be n*(3n-2) for n=0,1,-1,2,-2,etc
+# # $oeis_anum{'both'}->[8]   = 'A001082';
+# # # OEIS-Catalogue: A001082 polygonal=8 pairs=both
 
 $oeis_anum{'first'}->[9]  = 'A001106'; # 9 nonagonal
 $oeis_anum{'second'}->[9] = 'A179986'; # 9 nonagonal second n*(7*n+5)/2

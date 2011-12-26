@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 23;
+$VERSION = 24;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -118,7 +118,7 @@ __END__
 
 =head1 NAME
 
-Math::NumSeq::Totient -- Euler's totient function
+Math::NumSeq::Totient -- Euler's totient function, count of coprimes
 
 =head1 SYNOPSIS
 
@@ -128,9 +128,12 @@ Math::NumSeq::Totient -- Euler's totient function
 
 =head1 DESCRIPTION
 
-Euler's totient function, being the count of integers coprime to of i, so 1,
-1, 2, 2, 4, 2, 6, 4, etc.  For example i=6 has no common factor with 1 or 5,
-so the totient is 2.
+Euler's totient function, being the count of integers coprime to i, starting
+i=1,
+
+    1, 1, 2, 2, 4, 2, 6, 4, etc
+
+For example i=6 has no common factor with 1 or 5, so the totient is 2.
 
 =head1 FUNCTIONS
 
@@ -151,7 +154,9 @@ Return totient(i).
 =head1 SEE ALSO
 
 L<Math::NumSeq>,
-L<Math::NumSeq::TotientCumulative>
+L<Math::NumSeq::TotientCumulative>,
+L<Math::NumSeq::TotientPerfect>
+L<Math::NumSeq::TotientSteps>
 
 =head1 HOME PAGE
 

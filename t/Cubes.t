@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 11;
+plan tests => 12;
 
 use lib 't';
 use MyTestHelpers;
@@ -35,7 +35,7 @@ use Math::NumSeq::Cubes;
 # VERSION
 
 {
-  my $want_version = 23;
+  my $want_version = 24;
   ok ($Math::NumSeq::Cubes::VERSION, $want_version, 'VERSION variable');
   ok (Math::NumSeq::Cubes->VERSION,  $want_version, 'VERSION class method');
 
@@ -56,6 +56,7 @@ use Math::NumSeq::Cubes;
   my $seq = Math::NumSeq::Cubes->new;
   ok (! $seq->characteristic('count'), 1, 'characteristic(count)');
   ok ($seq->characteristic('digits'), undef, 'characteristic(digits)');
+  ok ($seq->characteristic('integer'), 1, 'characteristic(integer)');
 
   ok ($seq->characteristic('increasing'), 1, 'characteristic(increasing)');
   ok ($seq->characteristic('non_decreasing'), 1, 'characteristic(non_decreasing)');

@@ -21,13 +21,13 @@ use strict;
 use List::Util 'min', 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 23;
+$VERSION = 24;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
 
 # uncomment this to run the ### lines
-#use Devel::Comments;
+#use Smart::Comments;
 
 
 
@@ -118,6 +118,24 @@ sub next {
   return ($i, $ret);
 }
 
+# prime_factors() ends up about 5x faster
+#
+if (eval 'use Math::Factor::XS q(prime_factors); 1') {
+  ### use prime_factors() ...
+  eval "#line ".(__LINE__+1)." \"".__FILE__."\"\n" . <<'HERE';
+
+sub ith {
+  my ($self, $i) = @_;
+  my @primes = prime_factors($i);
+  return scalar(@primes);
+}
+
+HERE
+} else {
+  ### $@
+  ### use plain perl ...
+  eval "#line ".(__LINE__+1)." \"".__FILE__."\"\n" . <<'HERE';
+
 sub ith {
   my ($self, $i) = @_;
   ### PrimeFactorCount ith(): $i
@@ -159,7 +177,6 @@ sub ith {
   }
   return $count;
 
-
   #   if ($self->{'i'} <= $i) {
   #     ### extend from: $self->{'i'}
   #     my $upto;
@@ -167,6 +184,9 @@ sub ith {
   #            && $upto < $i) { }
   #   }
   #   return vec($self->{'string'}, $i,8);
+}
+
+HERE
 }
 
 sub pred {

@@ -30,7 +30,7 @@ use Math::NumSeq::FractionDigits;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-my $test_count = (tests => 28)[1];
+my $test_count = (tests => 29)[1];
 plan tests => $test_count;
 
 {
@@ -53,7 +53,7 @@ plan tests => $test_count;
 # VERSION
 
 {
-  my $want_version = 23;
+  my $want_version = 24;
   ok ($Math::NumSeq::FractionDigits::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::FractionDigits->VERSION,  $want_version,
@@ -99,6 +99,7 @@ plan tests => $test_count;
   ok ($seq->characteristic('digits'), 10, 'characteristic(digits)');
   ok ($seq->characteristic('smaller'), 1, 'characteristic(smaller)');
   ok (! $seq->characteristic('count'), 1, 'characteristic(count)');
+  ok ($seq->characteristic('integer'), 1, 'characteristic(integer)');
 
   ok (! $seq->characteristic('increasing'), 1,
       'characteristic(increasing)');

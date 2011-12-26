@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 23;
+$VERSION = 24;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -170,20 +170,21 @@ sub ith {
   if ($i > 1) {
     $ret *= 2;
   }
+
   # if ($self->{'divisor_type'} eq 'propn1') {
   #   if ($ret <= 2) {
   #     return 0;
   #   }
   #   $ret -= 2;
   # }
+
   return $ret;
 }
 
 sub pred {
   my ($self, $value) = @_;
-  ### $self
-  return ($value >= 1      # $values_min{$self->{'divisor_type'}}
-          && $value == int($value));
+  # $values_min{$self->{'divisor_type'}}
+  return ($value >= 1 && $value == int($value));
 }
 
 1;
@@ -233,3 +234,7 @@ L<Math::NumSeq>,
 L<Math::NumSeq::PrimeFactorCount>
 
 =cut
+
+# Local variables:
+# compile-command: "math-image --values=DivisorCount"
+# End:
