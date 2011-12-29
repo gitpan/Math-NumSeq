@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 24;
+$VERSION = 25;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -392,6 +392,10 @@ Create and return a new sequence object.
 Return true if C<$value> is an almost-prime, ie. it has exactly
 C<factor_count> many prime factors, and if C<distinct> is true then all
 those factors different.
+
+This check requires factorizing C<$value> and in the current code a hard
+limit of 2**32 is placed on values to be checked, in the interests of not
+going into a near-infinite loop.
 
 =back
 

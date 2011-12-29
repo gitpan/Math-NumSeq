@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 24;
+$VERSION = 25;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -71,9 +71,12 @@ sub ith {
 sub pred {
   my ($self, $value) = @_;
   if ($value < 0) { return 0; }
-  # FIXME: the _inverse() +3 etc might be lost to rounding for very big $value
-  my $i = _inverse($value);
-  return ($i == int($i));
+
+  my $int = int($value);
+  if ($value != $int) { return 0; }
+
+  my $i = int(_inverse($int));
+  return ($int == 6*$i*($i-1)+1);
 }
 
 # i = 1/2 + sqrt(1/6 * $n + 1/12)
@@ -81,7 +84,7 @@ sub pred {
 
 sub _inverse {
   my ($value) = @_;
-  return (sqrt(6*$value + 3) + 3) / 6;
+  return (sqrt(6*$value + 3) + 3)/6;
 }
 
 1;

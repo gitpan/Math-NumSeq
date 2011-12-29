@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 24;
+$VERSION = 25;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -28,7 +28,7 @@ use Math::NumSeq::Base::IterateIth;
         'Math::NumSeq');
 
 # uncomment this to run the ### lines
-#use Devel::Comments;
+#use Smart::Comments;
 
 # use constant name => Math::NumSeq::__('Polygonal Numbers');
 use constant description => Math::NumSeq::__('Polygonal numbers');
@@ -348,18 +348,22 @@ sub pred {
 
   my $k = $self->{'k'};
   my $add = $self->{'add'};
-  my $sqrt = sqrt(8*($k-2) * $value + $add*$add);
+  my $sqrt = int(sqrt(int(8*($k-2) * $value + $add*$add)));
+
   ### sqrt of: (8*($k-2) * $value + $add*$add)
 
   if ($self->{'pairs'} eq 'both') {
-    my $other = ($sqrt + $self->{'add'}) / (2*($k-2));
-    if (int($other) == $other) {
+    my $i = int (($sqrt + $self->{'add'}) / (2*($k-2)));
+    if ($value == $i * (($k-2)*$i - $self->{'add'}) / 2) {
       return 1;
     }
   }
-  $sqrt = ($sqrt - $self->{'add'}) / (2*($k-2));
+  my $i = int (($sqrt - $self->{'add'}) / (2*($k-2)));
+
   ### $sqrt
-  return ($sqrt == int($sqrt));
+  ### $i
+
+  return ($value == $i * (($k-2)*$i + $self->{'add'}) / 2);
 }
 
 1;
@@ -428,11 +432,11 @@ the "first" kind, or the C<pairs> option (a string) can be
 
 =item C<$value = $seq-E<gt>ith($i)>
 
-Return the C<$i>'th polygonal value
+Return the C<$i>'th polygonal value, of the given C<pairs> type.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value> is a polygonal number of the given C<pairs> type.
+Return true if C<$value> is a polygonal number, of the given C<pairs> type.
 
 =back
 

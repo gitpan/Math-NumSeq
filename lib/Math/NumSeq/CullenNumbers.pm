@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 24;
+$VERSION = 25;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -48,9 +48,13 @@ sub pred {
   my ($self, $value) = @_;
   ### CullenNumbers pred(): $value
 
+  {
+    my $int = int($value);
+    if ($value != $int) { return 0; }
+    $value = $int;
+  }
   unless ($value >= 1
           && ($value & 1)
-          && $value == int($value)
           && ! _is_infinite($value)) {
     return 0;
   }

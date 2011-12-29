@@ -28,7 +28,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 24;
+$VERSION = 25;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -36,7 +36,7 @@ use Math::NumSeq::Base::IterateIth;
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
 # uncomment this to run the ### lines
-#use Devel::Comments;
+#use Smart::Comments;
 
 use constant description => Math::NumSeq::__('Stern\'s diatomic sequence.');
 use constant i_start => 0;
@@ -54,6 +54,7 @@ use constant oeis_anum => 'A002487';
 
 sub ith {
   my ($self, $i) = @_;
+  ### SternDiatomic ith(): "$i"
 
   if ($i <= 0) {
     return 0;
@@ -73,6 +74,8 @@ sub ith {
     }
     $i = int($i/2);
   }
+
+  ### result: "$b"
   return $b;
 }
 

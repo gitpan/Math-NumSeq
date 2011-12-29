@@ -20,9 +20,11 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 24;
+$VERSION = 25;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
+
+use Math::NumSeq::PrimeFactorCount;
 
 # uncomment this to run the ### lines
 #use Devel::Comments;
@@ -54,6 +56,7 @@ my @transform = (0, 0, 1, -1);
 sub rewind {
   my ($self) = @_;
   $self->{'i'} = 1;
+  $self->{'multiplicity'} = 'repeated'; # for PrimeFactorCount ith()
   _restart_sieve ($self, 500);
 }
 sub _restart_sieve {
@@ -117,35 +120,9 @@ sub ith {
   my ($self, $i) = @_;
   ### LiouvilleFunction ith(): $i
 
-  if ($i < 0 || $i > 0xFFFF_FFFF) {
-    return undef;
-  }
-  if ($i < 1) {
-    return 0;
-  }
-  my $ret = 1;
-
-  until ($i % 2) {
-    $i /= 2;
-    $ret = -$ret;
-  }
-
-  my $limit = int(sqrt($i));
-  for (my $p = 3; $p <= $limit; $p += 2) {
-    if (($i % $p) == 0) {
-      do {
-        $i /= $p;
-        $ret = -$ret;
-      } until ($i % $p);
-
-      $limit = int(sqrt($i));  # new smaller limit
-      ### factor: "$p new ret $ret new limit $limit"
-    }
-  }
-  if ($i != 1) {
-    $ret = -$ret;
-  }
-  return $ret;
+  my $count = $self->Math::NumSeq::PrimeFactorCount::ith($i);
+  return (defined $count ? ($count & 1 ? -1 : 1)
+          : undef);
 }
 
 sub pred {
@@ -193,6 +170,10 @@ Create and return a new sequence object.
 Return the Liouville function of C<$i>, being 1 or -1 according to the
 number of prime factors in C<$i>.
 
+This calculation requires factorizing C<$i> and in the current code a hard
+limit of 2**32 is placed on C<$i>, in the interests of not going into a
+near-infinite loop.
+
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> occurs in the sequence, which simply means 1 or -1.
@@ -227,7 +208,3 @@ You should have received a copy of the GNU General Public License along with
 Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 =cut
-
-# Local variables:
-# compile-command: "math-image --values=LiouvilleFunction"
-# End:

@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
-use blib "$ENV{HOME}/p/fx/38_01/blib";
+# use blib "$ENV{HOME}/p/fx/38_02/blib";
 use Math::Factor::XS 'prime_factors';
 
 use 5.004;
@@ -26,6 +26,28 @@ use Math::Factor::XS 'factors','matches','prime_factors';
 
 # uncomment this to run the ### lines
 use Smart::Comments;
+
+{
+  # factors() is slower, maybe due to arg checking overhead
+  require Devel::TimeThis;
+  require Math::NumSeq::DivisorCount;
+  my $seq = Math::NumSeq::DivisorCount->new;
+
+  my $num = 50000;
+  {
+    my $t = Devel::TimeThis->new('ith');
+    foreach (1 .. $num) {
+      $seq->ith($_);
+    }
+  }
+  {
+    my $t = Devel::TimeThis->new('factors');
+    foreach (1 .. $num) {
+      factors($_);
+    }
+  }
+  exit 0;
+}
 
 {
   require Devel::TimeThis;
@@ -44,27 +66,6 @@ use Smart::Comments;
     foreach (1 .. $num) {
       my @f = prime_factors($_);
       scalar(@f);
-    }
-  }
-  exit 0;
-}
-
-{
-  require Devel::TimeThis;
-  require Math::NumSeq::DivisorCount;
-  my $seq = Math::NumSeq::DivisorCount->new;
-
-  my $num = 50000;
-  {
-    my $t = Devel::TimeThis->new('ith');
-    foreach (1 .. $num) {
-      $seq->ith($_);
-    }
-  }
-  {
-    my $t = Devel::TimeThis->new('factors');
-    foreach (1 .. $num) {
-      factors($_);
     }
   }
   exit 0;

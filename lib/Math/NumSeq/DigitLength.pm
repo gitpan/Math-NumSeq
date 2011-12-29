@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 24;
+$VERSION = 25;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -155,7 +155,8 @@ C<$value E<gt>= 1> since lengths are 1 or more.
 
 L<Math::NumSeq>,
 L<Math::NumSeq::DigitLengthCumulative>,
-L<Math::NumSeq::DigitCount>
+L<Math::NumSeq::DigitCount>,
+L<Math::NumSeq::AllDigits>
 
 =head1 HOME PAGE
 

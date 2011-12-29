@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 24;
+$VERSION = 25;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -214,7 +214,7 @@ sub pred {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq
+=for stopwords Ryde Math-NumSeq abundants
 
 =head1 NAME
 
@@ -272,7 +272,8 @@ Return true if C<$value> is abundant, deficient or primitive abundant per
 C<$seq>.
 
 This check requires factorizing C<$value> and in the current code a hard
-limit of 2**32 is placed on values to be checked.
+limit of 2**32 is placed on values to be checked, in the interests of not
+going into a near-infinite loop.
 
 =back
 

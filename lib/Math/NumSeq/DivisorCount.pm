@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 24;
+$VERSION = 25;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -183,7 +183,6 @@ sub ith {
 
 sub pred {
   my ($self, $value) = @_;
-  # $values_min{$self->{'divisor_type'}}
   return ($value >= 1 && $value == int($value));
 }
 
@@ -207,7 +206,7 @@ Math::NumSeq::DivisorCount -- how many divisors
 The number of divisors of i, being 1,2,2,3,2,4,2, etc.
 
 The sequence starts from i=1 and 1 is divisible only by itself.  Then i=2 is
-divisible by 1 and 2, then later i=6 is divisible by 4 numbers 1,2,3,6.
+divisible by 1 and 2.  Or for example i=6 is divisible by 4 numbers 1,2,3,6.
 
 =head1 FUNCTIONS
 
@@ -221,6 +220,10 @@ Create and return a new sequence object.
 
 Return the number of prime factors in C<$i>.
 
+This calculation requires factorizing C<$i> and in the current code a hard
+limit of 2**32 is placed on C<$i>, in the interests of not going into a
+near-infinite loop.
+
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> occurs as a divisor count, which simply means
@@ -232,6 +235,8 @@ C<$value E<gt>= 1>.
 
 L<Math::NumSeq>,
 L<Math::NumSeq::PrimeFactorCount>
+
+L<Math::Factor::XS>
 
 =cut
 

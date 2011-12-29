@@ -22,7 +22,7 @@ use List::Util 'max';
 use Math::NumSeq;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 24;
+$VERSION = 25;
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
 
@@ -207,7 +207,9 @@ sub next {
   return ($self->{'i'}++, $quot);
 }
 
-# FIXME: only some digits occur, being the modulo den residue class
+# ENHANCE-ME: ith() by modulo powering
+
+# ENHANCE-ME: only some digits occur, being the modulo den residue class
 # containing num.
 # sub pred {
 #   my ($self, $value) = @_;

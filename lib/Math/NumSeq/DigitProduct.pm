@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 24;
+$VERSION = 25;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -84,9 +84,9 @@ sub pred {
     return 0;
   }
   my $radix = $self->{'radix'};
-  for (my $i = 2; $i < $radix && $value > 1; $i++) {
+  for (my $i = 2; $i < $radix && $value > 1; $i+=1+($i!=2)) {
     until ($value % $i) {
-      $value /= $i;
+      $value = int($value/$i);
     }
   }
   return ($value <= 1);  # remainder

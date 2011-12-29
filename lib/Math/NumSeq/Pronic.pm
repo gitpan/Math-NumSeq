@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 24;
+$VERSION = 25;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -44,20 +44,29 @@ sub rewind {
   my ($self) = @_;
   $self->{'i'} = ceil(_inverse(max(0,$self->{'lo'})));
 }
-sub pred {
-  my ($self, $value) = @_;
-  if ($value < 0) { return 0; }
-  my $i = _inverse($value);
-  return ($i == int($i));
-}
 sub ith {
   my ($self, $i) = @_;
   return $i*($i+1);
 }
 
+# [0,1,2,3,4],[0,2,6,12,20]
+# N = (d^2 + d)
+#   = ($d**2 + $d)
+#   = (($d + 1)*$d)
+# d = -1/2 + sqrt(1 * $n + 1/4)
+#   = (-1 + 2*sqrt(1 * $n + 1/4))/2
+#   = (-1 + sqrt(4 * $n + 1))/2
+#   = (sqrt(4*$n + 1) - 1)/2
+
+sub pred {
+  my ($self, $value) = @_;
+  if ($value < 0) { return 0; }
+  my $i = _inverse($value);
+  return ($value == $i*($i+1));
+}
 sub _inverse {
   my ($value) = @_;
-  return sqrt($value + .25) - .5;
+  return int((sqrt(4*$value + 1) - 1)/2);
 }
 
 1;

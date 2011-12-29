@@ -25,7 +25,7 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
-my $test_count = (tests => 301)[1];
+my $test_count = (tests => 302)[1];
 plan tests => $test_count;
 
 # uncomment this to run the ### lines
@@ -117,6 +117,27 @@ foreach my $elem
    # Ln2Bits.pm
    # MobiusFunction.pm
    # PiBits.pm
+   
+   [ 'Math::NumSeq::PrimeFactorCount', 1,
+     [ 0,  # 1
+       1,  # 2
+       1,  # 3
+       2,  # 4
+       1,  # 5
+       2,  # 6
+       1,  # 7
+       3,  # 8
+     ] ],
+   [ 'Math::NumSeq::PrimeFactorCount', 1,
+     [ 0,  # 1
+       1,  # 2
+       1,  # 3
+       1,  # 4
+       1,  # 5
+       2,  # 6
+       1,  # 7
+       1,  # 8
+     ], { multiplicity => 'distinct' } ],
    
    [ 'Math::NumSeq::Fibonacci', 1,
      [ 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144,
@@ -794,8 +815,8 @@ foreach my $elem
      { multiples => 2 },
    ],
 
-   # [ 'Math::NumSeq::Obstinate', 1,
-   #   [ 1, 3, 127, ] ],
+   [ 'Math::NumSeq::PolignacObstinate', 1,
+     [ 1, 127, ] ],
 
    [ 'Math::NumSeq::RadixWithoutDigit', 0,
      [ 1, 2,    # 1,2
@@ -1009,13 +1030,9 @@ foreach my $elem
 
    [ 'Math::NumSeq::Triangular', 0,
      [ 0, 1, 3, 6, 10, 15, 21 ] ],
-   [ 'Math::NumSeq::Triangular', 5,
-     [ 6, 10, 15, 21 ] ],
 
    [ 'Math::NumSeq::Pronic', 0,
      [ 0, 2, 6, 12, 20, 30, 42 ] ],
-   [ 'Math::NumSeq::Pronic', 5,
-     [ 6, 12, 20, 30, 42 ] ],
 
    [ 'Math::NumSeq::Perrin', 0,
      [ 3, 0, 2, 3, 2, 5, 5, 7, 10, 12, 17 ] ],

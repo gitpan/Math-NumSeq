@@ -21,7 +21,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION','@ISA';
-$VERSION = 24;
+$VERSION = 25;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -111,7 +111,7 @@ can be the HTML, "internal" format, B-file, or A-file.
     ~/OEIS/a000032.txt
 
     downloaded from:
-    http://oeis.org/A000032/
+    http://oeis.org/A000032
     http://oeis.org/A000032/internal
     http://oeis.org/A000032/b000032.txt
     http://oeis.org/A000032/a000032.txt

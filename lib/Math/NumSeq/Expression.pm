@@ -24,7 +24,7 @@ use Math::Libm;
 use Module::Util;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 24;
+$VERSION = 25;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -400,7 +400,7 @@ sub next {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq evaluator prototyped Evaluator Expr eval subr
+=for stopwords Ryde Math-NumSeq evaluator prototyped Math-Expression-Evaluator Language-Expr eval subr
 
 =head1 NAME
 

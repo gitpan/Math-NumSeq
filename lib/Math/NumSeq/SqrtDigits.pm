@@ -22,7 +22,7 @@ use Carp;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 24;
+$VERSION = 25;
 
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
@@ -142,7 +142,7 @@ sub oeis_anum {
 
   if ($radix == 10
       && $sqrt >= 10 && $sqrt <= 99
-      && $sqrt != 50 && $sqrt != 75      
+      && $sqrt != 50 && $sqrt != 75
       && ! $perfect_square{$sqrt}) {
     ### calculated ...
     my $offset = 0;

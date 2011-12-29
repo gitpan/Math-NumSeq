@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 24;
+$VERSION = 25;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -45,6 +45,8 @@ sub ith {
   ### TotientSum ith(): $i
   return _totient_by_sieve($self,$i);
 }
+
+# ENHANCE-ME: do all values occur as totients?
 # sub pred {
 #   my ($self, $value) = @_;
 #   ### Totient pred(): $value
@@ -114,7 +116,7 @@ sub _totient_by_sieve {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq Euler's totient coprime
+=for stopwords Ryde Math-NumSeq Euler's totient coprime coprimes
 
 =head1 NAME
 
@@ -155,7 +157,7 @@ Return totient(i).
 
 L<Math::NumSeq>,
 L<Math::NumSeq::TotientCumulative>,
-L<Math::NumSeq::TotientPerfect>
+L<Math::NumSeq::TotientPerfect>,
 L<Math::NumSeq::TotientSteps>
 
 =head1 HOME PAGE

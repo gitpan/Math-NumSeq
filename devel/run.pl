@@ -81,7 +81,6 @@ $|=1;
   $values_class = 'App::MathImage::NumSeq::KlarnerRado';
   $values_class = 'App::MathImage::NumSeq::DigitCountLow';
   $values_class = 'App::MathImage::NumSeq::DivisorCount';
-  $values_class = 'Math::NumSeq::LiouvilleFunction';
   $values_class = 'Math::NumSeq::DigitCount';
   $values_class = 'App::MathImage::NumSeq::JugglerSteps';
   $values_class = 'Math::NumSeq::Kolakoski';
@@ -130,18 +129,22 @@ $|=1;
   $values_class = 'App::MathImage::NumSeq::InnerSquareRoot';
   $values_class = 'Math::NumSeq::MathImageSqrtContinued';
   $values_class = 'Math::NumSeq::SqrtContinuedPeriod';
-  $values_class = 'Math::NumSeq::MathImageAbundant';
-  $values_class = 'Math::NumSeq::MathImageObstinate';
+  $values_class = 'Math::NumSeq::LiouvilleFunction';
+  $values_class = 'Math::NumSeq::PolignacObstinate';
+  $values_class = 'Math::NumSeq::MathImagePowerful';
+  $values_class = 'Math::NumSeq::MathImageSqrtContinued';
 
   eval "require $values_class; 1" or die $@;
   print Math::NumSeq::DigitLength->VERSION,"\n";
   my $seq = $values_class->new (
+                                pairs => 'both',
+                                powerful_type => 'all',
                                 abundant_type => 'primitive',
                                 # multiples => 1,
                                 #  radix => 3,
                                 # digit => 1,
 
-                                # sqrt => 46,
+                                 sqrt => 46,
                                 planepath => 'FactorRationals',
                                 line_type => 'X_axis',
 

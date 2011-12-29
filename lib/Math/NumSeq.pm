@@ -42,7 +42,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 24;
+$VERSION = 25;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -311,6 +311,7 @@ element is a hashref
 
     {
       name        =>    parameter key arg for new()
+      share_key   =>    string, or undef
       description =>    human readable string
       type        =>    string "integer","boolean","enum" etc
       default     =>    value
@@ -339,8 +340,13 @@ For "enum" the C<choices> field is the possible values, such as
       choices => ["strawberry","chocolate"],
     }
 
-C<minimum> and C<maximum> are omitted if there's no hard limit on the
-parameter.
+C<minimum> and C<maximum> are omitted (or C<undef>) if there's no hard limit
+on the parameter.
+
+C<share_key> is designed to indicate when parameters from different NumSeq
+classes can be a single control widget in a GUI etc.  Normally the C<name>
+is enough, but when the same name has slightly different meanings in
+different classes a C<share_key> allows the same meanings to be matched up.
 
 =back
 
@@ -391,7 +397,8 @@ L<Math::NumSeq::Totient>,
 L<Math::NumSeq::TotientCumulative>,
 L<Math::NumSeq::TotientSteps>,
 L<Math::NumSeq::TotientPerfect>,
-L<Math::NumSeq::Abundant>
+L<Math::NumSeq::Abundant>,
+L<Math::NumSeq::PolignacObstinate>
 
 L<Math::NumSeq::Factorials>,
 L<Math::NumSeq::Primorials>,

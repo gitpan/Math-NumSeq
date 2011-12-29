@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 24;
+$VERSION = 25;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -40,30 +40,33 @@ use constant oeis_anum => 'A000217'; # starting from i=0 value=0
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-sub rewind {
-  my ($self) = @_;
-  $self->{'i'} = ceil(_inverse(max(0,$self->{'lo'})));
-}
-sub next {
-  my ($self) = @_;
-  my $i = $self->{'i'}++;
-  return ($i, $self->ith($i));
-}
-sub pred {
-  my ($self, $value) = @_;
-  if ($value < 0) { return 0; }
-  # FIXME: the _inverse() +.25, -.5 might be lost to rounding for very big $value
-  my $i = _inverse($value);
-  return ($i == int($i));
-}
 sub ith {
   my ($self, $i) = @_;
   return $i*($i+1)/2;
 }
 
-sub _inverse {
-  my ($value) = @_;
-  return sqrt(2*$value + .25) - .5;
+# [1,2,3,4,5],[1,3,6,10,15]
+# N = ((1/2*$d + 1/2)*$d)
+# d = -1/2 + sqrt(2 * $n + 1/4)
+#   = (-1 + 2*sqrt(2 * $n + 1/4))/2
+#   = (sqrt(4*2*$n + 1) - 1)/2
+#   = (sqrt(8*$n + 1) - 1)/2
+sub pred {
+  my ($self, $value) = @_;
+  ### Triangular pred(): $value
+
+  if ($value < 0) { return 0; }
+
+  my $int = int($value);
+  if ($value != $int) { return 0; }
+
+  my $i = int((sqrt(8*$int + 1) - 1)/2);
+
+  ### $int
+  ### $i
+  ### triangular: ($i+1)*$i/2
+
+  return ($int == ($i+1)*$i/2);
 }
 
 1;

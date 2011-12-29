@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 24;
+$VERSION = 25;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -151,13 +151,15 @@ sub ith {
 
 sub pred {
   my ($self, $value) = @_;
-  return ($value == int($value) && $value >= 0 && $value <= $self->values_max);
+  return ($value == int($value)
+          && $value >= 0
+          && $value <= $self->values_max);
 }
 
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq radix Thue
+=for stopwords Ryde Math-NumSeq radix Thue-Morse
 
 =head1 NAME
 

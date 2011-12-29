@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 24;
+$VERSION = 25;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -202,7 +202,7 @@ __END__
   #   };
 
 
-=for stopwords Ryde Math-NumSeq repdigit repdigits radix
+=for stopwords Ryde Math-NumSeq repdigit repdigits radix radices
 
 =head1 NAME
 

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 24;
+$VERSION = 25;
 
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IterateIth;
@@ -126,7 +126,7 @@ For example sqrt(12) is 3 then terms 2,6 repeating, which is period 2.
 
 All square root continued fractions like this comprise an integer part
 followed by repeating terms of some length.  Perfect squares are an integer
-part only, nothing furhter, and the period for them is taken to be 0.
+part only, nothing further, and the period for them is taken to be 0.
 
 =head1 FUNCTIONS
 

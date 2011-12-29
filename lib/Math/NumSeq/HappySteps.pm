@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 24;
+$VERSION = 25;
 
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IterateIth;
@@ -90,13 +90,13 @@ sub ith {
 sub pred {
   my ($self, $value) = @_;
   ### HappySteps pred(): $value
-  return ($value >= 0);
+  return ($value >= 0 && $value == int($value));
 }
 
 1;
 __END__
 
-=for stopwords Ryde 
+=for stopwords Ryde HappyNumbers HappySteps Math-NumSeq MERCHANTABILITY
 
 =head1 NAME
 

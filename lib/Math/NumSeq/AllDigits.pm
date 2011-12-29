@@ -32,7 +32,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 24;
+$VERSION = 25;
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
 
@@ -190,7 +190,7 @@ sub next {
 
 sub ith {
   my ($self, $i) = @_;
-  ### AllDigits ith(): $i
+  ### AllDigits ith(): "$i"
   if ($i < 0) {
     return undef;
   }
@@ -199,15 +199,14 @@ sub ith {
   }
 
   my $radix = $self->{'radix'};
-  my $n = 1;
-  my $len = 1;
+  my $len = my $n = ($i*0) + 1;  # inherit bignum 1
   $i -= 1;
   for (;;) {
     my $limit = $len*$n*($radix-1);
-    ### $len
-    ### $n
-    ### $i
-    ### $limit
+    ### len: "$len"
+    ### n: "$n"
+    ### i rem: "$i"
+    ### limit: "$limit"
 
     last if $i < $limit;
     $i -= $limit;
@@ -302,7 +301,8 @@ to radix-1.
 
 L<Math::NumSeq>,
 L<Math::NumSeq::All>,
-L<Math::NumSeq::SqrtDigits>
+L<Math::NumSeq::SqrtDigits>,
+L<Math::NumSeq::DigitLength>
 
 =cut
 

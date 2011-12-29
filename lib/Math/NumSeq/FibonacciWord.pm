@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 24;
+$VERSION = 25;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -124,7 +124,7 @@ sub pred {
 1;
 __END__
 
-=for stopwords Ryde Fibbinary Zeckendorf NumSeq
+=for stopwords Ryde Fibbinary Zeckendorf Math-NumSeq
 
 =head1 NAME
 

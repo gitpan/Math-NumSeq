@@ -21,7 +21,7 @@ use strict;
 use POSIX 'ceil';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 24;
+$VERSION = 25;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -134,10 +134,11 @@ sub ith {
 sub pred {
   my ($self, $value) = @_;
   my $multiples = $self->{'multiples'};
-  return ($multiples == 0
-          ? $value == 0
-          : ($value == int($value)
-             && ($value % $multiples) == 0));
+  if ($multiples == 0) {
+    return ($value == 0);
+  }
+  my $i = int($value / $multiples);
+  return ($value == $i*$multiples);
 }
 
 1;

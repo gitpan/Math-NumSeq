@@ -22,7 +22,7 @@ use POSIX ();
 use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 24;
+$VERSION = 25;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -170,6 +170,9 @@ Create and return a new sequence object.
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> is a prime.
+
+In the current code a hard limit of 2**32 is placed on the C<$value> to be
+checked, in the interests of not going into a near-infinite loop.
 
 =back
 

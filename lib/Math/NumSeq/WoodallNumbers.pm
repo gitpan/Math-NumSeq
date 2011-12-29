@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 24;
+$VERSION = 25;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -50,6 +50,11 @@ sub ith {
 sub pred {
   my ($self, $value) = @_;
   ### WoodallNumbers pred(): $value
+  {
+    my $int = int($value);
+    if ($value != $int) { return 0; }
+    $value = $int;
+  }
   ($value >= 1 && $value & 1) or return 0;
   my $exp = 0;
   $value += 1;  # now seeking $value == $exp * 2**$exp

@@ -21,7 +21,7 @@ use strict;
 use List::Util 'min', 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 24;
+$VERSION = 25;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -126,7 +126,14 @@ if (eval 'use Math::Factor::XS q(prime_factors); 1') {
 
 sub ith {
   my ($self, $i) = @_;
+  unless ($i >= 0 && $i <= 0xFFFF_FFFF) {
+    return undef;
+  }
   my @primes = prime_factors($i);
+  if ($self->{'multiplicity'} eq 'distinct') {
+    my $prev = 0;
+    @primes = grep {$_ == $prev ? () : ($prev=$_)} @primes;
+  }
   return scalar(@primes);
 }
 
@@ -140,7 +147,7 @@ sub ith {
   my ($self, $i) = @_;
   ### PrimeFactorCount ith(): $i
 
-  if ($i < 0 || $i > 0xFFFF_FFFF) {
+  unless ($i >= 0 && $i <= 0xFFFF_FFFF) {
     return undef;
   }
   my $count = 0;
@@ -234,6 +241,10 @@ Create and return a new sequence object.
 =item C<$value = $seq-E<gt>ith($i)>
 
 Return the number of prime factors in C<$i>.
+
+This requires factorizing C<$i> and in the current code a hard limit of
+2**32 is placed on C<$i>, in the interests of not going into a near-infinite
+loop.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 

@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 24;
+$VERSION = 25;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -50,11 +50,15 @@ sub next {
 }
 sub pred {
   my ($self, $value) = @_;
-  return (($value >= 0)
-          && do {
-            $value = sqrt($value);
-            $value == int($value)
-          });
+  ### Squares pred(): $value
+
+  if ($value < 0) { return 0; }
+
+  my $int = int($value);
+  if ($value != $int) { return 0; }
+
+  my $sqrt = int(sqrt($int));
+  return ($int == $sqrt*$sqrt);
 }
 sub ith {
   my ($self, $i) = @_;
