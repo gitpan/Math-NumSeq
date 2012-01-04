@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 25;
+$VERSION = 26;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -296,7 +296,7 @@ sub pred {
   my ($self, $value) = @_;
   ### AlmostPrimes pred(): $value
 
-  if ($value < 0 || $value > 0xFFFF_FFFF) {
+  unless ($value >= 0 && $value <= 0xFFFF_FFFF) {
     return undef;
   }
   if ($value < 1 || $value != int($value)) {

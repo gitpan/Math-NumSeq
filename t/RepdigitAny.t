@@ -35,7 +35,7 @@ use Math::NumSeq::RepdigitAny;
 # VERSION
 
 {
-  my $want_version = 25;
+  my $want_version = 26;
   ok ($Math::NumSeq::RepdigitAny::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::RepdigitAny->VERSION,  $want_version,

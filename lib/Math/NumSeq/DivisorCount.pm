@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 25;
+$VERSION = 26;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -142,7 +142,7 @@ sub ith {
   if ($i <= 1) {
     return $i;
   }
-  unless ($i < 0xFFFF_FFFF) {
+  unless ($i <= 0xFFFF_FFFF) {
     return undef;
   }
 

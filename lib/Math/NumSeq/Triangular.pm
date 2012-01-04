@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 25;
+$VERSION = 26;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -87,6 +87,25 @@ Math::NumSeq::Triangular -- triangular numbers
 =head1 DESCRIPTION
 
 The triangular numbers 0, 1, 3, 6, 10, 15, 21, 28, etc, i*(i+1)/2.
+
+The numbers are how many points are in an equilateral triangle of side i,
+
+       *      i=1  1
+
+       *      i=2  3
+      * *
+
+       * 
+      * *     i=3  6
+     * * *
+
+       *      
+      * *     i=4  10
+     * * *
+    * * * *
+
+From a given i, the next value is formed by adding i+1, being a new row of
+that length on the bottom of the triangle.
 
 =head1 FUNCTIONS
 

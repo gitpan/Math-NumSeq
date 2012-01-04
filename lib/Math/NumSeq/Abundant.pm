@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 25;
+$VERSION = 26;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -166,7 +166,7 @@ sub pred {
   if ($value != int($value) || _is_infinite($value)) {
     return 0;
   }
-  if ($value < 0 || $value > 0xFFFF_FFFF) {
+  unless ($value >= 0 && $value <= 0xFFFF_FFFF) {
     return undef;
   }
 

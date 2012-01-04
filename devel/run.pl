@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010, 2011 Kevin Ryde
+# Copyright 2010, 2011, 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -131,22 +131,23 @@ $|=1;
   $values_class = 'Math::NumSeq::SqrtContinuedPeriod';
   $values_class = 'Math::NumSeq::LiouvilleFunction';
   $values_class = 'Math::NumSeq::PolignacObstinate';
-  $values_class = 'Math::NumSeq::MathImagePowerful';
   $values_class = 'Math::NumSeq::MathImageSqrtContinued';
+  $values_class = 'Math::NumSeq::Powerful';
 
   eval "require $values_class; 1" or die $@;
   print Math::NumSeq::DigitLength->VERSION,"\n";
   my $seq = $values_class->new (
-                                pairs => 'both',
-                                powerful_type => 'all',
-                                abundant_type => 'primitive',
+                                # pairs => 'both',
+                                 powerful_type => 'all',
+                                power => 3,
+                                # abundant_type => 'primitive',
                                 # multiples => 1,
                                 #  radix => 3,
                                 # digit => 1,
 
-                                 sqrt => 46,
-                                planepath => 'FactorRationals',
-                                line_type => 'X_axis',
+                                # sqrt => 46,
+                                # planepath => 'FactorRationals',
+                                # line_type => 'X_axis',
 
                                 # order => 'forward',
                                 # including_self => 0,

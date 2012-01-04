@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 25;
+$VERSION = 26;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -385,7 +385,43 @@ Math::NumSeq::Polygonal -- polygonal numbers, triangular, square, pentagonal, et
 
 The sequence of polygonal numbers.  The 3-gonals are the triangular numbers
 i*(i+1)/2, the 4-gonals are squares i*i, the 5-gonals are pentagonals
-(3i-1)*i/2.  In general the k-gonals for kE<gt>=3 are
+(3i-1)*i/2, etc.
+
+The numbers are how many points are in a triangle, square, penatgon,
+hexagon, etc of side i,
+
+      Squares                      Pentagons
+
+    *          i=1  1                *
+
+                                     *
+    * *        i=2  3              *   *
+    * *                             * *
+
+                                
+                                      *      
+    * * *                           *   *    
+    * * *      i=3  6             *  *    *  
+    * * *                          *   * *   
+                                    * * *    
+
+
+
+                                       * 
+    * * * *                          *           * * *     
+    * * * *    i=4  10             *   *      *  *   *    *
+    * * * *                      *  *    *     *  *    * * 
+    * * * *                       *   * *       *   * * *  
+                                   * * *         * * * *   
+From a given i, the next value is formed by adding i+1, being a new row of
+that length on the bottom of the triangle.
+
+
+
+
+
+
+  In general the k-gonals for kE<gt>=3 are
 
     P(i) = (k-2)/2 * i*(i+1) - (k-3)*i
 

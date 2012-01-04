@@ -32,7 +32,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 25;
+$VERSION = 26;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -109,14 +109,13 @@ sub pred {
   my ($self, $value) = @_;
   ### Obstinate pred(): $value
 
+  unless ($value >= 0 && $value <= 0xFFFF_FFFF) {
+    return undef;
+  }
   if ($value != int($value)
-      || _is_infinite($value)
       || $value < 127
       || ($value % 2) == 0) {
     return ($value == 1);
-  }
-  if ($value > 0xFFFF_FFFF) {
-    return undef;
   }
 
   # Maybe an is_any_prime(...)

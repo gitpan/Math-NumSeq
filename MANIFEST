@@ -37,14 +37,14 @@ devel/old/ChampernowneBinary.t
 devel/old/ChampernowneBinaryLsb.pm
 devel/old/DigitSumSquares.pm
 devel/old/FractionBits.pm
-devel/old/MathImagePoweredPart.pm
-devel/old/MathImageSquareFree.pm
-devel/old/MathImageSquareFreeKernel.pm
 devel/old/Pentagonal.pm
 devel/old/PentagonalGeneralized.pm
 devel/old/PentagonalSecond.pm
+devel/old/PoweredPart.pm
 devel/old/pythagorean-columns.pl
 devel/old/SemiPrimesOdd.pm
+devel/old/SquareFree.pm
+devel/old/SquareFreeKernel.pm
 devel/old/TernaryWithout2.pm
 devel/old/ThueMorse.pm
 devel/old/ThueMorseEvil.pm
@@ -122,6 +122,7 @@ lib/Math/NumSeq/Pell.pm
 lib/Math/NumSeq/Perrin.pm
 lib/Math/NumSeq/PolignacObstinate.pm
 lib/Math/NumSeq/Polygonal.pm
+lib/Math/NumSeq/Powerful.pm
 lib/Math/NumSeq/PrimeFactorCount.pm
 lib/Math/NumSeq/Primes.pm
 lib/Math/NumSeq/Primorials.pm

@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010, 2011 Kevin Ryde
+# Copyright 2010, 2011, 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -134,6 +134,7 @@ sub check_class {
   # return unless $class =~ /RadixWithout/;
   # return unless $class =~ /Perrin/;
   # return unless $class =~ /Sqrt/;
+  # return unless $class =~ /Power/;
 
   eval "require $class" or die;
 
@@ -196,6 +197,15 @@ sub check_class {
   } elsif ($anum eq 'A006567') {
     # emirps shorten for now
     @$want = grep {$_ < 100_000} @$want;
+
+  } elsif ($anum eq 'A001694'    # Powerful all power=2
+           || $anum eq 'A036966' # Powerful all power=3
+           || $anum eq 'A036967' # Powerful all power=4
+           || $anum eq 'A069492' # Powerful all power=5
+           || $anum eq 'A069493' # Powerful all power=6
+          ) { 
+    # shorten for now
+    @$want = grep {$_ < 30_000} @$want;
 
   } elsif ($anum eq 'A004583') {
     # last digit of sample values octal sqrt(8) seems is 4 think should be 5,

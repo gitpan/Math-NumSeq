@@ -44,8 +44,8 @@ HERE
     next if $module eq 'File';
     next if $module eq 'Expression';
     next if $module eq 'OEIS';
-    next if $module eq 'CunninghamPrimes'; # broken
-    next if $module eq 'PlanePathTurn'; # not yet
+    next if $module =~ 'CunninghamPrimes'; # broken
+    next if $module =~ 'PlanePathTurn'; # not yet
     my $class = App::MathImage::Generator->values_class($module);
     print "$class\n";
 

@@ -21,7 +21,7 @@ use strict;
 use List::Util 'min', 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 25;
+$VERSION = 26;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -126,6 +126,7 @@ if (eval 'use Math::Factor::XS q(prime_factors); 1') {
 
 sub ith {
   my ($self, $i) = @_;
+  $i = abs($i);
   unless ($i >= 0 && $i <= 0xFFFF_FFFF) {
     return undef;
   }
@@ -147,6 +148,7 @@ sub ith {
   my ($self, $i) = @_;
   ### PrimeFactorCount ith(): $i
 
+  $i = abs($i);
   unless ($i >= 0 && $i <= 0xFFFF_FFFF) {
     return undef;
   }

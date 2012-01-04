@@ -22,7 +22,7 @@ use POSIX ();
 use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 25;
+$VERSION = 26;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -113,10 +113,13 @@ sub _primes_list {
 
 sub pred {
   my ($self, $value) = @_;
-  return ($value == int($value)
-          && ! _is_infinite($value)
-          && $value <= 0xFFFF_FFFF
-          && is_prime($value));
+  if (_is_infinite($value) || $value > 0xFFFF_FFFF) {
+    return undef;
+  }
+  if ($value != int($value) || $value < 0) {
+    return 0;
+  }
+  return is_prime($value);
 }
 
 # sub ith {

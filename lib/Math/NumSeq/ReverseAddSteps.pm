@@ -1,4 +1,4 @@
-# Copyright 2010, 2011 Kevin Ryde
+# Copyright 2010, 2011, 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 25;
+$VERSION = 26;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -44,16 +44,18 @@ use Math::NumSeq::Base::Digits;
 
 #------------------------------------------------------------------------------
 
+# http://oeis.org/index/Res#RAA     reverse-adds
+#
 # cf A015976 - numbers needing 1 iteration to reach palindrome
 #    A065206 - 1 iteration to reach palindrome, excluding palindromes
 #    A015977 - 2 iterations to reach palindrome
 #    A015979 - 3 iterations to reach palindrome
+#    A033865 - the palindrome at which each n stops
 #
 #    A023109 - first number requiring n iterations to palindrome
 #                suggesting where to make the hard limit ...
 #
-#    A030547 - num steps to a palindrome in the 196 trajectory A006960
-#              ie. how far away each elem is from a palindrome, ongoing
+#    A030547 - num steps, minimum 0, so palindromes value 1
 #    
 # ~/OEIS/a058042.txt  on reaching binary palindromes
 #
@@ -186,7 +188,7 @@ __END__
 
 =head1 NAME
 
-Math::NumSeq::ReverseAddSteps -- steps of the reverse-add algorithm
+Math::NumSeq::ReverseAddSteps -- steps of the reverse-add algorithm to reach palindrome
 
 =head1 SYNOPSIS
 
@@ -249,7 +251,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2011 Kevin Ryde
+Copyright 2011, 2012 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free
