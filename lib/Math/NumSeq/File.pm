@@ -1,4 +1,4 @@
-# Copyright 2011 Kevin Ryde
+# Copyright 2011, 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -30,7 +30,7 @@ use Carp;
 use Fcntl;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 26;
+$VERSION = 27;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 

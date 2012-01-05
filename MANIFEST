@@ -56,6 +56,7 @@ devel/reverse-add.pl
 devel/run.pl
 devel/SafePrimes.pm
 devel/SafePrimes.t
+devel/sqrt-continued.pl
 devel/totient.pl
 devel/triangular.pl
 inc/my_pod2html
@@ -135,6 +136,7 @@ lib/Math/NumSeq/Repdigits.pm
 lib/Math/NumSeq/ReverseAdd.pm
 lib/Math/NumSeq/ReverseAddSteps.pm
 lib/Math/NumSeq/SophieGermainPrimes.pm
+lib/Math/NumSeq/SqrtContinued.pm
 lib/Math/NumSeq/SqrtContinuedPeriod.pm
 lib/Math/NumSeq/SqrtDigits.pm
 lib/Math/NumSeq/SqrtEngel.pm
@@ -180,6 +182,7 @@ t/Primes.t
 t/RepdigitAny.t
 t/RepdigitRadix.t
 t/SophieGermainPrimes.t
+t/SqrtContinued.t
 t/SqrtDigits.t
 t/SqrtEngel.t
 t/Totient.t
@@ -197,4 +200,5 @@ xt/0-Test-Synopsis.t
 xt/0-Test-YAML-Meta.t
 xt/MyOEIS.pm
 xt/NumSeq-oeis.t
+xt/pod_lists.t
 META.yml                                 Module meta-data (added by MakeMaker)

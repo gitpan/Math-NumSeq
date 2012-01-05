@@ -1,4 +1,4 @@
-# Copyright 2010, 2011 Kevin Ryde
+# Copyright 2010, 2011, 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -41,7 +41,7 @@ use Math::NumSeq;
 use base 'Math::NumSeq';
 
 use vars '$VERSION';
-$VERSION = 26;
+$VERSION = 27;
 
 # http://oeis.org/A000695
 #    Moser-de Bruijn sequence, sums of distinct powers of 4

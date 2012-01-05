@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010, 2011 Kevin Ryde
+# Copyright 2010, 2011, 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -25,7 +25,7 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
-my $test_count = (tests => 302)[1];
+my $test_count = (tests => 304)[1];
 plan tests => $test_count;
 
 # uncomment this to run the ### lines
@@ -118,6 +118,9 @@ foreach my $elem
    # MobiusFunction.pm
    # PiBits.pm
    
+   [ 'Math::NumSeq::SqrtContinued', 1,
+     [ 1, 2,2,2,2,2 ]
+   ],
    [ 'Math::NumSeq::PrimeFactorCount', 1,
      [ 0,  # 1
        1,  # 2

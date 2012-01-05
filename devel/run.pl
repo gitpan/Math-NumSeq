@@ -74,7 +74,6 @@ $|=1;
   $values_class = 'App::MathImage::NumSeq::UndulatingNumbers';
   $values_class = 'App::MathImage::NumSeq::MobiusFunction';
   $values_class = 'Math::NumSeq::TwinPrimes';
-  $values_class = 'Math::NumSeq::NumAronson';
   $values_class = 'Math::NumSeq::ReverseAdd';
   $values_class = 'App::MathImage::NumSeq::Pell';
   $values_class = 'Math::NumSeq::Factorials';
@@ -133,6 +132,7 @@ $|=1;
   $values_class = 'Math::NumSeq::PolignacObstinate';
   $values_class = 'Math::NumSeq::MathImageSqrtContinued';
   $values_class = 'Math::NumSeq::Powerful';
+  $values_class = 'Math::NumSeq::RepdigitRadix';
 
   eval "require $values_class; 1" or die $@;
   print Math::NumSeq::DigitLength->VERSION,"\n";

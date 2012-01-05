@@ -1,4 +1,4 @@
-# Copyright 2010, 2011 Kevin Ryde
+# Copyright 2010, 2011, 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -15,14 +15,25 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
+
+# ENHANCE-ME: ith() might be a touch faster than next() now, perhaps
+# something sieve/flag in next()
+
+
 package Math::NumSeq::RepdigitRadix;
 use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 26;
+$VERSION = 27;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
+*_is_infinite = \&Math::NumSeq::_is_infinite;
+
+use Math::NumSeq::NumAronson;
+*_round_down_pow = \&Math::NumSeq::NumAronson::_round_down_pow;
+
+use Math::Factor::XS 0.37 'factors';
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -125,13 +136,103 @@ sub next {
   }
 }
 
+# d=r-1
+# v = d*(r^(len-1)+...+1)
+#   = r^len-1
+# dlimit = nthroot(v+1, len)
+#
+# q=v/d
+# q=r^(len-1)+...+1
+# q > r^(len-1)    # when len>2
+# r < nthroot(q, len-1)  
+
 sub ith {
   my ($self, $i) = @_;
   ### RepdigitRadix ith(): $i
-
+  if ($i < 0) {
+    $i = abs($i);
+  }
   if ($i < 3) {
     return $small[$i];
   }
+  if ($i > 0xFFFF_FFFF) {
+    return undef;
+  }
+  if (_is_infinite($i)) {
+    return $i; # nan
+  }
+
+  my @factors = reverse (1, factors($i));
+  ### @factors
+
+  my ($pow, $len) = _round_down_pow ($i, 2);
+  $len++;
+  ### initial len: $len
+
+  my $r_found;
+  for ( ; $len >= 3; $len--) {
+    my $d_limit = (defined $r_found ? $r_found-1 : _nth_root_floor($i+1,$len));
+    ### $len
+    ### $d_limit
+
+    foreach my $d (grep {$_<=$d_limit} @factors) {  # descending order
+      ### try d: $d
+
+      # if ($d > $d_limit) {
+      #   ### stop for d > d_limit ...
+      #   last;
+      # }
+
+      my $q = $i / $d;
+      my $r = _nth_root_floor($q,$len-1);
+      ### $q
+      ### $r
+      ### ones: ($r**$len - 1) / ($r-1)
+
+      if (defined $r_found && $r >= $r_found) {
+        ### stop at r >= r_found ...
+        last;
+      }
+
+      if ($r <= $d) {
+        ### r smaller than d ...
+        # since d>=1 this also excludes r<2
+        next;
+      }
+
+      if ($q == ($r**$len - 1) / ($r-1)) {
+        $r_found = $r;
+      }
+    }
+  }
+
+  my $d_limit = (defined $r_found ? $r_found-1 : int(sqrt($i+1)));
+  foreach my $d (grep {$_<=$d_limit} @factors) {  # descending order
+    ### try d: $d
+
+    # v = d*(r+1)
+    # v/d = r+1
+    # r = v/d - 1
+    #
+    my $r = $i/$d - 1;
+    ### $r
+
+    if (defined $r_found && $r >= $r_found) {
+      ### stop at r >= r_found ...
+      last;
+    }
+
+    if ($r <= $d) {
+      ### r smaller than d ...
+      # since d>=1 this also excludes r<2
+      next;
+    }
+
+    $r_found = $r;
+  }
+
+  return (defined $r_found ? $r_found : $i-1);
+
 
   for (my $radix = 2; ; $radix++) {
     ### $radix
@@ -157,6 +258,23 @@ sub ith {
       }
     } while (($one = $one * $radix + 1) <= $i);
   }
+}
+
+# value = root^power
+# log(value) = power*log(root)
+# log(root) = log(value)/power
+# root = exp(log(value)/power)
+#
+sub _nth_root_floor {
+  my ($value, $power) = @_;
+  my $root = int (exp (log($value)/$power));
+  if ($root**$power > $value) {
+    return $root-1;
+  }
+  if (($root+1)**$power < $value) {
+    return $root+1;
+  }
+  return $root;
 }
 
 # R^2+R+1
@@ -193,9 +311,9 @@ The radix in which i is a repdigit,
     starting i=0
     2, 0, 0, 2, 3, 4, 5, 2, 3, 8, 4, 10, etc
 
-i=0 is taken to be a repdigit 00 in base 2, but i=1 and i=2 are not
-repdigits in any radix, then i=3 is repdigit 11 in base 2.  Any iE<gt>=3 is
-a repdigit "11" in base i-1, but it may be a repdigit in a smaller base.
+i=0 is taken to be a repdigit "00" in base 2.  i=1 and i=2 are not repdigits
+in any radix.  Then i=3 is repdigit "11" in base 2.  Any iE<gt>=3 is at
+worst a repdigit "11" in base i-1, but may be a repdigit in a smaller base.
 For example i=8 is "22" in base 3.
 
 Is this behaviour for i=0,1,2 any good?  Perhaps it will change.
@@ -212,12 +330,96 @@ Create and return a new sequence object.
 
 Return the radix in which C<$i> is a repdigit.
 
+The current code relies on factorizing C<$i> and a hard limit of 2**32 is
+placed on C<$i> in the interests of not going into a near-infinite loop.
+
 =back
+
+=head1 FORMULAS
+
+=head2 ith() Value
+
+C<ith()> looks for the smallest radix r for which there's a digit d and
+length len satisfying
+
+    i = d * repunit(len)
+    i = d * (r^(len-1) + r^(len-2) + ... + r^2 + r + 1)
+
+The current approach is to consider repdigit lengths successively from
+log2(i) downwards and candidate digits d from among the divisors of i.
+
+    for len=log2(i) down to 2
+      for d each divisor of i, descending
+        r = nthroot(i/d, len-1)
+        if r >= r_found then next len
+        if r <= d then next divisor
+        if (r^len-1)/(r-1) == i/d then r_found=r, next len
+
+    if no r_found then r_found = i-1
+
+For a given d the radix r to give i would be
+
+    i/d = r^(len-1) + ... + r + 1
+
+but it's enough to calculate
+
+    i/d = r^(len-1)
+    r = floor nthroot(i/d, len-1)
+
+and then power up to see if it gives the desired i/d.
+
+    repunit(len) = r^(len-1) + ... + r + 1
+                 = (r^len - 1) / (r-1)
+    check if equals i/d
+
+floor(nthroot()) is never too small, since an r+1 from it would give
+
+    (r+1)^(len-1) = r^(len-1) + binomial*r^(len-2) + ... + 1
+                  > r^(len-1) +          r^(len-2) + ... + 1
+
+Divisors are taken in descending order so the radices r are in increasing
+order.  So if a repdigit is found in a given len then it's the smallest of
+that length and can go on to other lengths.
+
+The lengths can be considered in any order but the current code goes from
+high to low since a bigger length means a smaller maximum radix within that
+length (occurring when d=1, ie. a repunit), so it might establish a smaller
+"r_found" and a smaller r_found limits the number of divisors to be tried in
+subsequent lengths.  But does that actually happen often enough to make any
+difference?
+
+=head2 ith() Other Possibilities
+
+When len is even the repunit part r^(len-1)+...+1 is a multiple of r+1.  Can
+that cut the search?  For a given divisor the r is found easily enough by
+nthroot, but maybe i with only two prime factors can never be an even
+lengthE<gt>=4 repdigit, or something like that.
 
 =head1 SEE ALSO
 
 L<Math::NumSeq>,
 L<Math::NumSeq::RepdigitAny>
+
+=head1 HOME PAGE
+
+http://user42.tuxfamily.org/math-numseq/index.html
+
+=head1 LICENSE
+
+Copyright 2010, 2011, 2012 Kevin Ryde
+
+Math-NumSeq is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+Math-NumSeq is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+more details.
+
+You should have received a copy of the GNU General Public License along with
+Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 =cut
 

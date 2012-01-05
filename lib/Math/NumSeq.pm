@@ -42,7 +42,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 26;
+$VERSION = 27;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -206,7 +206,7 @@ use constant::defer _bigint => sub {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq oopery genericness Online OEIS ie arrayref hashref filename enum Aronson
+=for stopwords Ryde Math-NumSeq Math-Aronson Math-PlanePath oopery genericness Online OEIS ie arrayref hashref filename enum Aronson
 
 =head1 NAME
 
@@ -372,6 +372,8 @@ squares this would return true if C<$value> is a square or false if not.
 
 =head1 SEE ALSO
 
+=for my_pod see_also begin
+
 L<Math::NumSeq::Squares>,
 L<Math::NumSeq::Cubes>,
 L<Math::NumSeq::Pronic>,
@@ -383,7 +385,7 @@ L<Math::NumSeq::Powerful>
 
 L<Math::NumSeq::Even>,
 L<Math::NumSeq::Odd>,
-L<Math::NumSeq::All>
+L<Math::NumSeq::All>,
 L<Math::NumSeq::AllDigits>
 
 L<Math::NumSeq::Primes>,
@@ -392,12 +394,14 @@ L<Math::NumSeq::SophieGermainPrimes>,
 L<Math::NumSeq::AlmostPrimes>,
 L<Math::NumSeq::Emirps>,
 L<Math::NumSeq::MobiusFunction>,
+L<Math::NumSeq::LiouvilleFunction>,
 L<Math::NumSeq::PrimeFactorCount>,
 L<Math::NumSeq::DivisorCount>,
 
 L<Math::NumSeq::Totient>,
 L<Math::NumSeq::TotientCumulative>,
 L<Math::NumSeq::TotientSteps>,
+L<Math::NumSeq::TotientStepsSum>,
 L<Math::NumSeq::TotientPerfect>,
 L<Math::NumSeq::Abundant>,
 L<Math::NumSeq::PolignacObstinate>
@@ -405,6 +409,7 @@ L<Math::NumSeq::PolignacObstinate>
 L<Math::NumSeq::Factorials>,
 L<Math::NumSeq::Primorials>,
 L<Math::NumSeq::Fibonacci>,
+L<Math::NumSeq::FibonacciWord>,
 L<Math::NumSeq::LucasNumbers>,
 L<Math::NumSeq::Fibbinary>,
 L<Math::NumSeq::FibbinaryBitCount>,
@@ -415,6 +420,7 @@ L<Math::NumSeq::Perrin>
 L<Math::NumSeq::FractionDigits>,
 L<Math::NumSeq::SqrtDigits>,
 L<Math::NumSeq::SqrtEngel>,
+L<Math::NumSeq::SqrtContinued>,
 L<Math::NumSeq::SqrtContinuedPeriod>
 
 L<Math::NumSeq::DigitCount>,
@@ -434,7 +440,8 @@ L<Math::NumSeq::Repdigits>,
 L<Math::NumSeq::RepdigitAny>,
 L<Math::NumSeq::RepdigitRadix>,
 L<Math::NumSeq::HarshadNumbers>,
-L<Math::NumSeq::HappyNumbers>
+L<Math::NumSeq::HappyNumbers>,
+L<Math::NumSeq::HappySteps>
 
 L<Math::NumSeq::CullenNumbers>,
 L<Math::NumSeq::ProthNumbers>,
@@ -444,16 +451,30 @@ L<Math::NumSeq::KlarnerRado>,
 L<Math::NumSeq::MephistoWaltz>
 
 L<Math::NumSeq::CollatzSteps>,
+L<Math::NumSeq::ReverseAdd>,
+L<Math::NumSeq::ReverseAddSteps>,
 L<Math::NumSeq::JugglerSteps>,
 L<Math::NumSeq::SternDiatomic>,
 L<Math::NumSeq::NumAronson>
 
 L<Math::NumSeq::Kolakoski>,
 L<Math::NumSeq::GolombSequence>,
-L<Math::NumSeq::AsciiSelf>
+L<Math::NumSeq::AsciiSelf>,
+L<Math::NumSeq::Multiples>,
+L<Math::NumSeq::Modulo>
 
-L<Math::NumSeq::Aronson> (in the Math-Aronson dist),
-L<Math::NumSeq::PlanePathCoord> (in the Math-PlanePath dist)
+L<Math::NumSeq::Expression>,
+L<Math::NumSeq::File>,
+L<Math::NumSeq::OEIS>
+
+=for my_pod see_also end
+
+L<Math::NumSeq::Aronson> (in the Math-Aronson dist)
+
+L<Math::NumSeq::PlanePathCoord>, L<Math::NumSeq::PlanePathDelta>,
+L<Math::NumSeq::PlanePathTurn> (in the Math-PlanePath dist)
+
+=head2 Other Modules Etc
 
 L<Math::Sequence> and L<Math::Series>, for symbolic recursive sequence
 definitions

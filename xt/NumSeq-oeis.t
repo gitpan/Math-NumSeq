@@ -133,8 +133,9 @@ sub check_class {
   # return unless $class =~ /ReverseAddSteps/;
   # return unless $class =~ /RadixWithout/;
   # return unless $class =~ /Perrin/;
-  # return unless $class =~ /Sqrt/;
+  # return unless $class =~ /SqrtC/;
   # return unless $class =~ /Power/;
+  # return unless $class =~ /RepdigitRadix/;
 
   eval "require $class" or die;
 
@@ -207,14 +208,18 @@ sub check_class {
     # shorten for now
     @$want = grep {$_ < 30_000} @$want;
 
-  } elsif ($anum eq 'A004583') {
-    # last digit of sample values octal sqrt(8) seems is 4 think should be 5,
-    # trim it off for now
-    pop @$want;
+  } elsif ($anum eq 'A004542') {  # sqrt(2) in base 5
+    # trim seeming bad end
+    splice @$want, -15;
     MyTestHelpers::diag ("trim doubtful end $anum $name");
   } elsif ($anum eq 'A004582') {
     # last few of sample values sqrt(8) base 7 seem bad, trim
     splice @$want, -27;
+    MyTestHelpers::diag ("trim doubtful end $anum $name");
+  } elsif ($anum eq 'A004583') {
+    # last digit of sample values octal sqrt(8) seems is 4 think should be 5,
+    # trim it off for now
+    pop @$want;
     MyTestHelpers::diag ("trim doubtful end $anum $name");
   } elsif ($anum eq 'A004584') {
     # last few of sample values sqrt(8) base 9 seem bad, trim
@@ -224,10 +229,6 @@ sub check_class {
     # last 3,3,0,2,3,4,2,4,1,2,4,4,1 sample values sqrt(10) base 5 seem bad,
     # trim
     splice @$want, -13;
-    MyTestHelpers::diag ("trim doubtful end $anum $name");
-  } elsif ($anum eq 'A004542') {  # sqrt(2) in base 5
-    # trim seeming bad end
-    splice @$want, -15;
     MyTestHelpers::diag ("trim doubtful end $anum $name");
 
   } elsif ($anum eq 'A022000') {  # FIXME: not 1/996 ???
@@ -287,6 +288,11 @@ sub check_class {
     if ($got_i_start != $want_i_start
         && $anum ne 'A000004' # offset=0, but allow other i_start here
         && $anum ne 'A000012' # offset=0, but allow other i_start here
+        && $anum ne 'A010171' # SqrtContinued 103
+        && $anum ne 'A010172' # SqrtContinued 106
+        && $anum ne 'A010173' # SqrtContinued 107
+        && $anum ne 'A010174' # SqrtContinued 108
+        && $anum ne 'A010175' # SqrtContinued 109
        ) {
       if ($class =~ /RadixWithout/  # FIXME
           || $class =~ /SqrtDigits/ # FIXME

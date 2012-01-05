@@ -1,4 +1,6 @@
-# Copyright 2011, 2012 Kevin Ryde
+#!/usr/bin/perl -w
+
+# Copyright 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -15,39 +17,20 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
-package Math::NumSeq::Base::IteratePred;
-use 5.004;
+require 5;
 use strict;
+use List::Util 'min','max';
 
-use vars '$VERSION';
-$VERSION = 27;
-
-sub rewind {
-  my ($self) = @_;
-  $self->{'i'} = $self->i_start;
-  $self->{'value'} = 0;
-}
-sub next {
-  my ($self) = @_;
-  my $value = $self->{'value'};
-  for (;;) {
-    if ($self->pred(++$value)) {
-      return ($self->{'i'}++, ($self->{'value'} = $value));
-    }
+{
+  require Math::NumSeq::SqrtContinuedPeriod;
+  my $seq = Math::NumSeq::SqrtContinuedPeriod->new;
+  my @periods;
+  foreach my $i (2 .. 200) {
+    push @periods, $seq->ith($i);
   }
+  print "min ",min(@periods),"\n";
+  print "max ",max(@periods),"\n";
+  exit 0;
 }
-# sub ith {
-#   my ($self, $i) = @_;
-#   $i -= $self->i_start;
-#   my $value = $self->value_min - 1;
-#   while ($i >= 0) {
-#     $value++;
-#     if ($self->pred($value)) {
-#       $i--;
-#     }
-#   }
-#   return $value;    
-# }
 
-1;
-__END__
+

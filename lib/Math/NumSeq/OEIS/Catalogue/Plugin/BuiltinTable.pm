@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 26;
+$VERSION = 27;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 437 A-numbers in 79 modules
+# total 594 A-numbers in 80 modules
 
 use constant info_arrayref =>
 [
@@ -2645,6 +2645,1262 @@ use constant info_arrayref =>
   {
     'anum' => 'A005384',
     'class' => 'Math::NumSeq::SophieGermainPrimes'
+  },
+  {
+    'anum' => 'A040000',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      2
+    ]
+  },
+  {
+    'anum' => 'A040001',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      3
+    ]
+  },
+  {
+    'anum' => 'A040002',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      5
+    ]
+  },
+  {
+    'anum' => 'A040003',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      6
+    ]
+  },
+  {
+    'anum' => 'A010121',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      7
+    ]
+  },
+  {
+    'anum' => 'A040005',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      8
+    ]
+  },
+  {
+    'anum' => 'A040006',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      10
+    ]
+  },
+  {
+    'anum' => 'A040007',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      11
+    ]
+  },
+  {
+    'anum' => 'A040008',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      12
+    ]
+  },
+  {
+    'anum' => 'A010122',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      13
+    ]
+  },
+  {
+    'anum' => 'A010123',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      14
+    ]
+  },
+  {
+    'anum' => 'A040011',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      15
+    ]
+  },
+  {
+    'anum' => 'A040012',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      17
+    ]
+  },
+  {
+    'anum' => 'A040013',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      18
+    ]
+  },
+  {
+    'anum' => 'A010124',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      19
+    ]
+  },
+  {
+    'anum' => 'A040015',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      20
+    ]
+  },
+  {
+    'anum' => 'A010125',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      21
+    ]
+  },
+  {
+    'anum' => 'A010126',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      22
+    ]
+  },
+  {
+    'anum' => 'A010127',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      23
+    ]
+  },
+  {
+    'anum' => 'A040019',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      24
+    ]
+  },
+  {
+    'anum' => 'A040020',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      26
+    ]
+  },
+  {
+    'anum' => 'A040021',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      27
+    ]
+  },
+  {
+    'anum' => 'A040022',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      28
+    ]
+  },
+  {
+    'anum' => 'A010128',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      29
+    ]
+  },
+  {
+    'anum' => 'A040024',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      30
+    ]
+  },
+  {
+    'anum' => 'A010129',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      31
+    ]
+  },
+  {
+    'anum' => 'A010130',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      32
+    ]
+  },
+  {
+    'anum' => 'A010131',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      33
+    ]
+  },
+  {
+    'anum' => 'A010132',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      34
+    ]
+  },
+  {
+    'anum' => 'A040029',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      35
+    ]
+  },
+  {
+    'anum' => 'A040030',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      37
+    ]
+  },
+  {
+    'anum' => 'A040031',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      38
+    ]
+  },
+  {
+    'anum' => 'A040032',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      39
+    ]
+  },
+  {
+    'anum' => 'A040033',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      40
+    ]
+  },
+  {
+    'anum' => 'A010133',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      41
+    ]
+  },
+  {
+    'anum' => 'A040035',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      42
+    ]
+  },
+  {
+    'anum' => 'A010134',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      43
+    ]
+  },
+  {
+    'anum' => 'A040037',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      44
+    ]
+  },
+  {
+    'anum' => 'A010135',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      45
+    ]
+  },
+  {
+    'anum' => 'A010136',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      46
+    ]
+  },
+  {
+    'anum' => 'A010137',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      47
+    ]
+  },
+  {
+    'anum' => 'A040041',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      48
+    ]
+  },
+  {
+    'anum' => 'A040042',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      50
+    ]
+  },
+  {
+    'anum' => 'A040043',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      51
+    ]
+  },
+  {
+    'anum' => 'A010138',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      52
+    ]
+  },
+  {
+    'anum' => 'A010139',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      53
+    ]
+  },
+  {
+    'anum' => 'A010140',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      54
+    ]
+  },
+  {
+    'anum' => 'A010141',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      55
+    ]
+  },
+  {
+    'anum' => 'A040048',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      56
+    ]
+  },
+  {
+    'anum' => 'A010142',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      57
+    ]
+  },
+  {
+    'anum' => 'A010143',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      58
+    ]
+  },
+  {
+    'anum' => 'A010144',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      59
+    ]
+  },
+  {
+    'anum' => 'A040052',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      60
+    ]
+  },
+  {
+    'anum' => 'A010145',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      61
+    ]
+  },
+  {
+    'anum' => 'A010146',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      62
+    ]
+  },
+  {
+    'anum' => 'A040055',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      63
+    ]
+  },
+  {
+    'anum' => 'A040056',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      65
+    ]
+  },
+  {
+    'anum' => 'A040057',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      66
+    ]
+  },
+  {
+    'anum' => 'A010147',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      67
+    ]
+  },
+  {
+    'anum' => 'A040059',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      68
+    ]
+  },
+  {
+    'anum' => 'A010148',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      69
+    ]
+  },
+  {
+    'anum' => 'A010149',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      70
+    ]
+  },
+  {
+    'anum' => 'A010150',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      71
+    ]
+  },
+  {
+    'anum' => 'A040063',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      72
+    ]
+  },
+  {
+    'anum' => 'A010151',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      73
+    ]
+  },
+  {
+    'anum' => 'A010152',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      74
+    ]
+  },
+  {
+    'anum' => 'A010153',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      75
+    ]
+  },
+  {
+    'anum' => 'A010154',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      76
+    ]
+  },
+  {
+    'anum' => 'A010155',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      77
+    ]
+  },
+  {
+    'anum' => 'A010156',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      78
+    ]
+  },
+  {
+    'anum' => 'A010157',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      79
+    ]
+  },
+  {
+    'anum' => 'A040071',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      80
+    ]
+  },
+  {
+    'anum' => 'A040072',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      82
+    ]
+  },
+  {
+    'anum' => 'A040073',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      83
+    ]
+  },
+  {
+    'anum' => 'A040074',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      84
+    ]
+  },
+  {
+    'anum' => 'A010158',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      85
+    ]
+  },
+  {
+    'anum' => 'A010159',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      86
+    ]
+  },
+  {
+    'anum' => 'A040077',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      87
+    ]
+  },
+  {
+    'anum' => 'A010160',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      88
+    ]
+  },
+  {
+    'anum' => 'A010161',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      89
+    ]
+  },
+  {
+    'anum' => 'A040080',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      90
+    ]
+  },
+  {
+    'anum' => 'A010162',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      91
+    ]
+  },
+  {
+    'anum' => 'A010163',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      92
+    ]
+  },
+  {
+    'anum' => 'A010164',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      93
+    ]
+  },
+  {
+    'anum' => 'A010165',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      94
+    ]
+  },
+  {
+    'anum' => 'A010166',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      95
+    ]
+  },
+  {
+    'anum' => 'A010167',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      96
+    ]
+  },
+  {
+    'anum' => 'A010168',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      97
+    ]
+  },
+  {
+    'anum' => 'A010169',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      98
+    ]
+  },
+  {
+    'anum' => 'A010170',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      99
+    ]
+  },
+  {
+    'anum' => 'A010171',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      103
+    ]
+  },
+  {
+    'anum' => 'A010172',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      106
+    ]
+  },
+  {
+    'anum' => 'A010173',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      107
+    ]
+  },
+  {
+    'anum' => 'A010174',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      108
+    ]
+  },
+  {
+    'anum' => 'A010175',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      109
+    ]
+  },
+  {
+    'anum' => 'A010176',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      111
+    ]
+  },
+  {
+    'anum' => 'A010177',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      112
+    ]
+  },
+  {
+    'anum' => 'A010178',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      113
+    ]
+  },
+  {
+    'anum' => 'A010179',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      114
+    ]
+  },
+  {
+    'anum' => 'A010180',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      115
+    ]
+  },
+  {
+    'anum' => 'A010181',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      116
+    ]
+  },
+  {
+    'anum' => 'A010182',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      117
+    ]
+  },
+  {
+    'anum' => 'A010183',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      118
+    ]
+  },
+  {
+    'anum' => 'A010184',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      119
+    ]
+  },
+  {
+    'anum' => 'A010185',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      124
+    ]
+  },
+  {
+    'anum' => 'A010186',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      125
+    ]
+  },
+  {
+    'anum' => 'A010187',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      126
+    ]
+  },
+  {
+    'anum' => 'A010188',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      127
+    ]
+  },
+  {
+    'anum' => 'A010189',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      128
+    ]
+  },
+  {
+    'anum' => 'A010190',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      129
+    ]
+  },
+  {
+    'anum' => 'A010191',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      131
+    ]
+  },
+  {
+    'anum' => 'A010192',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      133
+    ]
+  },
+  {
+    'anum' => 'A010193',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      134
+    ]
+  },
+  {
+    'anum' => 'A010194',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      135
+    ]
+  },
+  {
+    'anum' => 'A010195',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      136
+    ]
+  },
+  {
+    'anum' => 'A010196',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      137
+    ]
+  },
+  {
+    'anum' => 'A010197',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      138
+    ]
+  },
+  {
+    'anum' => 'A010198',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      139
+    ]
+  },
+  {
+    'anum' => 'A010199',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      140
+    ]
+  },
+  {
+    'anum' => 'A010200',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      141
+    ]
+  },
+  {
+    'anum' => 'A010201',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      142
+    ]
+  },
+  {
+    'anum' => 'A010202',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      149
+    ]
+  },
+  {
+    'anum' => 'A010203',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      151
+    ]
+  },
+  {
+    'anum' => 'A010204',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      153
+    ]
+  },
+  {
+    'anum' => 'A010205',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      154
+    ]
+  },
+  {
+    'anum' => 'A010206',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      157
+    ]
+  },
+  {
+    'anum' => 'A010207',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      158
+    ]
+  },
+  {
+    'anum' => 'A010208',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      159
+    ]
+  },
+  {
+    'anum' => 'A010209',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      160
+    ]
+  },
+  {
+    'anum' => 'A010210',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      161
+    ]
+  },
+  {
+    'anum' => 'A010211',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      162
+    ]
+  },
+  {
+    'anum' => 'A010212',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      163
+    ]
+  },
+  {
+    'anum' => 'A010213',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      165
+    ]
+  },
+  {
+    'anum' => 'A010214',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      166
+    ]
+  },
+  {
+    'anum' => 'A010215',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      167
+    ]
+  },
+  {
+    'anum' => 'A010216',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      172
+    ]
+  },
+  {
+    'anum' => 'A010217',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      173
+    ]
+  },
+  {
+    'anum' => 'A010218',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      174
+    ]
+  },
+  {
+    'anum' => 'A010219',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      175
+    ]
+  },
+  {
+    'anum' => 'A010220',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      176
+    ]
+  },
+  {
+    'anum' => 'A010221',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      177
+    ]
+  },
+  {
+    'anum' => 'A010222',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      178
+    ]
+  },
+  {
+    'anum' => 'A010223',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      179
+    ]
+  },
+  {
+    'anum' => 'A010224',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      181
+    ]
+  },
+  {
+    'anum' => 'A010225',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      183
+    ]
+  },
+  {
+    'anum' => 'A010226',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      184
+    ]
+  },
+  {
+    'anum' => 'A010227',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      185
+    ]
+  },
+  {
+    'anum' => 'A010228',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      186
+    ]
+  },
+  {
+    'anum' => 'A010229',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      187
+    ]
+  },
+  {
+    'anum' => 'A010230',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      188
+    ]
+  },
+  {
+    'anum' => 'A010231',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      189
+    ]
+  },
+  {
+    'anum' => 'A010232',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      190
+    ]
+  },
+  {
+    'anum' => 'A010233',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      191
+    ]
+  },
+  {
+    'anum' => 'A010234',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      192
+    ]
+  },
+  {
+    'anum' => 'A010235',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      193
+    ]
+  },
+  {
+    'anum' => 'A010236',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      194
+    ]
+  },
+  {
+    'anum' => 'A010237',
+    'class' => 'Math::NumSeq::SqrtContinued',
+    'parameters' => [
+      'sqrt',
+      199
+    ]
   },
   {
     'anum' => 'A003285',

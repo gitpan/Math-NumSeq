@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,57 +20,64 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 6;
 
 use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings(); }
 
-use Math::NumSeq::SafePrimes;
+use List::Util 'min','max';
+use Math::NumSeq::SqrtContinued;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
+
+
+my $test_count = (tests => 402)[1];
+plan tests => $test_count;
+
+
 
 #------------------------------------------------------------------------------
 # VERSION
 
 {
   my $want_version = 27;
-  ok ($Math::NumSeq::SafePrimes::VERSION, $want_version,
+  ok ($Math::NumSeq::SqrtContinued::VERSION, $want_version,
       'VERSION variable');
-  ok (Math::NumSeq::SafePrimes->VERSION,  $want_version,
+  ok (Math::NumSeq::SqrtContinued->VERSION,  $want_version,
       'VERSION class method');
 
-  ok (eval { Math::NumSeq::SafePrimes->VERSION($want_version); 1 },
+  ok (eval { Math::NumSeq::SqrtContinued->VERSION($want_version); 1 },
       1,
       "VERSION class check $want_version");
   my $check_version = $want_version + 1000;
-  ok (! eval { Math::NumSeq::SafePrimes->VERSION($check_version); 1 },
+  ok (! eval { Math::NumSeq::SqrtContinued->VERSION($check_version); 1 },
       1,
       "VERSION class check $check_version");
 }
 
 
 #------------------------------------------------------------------------------
-# next()
+# values_min(), values_max()
 
-sub collect {
-  my ($seq, $count) = @_;
-  my @i;
+foreach my $sqrt (2 .. 200) {
+  my $seq = Math::NumSeq::SqrtContinued->new (sqrt => $sqrt);
+  my $values_min = $seq->values_min;
+  my $values_max = $seq->values_max;
+
   my @values;
-  foreach (1 .. ($count||5)) {
-    my ($i, $value) = $seq->next
-      or last;
-    push @i, $i;
+  foreach (1 .. 100) {
+    my ($i,$value) = $seq->next or last;
     push @values, $value;
   }
-  return join(',',@i) . ' -- ' . join(',',@values);
-}
-    
-{
-  my $seq = Math::NumSeq::SafePrimes->new;
-  ok ($seq->oeis_anum, 'A005385');
-  ok (collect($seq), '1,2,3,4,5 -- 5,7,11,23,47');
+  my $saw_values_min = min(@values);
+  my $saw_values_max = max(@values);
+
+  ok ($values_min, $saw_values_min);
+  ok ($values_max, $saw_values_max);
 }
 
+
 exit 0;
+
+

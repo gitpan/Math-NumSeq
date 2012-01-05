@@ -1,4 +1,4 @@
-# Copyright 2010, 2011 Kevin Ryde
+# Copyright 2010, 2011, 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 26;
+$VERSION = 27;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -106,8 +106,7 @@ sub ith {
     }
   }
 
-  my $k = _round_down_pow (int(($i+3)/6), 2);
-  my $pow = 2**$k;
+  my ($pow, $k) = _round_down_pow (int(($i+3)/6), 2);
   my $j = $i - 9*$pow + 3;
 
   ### round down for k: ($i+3)/6
@@ -271,7 +270,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2010, 2011 Kevin Ryde
+Copyright 2010, 2011, 2012 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free
