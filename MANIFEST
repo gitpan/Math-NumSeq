@@ -124,6 +124,7 @@ lib/Math/NumSeq/Perrin.pm
 lib/Math/NumSeq/PolignacObstinate.pm
 lib/Math/NumSeq/Polygonal.pm
 lib/Math/NumSeq/Powerful.pm
+lib/Math/NumSeq/PowerPart.pm
 lib/Math/NumSeq/PrimeFactorCount.pm
 lib/Math/NumSeq/Primes.pm
 lib/Math/NumSeq/Primorials.pm

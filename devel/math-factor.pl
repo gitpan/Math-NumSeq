@@ -28,6 +28,49 @@ use Math::Factor::XS 'factors','matches','prime_factors';
 use Smart::Comments;
 
 {
+  # 1       1      1  +2
+  # 3
+  # 5       5
+  # 7       7      7  +6
+  # 9
+  # 11     11     11  +4
+  # 13     13     13  +2
+  # 15
+  # 17     17     17  +4
+  # 19     19     19  +2
+  # 21
+  # 23     23     23  +4
+  # 25     25
+  # 27
+  # 29     29     29  +6
+  #
+  # 2,6,4,2,
+  # 4,2,4,6
+  #
+  # 11   ^01
+  # 01   ^10
+  # 11   ^10
+  # 10   ^01
+  # 01   ^11
+  # 10   ^11
+  # 01   ^11
+  # 10   ^11
+  #
+  my $prev = -1;
+  my $prev_d = 6;
+  foreach my $i (0 .. 29) {
+    next unless $i % 2;
+    next unless $i % 3;
+    next unless $i % 5;
+    my $d = $i-$prev;
+    printf "%2d  %+d  %+d\n", $i, $d, $d-$prev_d;
+    $prev = $i;
+    $prev_d = $d;
+  }
+  exit 0;
+}
+
+{
   require Devel::TimeThis;
   require Math::NumSeq::PrimeFactorCount;
   my $seq = Math::NumSeq::PrimeFactorCount->new;

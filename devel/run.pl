@@ -133,12 +133,13 @@ $|=1;
   $values_class = 'Math::NumSeq::MathImageSqrtContinued';
   $values_class = 'Math::NumSeq::Powerful';
   $values_class = 'Math::NumSeq::RepdigitRadix';
+  $values_class = 'Math::NumSeq::MathImagePowerPart';
 
   eval "require $values_class; 1" or die $@;
   print Math::NumSeq::DigitLength->VERSION,"\n";
   my $seq = $values_class->new (
                                 # pairs => 'both',
-                                 powerful_type => 'all',
+                                # powerful_type => 'all',
                                 power => 3,
                                 # abundant_type => 'primitive',
                                 # multiples => 1,

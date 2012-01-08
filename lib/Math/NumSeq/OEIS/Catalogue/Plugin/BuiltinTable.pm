@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 27;
+$VERSION = 28;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 594 A-numbers in 80 modules
+# total 597 A-numbers in 81 modules
 
 use constant info_arrayref =>
 [
@@ -2090,6 +2090,26 @@ use constant info_arrayref =>
       290,
       'pairs',
       'average'
+    ]
+  },
+  {
+    'anum' => 'A000188',
+    'class' => 'Math::NumSeq::PowerPart'
+  },
+  {
+    'anum' => 'A053150',
+    'class' => 'Math::NumSeq::PowerPart',
+    'parameters' => [
+      'power',
+      3
+    ]
+  },
+  {
+    'anum' => 'A053164',
+    'class' => 'Math::NumSeq::PowerPart',
+    'parameters' => [
+      'power',
+      4
     ]
   },
   {

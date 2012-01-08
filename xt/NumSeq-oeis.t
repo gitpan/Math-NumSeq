@@ -133,7 +133,7 @@ sub check_class {
   # return unless $class =~ /ReverseAddSteps/;
   # return unless $class =~ /RadixWithout/;
   # return unless $class =~ /Perrin/;
-  # return unless $class =~ /SqrtC/;
+  # return unless $class =~ /SqrtD/;
   # return unless $class =~ /Power/;
   # return unless $class =~ /RepdigitRadix/;
 

@@ -42,7 +42,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 27;
+$VERSION = 28;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -382,6 +382,7 @@ L<Math::NumSeq::Polygonal>,
 L<Math::NumSeq::Tetrahedral>,
 L<Math::NumSeq::StarNumbers>,
 L<Math::NumSeq::Powerful>
+L<Math::NumSeq::PowerPart>
 
 L<Math::NumSeq::Even>,
 L<Math::NumSeq::Odd>,

@@ -25,7 +25,7 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
-my $test_count = (tests => 304)[1];
+my $test_count = (tests => 306)[1];
 plan tests => $test_count;
 
 # uncomment this to run the ### lines
@@ -118,6 +118,17 @@ foreach my $elem
    # MobiusFunction.pm
    # PiBits.pm
    
+   [ 'Math::NumSeq::PowerPart', 1,
+     [ 1,  # 1
+       1,  # 2
+       1,  # 3
+       2,  # 4
+       1,  # 5
+       1,  # 6
+       1,  # 7
+       2,  # 8
+     ]
+   ],
    [ 'Math::NumSeq::SqrtContinued', 1,
      [ 1, 2,2,2,2,2 ]
    ],
