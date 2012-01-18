@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 28;
+$VERSION = 29;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -67,6 +67,11 @@ sub pred {
   ### triangular: ($i+1)*$i/2
 
   return ($int == ($i+1)*$i/2);
+}
+
+sub value_to_i_estimate {
+  my ($self, $value) = @_;
+  return int((sqrt(8*int($value) + 1) - 1)/2);
 }
 
 1;

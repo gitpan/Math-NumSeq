@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 28;
+$VERSION = 29;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -86,6 +86,14 @@ sub _inverse {
   my ($value) = @_;
   return (sqrt(6*$value + 3) + 3)/6;
 }
+
+sub value_to_i_floor {
+  my ($self, $value) = @_;
+  if ($value < 0) { return 0; }
+  return int(_inverse(int($value)));
+}
+*value_to_i_estimate = \&value_to_i_floor;
+
 
 1;
 __END__

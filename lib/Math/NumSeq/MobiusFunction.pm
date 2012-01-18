@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 28;
+$VERSION = 29;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -127,6 +127,7 @@ sub next {
 sub ith {
   my ($self, $i) = @_;
   ### MobiusFunction ith(): $i
+
   if ($i < 0 || $i > 0xFFFF_FFFF) {
     return undef;
   }

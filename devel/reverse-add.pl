@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2011 Kevin Ryde
+# Copyright 2011, 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -19,6 +19,34 @@
 
 use 5.004;
 use strict;
+
+{
+  print ~0,"\n";
+
+  require Math::BigInt;
+  my $x = Math::BigInt->new("54043196132425725");
+  print "$x\n";
+  my $bin = $x->as_bin;
+  $bin =~ s/0b//;
+  print "$bin\n";
+  my $rbin = reverse $bin;
+  print "$rbin\n";
+  my $r = Math::BigInt->from_bin($rbin);
+  print "$r\n";
+  my $add = $x + $r;
+  print "$add\n";
+
+  print "\n";
+
+  require Math::NumSeq::Emirps;
+  $x = 54043196132425725;
+  print "$x\n";
+  $r = Math::NumSeq::Emirps::_reverse_in_radix($x,2);
+  print "$r\n";
+  $add = $x + $r;
+  print "$add\n";
+  exit 0;
+}
 
 {
   require Math::BigInt;

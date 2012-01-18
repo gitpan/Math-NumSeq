@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 28;
+$VERSION = 29;
 
 use Math::NumSeq::Primes;
 @ISA = ('Math::NumSeq::Primes');
@@ -30,9 +30,9 @@ use Math::NumSeq::Primes;
 
 
 # use constant name => Math::NumSeq::__('Twin Primes');
-use constant description => Math::NumSeq::__('The twin primes, 3, 5, 7, 11, 13, being numbers where both K and K+2 are primes.');
+use constant description => Math::NumSeq::__('The twin primes, 3, 5, 7, 11, 13, being integers where both K and K+2 are primes.');
 use constant i_start => 1;
-use constant characteristic_increasing => 2;
+use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
 use constant parameter_info_array =>
   [
@@ -62,6 +62,8 @@ sub values_min {
 #    A040040 - average/2 since the average is always even
 #    A054735 - sum twin primes (OFFSET=1)
 #    A111046 - p^2 - q^2
+#    A167777 - even "isolated" numbers, 2 plus twin primes average
+#    A129297 - m s.t. m^2-1 no no divisors 1<d<m-1, twin average plus 0..3
 #
 my %oeis_anum = (
                  first  => 'A001359',
@@ -73,9 +75,8 @@ my %oeis_anum = (
                  both   => 'A001097', # both, without repetition
                  # OEIS-Catalogue: A001097 pairs=both
 
-                 # but OFFSET=0 and thus a(n) = {A001359(n+1) + A006512(n+1)}/2
-                 # # average => 'A014574', # average
-                 # # # OEIS-Catalogue: A014574 pairs=average
+                 average => 'A014574', # average
+                 # OEIS-Catalogue: A014574 pairs=average
                 );
 sub oeis_anum {
   my ($self) = @_;
@@ -92,7 +93,7 @@ sub rewind {
   ### TwinPrimes rewind() ...
 
   $self->SUPER::rewind;
-  $self->{'twin_i'} = 0;
+  $self->{'twin_i'} = $self->i_start;
   $self->{'twin_both'} = 0;
   (undef, $self->{'twin_prev'}) = $self->SUPER::next;
   ### $self
@@ -111,17 +112,19 @@ sub next {
       my $pairs = $self->{'pairs'};
       $self->{'twin_prev'} = $prime;
       $self->{'twin_both'} = ($pairs eq 'both');
-      return (++$self->{'twin_i'}, $prev + $pairs_add{$pairs})
+      return ($self->{'twin_i'}++, $prev + $pairs_add{$pairs})
 
     } elsif ($self->{'twin_both'}) {
       $self->{'twin_prev'} = $prime;
       $self->{'twin_both'} = 0;
-      return (++$self->{'twin_i'}, $prev);
+      return ($self->{'twin_i'}++, $prev);
     }
     $prev = $prime;
   }
 }
 
+# ENHANCE-ME: all pairs are 6k+/-1
+#
 my %pairs_other = (first => 2,
                    average => 1,
                    second => 0);
@@ -135,6 +138,14 @@ sub pred {
     return ($self->SUPER::pred ($value - $pairs_add{$pairs})
             && $self->SUPER::pred ($value + $pairs_other{$pairs}));
   }
+}
+
+sub can {
+  my ($class, $method) = @_;
+  if ($method eq 'value_to_i_estimate') {
+    return undef;
+  }
+  return $class->SUPER::can($method);
 }
 
 1;

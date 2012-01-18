@@ -22,7 +22,7 @@ use Carp;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 28;
+$VERSION = 29;
 
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
@@ -218,7 +218,7 @@ sub oeis_anum {
 # OEIS-Catalogue: A010524 sqrt=72
 # OEIS-Catalogue: A010525 sqrt=73
 # OEIS-Catalogue: A010526 sqrt=74
-# # OEIS-Catalogue: A010527 sqrt=75   OFFSET=0 ...
+# # OEIS-Catalogue: A010527 sqrt=75   OFFSET=0 for sqrt(3)/2
 # OEIS-Catalogue: A010528 sqrt=76
 # OEIS-Catalogue: A010529 sqrt=77
 # OEIS-Catalogue: A010530 sqrt=78

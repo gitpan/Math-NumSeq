@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 28;
+$VERSION = 29;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -54,6 +54,11 @@ sub pred {
   ### Odd pred(): $value
   return ($value == int($value)
           && ($value % 2));
+}
+
+sub value_to_i_estimate {
+  my ($self, $value) = @_;
+  return int(($value-1)/2);
 }
 
 # sub new {

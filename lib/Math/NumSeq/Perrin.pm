@@ -20,13 +20,14 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 28;
+$VERSION = 29;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
-
+*_is_infinite = \&Math::NumSeq::_is_infinite;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
+
 
 # use constant name => Math::NumSeq::__('Perrin Numbers');
 use constant description => Math::NumSeq::__('Perrin numbers 3, 0, 2, 3, 2, 5, 5, 7, 10, etc, being P(i) = P(i-2) + P(i-3) starting from 3,0,2.');
@@ -98,6 +99,28 @@ sub next {
 
   ### ret: "$ret"
   return ($self->{'i'}++, $ret);
+}
+
+sub value_to_i_estimate {
+  my ($self, $value) = @_;
+
+  if (_is_infinite($value)) {
+    return $value;
+  }
+
+  my $f1 = ($value * 0);  # inherit bignum 0
+  my $f0 = $f1 + 3;       # inherit bignum 3
+  my $f2 = $f1 + 2;       # inherit bignum 2
+
+  my $i = 0;
+  for (;;) {
+    ### at: "i=$i  $f0, $f1, $f2"
+    if ($value <= $f0) {
+      return $i;
+    }
+    ($f0,$f1,$f2) = ($f1,$f2, $f0+$f1);
+    $i++;
+  }
 }
 
 1;

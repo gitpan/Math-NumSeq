@@ -20,10 +20,11 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 28;
+$VERSION = 29;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
+*_is_infinite = \&Math::NumSeq::_is_infinite;
 
 # use constant name => Math::NumSeq::__('Factorials');
 use constant description => Math::NumSeq::__('The factorials 1, 2, 6, 24, 120, etc, 1*2*...*N.');
@@ -35,6 +36,7 @@ use constant oeis_anum => 'A000142'; # factorials 1,1,2,6,24, including 0!==1
 
 # uncomment this to run the ### lines
 #use Devel::Comments;
+
 
 use constant 1.02;  # for leading underscore
 use constant _UV_LIMIT => do {
@@ -83,6 +85,20 @@ sub pred {
       $value /= $i;
     } else {
       return 0;
+    }
+  }
+}
+
+sub value_to_i_estimate {
+  my ($self, $value) = @_;
+  if (_is_infinite($value)) {
+    return $value;
+  }
+  my $i = 2;
+  for (;; $i++) {
+    $value = int($value/$i);
+    if ($value <= 1) {
+      return $i;
     }
   }
 }

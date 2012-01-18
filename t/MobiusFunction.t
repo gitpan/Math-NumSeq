@@ -35,7 +35,7 @@ use Math::NumSeq::MobiusFunction;
 # VERSION
 
 {
-  my $want_version = 28;
+  my $want_version = 29;
   ok ($Math::NumSeq::MobiusFunction::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::MobiusFunction->VERSION,  $want_version,
@@ -97,7 +97,7 @@ use Math::NumSeq::MobiusFunction;
     $seq->rewind;
     my $got = join ',', map {$seq->next} 1..30;
     ok ($got, $want,
-        'PrimeFactorCount 1 to 30 rewind iterator');
+        'MobiusFunction 1 to 30 rewind iterator');
   }
 
   # my %got_hashref;

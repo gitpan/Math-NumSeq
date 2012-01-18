@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 28;
+$VERSION = 29;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
 
@@ -32,7 +32,7 @@ use Math::NumSeq 7; # v.7 for _is_infinite()
 use constant description => Math::NumSeq::__('The Pell numbers 0, 1, 2, 5, 12, 29, 70, etc, being P(k)=2*P(k-1)+P(k-2) starting from 0,1.');
 use constant i_start => 0;
 use constant values_min => 0;
-use constant characteristic_increasing => 2; # strictly
+use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
 use constant oeis_anum => 'A000129'; # pell
 
@@ -72,6 +72,21 @@ sub ith {
     ($f0,$f1) = ($f1, $f0 + 2*$f1);
   }
   return $f0;
+}
+
+# FIXME: smaller than this
+sub value_to_i_estimate {
+  my ($self, $value) = @_;
+  if (_is_infinite($value)) {
+    return $value;
+  }
+  my $i = 1;
+  for (;; $i++) {
+    $value = int($value/2);
+    if ($value <= 1) {
+      return $i;
+    }
+  }
 }
 
 1;

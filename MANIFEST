@@ -130,10 +130,12 @@ lib/Math/NumSeq/Primes.pm
 lib/Math/NumSeq/Primorials.pm
 lib/Math/NumSeq/Pronic.pm
 lib/Math/NumSeq/ProthNumbers.pm
+lib/Math/NumSeq/PythagoreanHypots.pm
 lib/Math/NumSeq/RadixWithoutDigit.pm
 lib/Math/NumSeq/RepdigitAny.pm
 lib/Math/NumSeq/RepdigitRadix.pm
 lib/Math/NumSeq/Repdigits.pm
+lib/Math/NumSeq/ReRound.pm
 lib/Math/NumSeq/ReverseAdd.pm
 lib/Math/NumSeq/ReverseAddSteps.pm
 lib/Math/NumSeq/SophieGermainPrimes.pm
@@ -153,6 +155,7 @@ lib/Math/NumSeq/TotientStepsSum.pm
 lib/Math/NumSeq/Triangular.pm
 lib/Math/NumSeq/Tribonacci.pm
 lib/Math/NumSeq/TwinPrimes.pm
+lib/Math/NumSeq/UlamSequence.pm
 lib/Math/NumSeq/WoodallNumbers.pm
 Makefile.PL
 MANIFEST			This list of files
@@ -165,6 +168,7 @@ t/Cubes.t
 t/DigitProduct.t
 t/DivisorCount.t
 t/Emirps.t
+t/Even.t
 t/Expression.t
 t/Fibbinary.t
 t/FibonacciWord.t
@@ -174,20 +178,24 @@ t/FractionDigits-Catalogue.t
 t/FractionDigits.t
 t/MephistoWaltz.t
 t/MobiusFunction.t
+t/Multiples.t
 t/MyTestHelpers.pm
 t/NumSeq.t
 t/OEIS-File.t
+t/Perrin.t
 t/PolignacObstinate.t
 t/PrimeFactorsCount.t
 t/Primes.t
 t/RepdigitAny.t
 t/RepdigitRadix.t
+t/ReverseAdd.t
 t/SophieGermainPrimes.t
 t/SqrtContinued.t
 t/SqrtDigits.t
 t/SqrtEngel.t
 t/Totient.t
 t/TotientCumulative.t
+t/Tribonacci.t
 t/TwinPrimes.t
 tools/make-oeis-catalogue.pl
 xt/0-examples-xrefs.t

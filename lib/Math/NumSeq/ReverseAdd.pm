@@ -20,16 +20,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 28;
+$VERSION = 29;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
-use Math::NumSeq::Emirps;
-*_reverse_in_radix = \&Math::NumSeq::Emirps::_reverse_in_radix;
-
 # uncomment this to run the ### lines
-#use Devel::Comments;
+#use Smart::Comments;
 
 
 use constant description => Math::NumSeq::__('Reverse-add sequence, reverse the digits and add.');
@@ -39,7 +36,7 @@ use constant characteristic_integer => 1;
 sub characteristic_increasing {
   my ($self) = @_;
   # any non-zero start always increases
-  return ($self->{'start'} ? 1 : 0);
+  return ($self->{'start'} != 0);
 }
 sub values_min {
   my ($self) = @_;
@@ -70,55 +67,53 @@ use constant parameter_info_array =>
 my %oeis_anum;
 
 # cf A058042 written out in binary
-# ~/OEIS/a058042.txt  on reaching binary palindromes
+#    ~/OEIS/a058042.txt  on reaching binary palindromes
 
 $oeis_anum{'2'}->{'1'} = 'A035522';
-# OEIS-Catalogue: A035522 radix=2 start=1
 $oeis_anum{'2'}->{'22'} = 'A061561';
-# OEIS-Catalogue: A061561 radix=2 start=22
 $oeis_anum{'2'}->{'77'} = 'A075253';
-# OEIS-Catalogue: A075253 radix=2 start=77
 $oeis_anum{'2'}->{'442'} = 'A075268';
-# OEIS-Catalogue: A075268 radix=2 start=442
 $oeis_anum{'2'}->{'537'} = 'A077076';
-# OEIS-Catalogue: A077076 radix=2 start=537
 $oeis_anum{'2'}->{'775'} = 'A077077';
+# OEIS-Catalogue: A035522 radix=2 start=1
+# OEIS-Catalogue: A061561 radix=2 start=22
+# OEIS-Catalogue: A075253 radix=2 start=77
+# OEIS-Catalogue: A075268 radix=2 start=442
+# OEIS-Catalogue: A077076 radix=2 start=537
 # OEIS-Catalogue: A077077 radix=2 start=775
 
 $oeis_anum{'3'}->{'1'} = 'A035523';
 # OEIS-Catalogue: A035523 radix=3 start=1
 
 $oeis_anum{'4'}->{'1'} = 'A035524';
-# OEIS-Catalogue: A035524 radix=4 start=1
 $oeis_anum{'4'}->{'290'} = 'A075299';
-# OEIS-Catalogue: A075299 radix=4 start=290
 $oeis_anum{'4'}->{'318'} = 'A075153';
-# OEIS-Catalogue: A075153 radix=4 start=318
 $oeis_anum{'4'}->{'266718'} = 'A075466';
-# OEIS-Catalogue: A075466 radix=4 start=266718
 $oeis_anum{'4'}->{'270798'} = 'A075467';
-# OEIS-Catalogue: A075467 radix=4 start=270798
 $oeis_anum{'4'}->{'1059774'} = 'A076247';
-# OEIS-Catalogue: A076247 radix=4 start=1059774
 $oeis_anum{'4'}->{'1059831'} = 'A076248';
+# OEIS-Catalogue: A035524 radix=4 start=1
+# OEIS-Catalogue: A075299 radix=4 start=290
+# OEIS-Catalogue: A075153 radix=4 start=318
+# OEIS-Catalogue: A075466 radix=4 start=266718
+# OEIS-Catalogue: A075467 radix=4 start=270798
+# OEIS-Catalogue: A076247 radix=4 start=1059774
 # OEIS-Catalogue: A076248 radix=4 start=1059831
 
 $oeis_anum{'10'}->{'1'} = 'A001127';
-# OEIS-Catalogue: A001127 start=1
 $oeis_anum{'10'}->{'3'} = 'A033648';
-# OEIS-Catalogue: A033648 start=3
 $oeis_anum{'10'}->{'5'} = 'A033649';
-# OEIS-Catalogue: A033649 start=5
 $oeis_anum{'10'}->{'7'} = 'A033650';
-# OEIS-Catalogue: A033650 start=7
 $oeis_anum{'10'}->{'9'} = 'A033651';
-# OEIS-Catalogue: A033651 start=9
 $oeis_anum{'10'}->{'89'} = 'A033670';
-# OEIS-Catalogue: A033670 start=89
 $oeis_anum{'10'}->{'196'} = 'A006960';
+# OEIS-Catalogue: A001127 start=1
+# OEIS-Catalogue: A033648 start=3
+# OEIS-Catalogue: A033649 start=5
+# OEIS-Catalogue: A033650 start=7
+# OEIS-Catalogue: A033651 start=9
+# OEIS-Catalogue: A033670 start=89
 # OEIS-Catalogue: A006960 start=196
-
-# $oeis_anum{'10'}->{''} = '';
 
 sub oeis_anum {
   my ($self) = @_;
@@ -131,36 +126,212 @@ sub oeis_anum {
 
   return $oeis_anum{$self->{'radix'}}->{$start};
 }
+
 #------------------------------------------------------------------------------
+
+my $max = do {
+  my $m = 1;
+  foreach (1 .. 256) {
+    my $double = 2*$m;
+    my $next = 2*$m + 1;
+    if ($next <= 2*$m || $next >= 2*$m+2) {
+      last;
+    }
+    # must be able to divide for _reverse_in_radix()
+    if (int($next/2) != $m) {
+      last;
+    }
+    $m = $next;
+  }
+  $m = int($m/2);
+  ### $m
+  ### m hex: sprintf '%X', $m
+  $m
+};
 
 sub rewind {
   my ($self) = @_;
   $self->{'i'} = $self->i_start;
   $self->{'value'} = $self->{'start'};
+  $self->{'uv_limit'} = int ($max / $self->{'radix'});
 }
 sub next {
   my ($self) = @_;
-  ### ReverseAdd next(): $self->{'i'}
-  ### value: "$self->{'value'}"
+  ### ReverseAdd next(): "i=$self->{'i'}  ".(ref $self->{'value'})." $self->{'value'}"
+  ### reverse: _reverse_in_radix($self->{'value'}, $self->{'radix'})
+
   my $ret = $self->{'value'};
-  $self->{'value'} += _reverse_in_radix($self->{'value'}, $self->{'radix'});
-  return ($self->{'i'}++, $ret);
+  if (! ref $ret && $ret >= $self->{'uv_limit'}) {
+    ### go to bigint ...
+    $self->{'value'} = Math::NumSeq::_bigint()->new("$ret");
+  }
+  $self->{'value'} += _reverse_in_radix($ret, $self->{'radix'});
+  return ($self->{'i'}++,
+          $ret);
 }
 
 sub ith {
   my ($self, $i) = @_;
   ### ReverseAdd ith(): $i
-
+  
   if (_is_infinite($i)) {
     return undef;
   }
-
+  
   my $radix = $self->{'radix'};
-  my $value = $self->{'start'};
+  my $start = $self->{'start'} || return 0;  # start 0 gives 0
+  my $value = ($i*0) + $start;  # inherit bignum from $i
+
   while ($i-- > 0) {
     $value += _reverse_in_radix($value, $radix);
   }
   return $value;
+}
+# if ($value >= $self->{'uv_limit'}) {
+#   ### go to bigint ...
+#   $value = Math::NumSeq::_bigint()->new("$value");
+#   while ($i-- > 0) {
+#     $value += _reverse_in_radix($value, $radix);
+#   }
+#   last;
+# }
+
+sub pred {
+  my ($self, $value) = @_;
+  ### ReverseAdd pred(): $value
+
+  my $start = $self->{'start'} || return ($value == 0);  # start 0 gives 0
+  if ($value < $start || _is_infinite($value)) {
+    return 0;
+  }
+
+  {
+    my $int = int($value);
+    if ($value != $int) {
+      return 0;
+    }
+    $value = $int;
+  }
+
+  my $radix = $self->{'radix'};
+  my $k = ($value*0) + $start;
+  while ($k < $self->{'uv_limit'}) {
+    unless ($value > $k) {
+      return ($value == $k);
+    }
+    $k += _reverse_in_radix($k, $radix);
+  }
+
+  ### go to bigint ...
+  for (;;) {
+    unless ($value > $k) {
+      return ($value == $k);
+    }
+    $k += _reverse_in_radix($k, $radix);
+  }
+}
+
+# if ($value >= $self->{'uv_limit'}) {
+#   ### go to bigint ...
+#   $value = Math::NumSeq::_bigint()->new("$value");
+#   while ($i-- > 0) {
+#     $value += _reverse_in_radix($value, $radix);
+#   }
+#   last;
+# }
+
+# FIXME: smaller than this
+sub value_to_i_estimate {
+  my ($self, $value) = @_;
+  if (_is_infinite($value)) {
+    return $value;
+  }
+  my $i = 1;
+  for (;; $i++) {
+    $value = int($value/2);
+    if ($value <= 1) {
+      return $i;
+    }
+  }
+}
+
+my %binary_to_base4 = (# '0b' => '',
+                       '00' => '0',
+                       '01' => '1',
+                       '10' => '2',
+                       '11' => '3');
+sub _bigint_as_base4 {
+  my ($big) = @_;
+  my $str = $big->as_bin;
+  $str =~ s/^0b//;
+  if (length($str) & 1) {
+    $str = "0$str";
+  }
+  $str =~ s/(..)/$binary_to_base4{$1}/ge;
+  return $str;
+}
+my @base4_to_binary = ('00','01','10','11');
+sub _bigint_from_base4 {
+  my ($class, $str) = @_;
+  ### _bigint_from_base4(): $str
+  $str =~ s/(.)/$base4_to_binary[$1]/ge;
+  return $class->from_bin($str);
+}
+
+my @radix_to_stringize_method;
+my @string_to_bigint_method;
+my $bigint = Math::NumSeq::_bigint();
+{
+  if ($bigint->can('as_bin') && $bigint->can('from_bin')) {
+    $radix_to_stringize_method[2] = 'as_bin';
+    $radix_to_stringize_method[4] = \&_bigint_as_base4;
+    $string_to_bigint_method[2] = 'from_bin';
+    $string_to_bigint_method[4] = \&_bigint_from_base4;
+  }
+  if ($bigint->can('as_oct') && $bigint->can('from_oct')) {
+    $radix_to_stringize_method[8] = 'as_oct';
+    $string_to_bigint_method[8] = 'from_oct';
+  }
+  if ($bigint->can('as_hex') && $bigint->can('from_hex')) {
+    $radix_to_stringize_method[16] = 'as_hex';
+    $string_to_bigint_method[16] = 'from_hex';
+  }
+  # if ($bigint->can('bstr') && $bigint->can('as_string')) {
+  #   $radix_to_stringize_method{10} = 'as_oct';
+  #   $string_to_bigint_method{10} = 'new';
+  # }
+}
+### @radix_to_stringize_method
+### @string_to_bigint_method
+
+# return $n reversed in $radix
+sub _reverse_in_radix {
+  my ($n, $radix) = @_;
+
+  if ($radix == 10) {
+    return scalar(reverse("$n"));
+  }
+  if (ref $n
+      && $n->isa('Math::BigInt')
+      && (my $method = $radix_to_stringize_method[$radix])) {
+    my $from = $string_to_bigint_method[$radix];
+    my $str = $n->$method();
+    $str =~ s/^0[bx]?//;
+    ### $str
+    ### $from
+    ### result: $bigint->$from(scalar(reverse($str))).''
+    return $bigint->$from(scalar(reverse($str)));
+  }
+
+  # ### _reverse_in_radix(): sprintf '%#X %d', $n, $n
+
+  my $ret = $n*0;   # inherit bignum 0
+  do {
+    $ret = $ret * $radix + ($n % $radix);
+  } while ($n = int($n/$radix));
+
+  # ### ret: sprintf '%#X %d', $ret, $ret
+  return $ret;
 }
 
 1;

@@ -17,6 +17,15 @@ with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 29, January 2012
+    - new ReRound, PythagoreanHypots, UlamSequence
+    - new value_to_i_floor(), value_to_i_estimate() in some classes
+    - CullenNumbers, WoodallNumbers, ReverseAdd next() give BigInt
+      when necessary
+    - ReverseAdd new pred()
+    - LucasNumbers next() fix for BigInt
+    - PrimeFactorCount new prime_type all,odd,4k+1,4k+3
+
 Version 28, January 2012
     - new PowerPart
 

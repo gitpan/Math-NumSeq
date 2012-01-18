@@ -37,8 +37,8 @@ MyMakeMakerExtras::WriteMakefile
                     'Math::Libm' => 0,
                     'Math::Prime::XS' => '0.23', # version 0.23 for fix 1928099
 
-                    # version 0.37 for something related to factors()
-                    'Math::Factor::XS' => '0.37',
+                    # version 0.39 for prime_factors()
+                    'Math::Factor::XS' => '0.39',
 
                     'Module::Util' => 0,
                     'Module::Load' => 0,

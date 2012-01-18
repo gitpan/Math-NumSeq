@@ -41,7 +41,7 @@ plan tests => $test_count;
 # VERSION
 
 {
-  my $want_version = 28;
+  my $want_version = 29;
   ok ($Math::NumSeq::SqrtContinued::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::SqrtContinued->VERSION,  $want_version,

@@ -20,16 +20,14 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 28;
+$VERSION = 29;
 
 use Math::NumSeq;
-use Math::NumSeq::Base::IterateIth;
-@ISA = ('Math::NumSeq::Base::IterateIth',
-        'Math::NumSeq');
+@ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
 # uncomment this to run the ### lines
-#use Devel::Comments;
+#use Smart::Comments;
 
 
 # use constant name => Math::NumSeq::__('Cullen Numbers');
@@ -39,6 +37,51 @@ use constant values_min => 1;
 use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
 use constant oeis_anum => 'A002064';
+
+# pow*i+1
+my $uv_i_limit = do {
+  my $max = ~0;
+  my $limit = 1;
+
+  for (my $i = 1; $i < 1000; $i++) {
+    if ($i <= ($max-1) >> $i) {
+      $limit = $i;
+    } else {
+      last;
+    }
+  }
+
+  ### max   : $max
+  ### cullen: (1<<$limit)*$limit+1
+  ### assert: $limit*(1<<$limit)+1 <= $max
+
+  $limit
+};
+### $uv_i_limit
+
+# or maybe ...
+# (i+1)*2^(i+1) + 1
+#   = 2*(i+1)*2^i + 1
+#   = (2i+2)*2^i + 1
+#   = 2i*2^i + 2*2^i + 1
+#   = 2(i*2^i + 1) -2 + 2*2^i + 1
+#   = 2(i*2^i + 1) + 2*2^i - 1
+
+sub rewind {
+  my ($self) = @_;
+  my $i = $self->{'i'} = $self->i_start;
+  $self->{'pow'} = 2 ** $i;
+}
+sub next {
+  my ($self) = @_;
+  my $i = $self->{'i'}++;
+  if ($i == $uv_i_limit) {
+    $self->{'pow'} = Math::NumSeq::_bigint()->new($self->{'pow'});
+  }
+  my $value = $self->{'pow'}*$i + 1;
+  $self->{'pow'} *= 2;
+  return ($i, $value);
+}
 
 sub ith {
   my ($self, $i) = @_;
@@ -54,19 +97,44 @@ sub pred {
     $value = $int;
   }
   unless ($value >= 1
-          && ($value & 1)
-          && ! _is_infinite($value)) {
+          && ($value % 2) == 1) {
+    return 0;
+  }
+
+  $value -= 1;  # now seeking $value == $exp * 2**$exp
+
+  if (_is_infinite($value)) {
     return 0;
   }
 
   my $exp = 0;
-  $value -= 1;  # now seeking $value == $exp * 2**$exp
   for (;;) {
-    if ($value <= $exp || $value & 1) {
+    if ($value <= $exp || $value % 2) {
       return ($value == $exp);
     }
-    $value >>= 1;
+    $value = int($value/2);
     $exp++;
+  }
+}
+
+sub value_to_i_estimate {
+  my ($self, $value) = @_;
+
+  if ($value < 1) {
+    return 0;
+  }
+  $value -= 1;  # now seeking $value == $i * 2**$i
+
+  if (_is_infinite($value)) {
+    return $value;
+  }
+  my $i = 0;
+  for (;;) {
+    if ($value <= $i || $value % 2) {
+      return $i;
+    }
+    $value = int($value/2);
+    $i++;
   }
 }
 

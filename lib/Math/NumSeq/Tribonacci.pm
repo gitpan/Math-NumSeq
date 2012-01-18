@@ -20,9 +20,10 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 28;
+$VERSION = 29;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
+*_is_infinite = \&Math::NumSeq::_is_infinite;
 
 
 # uncomment this to run the ### lines
@@ -56,6 +57,26 @@ sub next {
       $self->{'f2'},
       $self->{'f0'}+$self->{'f1'}+$self->{'f2'});
   return ($self->{'i'}++, $ret);
+}
+
+sub value_to_i_estimate {
+  my ($self, $value) = @_;
+
+  if (_is_infinite($value)) {
+    return $value;
+  }
+
+  my $f0 = my $f1 = ($value * 0);  # inherit bignum 0
+  my $f2 = $f0 + 1;                # inherit bignum 1
+
+  my $i = 0;
+  for (;;) {
+    if ($value <= $f0) {
+      return $i;
+    }
+    ($f0,$f1,$f2) = ($f1,$f2, $f0+$f1+$f2);
+    $i++;
+  }
 }
 
 1;

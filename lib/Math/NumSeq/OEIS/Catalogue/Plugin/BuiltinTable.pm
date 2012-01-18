@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 28;
+$VERSION = 29;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 597 A-numbers in 81 modules
+# total 624 A-numbers in 84 modules
 
 use constant info_arrayref =>
 [
@@ -2189,11 +2189,61 @@ use constant info_arrayref =>
     ]
   },
   {
-    'anum' => 'A001222',
+    'anum' => 'A005087',
     'class' => 'Math::NumSeq::PrimeFactorCount',
     'parameters' => [
       'multiplicity',
-      'repeated'
+      'distinct',
+      'prime_type',
+      'odd'
+    ]
+  },
+  {
+    'anum' => 'A005089',
+    'class' => 'Math::NumSeq::PrimeFactorCount',
+    'parameters' => [
+      'multiplicity',
+      'distinct',
+      'prime_type',
+      '4k+1'
+    ]
+  },
+  {
+    'anum' => 'A005091',
+    'class' => 'Math::NumSeq::PrimeFactorCount',
+    'parameters' => [
+      'multiplicity',
+      'distinct',
+      'prime_type',
+      '4k+3'
+    ]
+  },
+  {
+    'anum' => 'A001222',
+    'class' => 'Math::NumSeq::PrimeFactorCount'
+  },
+  {
+    'anum' => 'A087436',
+    'class' => 'Math::NumSeq::PrimeFactorCount',
+    'parameters' => [
+      'prime_type',
+      'odd'
+    ]
+  },
+  {
+    'anum' => 'A083025',
+    'class' => 'Math::NumSeq::PrimeFactorCount',
+    'parameters' => [
+      'prime_type',
+      '4k+1'
+    ]
+  },
+  {
+    'anum' => 'A065339',
+    'class' => 'Math::NumSeq::PrimeFactorCount',
+    'parameters' => [
+      'prime_type',
+      '4k+3'
     ]
   },
   {
@@ -2211,6 +2261,18 @@ use constant info_arrayref =>
   {
     'anum' => 'A080075',
     'class' => 'Math::NumSeq::ProthNumbers'
+  },
+  {
+    'anum' => 'A009003',
+    'class' => 'Math::NumSeq::PythagoreanHypots'
+  },
+  {
+    'anum' => 'A008846',
+    'class' => 'Math::NumSeq::PythagoreanHypots',
+    'parameters' => [
+      'pythagorean_type',
+      'primitive'
+    ]
   },
   {
     'anum' => 'A032924',
@@ -2440,6 +2502,90 @@ use constant info_arrayref =>
       10,
       'digit',
       9
+    ]
+  },
+  {
+    'anum' => 'A002491',
+    'class' => 'Math::NumSeq::ReRound'
+  },
+  {
+    'anum' => 'A000960',
+    'class' => 'Math::NumSeq::ReRound',
+    'parameters' => [
+      'extra_multiples',
+      1
+    ]
+  },
+  {
+    'anum' => 'A112557',
+    'class' => 'Math::NumSeq::ReRound',
+    'parameters' => [
+      'extra_multiples',
+      2
+    ]
+  },
+  {
+    'anum' => 'A112558',
+    'class' => 'Math::NumSeq::ReRound',
+    'parameters' => [
+      'extra_multiples',
+      3
+    ]
+  },
+  {
+    'anum' => 'A113742',
+    'class' => 'Math::NumSeq::ReRound',
+    'parameters' => [
+      'extra_multiples',
+      4
+    ]
+  },
+  {
+    'anum' => 'A113743',
+    'class' => 'Math::NumSeq::ReRound',
+    'parameters' => [
+      'extra_multiples',
+      5
+    ]
+  },
+  {
+    'anum' => 'A113744',
+    'class' => 'Math::NumSeq::ReRound',
+    'parameters' => [
+      'extra_multiples',
+      6
+    ]
+  },
+  {
+    'anum' => 'A113745',
+    'class' => 'Math::NumSeq::ReRound',
+    'parameters' => [
+      'extra_multiples',
+      7
+    ]
+  },
+  {
+    'anum' => 'A113746',
+    'class' => 'Math::NumSeq::ReRound',
+    'parameters' => [
+      'extra_multiples',
+      8
+    ]
+  },
+  {
+    'anum' => 'A113747',
+    'class' => 'Math::NumSeq::ReRound',
+    'parameters' => [
+      'extra_multiples',
+      9
+    ]
+  },
+  {
+    'anum' => 'A113748',
+    'class' => 'Math::NumSeq::ReRound',
+    'parameters' => [
+      'extra_multiples',
+      10
     ]
   },
   {
@@ -4880,6 +5026,70 @@ use constant info_arrayref =>
     'parameters' => [
       'pairs',
       'both'
+    ]
+  },
+  {
+    'anum' => 'A014574',
+    'class' => 'Math::NumSeq::TwinPrimes',
+    'parameters' => [
+      'pairs',
+      'average'
+    ]
+  },
+  {
+    'anum' => 'A002858',
+    'class' => 'Math::NumSeq::UlamSequence',
+    'parameters' => [
+      'start_values',
+      '1,2'
+    ]
+  },
+  {
+    'anum' => 'A002859',
+    'class' => 'Math::NumSeq::UlamSequence',
+    'parameters' => [
+      'start_values',
+      '1,3'
+    ]
+  },
+  {
+    'anum' => 'A003666',
+    'class' => 'Math::NumSeq::UlamSequence',
+    'parameters' => [
+      'start_values',
+      '1,4'
+    ]
+  },
+  {
+    'anum' => 'A003667',
+    'class' => 'Math::NumSeq::UlamSequence',
+    'parameters' => [
+      'start_values',
+      '1,5'
+    ]
+  },
+  {
+    'anum' => 'A001857',
+    'class' => 'Math::NumSeq::UlamSequence',
+    'parameters' => [
+      'start_values',
+      '2,3'
+    ]
+  },
+  {
+    'anum' => 'A048951',
+    'class' => 'Math::NumSeq::UlamSequence',
+    'parameters' => [
+      'start_values',
+      '2,4'
+    ]
+  },
+  {
+    'anum' => 'A007300',
+    'class' => 'Math::NumSeq::UlamSequence',
+    'parameters' => [
+      'start_values',
+      '2,5'
     ]
   },
   {

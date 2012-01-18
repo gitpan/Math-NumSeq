@@ -35,7 +35,7 @@ use Math::NumSeq::OEIS::File;
 # VERSION
 
 {
-  my $want_version = 28;
+  my $want_version = 29;
   ok ($Math::NumSeq::OEIS::File::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::OEIS::File->VERSION, $want_version,

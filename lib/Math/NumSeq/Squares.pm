@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 28;
+$VERSION = 29;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -64,6 +64,13 @@ sub ith {
   my ($self, $i) = @_;
   return $i*$i;
 }
+
+sub value_to_i_floor {
+  my ($self, $value) = @_;
+  if ($value < 0) { $value = 0; }
+  return int(sqrt(int($value)));
+}
+*value_to_i_estimate = \&value_to_i_floor;
 
 1;
 __END__

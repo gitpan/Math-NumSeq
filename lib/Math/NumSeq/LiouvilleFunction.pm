@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 28;
+$VERSION = 29;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -57,6 +57,7 @@ sub rewind {
   my ($self) = @_;
   $self->{'i'} = 1;
   $self->{'multiplicity'} = 'repeated'; # for PrimeFactorCount ith()
+  $self->{'prime_type'} = 'all';        # for PrimeFactorCount ith()
   _restart_sieve ($self, 500);
 }
 sub _restart_sieve {

@@ -21,7 +21,7 @@ use strict;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 28;
+$VERSION = 29;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
 
@@ -35,7 +35,7 @@ use Math::NumSeq;
 use constant description => Math::NumSeq::__('Lucas numbers 1, 3, 4, 7, 11, 18, 29, etc, being L(i) = L(i-1) + L(i-2) starting from 1,3.  This is the same recurrence as the Fibonacci numbers, but a different starting point.');
 
 use constant values_min => 1;
-use constant characteristic_increasing => 2;
+use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
 use constant oeis_anum => 'A000204'; # lucas starting at 1,3,...
 use constant i_start => 1;
@@ -94,7 +94,8 @@ sub next {
   ### $ret
 
   if ($ret == $uv_limit) {
-    $self->{'f1'} = _bigint()->new("$self->{'f1'}");
+    $self->{'f0'} = Math::NumSeq::_bigint()->new("$self->{'f0'}");
+    $self->{'f1'} = Math::NumSeq::_bigint()->new("$self->{'f1'}");
   }
 
   return ($self->{'i'}++, $ret);
@@ -119,6 +120,21 @@ sub ith {
     $f1 += $f0;
   }
   return $f1;
+}
+
+# FIXME: smaller than this
+sub value_to_i_estimate {
+  my ($self, $value) = @_;
+  if (_is_infinite($value)) {
+    return $value;
+  }
+  my $i = 1;
+  for (;; $i++) {
+    $value = int($value/2);
+    if ($value <= 1) {
+      return $i;
+    }
+  }
 }
 
 1;

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 28;
+$VERSION = 29;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -364,6 +364,11 @@ sub pred {
   ### $i
 
   return ($value == $i * (($k-2)*$i + $self->{'add'}) / 2);
+}
+
+sub value_to_i_estimate {
+  my ($self, $value) = @_;
+  return int(sqrt($value));
 }
 
 1;

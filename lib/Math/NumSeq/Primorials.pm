@@ -21,7 +21,7 @@ use strict;
 use Math::Prime::XS;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 28;
+$VERSION = 29;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -119,6 +119,23 @@ sub pred {
     } else {
       return 0;  # not divisible by this prime
     }
+    until (Math::Prime::XS::is_prime(++$prime)) {}
+  }
+}
+
+sub value_to_i_estimate {
+  my ($self, $value) = @_;
+  if (_is_infinite($value)) {
+    return $value;
+  }
+  my $i = 1;
+  my $prime = 2;
+  for (;;) {
+    $value = int($value/$prime);
+    if ($value <= 1) {
+      return $i;
+    }
+    $i++;
     until (Math::Prime::XS::is_prime(++$prime)) {}
   }
 }

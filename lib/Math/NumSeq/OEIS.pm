@@ -21,7 +21,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION','@ISA';
-$VERSION = 28;
+$VERSION = 29;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');

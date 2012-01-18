@@ -21,10 +21,11 @@ use strict;
 use List::Util 'min', 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 28;
+$VERSION = 29;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
+use Math::Factor::XS 'prime_factors';
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -34,31 +35,57 @@ use Math::NumSeq;
 # cf. Untouchables, not sum of proper divisors of any other integer
 # p*q sum S=1+p+q
 # so sums up to hi need factorize to (hi^2)/4
-# 
+#
 
 use constant description => Math::NumSeq::__('Count of prime factors.');
-use constant characteristic_count => 1;
 use constant characteristic_increasing => 0;
+use constant characteristic_count => 1;
+use constant characteristic_integer => 1;
 use constant values_min => 0;
 use constant i_start => 1;
 
 use constant parameter_info_array =>
-  [ { name    => 'multiplicity',
-      display => Math::NumSeq::__('Multiplicity'),
-      type    => 'enum',
-      choices => ['repeated','distinct'],
-      default => 'repeated',
-      # description => Math::NumSeq::__(''),
-    },
+  [
+   { name    => 'prime_type',
+     display => Math::NumSeq::__('Prime Type'),
+     type    => 'enum',
+     choices => ['all','odd','4k+1','4k+3'],
+     default => 'all',
+     # description => Math::NumSeq::__(''),
+   },
+   { name    => 'multiplicity',
+     display => Math::NumSeq::__('Multiplicity'),
+     type    => 'enum',
+     choices => ['repeated','distinct'],
+     default => 'repeated',
+     # description => Math::NumSeq::__(''),
+   },
   ];
 
-my %oeis_anum = (distinct => 'A001221',
-                 repeated => 'A001222');
+# A156542 count S-G
+my %oeis_anum = (distinct => { all    => 'A001221',
+                               odd    => 'A005087',
+                               '4k+1' => 'A005089',
+                               '4k+3' => 'A005091',
+                             },
+                 repeated => { all    => 'A001222',
+                               odd    => 'A087436',
+                               '4k+1' => 'A083025',
+                               '4k+3' => 'A065339',
+                             },
+                );
 # OEIS-Catalogue: A001221 multiplicity=distinct
-# OEIS-Catalogue: A001222 multiplicity=repeated
+# OEIS-Catalogue: A005087 multiplicity=distinct prime_type=odd
+# OEIS-Catalogue: A005089 multiplicity=distinct prime_type=4k+1
+# OEIS-Catalogue: A005091 multiplicity=distinct prime_type=4k+3
+# OEIS-Catalogue: A001222
+# OEIS-Catalogue: A087436 prime_type=odd
+# OEIS-Catalogue: A083025 prime_type=4k+1
+# OEIS-Catalogue: A065339 prime_type=4k+3
+
 sub oeis_anum {
   my ($self) = @_;
-  return $oeis_anum{$self->{'multiplicity'}};
+  return $oeis_anum{$self->{'multiplicity'}}->{$self->{'prime_type'}};
 }
 
 
@@ -67,11 +94,6 @@ sub rewind {
   ### PrimeFactorCount rewind()
   $self->{'i'} = 1;
   _restart_sieve ($self, 500);
-
-  # while ($self->{'i'} < $self->{'lo'}-1) {
-  #   ### rewind advance
-  #   $self->next;
-  # }
 }
 sub _restart_sieve {
   my ($self, $hi) = @_;
@@ -80,6 +102,8 @@ sub _restart_sieve {
   $self->{'string'} = "\0" x ($self->{'hi'}+1);
 }
 
+# ENHANCE-ME: maybe _primes_list() applied to block array
+#
 sub next {
   my ($self) = @_;
   ### PrimeFactorCount next() ...
@@ -92,26 +116,46 @@ sub next {
     $start = 2;
   }
 
+  my $prime_type = $self->{'prime_type'};
   my $cref = \$self->{'string'};
   ### $i
   my $ret;
   foreach my $i ($start .. $i) {
     $ret = vec ($$cref, $i,8);
-    if ($ret == 0 && $i >= 2) {
-      $ret++;
-      # a prime
-      for (my $power = 1; ; $power++) {
-        my $step = $i ** $power;
-        last if ($step > $hi);
-        for (my $j = $step; $j <= $hi; $j += $step) {
-          vec($$cref, $j,8) = min (255, vec($$cref,$j,8)+1);
+    ### at: "i=$i ret=$ret"
+
+    if ($ret == 255) {
+      ### composite with no matching factors: $i
+      $ret = 0;
+
+    } elsif ($ret == 0 && $i >= 2) {
+      ### prime: $i
+      if ($prime_type eq 'all'
+          || ($prime_type eq 'odd' && ($i&1))
+          || ($prime_type eq '4k+1' && ($i&3)==1)
+          || ($prime_type eq '4k+3' && ($i&3)==3)) {
+        ### increment ...
+        $ret++;
+        for (my $step = $i; $step <= $hi; $step *= $i) {
+          for (my $j = $step; $j <= $hi; $j += $step) {
+            my $c = vec($$cref,$j,8);
+            if ($c == 255) { $c = 0; }
+            vec($$cref, $j,8) = min (255, $c+1);
+          }
+          last if $self->{'multiplicity'} eq 'distinct';
         }
-        last if $self->{'multiplicity'} eq 'distinct';
+        # print "applied: $i\n";
+        # for (my $j = 0; $j < $hi; $j++) {
+        #   printf "  %2d %2d\n", $j, vec($$cref, $j,8));
+        # }
+      } else {
+        ### flag composites ...
+        for (my $j = 2*$i; $j <= $hi; $j += $i) {
+          unless (vec($$cref, $j,8)) {
+            vec($$cref, $j,8) = 255;
+          }
+        }
       }
-      # print "applied: $i\n";
-      # for (my $j = 0; $j < $hi; $j++) {
-      #   printf "  %2d %2d\n", $j, vec($$cref, $j,8));
-      # }
     }
   }
   ### ret: "$i, $ret"
@@ -120,83 +164,123 @@ sub next {
 
 # prime_factors() ends up about 5x faster
 #
-if (eval 'use Math::Factor::XS q(prime_factors); 1') {
-  ### use prime_factors() ...
-  eval "#line ".(__LINE__+1)." \"".__FILE__."\"\n" . <<'HERE';
-
 sub ith {
   my ($self, $i) = @_;
   $i = abs($i);
   unless ($i >= 0 && $i <= 0xFFFF_FFFF) {
     return undef;
   }
+
   my @primes = prime_factors($i);
+
   if ($self->{'multiplicity'} eq 'distinct') {
+    # cf List::MoreUtils uniq() perhaps
     my $prev = 0;
-    @primes = grep {$_ == $prev ? () : ($prev=$_)} @primes;
+    @primes = grep {$_ == $prev ? 0 : ($prev=$_)} @primes;
   }
+
+  if ($self->{'prime_type'} eq 'odd') {
+    @primes = grep {$_&1} @primes;
+    ### grep to odd: @primes
+  } elsif ($self->{'prime_type'} eq '4k+1') {
+    @primes = grep {($_&3)==1} @primes;
+  } elsif ($self->{'prime_type'} eq '4k+3') {
+    @primes = grep {($_&3)==3} @primes;
+  }
+
   return scalar(@primes);
 }
 
-HERE
-} else {
-  ### $@
-  ### use plain perl ...
-  eval "#line ".(__LINE__+1)." \"".__FILE__."\"\n" . <<'HERE';
 
-sub ith {
-  my ($self, $i) = @_;
-  ### PrimeFactorCount ith(): $i
-
-  $i = abs($i);
-  unless ($i >= 0 && $i <= 0xFFFF_FFFF) {
-    return undef;
-  }
-  my $count = 0;
-
-  if (($i % 2) == 0) {
-    $i /= 2;
-    $count++;
-    while (($i % 2) == 0) {
-      $i /= 2;
-      if ($self->{'multiplicity'} ne 'distinct') {
-        $count++;
-      }
-    }
-  }
-
-  my $limit = int(sqrt($i));
-  my $p = 3;
-  while ($p <= $limit) {
-    if (($i % $p) == 0) {
-      $i /= $p;
-      $count++;
-      while (($i % $p) == 0) {
-        $i /= $p;
-        if ($self->{'multiplicity'} ne 'distinct') {
-          $count++;
-        }
-      }
-      $limit = int(sqrt($i));  # new smaller limit
-    }
-    $p += 2;
-  }
-  if ($i != 1) {
-    $count++;
-  }
-  return $count;
-
-  #   if ($self->{'i'} <= $i) {
-  #     ### extend from: $self->{'i'}
-  #     my $upto;
-  #     while ((($upto) = $self->next)
-  #            && $upto < $i) { }
-  #   }
-  #   return vec($self->{'string'}, $i,8);
-}
-
-HERE
-}
+# if (0 && eval '; 1') {
+#   ### use prime_factors() ...
+#   eval "#line ".(__LINE__+1)." \"".__FILE__."\"\n" . <<'HERE' or die;
+# 
+# 1;
+# 
+# HERE
+# } else {
+#   ### $@
+#   ### use plain perl ...
+#   eval "#line ".(__LINE__+1)." \"".__FILE__."\"\n" . <<'HERE' or die;
+# 
+# sub ith {
+#   my ($self, $i) = @_;
+#   ### PrimeFactorCount ith(): $i
+# 
+#   $i = abs($i);
+#   unless ($i >= 0 && $i <= 0xFFFF_FFFF) {
+#     return undef;
+#   }
+# 
+#   my $prime_type = $self->{'prime_type'};
+#   my $count = 0;
+# 
+#   if (($i % 2) == 0) {
+#     $i /= 2;
+#     if ($self->{'prime_type'} eq 'all') {
+#       $count++;
+#     }
+#     while (($i % 2) == 0) {
+#       $i /= 2;
+#       if ($prime_type eq 'all'
+#           && $self->{'multiplicity'} ne 'distinct') {
+#         $count++;
+#       }
+#     }
+#   }
+# 
+#   my $limit = int(sqrt($i));
+#   for (my $p = 3; $p <= $limit; $p += 2) {
+#     next if ($i % $p);
+# 
+#     $i /= $p;
+#     if ($prime_type eq 'all'
+#        || ($prime_type eq 'odd' && ($p&1))
+#        || ($prime_type eq '4k+1' && ($p&3)==1)
+#        || ($prime_type eq '4k+3' && ($p&3)==3)
+#        ) {
+#       $count++;
+#     }
+# 
+#     until ($i % $p) {
+#       $i /= $p;
+#       if ($self->{'multiplicity'} ne 'distinct') {
+#         if ($prime_type eq 'all'
+#            || ($prime_type eq 'odd' && ($p&1))
+#            || ($prime_type eq '4k+1' && ($p&3)==1)
+#            || ($prime_type eq '4k+3' && ($p&3)==3)
+#           ) {
+#           $count++;
+#         }
+#       }
+#     }
+#     $limit = int(sqrt($i));  # new smaller limit
+#   }
+# 
+#   if ($i != 1) {
+#     if ($prime_type eq 'all'
+#        || ($prime_type eq 'odd' && ($i&1))
+#        || ($prime_type eq '4k+1' && ($i&3)==1)
+#        || ($prime_type eq '4k+3' && ($i&3)==3)
+#        ) {
+#       $count++;
+#     }
+#   }
+# 
+#   return $count;
+# 
+#   #   if ($self->{'i'} <= $i) {
+#   #     ### extend from: $self->{'i'}
+#   #     my $upto;
+#   #     while ((($upto) = $self->next)
+#   #            && $upto < $i) { }
+#   #   }
+#   #   return vec($self->{'string'}, $i,8);
+# }
+# 1;
+# HERE
+# }
 
 sub pred {
   my ($self, $value) = @_;

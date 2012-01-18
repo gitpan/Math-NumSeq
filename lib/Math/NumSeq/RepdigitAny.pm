@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 28;
+$VERSION = 29;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -32,7 +32,7 @@ use Math::NumSeq 7; # v.7 for _is_infinite()
 use constant description => Math::NumSeq::__('Numbers which are a "repdigit" like 1111, 222, 999 etc of 3 or more digits in some number base.');
 use constant i_start => 1;
 use constant values_min => 0;
-use constant characteristic_increasing => 2;
+use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
 
 # cf A167783 - length >=2, 2 or more bases

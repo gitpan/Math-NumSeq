@@ -20,10 +20,12 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 28;
+$VERSION = 29;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
+
+use Math::Factor::XS 'prime_factors';
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -127,12 +129,10 @@ sub next {
   return ($target, $ret||1);
 }
 
-if (0) { # ... eval 'use Math::Factor::XS q(prime_factors); 1') {
-  ### use prime_factors() ...
-  eval "#line ".(__LINE__+1)." \"".__FILE__."\"\n" . <<'HERE';
-
 sub ith {
   my ($self, $i) = @_;
+  ### PowerPart ith(): $i
+
   $i = abs($i);
   my $power = $self->{'power'};
   if ($power < 2) {
@@ -145,76 +145,84 @@ sub ith {
   my $count = 0;
   my $ret = 1;
   foreach my $p (prime_factors($i)) {
+    ### $p
     if ($p == $prev) {
+      ### same ...
+      ### $count
       if (++$count >= $power) {
+        ### incorporate ...
         $ret *= $p;
         $count -= $power;
       }
     } else {
-      $count = 0;
+      ### different ...
+      $count = 1;
       $prev = $p;
     }
   }
   return $ret;
 }
 
-HERE
-} else {
-  ### $@
-  ### use plain perl ...
-  eval "#line ".(__LINE__+1)." \"".__FILE__."\"\n" . <<'HERE';
-
-sub ith {
-  my ($self, $i) = @_;
-  ### PowerPart ith(): $i
-  $i = abs($i);
-  my $power = $self->{'power'};
-  if ($power < 2) {
-    return $i;
-  }
-  if ($i > 0xFFFF_FFFF) {
-    return undef;
-  }
-  if (_is_infinite($i)) { # nan
-    return $i;
-  }
-  if (abs($i) < 4) {
-    return 1;
-  }
-
-  my $ret = 1;
-
-  {
-    my $pow = 2 ** $power;
-    while (($i % $pow) == 0) {
-      ### $pow
-      $i /= $pow;
-      $ret *= 2;
-    }
-    while (($i % 2) == 0) {
-      $i /= 2;
-    }
-  }
-
-  for (my $p = 3; ; $p += 2) {
-    my $pow = $p ** $power;
-    last if $pow > abs($i);
-    while (($i % $pow) == 0) {
-      ### $pow
-      $i /= $pow;
-      $ret *= $p;
-    }
-    while (($i % $p) == 0) {
-      $i /= $p;
-    }
-  }
-
-  ### $ret
-  return $ret;
-}
-
-HERE
-}
+# if (0) { # ... eval '; 1') {
+#   ### use prime_factors() ...
+#   eval "#line ".(__LINE__+1)." \"".__FILE__."\"\n" . <<'HERE';
+# HERE
+# } else {
+#   ### $@
+#   ### use plain perl ...
+#   eval "#line ".(__LINE__+1)." \"".__FILE__."\"\n" . <<'HERE';
+# 
+# sub ith {
+#   my ($self, $i) = @_;
+#   ### PowerPart ith(): $i
+#   $i = abs($i);
+#   my $power = $self->{'power'};
+#   if ($power < 2) {
+#     return $i;
+#   }
+#   if ($i > 0xFFFF_FFFF) {
+#     return undef;
+#   }
+#   if (_is_infinite($i)) { # nan
+#     return $i;
+#   }
+#   if (abs($i) < 4) {
+#     return 1;
+#   }
+# 
+#   my $ret = 1;
+# 
+#   {
+#     my $pow = 2 ** $power;
+#     while (($i % $pow) == 0) {
+#       ### $pow
+#       $i /= $pow;
+#       $ret *= 2;
+#     }
+#     while (($i % 2) == 0) {
+#       $i /= 2;
+#     }
+#   }
+# 
+#   for (my $p = 3; ; $p += 2) {
+#     my $pow = $p ** $power;
+#     last if $pow > abs($i);
+#     while (($i % $pow) == 0) {
+#       ### $pow
+#       $i /= $pow;
+#       $ret *= $p;
+#     }
+#     while (($i % $p) == 0) {
+#       $i /= $p;
+#     }
+#   }
+# 
+#   ### $ret
+#   return $ret;
+# }
+# 
+# HERE
+# }
 
 sub pred {
   my ($self, $value) = @_;

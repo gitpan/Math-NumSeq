@@ -42,7 +42,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 28;
+$VERSION = 29;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -222,20 +222,20 @@ Math::NumSeq -- number sequences
 =head1 DESCRIPTION
 
 This is a base class for number sequences.  Sequence objects can iterate
-through values, and some sequences have random access and predicate.  It's a
-touch rough yet.
+through values, and some sequences have random access and predicate.
 
 The idea is to generate things like squares or primes in a generic way.
 Some sequences, like squares, are so easy there's no need for this except
 for the genericness.  Other sequences are trickier and an iterator is a good
 way to go through the values.
 
+The intention is that all modules C<Math::NumSeq::Foo> are sequence classes,
+and that supporting things are deeper, such as under
+C<Math::NumSeq::Something::Helper> or C<Math::NumSeq::Base::SharedStuff>.
+
 =head1 FUNCTIONS
 
-In the following "Foo" is one of the subclass names.  The intention is that
-all modules C<Math::NumSeq::Something> are sequence classes, and that
-supporting things are deeper, such as under
-C<Math::NumSeq::Something::Helper> or C<Math::NumSeq::Base::SharedStuff>.
+In the following "Foo" is one of the subclass names.
 
 =over 4
 
@@ -368,6 +368,18 @@ implement this method.
 Return true if C<$value> occurs in the sequence.  For example for the
 squares this would return true if C<$value> is a square or false if not.
 
+=item C<$i = $seq-E<gt>value_to_i_floor($value)>
+
+Return the index i of C<$value>, or if C<$value> doesn't occur in the
+sequence then the i of the next lower value which does.  This method only
+exists for non-decreasing sequences.
+
+=item C<$i = $seq-E<gt>value_to_i_estimate($value)>
+
+Return an estimate of the i value corresponding to C<$value>.  This method
+only exists for non-decreasing sequences, and the accuracy of the estimate
+is unspecified, but when available it can at least hint at the growth rate.
+
 =back
 
 =head1 SEE ALSO
@@ -398,6 +410,7 @@ L<Math::NumSeq::MobiusFunction>,
 L<Math::NumSeq::LiouvilleFunction>,
 L<Math::NumSeq::PrimeFactorCount>,
 L<Math::NumSeq::DivisorCount>,
+L<Math::NumSeq::PythagoreanHypots>
 
 L<Math::NumSeq::Totient>,
 L<Math::NumSeq::TotientCumulative>,
@@ -449,6 +462,8 @@ L<Math::NumSeq::ProthNumbers>,
 L<Math::NumSeq::WoodallNumbers>,
 L<Math::NumSeq::BaumSweet>,
 L<Math::NumSeq::KlarnerRado>,
+L<Math::NumSeq::UlamSequence>,
+L<Math::NumSeq::ReRound>,
 L<Math::NumSeq::MephistoWaltz>
 
 L<Math::NumSeq::CollatzSteps>,

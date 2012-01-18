@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 28;
+$VERSION = 29;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -55,6 +55,21 @@ sub pred {
   return ($value == int($value)
           && ($value % 2) == 0);
 }
+
+sub value_to_i_floor {
+  my ($self, $value) = @_;
+  if ($value < 0) {
+    my $i = int($value/2);
+    if (2*$i == $value) {
+      return $i;
+    } else {
+      return $i-1;
+    }
+  } else {
+    return int($value/2);
+  }
+}
+*value_to_i_estimate = \&value_to_i_floor;
 
 1;
 __END__

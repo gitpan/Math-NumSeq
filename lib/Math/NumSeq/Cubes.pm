@@ -23,7 +23,7 @@ use POSIX 'floor','ceil';
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 28;
+$VERSION = 29;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -110,6 +110,16 @@ sub pred {
   my $i = _cbrt_floor ($value);
   return ($i*$i*$i == $value);
 }
+
+sub value_to_i_floor {
+  my ($self, $value) = @_;
+  return _cbrt_floor($value);
+}
+*value_to_i_estimate = \&value_to_i_floor;
+
+
+#------------------------------------------------------------------------------
+# generic
 
 sub _cbrt_floor {
   my ($x) = @_;

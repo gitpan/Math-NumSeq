@@ -21,7 +21,7 @@ use strict;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 28;
+$VERSION = 29;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
 
@@ -121,6 +121,21 @@ sub ith {
     $f1 += $f0;
   }
   return $f1;
+}
+
+# FIXME: smaller than this
+sub value_to_i_estimate {
+  my ($self, $value) = @_;
+  if (_is_infinite($value)) {
+    return $value;
+  }
+  my $i = 1;
+  for (;; $i++) {
+    $value = int($value/2);
+    if ($value <= 1) {
+      return $i;
+    }
+  }
 }
 
 1;

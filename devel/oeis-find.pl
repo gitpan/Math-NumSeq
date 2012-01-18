@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010, 2011 Kevin Ryde
+# Copyright 2010, 2011, 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,6 +20,7 @@
 use 5.004;
 use strict;
 use HTML::Entities::Interpolate;
+use List::Util;
 use URI::Escape;
 use Module::Load;
 
@@ -85,13 +86,18 @@ HERE
         }
       }
 
+      my $signed='';
+      if (defined (List::Util::first {$_<0} @values)) {
+        $signed = 'signed:';
+      }
+
       special_values($module, $p_string, \@values);
 
       my $values_escaped = URI::Escape::uri_escape($values);
       print OUT "<br>\n$p_string\n" or die;
 
       print OUT <<HERE or die;
-$first_value, <a href="http://oeis.org/search?q=$values_escaped&sort=&language=english&go=Search">$values</a>
+$first_value, <a href="http://oeis.org/search?q=$signed$values_escaped&sort=&language=english&go=Search">$values</a>
 HERE
       $count++;
     }
@@ -251,6 +257,8 @@ sub info_extend_parameters {
   if ($info->{'type'} eq 'integer'
       || $info->{'name'} eq 'multiples') {
     my $max = $info->{'minimum'}+10;
+    if ($info->{'name'} eq 'rule') { $max = 255; }
+    if ($info->{'name'} eq 'round_count') { $max = 20; }
     if ($info->{'name'} eq 'straight_spacing') { $max = 2; }
     if ($info->{'name'} eq 'diagonal_spacing') { $max = 2; }
     if ($info->{'name'} eq 'radix') { $max = 17; }

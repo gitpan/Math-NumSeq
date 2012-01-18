@@ -25,7 +25,7 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
-my $test_count = (tests => 306)[1];
+my $test_count = (tests => 317)[1];
 plan tests => $test_count;
 
 # uncomment this to run the ### lines
@@ -118,6 +118,20 @@ foreach my $elem
    # MobiusFunction.pm
    # PiBits.pm
    
+   [ 'Math::NumSeq::PythagoreanHypots', 1,
+     [ 5, 10, 13, 15, 17, 20, ]
+   ],
+   [ 'Math::NumSeq::PythagoreanHypots', 1,
+     [ 5, 13, 17, 25, 29, 37, ],
+     { pythagorean_type => 'primitive' },
+   ],
+   [ 'Math::NumSeq::ReRound', 1,
+     [ 1, 2, 4, 6, 10, 12, ]
+   ],
+   [ 'Math::NumSeq::UlamSequence', 1,
+     [ 1, 2, 3, 4, 6, 8, 11, 13, 16, 18, 26, ]
+   ],
+
    [ 'Math::NumSeq::PowerPart', 1,
      [ 1,  # 1
        1,  # 2

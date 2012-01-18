@@ -27,7 +27,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 28;
+$VERSION = 29;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -37,9 +37,9 @@ use Math::NumSeq;
 #use Smart::Comments;
 
 use constant values_min => 0;
-use constant characteristic_increasing => 2;
+use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
-use constant description => Math::NumSeq::__('Fibbinary numbers 0,1,2,4,5,8,9,etc, without adjacent 1 bits.');
+use constant description => Math::NumSeq::__('Fibbinary numbers 0,1,2,4,5,8,9,etc, integers without adjacent 1 bits.');
 use constant i_start => 0;
 
 # cf A000119 - number of fibonacci sums forms

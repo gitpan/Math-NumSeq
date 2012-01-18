@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 13;
+plan tests => 14;
 
 use lib 't';
 use MyTestHelpers;
@@ -35,7 +35,7 @@ use Math::NumSeq::TwinPrimes;
 # VERSION
 
 {
-  my $want_version = 28;
+  my $want_version = 29;
   ok ($Math::NumSeq::TwinPrimes::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::TwinPrimes->VERSION,  $want_version,
@@ -91,6 +91,14 @@ sub collect {
   my $seq = Math::NumSeq::TwinPrimes->new (pairs => 'both');
   ok ($seq->oeis_anum, 'A001097');
   ok (collect($seq,9), '1,2,3,4,5,6,7,8,9 -- 3,5,7,11,13,17,19,29,31');
+}
+
+#------------------------------------------------------------------------------
+# value_to_i_estimate()
+
+{
+  my $seq = Math::NumSeq::TwinPrimes->new;
+  ok ($seq->can('value_to_i_estimate'), undef);
 }
 
 exit 0;

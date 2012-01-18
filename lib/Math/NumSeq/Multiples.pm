@@ -21,7 +21,7 @@ use strict;
 use POSIX 'ceil';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 28;
+$VERSION = 29;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -140,6 +140,21 @@ sub pred {
   my $i = int($value / $multiples);
   return ($value == $i*$multiples);
 }
+
+use constant::defer _INFINITY => sub {
+  require POSIX;
+  return 2 * POSIX::DBL_MAX;
+};
+
+sub value_to_i_estimate {
+  my ($self, $value) = @_;
+  my $multiples = $self->{'multiples'};
+  if ($multiples == 0) {
+    return _INFINITY;
+  }
+  return int($value / $multiples);
+}
+
 
 1;
 __END__

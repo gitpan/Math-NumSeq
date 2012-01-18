@@ -72,9 +72,7 @@ $|=1;
   $values_class = 'Math::NumSeq::DigitLength';
   $values_class = 'Math::NumSeq::DigitProduct';
   $values_class = 'App::MathImage::NumSeq::UndulatingNumbers';
-  $values_class = 'App::MathImage::NumSeq::MobiusFunction';
   $values_class = 'Math::NumSeq::TwinPrimes';
-  $values_class = 'Math::NumSeq::ReverseAdd';
   $values_class = 'App::MathImage::NumSeq::Pell';
   $values_class = 'Math::NumSeq::Factorials';
   $values_class = 'App::MathImage::NumSeq::KlarnerRado';
@@ -99,7 +97,6 @@ $|=1;
   $values_class = 'App::MathImage::NumSeq::ReRound';
   $values_class = 'Math::NumSeq::AlmostPrimes';
   $values_class = 'App::MathImage::NumSeq::DigitMiddle';
-  $values_class = 'Math::NumSeq::PrimeFactorCount';
   $values_class = 'Math::NumSeq::SternDiatomic';
   $values_class = 'Math::NumSeq::SqrtEngel';
   $values_class = 'App::MathImage::NumSeq::HappySteps';
@@ -133,17 +130,29 @@ $|=1;
   $values_class = 'Math::NumSeq::MathImageSqrtContinued';
   $values_class = 'Math::NumSeq::Powerful';
   $values_class = 'Math::NumSeq::RepdigitRadix';
-  $values_class = 'Math::NumSeq::MathImagePowerPart';
+  $values_class = 'Math::NumSeq::MathImageReRound';
+  $values_class = 'Math::NumSeq::MobiusFunction';
+  $values_class = 'Math::NumSeq::MathImageReSieve';
+  $values_class = 'Math::NumSeq::CullenNumbers';
+  $values_class = 'Math::NumSeq::WoodallNumbers';
+  $values_class = 'Math::NumSeq::ReverseAdd';
+  $values_class = 'Math::NumSeq::PythagoreanHypots';
+  $values_class = 'Math::NumSeq::PrimeFactorCount';
+  $values_class = 'Math::NumSeq::PowerPart';
 
   eval "require $values_class; 1" or die $@;
   print Math::NumSeq::DigitLength->VERSION,"\n";
   my $seq = $values_class->new (
+                                # start => 1,
+                                #  radix => 4,
+                                # pythagorean_type => 'primitive',
+                                prime_type => '4k+3',
+                                # round_count => 2,
                                 # pairs => 'both',
                                 # powerful_type => 'all',
-                                power => 3,
+                                # power => 3,
                                 # abundant_type => 'primitive',
                                 # multiples => 1,
-                                #  radix => 3,
                                 # digit => 1,
 
                                 # sqrt => 46,
@@ -191,14 +200,13 @@ $|=1;
                                 # # divisors_type => 'proper',
                                 # # algorithm_type => '1/2-3/2',
                                 # # algorithm_type => '1/3-3/2',
-                                # start => 1,
                                 # fraction => '1/975',
                                 # lo => 0,
                                 # hi => 10, # 200*$rep,
                                 # where => 'low',
                                 # oeis_anum  => 'A000396',
                                );
-  my $hi = 278;
+  my $hi = 50;
 
   my $i_start = $seq->i_start;
   print "i_start $i_start\n";
@@ -248,9 +256,10 @@ $|=1;
         if (! defined $saw_value_min || $value < $saw_value_min) {
           $saw_value_min = $value;
         }
-        if ($value > DBL_INT_MAX) {
-          last;
-        }
+        # if ($value > DBL_INT_MAX) {
+        #   print "\nstop at DBL_INT_MAX\n";
+        #   last;
+        # }
       } else {
         print "undef,";
       }
@@ -277,6 +286,9 @@ $|=1;
         }
       }
       if ($seq->can('ith')) {
+        if ($value >= 2**50) {
+          $i = Math::BigInt->new($i);
+        }
         my $ith_value = $seq->ith($i);
         if (defined $value && $ith_value != $value) {
           print " oops, ith($i)=$ith_value next=$value\n";

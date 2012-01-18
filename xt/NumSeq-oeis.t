@@ -124,18 +124,21 @@ sub check_class {
 
   # skip all except ...
   #
-  # return unless $class =~ /AlmostPrimes/;
+  # return unless $class =~ /PrimeF/;
+  # return unless $class =~ /Liou/;
   # return unless $class =~ /Fib/;
-  # return unless $class =~ /Fraction/;
+  # return unless $class =~ /FactorCount/;
   # return unless $class =~ /Fib/;
   # return unless $class =~ /Star/;
-  # return unless $class =~ /Luc|Fib/;
-  # return unless $class =~ /ReverseAddSteps/;
+  # return unless $class =~ /Luc|Fib|Cullen|Wood/;
+  # return unless $class =~ /Lucas/;
   # return unless $class =~ /RadixWithout/;
   # return unless $class =~ /Perrin/;
   # return unless $class =~ /SqrtD/;
   # return unless $class =~ /Power/;
   # return unless $class =~ /RepdigitRadix/;
+  # return unless $class =~ /ReverseAdd/;
+  # return unless $anum eq 'A035524';
 
   eval "require $class" or die;
 
@@ -146,9 +149,13 @@ sub check_class {
   my $max_value = undef;
   if ($class eq 'Math::NumSeq::Factorials'
       || $class eq 'Math::NumSeq::Primorials'
-      || $class->isa('Math::NumSeq::Fibonacci') # incl LucasNumbers
+      || $class eq 'Math::NumSeq::Fibonacci' # incl LucasNumbers
+      || $class eq 'Math::NumSeq::LucasNumbers'
       || $class eq 'Math::NumSeq::Perrin'
       || $class eq 'Math::NumSeq::Cubes'
+      || $class eq 'Math::NumSeq::CullenNumbers'
+      || $class eq 'Math::NumSeq::WoodallNumbers'
+      || $class eq 'Math::NumSeq::ReverseAdd'
      ) {
     $max_value = 'unlimited';
   }
@@ -163,7 +170,7 @@ sub check_class {
   ### $want_i_start
 
   if ($anum eq 'A009003') {
-    #  PythagoreanHypots slow, only first 250 values for now ...
+    #  Math::NumSeq::MathImagePythagoreanHypots slow, only first 250 values for now ...
     splice @$want, 250;
   } elsif ($anum eq 'A003434') {
     #  TotientSteps slow, only first 250 values for now ...
@@ -187,6 +194,19 @@ sub check_class {
     # twin primes shorten for now
     @$want = grep {$_ < 1_000_000} @$want;
 
+  } elsif ($anum eq 'A002858'    # UlamSequence shortened for now
+           || $anum eq 'A002859'
+           || $anum eq 'A003666'
+           || $anum eq 'A003667'
+           || $anum eq 'A001857'
+           || $anum eq 'A048951'
+           || $anum eq 'A007300') {
+    if ($#$want > 1000) { $#$want = 1000; }
+
+  } elsif ($anum eq 'A000004') {
+    # shorten anything all zeros
+    if ($#$want > 20) { $#$want = 20 }
+
   } elsif ($anum eq 'A005384') {
     # sophie germain shorten for now
     @$want = grep {$_ < 1_000_000} @$want;
@@ -194,6 +214,13 @@ sub check_class {
   } elsif ($class =~ /AlmostPrimes/) {
     # AlmostPrimes shorten for now
     @$want = grep {$_ < 10_000_000} @$want;
+
+  # } elsif ($class =~ /PrimeFactorCount/) {
+  #   if ($#$want > 2000) { $#$want = 20000 }
+
+  } elsif ($class =~ /ReverseAdd/) {
+    # shorten the biggest nums
+    @$want = grep {length($_) < 100} @$want;
 
   } elsif ($anum eq 'A006567') {
     # emirps shorten for now

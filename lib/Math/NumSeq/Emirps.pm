@@ -20,14 +20,14 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 28;
+$VERSION = 29;
 use Math::NumSeq::Primes;
 @ISA = ('Math::NumSeq::Primes');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
 
 # uncomment this to run the ### lines
-#use Devel::Comments;
+#use Smart::Comments;
 
 # use constant name => Math::NumSeq::__('Emirps');
 use constant description => Math::NumSeq::__('Numbers which are primes forwards and backwards, eg. 157 because both 157 and 751 are primes.  Palindromes like 131 are excluded.  Default is decimal, or select a radix.');
@@ -109,10 +109,11 @@ sub pred {
 # return $n reversed in $radix
 sub _reverse_in_radix {
   my ($n, $radix) = @_;
+
   if ($radix == 10) {
     return scalar(reverse("$n"));
   } else {
-    my $ret = 0;
+    my $ret = $n*0;   # inherit bignum 0
     # ### _reverse_in_radix(): sprintf '%#X %d', $n, $n
     do {
       $ret = $ret * $radix + ($n % $radix);

@@ -35,7 +35,7 @@ use Math::NumSeq::Emirps;
 # VERSION
 
 {
-  my $want_version = 28;
+  my $want_version = 29;
   ok ($Math::NumSeq::Emirps::VERSION, $want_version, 'VERSION variable');
   ok (Math::NumSeq::Emirps->VERSION,  $want_version, 'VERSION class method');
 
@@ -63,7 +63,6 @@ use Math::NumSeq::Emirps;
 # _reverse_in_radix()
 
 {
-  ## no critic (ProtectPrivateSubs)
   ok (Math::NumSeq::Emirps::_reverse_in_radix(123,10),
       321);
   ok (Math::NumSeq::Emirps::_reverse_in_radix(0xAB,16),

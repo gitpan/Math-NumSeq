@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 16;
+plan tests => 18;
 
 use lib 't';
 use MyTestHelpers;
@@ -31,11 +31,12 @@ use Math::NumSeq::Primes;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
+
 #------------------------------------------------------------------------------
 # VERSION
 
 {
-  my $want_version = 28;
+  my $want_version = 29;
   ok ($Math::NumSeq::Primes::VERSION, $want_version, 'VERSION variable');
   ok (Math::NumSeq::Primes->VERSION,  $want_version, 'VERSION class method');
 
@@ -97,4 +98,23 @@ use Math::NumSeq::Primes;
   }
 }
 
+
+#------------------------------------------------------------------------------
+# value_to_i_estimate()
+
+{
+  my $seq = Math::NumSeq::Primes->new;
+
+  {
+    my $i = $seq->value_to_i_estimate(12345);
+    ok ($i > 0, 1);
+  }
+  {
+    require Math::BigInt;
+    my $value = Math::BigInt->new(2);
+    foreach (1 .. 8) { $value *= $value; }  # 2**256
+    my $i = $seq->value_to_i_estimate($value);
+    ok ($i > 0, 1);
+  }
+}
 exit 0;
