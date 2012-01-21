@@ -27,7 +27,7 @@ BEGIN { MyTestHelpers::nowarnings(); }
 
 use Math::NumSeq::ReverseAdd;
 
-my $test_count = (tests => 9)[1];
+my $test_count = (tests => 13)[1];
 plan tests => $test_count;
 
 
@@ -35,7 +35,7 @@ plan tests => $test_count;
 # VERSION
 
 {
-  my $want_version = 29;
+  my $want_version = 30;
   ok ($Math::NumSeq::ReverseAdd::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::ReverseAdd->VERSION,  $want_version,
@@ -70,10 +70,52 @@ plan tests => $test_count;
 # _reverse_in_radix()
 
 {
-  my $n = Math::NumSeq::_bigint()->new("3377699871522813");
+  my $str = "3377699871522813";
+  my $n = Math::NumSeq::_bigint()->new($str);
+  MyTestHelpers::diag("n type: ",ref $n);
+  MyTestHelpers::diag("str   : ",$str);
+  MyTestHelpers::diag("n bstr: ",$n->bstr);
+
   my $rev = Math::NumSeq::ReverseAdd::_reverse_in_radix($n,2);
   my $revstr = "$rev";
   ok ($revstr, "3377699468869635");
+
+  my $bigint = Math::NumSeq::_bigint();
+  MyTestHelpers::diag("BigInt can(as_bin): ",$bigint->can('as_bin'));
+  if ($bigint->can('as_bin')) {
+    my $as_bin = $n->as_bin;
+    MyTestHelpers::diag("n as_bin(): ", $as_bin);
+  }
+  MyTestHelpers::diag("BigInt can(from_bin): ",$bigint->can('from_bin'));
+}
+
+{
+  my $str = "256";
+  my $n = Math::NumSeq::_bigint()->new($str);
+  my $rev = Math::NumSeq::ReverseAdd::_reverse_in_radix($n,4);
+  my $revstr = "$rev";
+  ok ($revstr, "1");
+}
+{
+  my $str = "512";
+  my $n = Math::NumSeq::_bigint()->new($str);
+  my $rev = Math::NumSeq::ReverseAdd::_reverse_in_radix($n,8);
+  my $revstr = "$rev";
+  ok ($revstr, "1");
+}
+{
+  my $str = "256";
+  my $n = Math::NumSeq::_bigint()->new($str);
+  my $rev = Math::NumSeq::ReverseAdd::_reverse_in_radix($n,16);
+  my $revstr = "$rev";
+  ok ($revstr, "1");
+}
+{
+  my $str = "1234";
+  my $n = Math::NumSeq::_bigint()->new($str);
+  my $rev = Math::NumSeq::ReverseAdd::_reverse_in_radix($n,10);
+  my $revstr = "$rev";
+  ok ($revstr, "4321");
 }
 
 exit 0;

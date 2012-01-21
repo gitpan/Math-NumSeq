@@ -21,7 +21,7 @@ use strict;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 29;
+$VERSION = 30;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
 

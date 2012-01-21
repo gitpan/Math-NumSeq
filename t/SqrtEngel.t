@@ -36,7 +36,7 @@ use Math::NumSeq::SqrtEngel;
 # VERSION
 
 {
-  my $want_version = 29;
+  my $want_version = 30;
   ok ($Math::NumSeq::SqrtEngel::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::SqrtEngel->VERSION,  $want_version,

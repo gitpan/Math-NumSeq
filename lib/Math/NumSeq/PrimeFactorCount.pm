@@ -21,7 +21,7 @@ use strict;
 use List::Util 'min', 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 29;
+$VERSION = 30;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -171,24 +171,43 @@ sub ith {
     return undef;
   }
 
+  my $multiplicity = ($self->{'multiplicity'} ne 'distinct');
+  my $prime_type = $self->{'prime_type'};
+
   my @primes = prime_factors($i);
+  my $count = 0;
 
-  if ($self->{'multiplicity'} eq 'distinct') {
-    # cf List::MoreUtils uniq() perhaps
-    my $prev = 0;
-    @primes = grep {$_ == $prev ? 0 : ($prev=$_)} @primes;
+  while (@primes) {
+    my $p = shift @primes;
+    my $c = 1;
+    while (@primes && $primes[0] == $p) {
+      shift @primes;
+      $c += $multiplicity;
+    }
+
+    if ($prime_type eq 'odd') {
+      next unless $p & 1;
+    } elsif ($prime_type eq '4k+1') {
+      next unless ($p&3)==1;
+    } elsif ($prime_type eq '4k+3') {
+      next unless ($p&3)==3;
+
+    # } elsif ($prime_type eq 'twin_either') {
+    #   next unless is_prime($p-2) || is_prime($p+2);
+    # } elsif ($prime_type eq 'twin_first') {
+    #   next unless is_prime($p+2);
+    # } elsif ($prime_type eq 'twin_second') {
+    #   next unless is_prime($p-2);
+    # } elsif ($prime_type eq 'SG') {
+    #   next unless is_prime(2*$p+1);
+    # } elsif ($prime_type eq 'safe') {
+    #   next unless ($p&1) && is_prime(($p-1)/2);
+
+    }
+    $count += $c;
   }
 
-  if ($self->{'prime_type'} eq 'odd') {
-    @primes = grep {$_&1} @primes;
-    ### grep to odd: @primes
-  } elsif ($self->{'prime_type'} eq '4k+1') {
-    @primes = grep {($_&3)==1} @primes;
-  } elsif ($self->{'prime_type'} eq '4k+3') {
-    @primes = grep {($_&3)==3} @primes;
-  }
-
-  return scalar(@primes);
+  return $count;
 }
 
 

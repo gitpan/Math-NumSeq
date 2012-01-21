@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 29;
+$VERSION = 30;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -275,7 +275,10 @@ sub _bigint_from_base4 {
   my ($class, $str) = @_;
   ### _bigint_from_base4(): $str
   $str =~ s/(.)/$base4_to_binary[$1]/ge;
-  return $class->from_bin($str);
+  return $class->from_bin("0b$str");
+}
+
+sub _bigint_from_bin_with_0b {
 }
 
 my @radix_to_stringize_method;
@@ -284,8 +287,16 @@ my $bigint = Math::NumSeq::_bigint();
 {
   if ($bigint->can('as_bin') && $bigint->can('from_bin')) {
     $radix_to_stringize_method[2] = 'as_bin';
+    # in past BigInt must have 0b prefix for from_bin()
+    $string_to_bigint_method[2]
+      = ($bigint->from_bin('0') == 0
+         ? 'from_bin'
+         : sub {
+           ### from_bin with 0b: "0b$_[1]"
+           $_[0]->from_bin("0b$_[1]")
+         });
+
     $radix_to_stringize_method[4] = \&_bigint_as_base4;
-    $string_to_bigint_method[2] = 'from_bin';
     $string_to_bigint_method[4] = \&_bigint_from_base4;
   }
   if ($bigint->can('as_oct') && $bigint->can('from_oct')) {
@@ -294,12 +305,19 @@ my $bigint = Math::NumSeq::_bigint();
   }
   if ($bigint->can('as_hex') && $bigint->can('from_hex')) {
     $radix_to_stringize_method[16] = 'as_hex';
-    $string_to_bigint_method[16] = 'from_hex';
+    # in past BigInt must have 0x prefix for from_hex()
+    $string_to_bigint_method[16]
+      = ($bigint->from_hex('0') == 0
+         ? 'from_hex'
+         : sub {
+           ### from_hex with 0x: "0x$_[1]"
+           $_[0]->from_hex("0x$_[1]")
+         });
   }
-  # if ($bigint->can('bstr') && $bigint->can('as_string')) {
-  #   $radix_to_stringize_method{10} = 'as_oct';
-  #   $string_to_bigint_method{10} = 'new';
-  # }
+  if ($bigint->can('bstr')) {
+    $radix_to_stringize_method[10] = 'bstr';
+    $string_to_bigint_method[10] = 'new';
+  }
 }
 ### @radix_to_stringize_method
 ### @string_to_bigint_method
@@ -308,9 +326,8 @@ my $bigint = Math::NumSeq::_bigint();
 sub _reverse_in_radix {
   my ($n, $radix) = @_;
 
-  if ($radix == 10) {
-    return scalar(reverse("$n"));
-  }
+  # prefer bstr() over plain stringize "$n" since BigInt in 5.8 and 5.10
+  # seems to do something dubious in "$n" which rounds off
   if (ref $n
       && $n->isa('Math::BigInt')
       && (my $method = $radix_to_stringize_method[$radix])) {
@@ -319,8 +336,13 @@ sub _reverse_in_radix {
     $str =~ s/^0[bx]?//;
     ### $str
     ### $from
+    ### reverse: scalar(reverse($str))
     ### result: $bigint->$from(scalar(reverse($str))).''
     return $bigint->$from(scalar(reverse($str)));
+  }
+
+  if ($radix == 10) {
+    return scalar(reverse("$n"));
   }
 
   # ### _reverse_in_radix(): sprintf '%#X %d', $n, $n
