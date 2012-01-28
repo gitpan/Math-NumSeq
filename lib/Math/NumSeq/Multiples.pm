@@ -21,7 +21,7 @@ use strict;
 use POSIX 'ceil';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 30;
+$VERSION = 31;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -143,7 +143,7 @@ sub pred {
 
 use constant::defer _INFINITY => sub {
   require POSIX;
-  return 2 * POSIX::DBL_MAX;
+  return 2 * POSIX::DBL_MAX();
 };
 
 sub value_to_i_estimate {

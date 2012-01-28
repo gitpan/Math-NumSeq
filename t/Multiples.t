@@ -35,7 +35,7 @@ plan tests => $test_count;
 # VERSION
 
 {
-  my $want_version = 30;
+  my $want_version = 31;
   ok ($Math::NumSeq::Multiples::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::Multiples->VERSION,  $want_version,
@@ -81,7 +81,7 @@ plan tests => $test_count;
   my $seq = Math::NumSeq::Multiples->new (multiples => 0);
   my $i = $seq->value_to_i_estimate(123);
   require POSIX;
-  ok ($i >= POSIX::DBL_MAX, 1);
+  ok ($i >= POSIX::DBL_MAX(), 1);
 }
 
 exit 0;

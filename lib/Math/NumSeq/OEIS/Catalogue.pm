@@ -34,7 +34,7 @@ my @plugins = sort __PACKAGE__->plugins;
 ### @plugins
 
 use vars '$VERSION';
-$VERSION = 30;
+$VERSION = 31;
 
 # sub seq_to_num {
 #   my ($class, $num) = @_;

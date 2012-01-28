@@ -25,7 +25,7 @@ use strict;
 use List::Util;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 30;
+$VERSION = 31;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;

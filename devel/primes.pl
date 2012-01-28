@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010, 2011 Kevin Ryde
+# Copyright 2010, 2011, 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -26,6 +26,20 @@ use Smart::Comments;
 
 # use blib "$ENV{HOME}/perl/bit-vector/Bit-Vector-7.1/blib";
 
+{
+  use Math::Prime::FastSieve;
+  my @ret = Math::Prime::FastSieve::primes(20);
+  ### @ret;
+
+  require Test::Weaken;
+  my $leaks = Test::Weaken::leaks (sub { Math::Prime::FastSieve::primes(20) });
+  ### $leaks
+
+  my $sieve = Math::Prime::FastSieve::Sieve->new( 2_000_000 );
+  ### isprime: $sieve->isprime(1928099)
+
+  exit 0;
+}
 {
   require Math::Prime::TiedArray;
   tie my @primes, 'Math::Prime::TiedArray';

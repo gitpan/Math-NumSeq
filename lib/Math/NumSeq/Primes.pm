@@ -22,7 +22,7 @@ use POSIX ();
 use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 30;
+$VERSION = 31;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -201,7 +201,8 @@ L<Math::NumSeq::SophieGermainPrimes>,
 L<Math::NumSeq::Emirps>
 
 L<Math::Prime::XS>,
-L<Math::Prime::TiedArray>
+L<Math::Prime::TiedArray>,
+L<Math::Prime::FastSieve>
 
 =head1 HOME PAGE
 
