@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 31;
+$VERSION = 32;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 624 A-numbers in 84 modules
+# total 625 A-numbers in 84 modules
 
 use constant info_arrayref =>
 [
@@ -2181,6 +2181,34 @@ use constant info_arrayref =>
     ]
   },
   {
+    'anum' => 'A001222',
+    'class' => 'Math::NumSeq::PrimeFactorCount'
+  },
+  {
+    'anum' => 'A087436',
+    'class' => 'Math::NumSeq::PrimeFactorCount',
+    'parameters' => [
+      'prime_type',
+      'odd'
+    ]
+  },
+  {
+    'anum' => 'A083025',
+    'class' => 'Math::NumSeq::PrimeFactorCount',
+    'parameters' => [
+      'prime_type',
+      '4k+1'
+    ]
+  },
+  {
+    'anum' => 'A065339',
+    'class' => 'Math::NumSeq::PrimeFactorCount',
+    'parameters' => [
+      'prime_type',
+      '4k+3'
+    ]
+  },
+  {
     'anum' => 'A001221',
     'class' => 'Math::NumSeq::PrimeFactorCount',
     'parameters' => [
@@ -2219,31 +2247,13 @@ use constant info_arrayref =>
     ]
   },
   {
-    'anum' => 'A001222',
-    'class' => 'Math::NumSeq::PrimeFactorCount'
-  },
-  {
-    'anum' => 'A087436',
+    'anum' => 'A156542',
     'class' => 'Math::NumSeq::PrimeFactorCount',
     'parameters' => [
+      'multiplicity',
+      'distinct',
       'prime_type',
-      'odd'
-    ]
-  },
-  {
-    'anum' => 'A083025',
-    'class' => 'Math::NumSeq::PrimeFactorCount',
-    'parameters' => [
-      'prime_type',
-      '4k+1'
-    ]
-  },
-  {
-    'anum' => 'A065339',
-    'class' => 'Math::NumSeq::PrimeFactorCount',
-    'parameters' => [
-      'prime_type',
-      '4k+3'
+      'SG'
     ]
   },
   {

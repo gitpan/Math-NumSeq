@@ -42,19 +42,19 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 31;
+$VERSION = 32;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
 BEGIN {
-  eval "#line ".(__LINE__+1)." \"".__FILE__."\"\n" . <<'HERE'
+  eval "\n#line ".(__LINE__+1)." \"".__FILE__."\"\n" . <<'HERE'
 # print "attempt Locale::Messages for __\n";
 use Locale::Messages ();
 sub __ { Locale::Messages::dgettext('Math-NumSeq',$_[0]) }
 1;
 HERE
-    || eval "#line ".(__LINE__+1)." \"".__FILE__."\"\n" . <<'HERE'
+    || eval "\n#line ".(__LINE__+1)." \"".__FILE__."\"\n" . <<'HERE'
 # print "fallback definition of __\n";
 sub __ { $_[0] };
 1;

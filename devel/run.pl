@@ -132,13 +132,13 @@ $|=1;
   $values_class = 'Math::NumSeq::RepdigitRadix';
   $values_class = 'Math::NumSeq::MathImageReRound';
   $values_class = 'Math::NumSeq::MobiusFunction';
-  $values_class = 'Math::NumSeq::MathImageReSieve';
+  $values_class = 'Math::NumSeq::MathImageSieveMultiples';
   $values_class = 'Math::NumSeq::CullenNumbers';
   $values_class = 'Math::NumSeq::WoodallNumbers';
   $values_class = 'Math::NumSeq::ReverseAdd';
   $values_class = 'Math::NumSeq::PythagoreanHypots';
-  $values_class = 'Math::NumSeq::PrimeFactorCount';
   $values_class = 'Math::NumSeq::PowerPart';
+  $values_class = 'Math::NumSeq::PrimeFactorCount';
 
   eval "require $values_class; 1" or die $@;
   print Math::NumSeq::DigitLength->VERSION,"\n";
@@ -146,7 +146,7 @@ $|=1;
                                 # start => 1,
                                 #  radix => 4,
                                 # pythagorean_type => 'primitive',
-                                prime_type => '4k+3',
+                                prime_type => 'twin',
                                 # round_count => 2,
                                 # pairs => 'both',
                                 # powerful_type => 'all',

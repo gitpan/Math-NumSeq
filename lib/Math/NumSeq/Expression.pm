@@ -24,7 +24,7 @@ use Math::Libm;
 use Module::Util;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 31;
+$VERSION = 32;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -216,7 +216,7 @@ sub new {
 
     my $pi = Math::Libm::M_PI();
     my $e  = Math::Libm::M_E();
-    $subr = $safe->reval("#line ".(__LINE__+2)." \"".__FILE__."\"\n"
+    $subr = $safe->reval("\n#line ".(__LINE__+2)." \"".__FILE__."\"\n"
                          . <<"HERE");
 my \$pi = $pi;
 my \$e = $e;

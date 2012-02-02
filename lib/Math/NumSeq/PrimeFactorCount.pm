@@ -21,10 +21,11 @@ use strict;
 use List::Util 'min', 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 31;
+$VERSION = 32;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
+use Math::Prime::XS 'is_prime';
 use Math::Factor::XS 'prime_factors';
 
 # uncomment this to run the ### lines
@@ -49,39 +50,45 @@ use constant parameter_info_array =>
    { name    => 'prime_type',
      display => Math::NumSeq::__('Prime Type'),
      type    => 'enum',
-     choices => ['all','odd','4k+1','4k+3'],
+     choices => ['all','odd','4k+1','4k+3',
+                 'twin','SG','safe'],
      default => 'all',
-     # description => Math::NumSeq::__(''),
+     description => Math::NumSeq::__('The type of primes to count.
+twin=P where P+2 or P-2 also prime.
+SG=Sophie Germain P where 2P+1 also prime.
+safe=P where (P-1)/2 also prime (the "other" of the SGs).'),
    },
    { name    => 'multiplicity',
      display => Math::NumSeq::__('Multiplicity'),
      type    => 'enum',
      choices => ['repeated','distinct'],
      default => 'repeated',
-     # description => Math::NumSeq::__(''),
+      description => Math::NumSeq::__('Whether to count repeated prime factors, or only distinct prime factors.'),
    },
   ];
 
-# A156542 count S-G
-my %oeis_anum = (distinct => { all    => 'A001221',
-                               odd    => 'A005087',
-                               '4k+1' => 'A005089',
-                               '4k+3' => 'A005091',
-                             },
-                 repeated => { all    => 'A001222',
+my %oeis_anum = (repeated => { all    => 'A001222',
                                odd    => 'A087436',
                                '4k+1' => 'A083025',
                                '4k+3' => 'A065339',
                              },
+                 distinct => { all    => 'A001221',
+                               odd    => 'A005087',
+                               '4k+1' => 'A005089',
+                               '4k+3' => 'A005091',
+                               SG     => 'A156542',
+                             },
                 );
-# OEIS-Catalogue: A001221 multiplicity=distinct
-# OEIS-Catalogue: A005087 multiplicity=distinct prime_type=odd
-# OEIS-Catalogue: A005089 multiplicity=distinct prime_type=4k+1
-# OEIS-Catalogue: A005091 multiplicity=distinct prime_type=4k+3
 # OEIS-Catalogue: A001222
 # OEIS-Catalogue: A087436 prime_type=odd
 # OEIS-Catalogue: A083025 prime_type=4k+1
 # OEIS-Catalogue: A065339 prime_type=4k+3
+
+# OEIS-Catalogue: A001221 multiplicity=distinct
+# OEIS-Catalogue: A005087 multiplicity=distinct prime_type=odd
+# OEIS-Catalogue: A005089 multiplicity=distinct prime_type=4k+1
+# OEIS-Catalogue: A005091 multiplicity=distinct prime_type=4k+3
+# OEIS-Catalogue: A156542 multiplicity=distinct prime_type=SG
 
 sub oeis_anum {
   my ($self) = @_;
@@ -133,7 +140,10 @@ sub next {
       if ($prime_type eq 'all'
           || ($prime_type eq 'odd' && ($i&1))
           || ($prime_type eq '4k+1' && ($i&3)==1)
-          || ($prime_type eq '4k+3' && ($i&3)==3)) {
+          || ($prime_type eq '4k+3' && ($i&3)==3)
+          || ($prime_type eq 'twin' && _is_twin_prime($i))
+          || ($prime_type eq 'SG' && _is_SG_prime($i))
+          || ($prime_type eq 'safe' && _is_safe_prime($i))) {
         ### increment ...
         $ret++;
         for (my $step = $i; $step <= $hi; $step *= $i) {
@@ -191,18 +201,17 @@ sub ith {
       next unless ($p&3)==1;
     } elsif ($prime_type eq '4k+3') {
       next unless ($p&3)==3;
+    } elsif ($prime_type eq 'twin') {
+      next unless _is_twin_prime($p);
+    } elsif ($prime_type eq 'SG') {
+      next unless _is_SG_prime($p);
+    } elsif ($prime_type eq 'safe') {
+      next unless _is_safe_prime($p);
 
-    # } elsif ($prime_type eq 'twin_either') {
-    #   next unless is_prime($p-2) || is_prime($p+2);
     # } elsif ($prime_type eq 'twin_first') {
     #   next unless is_prime($p+2);
     # } elsif ($prime_type eq 'twin_second') {
     #   next unless is_prime($p-2);
-    # } elsif ($prime_type eq 'SG') {
-    #   next unless is_prime(2*$p+1);
-    # } elsif ($prime_type eq 'safe') {
-    #   next unless ($p&1) && is_prime(($p-1)/2);
-
     }
     $count += $c;
   }
@@ -210,10 +219,27 @@ sub ith {
   return $count;
 }
 
+sub _is_twin_prime {
+  my ($n) = @_;
+  ### assert: $n >= 2
+  ### assert: is_prime($n)
+  return (is_prime($n+2) || is_prime($n-2));
+}
+sub _is_SG_prime {
+  my ($n) = @_;
+  ### assert: is_prime($n)
+  return is_prime(2*$n+1);
+}
+sub _is_safe_prime {
+  my ($n) = @_;
+  ### assert: is_prime($n)
+  return (($n&1) && is_prime(($n-1)/2));
+}
+
 
 # if (0 && eval '; 1') {
 #   ### use prime_factors() ...
-#   eval "#line ".(__LINE__+1)." \"".__FILE__."\"\n" . <<'HERE' or die;
+#   eval "\n#line ".(__LINE__+1)." \"".__FILE__."\"\n" . <<'HERE' or die;
 # 
 # 1;
 # 
@@ -221,7 +247,7 @@ sub ith {
 # } else {
 #   ### $@
 #   ### use plain perl ...
-#   eval "#line ".(__LINE__+1)." \"".__FILE__."\"\n" . <<'HERE' or die;
+#   eval "\n#line ".(__LINE__+1)." \"".__FILE__."\"\n" . <<'HERE' or die;
 # 
 # sub ith {
 #   my ($self, $i) = @_;
@@ -323,11 +349,13 @@ Math::NumSeq::PrimeFactorCount -- how many prime factors
 
 =head1 DESCRIPTION
 
-The sequence of how many prime factors in i, being 0, 1, 1, 2, 1, 2, etc.
+The sequence of how many prime factors in i, being
 
-The sequence starts from i=1 and that 1 is taken to have 0 prime factors.
-Then i=2 and i=3 are themselves primes, so 1 prime factor.  Then i=4 is 2*2
-which is 2 prime factors.
+    0, 1, 1, 2, 1, 2, ...
+
+The sequence starts from i=1 and 1 is taken to have no prime factors.  Then
+i=2 and i=3 are themselves primes, so 1 prime factor.  Then i=4 is 2*2 which
+is 2 prime factors.
 
 The C<multiplicity =E<gt> "distinct"> option can control whether repeats of
 a prime factors are counted, or only distinct primes.  For example with
@@ -339,22 +367,42 @@ a prime factors are counted, or only distinct primes.  For example with
 
 =item C<$seq = Math::NumSeq::PrimeFactorCount-E<gt>new ()>
 
-=item C<$seq = Math::NumSeq::PrimeFactorCount-E<gt>new (multiplicity =E<gt> 'distinct')>
+=item C<$seq = Math::NumSeq::PrimeFactorCount-E<gt>new (multiplicity =E<gt> $str, prime_type =E<gt> $str)>
 
 Create and return a new sequence object.
+
+Option C<multiplicity> is a string either
+
+    "repeated"      count repeats of primes (the default)
+    "distinct"      count only distinct primes
+
+Option C<prime_type> is a string either
+
+    "all"           count all primes
+    "odd"           count only odd primes (ie. not 2)
+    "4k+1"          count only primes 4k+1
+    "4k+3"          count only primes 4k+3
+    "twin"          count only twin primes
+                      (P for which P+2 or P-2 also prime)
+    "SG"            count only Sophie Germain primes
+                      (P for which 2P+1 also prime)
+    "safe"          count only "safe" primes
+                      (P for which (P-1)/2 also prime)
+
+"twin" counts both primes of each twin prime pair, so all of 3,5,7, 11,13,
+17,19, etc.
 
 =item C<$value = $seq-E<gt>ith($i)>
 
 Return the number of prime factors in C<$i>.
 
-This requires factorizing C<$i> and in the current code a hard limit of
-2**32 is placed on C<$i>, in the interests of not going into a near-infinite
-loop.
+This requires factorizing C<$i> and the current code has a hard limit of
+2**32 on C<$i>, in the interests of not going into a near-infinite loop.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value> occurs in the sequence, which means simply C<$value
-E<gt>= 0>.
+Return true if C<$value> occurs in the sequence, which means simply integer
+C<$value E<gt>= 0>.
 
 =back
 
@@ -362,6 +410,8 @@ E<gt>= 0>.
 
 L<Math::NumSeq>,
 L<Math::NumSeq::Primes>,
+L<Math::NumSeq::TwinPrimes>,
+L<Math::NumSeq::SophieGermainPrimes>,
 L<Math::NumSeq::LiouvilleFunction>,
 L<Math::NumSeq::MobiusFunction>
 

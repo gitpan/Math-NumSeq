@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 31;
+$VERSION = 32;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -165,12 +165,12 @@ sub ith {
 
 # if (0) { # ... eval '; 1') {
 #   ### use prime_factors() ...
-#   eval "#line ".(__LINE__+1)." \"".__FILE__."\"\n" . <<'HERE';
+#   eval "\n#line ".(__LINE__+1)." \"".__FILE__."\"\n" . <<'HERE';
 # HERE
 # } else {
 #   ### $@
 #   ### use plain perl ...
-#   eval "#line ".(__LINE__+1)." \"".__FILE__."\"\n" . <<'HERE';
+#   eval "\n#line ".(__LINE__+1)." \"".__FILE__."\"\n" . <<'HERE';
 # 
 # sub ith {
 #   my ($self, $i) = @_;

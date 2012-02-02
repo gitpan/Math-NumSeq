@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -w
 
 # Copyright 2010, 2011, 2012 Kevin Ryde
 
@@ -55,6 +55,7 @@ MyMakeMakerExtras::WriteMakefile
    META_MERGE =>
    { resources =>
      { homepage => 'http://user42.tuxfamily.org/math-numseq/index.html',
+       license  => 'http://www.gnu.org/licenses/gpl.html',
      },
      recommends =>
      { 'Math::Prime::XS' => '0.26', # v.26 for faster is_prime()

@@ -138,7 +138,7 @@ sub check_class {
   # return unless $class =~ /Power/;
   # return unless $class =~ /RepdigitRadix/;
   # return unless $class =~ /ReverseAdd/;
-  # return unless $anum eq 'A035524';
+  # return unless $anum eq 'A156542';
 
   eval "require $class" or die;
 
