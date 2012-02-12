@@ -24,16 +24,16 @@ use POSIX ();
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 32;
+$VERSION = 33;
 
 use Math::NumSeq::Base::Array;
 @ISA = ('Math::NumSeq::Base::Array');
 
 use vars '$VERSION';
-$VERSION = 32;
+$VERSION = 33;
 
 # uncomment this to run the ### lines
-#use Devel::Comments;
+#use Smart::Comments;
 
 
 # use constant name => Math::NumSeq::__('OEIS File');
@@ -173,6 +173,10 @@ sub _read_values {
   return;
 }
 
+sub oeis_anum {
+  my ($self) = @_;
+  return $self->{'anum'};
+}
 sub characteristic_increasing {
   my ($self) = @_;
   ### OEIS-File characteristic_increasing() ...
@@ -194,24 +198,27 @@ sub characteristic_increasing {
   }
   return $self->{'characteristic'}->{'increasing'};
 }
-
 sub characteristic_smaller {
   my ($self) = @_;
   ### OEIS-File characteristic_smaller() ...
 
   if (! defined $self->{'characteristic'}->{'smaller'}) {
     my $aref = $self->{'array'};
+    my $strictly_smaller = 0;
     my $smaller = 0;
     my $total = 0;
     foreach my $i (0 .. $#$aref) {
       next unless defined (my $value = $aref->[$i]);
       $total++;
-      $smaller += ($value < $i);
+      $smaller += ($value <= $i);
+      $strictly_smaller += ($value < $i);
     }
     ### $smaller
     ### $total
     $self->{'characteristic'}->{'smaller'}
-      = ($total == 0 || $smaller / $total >= .9);
+      = ($total == 0
+         || ($smaller / $total >= .9
+             && $strictly_smaller > 0));
     ### decide: $self->{'characteristic'}->{'smaller'}
   }
   return $self->{'characteristic'}->{'smaller'};
@@ -271,6 +278,9 @@ sub _read_internal {
   my $contents = do { local $/; <FH> }; # slurp
   close FH or die "Error reading $filename: ",$!;
 
+  # "Internal" files are served as html with a <meta> charset indicator too.
+  $contents = _decode_html_charset($contents);
+
   my %characteristic = (integer => 1);
   $self->{'characteristic'} = \%characteristic;
 
@@ -286,10 +296,10 @@ sub _read_internal {
     $description = $1;
     $description =~ s/\s+/ /g;
     $description =~ s/<[^>]*?>//sg;  # <foo ...> tags
-    $description =~ s/&lt;/</sg;     # unentitize <
-    $description =~ s/&gt;/>/sg;     # unentitize >
-    $description =~ s/&amp;/&/sg;    # unentitize &
-    $description =~ s/&#39;/'/sg;    # unentitize '
+    $description =~ s/&lt;/</g;      # unentitize <
+    $description =~ s/&gt;/>/g;      # unentitize >
+    $description =~ s/&amp;/&/g;     # unentitize &
+    $description =~ s/&#(\d+);/chr($1)/ge; # unentitize numeric ' and "
     ### $description
 
     if ($description =~ /^number of /i) {
@@ -322,6 +332,8 @@ sub _read_html {
       my $contents = do { local $/; <FH> }; # slurp
       close FH or die;
 
+      $contents = _decode_html_charset($contents);
+
       my $description;
       if ($contents =~
           m{$anum\n.*?
@@ -335,10 +347,10 @@ sub _read_html {
         $description =~ s/\s+$//;       # trailing whitespace
         $description =~ s/\s+/ /g;      # collapse whitespace
         $description =~ s/<[^>]*?>//sg; # tags <foo ...>
-        $description =~ s/&lt;/</sg;    # unentitize <
-        $description =~ s/&gt;/>/sg;    # unentitize >
-        $description =~ s/&amp;/&/sg;   # unentitize &
-        $description =~ s/&#39;/'/sg;   # unentitize '
+        $description =~ s/&lt;/</g;    # unentitize <
+        $description =~ s/&gt;/>/g;    # unentitize >
+        $description =~ s/&amp;/&/g;   # unentitize &
+        $description =~ s/&#(\d+);/chr($1)/ge; # unentitize numeric ' and "
         ### $description
 
         # __x('Values from B-file {filename}',
@@ -360,6 +372,8 @@ sub _read_html {
       if ($contents =~ m{KEYWORD.*?<tt[^>]*>(.*?)</tt>}s) {
         ### html keywords match: $1
         $keywords = $1;
+      } else {
+        # die "Oops, KEYWORD not matched: $anum";
       }
       _set_characteristics ($self, $description, $keywords);
 
@@ -382,6 +396,10 @@ sub _set_characteristics {
   ### _set_characteristics()
   ### $description
   ### $keywords
+
+  if (! defined $keywords) {
+    return; # if perhaps match of .html failed
+  }
 
   $keywords =~ s{<[^>]*>}{}g;  # <foo ...> tags
   ### $keywords
@@ -416,6 +434,27 @@ sub _split_sample_values {
   # http://oeis.org/eishelp2.html#RO
   if ($offset && ! $self->{'characteristic'}->{'radix'}) {
     unshift @{$self->{'array'}}, (undef) x $offset;
+  }
+}
+
+use constant::defer _HAVE_ENCODE => sub {
+  eval { require Encode; 1 } || 0;
+};
+sub _decode_html_charset {
+  my ($contents) = @_;
+
+  # eg. <META http-equiv="content-type" content="text/html; charset=utf-8">
+  # HTTP::Message has a blob of code for this, using the full HTTP::Parser,
+  # but a slack regexp should be enough for OEIS pages.
+  #
+  if (_HAVE_ENCODE
+      && $contents =~ m{<META[^>]+
+                        http-equiv=[^>]+
+                        content-type[^>]+
+                        charset=([a-z0-9-_]+)}isx) {
+    return Encode::decode($1, $contents, Encode::FB_PERLQQ());
+  } else {
+    return $contents;
   }
 }
 

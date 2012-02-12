@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 32;
+$VERSION = 33;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -176,7 +176,3 @@ L<Math::NumSeq>,
 L<Math::NumSeq::Fibonacci>
 
 =cut
-
-# Local variables:
-# compile-command: "math-image --values=Perrin"
-# End:

@@ -138,6 +138,7 @@ sub check_class {
   # return unless $class =~ /Power/;
   # return unless $class =~ /RepdigitRadix/;
   # return unless $class =~ /ReverseAdd/;
+  # return unless $class =~ /Goldb/;
   # return unless $anum eq 'A156542';
 
   eval "require $class" or die;
@@ -183,7 +184,9 @@ sub check_class {
     if ($want->[9] == 2) {
       unshift @$want, 1;
     }
+
   } elsif ($anum eq 'A082897') {
+    # perfect totients
     # full B-file goes to 2^32 which is too much to sieve
     @$want = grep {$_ < 200_000} @$want;
 
@@ -194,13 +197,14 @@ sub check_class {
     # twin primes shorten for now
     @$want = grep {$_ < 1_000_000} @$want;
 
-  } elsif ($anum eq 'A002858'    # UlamSequence shortened for now
+  } elsif ($anum eq 'A002858'
            || $anum eq 'A002859'
            || $anum eq 'A003666'
            || $anum eq 'A003667'
            || $anum eq 'A001857'
            || $anum eq 'A048951'
            || $anum eq 'A007300') {
+    # UlamSequence shortened for now
     if ($#$want > 1000) { $#$want = 1000; }
 
   } elsif ($anum eq 'A000004') {

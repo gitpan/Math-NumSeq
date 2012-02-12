@@ -42,7 +42,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 32;
+$VERSION = 33;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -410,6 +410,8 @@ L<Math::NumSeq::MobiusFunction>,
 L<Math::NumSeq::LiouvilleFunction>,
 L<Math::NumSeq::PrimeFactorCount>,
 L<Math::NumSeq::DivisorCount>,
+L<Math::NumSeq::GoldbachCount>,
+L<Math::NumSeq::LemoineCount>,
 L<Math::NumSeq::PythagoreanHypots>
 
 L<Math::NumSeq::Totient>,
@@ -455,7 +457,7 @@ L<Math::NumSeq::RepdigitAny>,
 L<Math::NumSeq::RepdigitRadix>,
 L<Math::NumSeq::HarshadNumbers>,
 L<Math::NumSeq::HappyNumbers>,
-L<Math::NumSeq::HappySteps>
+L<Math::NumSeq::HappySteps>,
 
 L<Math::NumSeq::CullenNumbers>,
 L<Math::NumSeq::ProthNumbers>,
@@ -464,6 +466,7 @@ L<Math::NumSeq::BaumSweet>,
 L<Math::NumSeq::KlarnerRado>,
 L<Math::NumSeq::UlamSequence>,
 L<Math::NumSeq::ReRound>,
+L<Math::NumSeq::ReReplace>,
 L<Math::NumSeq::MephistoWaltz>
 
 L<Math::NumSeq::CollatzSteps>,

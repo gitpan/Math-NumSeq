@@ -21,7 +21,7 @@ use strict;
 use List::Util 'min', 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 32;
+$VERSION = 33;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -38,7 +38,6 @@ use Math::Factor::XS 'prime_factors';
 # so sums up to hi need factorize to (hi^2)/4
 #
 
-use constant description => Math::NumSeq::__('Count of prime factors.');
 use constant characteristic_increasing => 0;
 use constant characteristic_count => 1;
 use constant characteristic_integer => 1;
@@ -66,6 +65,27 @@ safe=P where (P-1)/2 also prime (the "other" of the SGs).'),
       description => Math::NumSeq::__('Whether to count repeated prime factors, or only distinct prime factors.'),
    },
   ];
+
+sub description {
+  my ($self) = @_;
+  if (ref $self) {
+    return ($self->{'multiplicity'} eq 'repeated'
+            ? Math::NumSeq::__('Count of prime factors, including repetitions.')
+            : Math::NumSeq::__('Count of distinct prime factors.'))
+      . ($self->{'prime_type'} eq 'odd' ? "\nOdd primes only."
+         : $self->{'prime_type'} eq '4k+1' ? "\nPrimes of form 4k+1 only."
+         : $self->{'prime_type'} eq '4k+3' ? "\nPrimes of form 4k+3 only."
+         : $self->{'prime_type'} eq 'twin' ? "\nTwin primes only."
+         : $self->{'prime_type'} eq 'SG' ? "\nSophie Germain primes only (2P+1 also prime)."
+         : $self->{'prime_type'} eq 'SG' ? "\nSafe primes only ((P-1)/2 also prime)."
+         : "");
+  } else {
+    # class method
+    return Math::NumSeq::__('Count of prime factors.');
+  }
+}
+
+#------------------------------------------------------------------------------
 
 my %oeis_anum = (repeated => { all    => 'A001222',
                                odd    => 'A087436',
@@ -95,11 +115,12 @@ sub oeis_anum {
   return $oeis_anum{$self->{'multiplicity'}}->{$self->{'prime_type'}};
 }
 
+#------------------------------------------------------------------------------
 
 sub rewind {
   my ($self) = @_;
   ### PrimeFactorCount rewind()
-  $self->{'i'} = 1;
+  $self->{'i'} = $self->i_start;
   _restart_sieve ($self, 500);
 }
 sub _restart_sieve {

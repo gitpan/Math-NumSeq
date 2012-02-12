@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 32;
+$VERSION = 33;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -31,7 +31,6 @@ use Math::NumSeq::Base::IterateIth;
 #use Smart::Comments;
 
 # use constant name => Math::NumSeq::__('Polygonal Numbers');
-use constant description => Math::NumSeq::__('Polygonal numbers');
 use constant i_start => 0;
 use constant values_min => 0;
 use constant characteristic_increasing => 1;
@@ -59,6 +58,21 @@ use constant parameter_info_array =>
      description => Math::NumSeq::__('Which of the pair of values to show.'),
    },
   ];
+
+sub description {
+  my ($self) = @_;
+  if (ref $self) {
+    return "$self->{'polygonal'}-gonal numbers"
+      . ($self->{'pairs'} eq 'second' ? " of the second kind"
+         : $self->{'pairs'} eq 'both' ? " of both first and second kind"
+         : $self->{'pairs'} eq 'average' ? ", average of first and second kind"
+         : '')
+    } else {
+      # class method
+      return Math::NumSeq::__('Polygonal numbers');
+    }
+}
+
 
 #------------------------------------------------------------------------------
 my %oeis_anum;

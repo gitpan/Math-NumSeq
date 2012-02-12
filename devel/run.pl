@@ -33,7 +33,7 @@ $|=1;
 
 {
   my $pred_upto = 0;
-
+  
   my $values_class;
   # $values_class = $gen->values_class('Emirps');
   # $values_class = $gen->values_class('Repdigits');
@@ -55,9 +55,7 @@ $|=1;
   # # $values_class = $gen->values_class('MathSequence');
   # $values_class = $gen->values_class('DigitLength');
   # $values_class = $gen->values_class('DigitLengthCumulative');
-  # $values_class = $gen->values_class('HypotCount');
   # $values_class = $gen->values_class('PrimeIndexCount');
-  # $values_class = $gen->values_class('Loeschian');
   # $values_class = $gen->values_class('SumXsq3Ysq');
   # $values_class = $gen->values_class('ProthNumbers');
   # $values_class = $gen->values_class('DigitSumModulo');
@@ -67,11 +65,9 @@ $|=1;
   # $values_class = $gen->values_class('TotientPerfect');
   # $values_class = $gen->values_class('FractionDigits');
   require Math::NumSeq::DigitLength;
-  $values_class = 'Math::NumSeq::OEIS';
   $values_class = 'Math::NumSeq::SqrtDigits';
   $values_class = 'Math::NumSeq::DigitLength';
   $values_class = 'Math::NumSeq::DigitProduct';
-  $values_class = 'App::MathImage::NumSeq::UndulatingNumbers';
   $values_class = 'Math::NumSeq::TwinPrimes';
   $values_class = 'App::MathImage::NumSeq::Pell';
   $values_class = 'Math::NumSeq::Factorials';
@@ -82,8 +78,6 @@ $|=1;
   $values_class = 'App::MathImage::NumSeq::JugglerSteps';
   $values_class = 'Math::NumSeq::Kolakoski';
   $values_class = 'App::MathImage::NumSeq::GolombSequence';
-  $values_class = 'Math::NumSeq::Primorials';
-  $values_class = 'Math::NumSeq::MephistoWaltz';
   $values_class = 'App::MathImage::NumSeq::UlamSequence';
   $values_class = 'Math::NumSeq::Fibonacci';
   $values_class = 'App::MathImage::NumSeq::ReplicateDigits';
@@ -102,27 +96,21 @@ $|=1;
   $values_class = 'App::MathImage::NumSeq::HappySteps';
   $values_class = 'App::MathImage::NumSeq::RepdigitRadix';
   $values_class = 'App::MathImage::NumSeq::Runs';
-  $values_class = 'App::MathImage::NumSeq::HofstadterDiff';
   $values_class = 'App::MathImage::NumSeq::ConcatNumbers';
   $values_class = 'Math::NumSeq::TotientStepsSum';
   $values_class = 'App::MathImage::NumSeq::KolakoskiMajority';
-  $values_class = 'App::MathImage::NumSeq::PlanePathDelta';
   $values_class = 'Math::NumSeq::LucasNumbers';
   $values_class = 'Math::NumSeq::StarNumbers';
   $values_class = 'Math::NumSeq::ReverseAddSteps';
   $values_class = 'Math::NumSeq::Expression';
   $values_class = 'App::MathImage::NumSeq::PiDigits';
   $values_class = 'Math::NumSeq::PlanePathCoord';
-  $values_class = 'Math::NumSeq::AllDigits';
   $values_class = 'Math::NumSeq::Palindromes';
   $values_class = 'Math::NumSeq::RadixWithoutDigit';
   $values_class = 'Math::NumSeq::Tribonacci';
   $values_class = 'Math::NumSeq::AsciiSelf';
-  $values_class = 'App::MathImage::NumSeq::SquareFree';
-  $values_class = 'App::MathImage::NumSeq::PlanePathN';
   $values_class = 'App::MathImage::NumSeq::Squareful';
   $values_class = 'App::MathImage::NumSeq::SquareFreeKernel';
-  $values_class = 'App::MathImage::NumSeq::InnerSquareRoot';
   $values_class = 'Math::NumSeq::MathImageSqrtContinued';
   $values_class = 'Math::NumSeq::SqrtContinuedPeriod';
   $values_class = 'Math::NumSeq::LiouvilleFunction';
@@ -139,14 +127,34 @@ $|=1;
   $values_class = 'Math::NumSeq::PythagoreanHypots';
   $values_class = 'Math::NumSeq::PowerPart';
   $values_class = 'Math::NumSeq::PrimeFactorCount';
-
+  $values_class = 'Math::NumSeq::MathImageAbsCubicDiff';
+  $values_class = 'Math::NumSeq::OEIS';
+  $values_class = 'Math::NumSeq::RepdigitAny';
+  $values_class = 'Math::NumSeq::PlanePathDelta';
+  $values_class = 'Math::NumSeq::MathImageLoeschian';
+  $values_class = 'Math::NumSeq::MathImageHypotCount';
+  $values_class = 'Math::NumSeq::PlanePathTurn';
+  $values_class = 'Math::NumSeq::PlanePathN';
+  $values_class = 'Math::NumSeq::MathImageHofstadterDiff';
+  $values_class = 'Math::NumSeq::MathImageSlopingBinaryExcluded';
+  $values_class = 'Math::NumSeq::MathImageLemoineCount';
+  $values_class = 'Math::NumSeq::GoldbachCount';
+  $values_class = 'Math::NumSeq::MathImageUndulatingNumbers';
+  
   eval "require $values_class; 1" or die $@;
-  print Math::NumSeq::DigitLength->VERSION,"\n";
   my $seq = $values_class->new (
+                                 radix => 3,
+                                including_repdigits => 1,
+
+                                # goldbach_type => 'even',
+                                # i_start => 3,
+                                
+                                # including_one => 1,
+                                # anum  => 'A160722',
                                 # start => 1,
                                 #  radix => 4,
                                 # pythagorean_type => 'primitive',
-                                prime_type => 'twin',
+                                # prime_type => 'twin',
                                 # round_count => 2,
                                 # pairs => 'both',
                                 # powerful_type => 'all',
@@ -154,11 +162,12 @@ $|=1;
                                 # abundant_type => 'primitive',
                                 # multiples => 1,
                                 # digit => 1,
-
+                                
                                 # sqrt => 46,
-                                # planepath => 'FactorRationals',
-                                # line_type => 'X_axis',
-
+                                # planepath => 'DragonMidpoint',
+                                # delta_type=>'dY',
+                                # line_type => 'Diagonal',
+                                
                                 # order => 'forward',
                                 # including_self => 0,
                                 #
@@ -174,28 +183,26 @@ $|=1;
                                 # multiplicity => 'distinct',
                                 #
                                 # round => 'lower',
-                                # radix => 10,
                                 #
                                 # length => 2,
                                 # which => 'last',
-
+                                
                                 # polygonal => 6,
                                 # pairs => 'average',
-
-                                # planepath => 'SquareSpiral',
+                                
                                 # coordinate_type => 'AbsDiff',
                                 #planepath => 'CoprimeColumns',
                                 # i_start => 1,
                                 # endian => 'little',
-
+                                
+                                 planepath => 'SquareSpiral',
                                 # planepath => 'ZOrderCurve,radix=10',
                                 # i_start => 1,
                                 # planepath => 'PythagoreanTree,coordinates=BA',
                                 # planepath=>'RationalsTree,tree_type=CW',
                                 # planepath => 'DivisibleColumns,divisor_type=proper',
                                 # planepath => 'HilbertCurve',
-                                # delta_type=>'Dir4',
-
+                                
                                 # including_zero => 1,
                                 # # divisors_type => 'proper',
                                 # # algorithm_type => '1/2-3/2',
@@ -204,23 +211,24 @@ $|=1;
                                 # lo => 0,
                                 # hi => 10, # 200*$rep,
                                 # where => 'low',
-                                # oeis_anum  => 'A000396',
                                );
   my $hi = 50;
-
+  
   my $i_start = $seq->i_start;
   print "i_start $i_start\n";
   print "anum ",($seq->oeis_anum//'[undef]'),"\n";
+  print "description: ",($seq->description//'[undef]'),"\n";
   print "values_min ",($seq->values_min//'[undef]'),"\n";
   print "values_max ",($seq->values_max//'[undef]'),"\n";
   print "characteristic(increasing) ",($seq->characteristic('increasing')//'[undef]'),"\n";
+  print "characteristic(smaller)    ",($seq->characteristic('smaller')//'[undef]'),"\n";
   print "parameters: ",join(', ',map{$_->{'name'}}$seq->parameter_info_list),"\n";
   print "\n";
-
+  
   my $values_min = $seq->values_min;
   my $values_max = $seq->values_max;
   my $saw_value_min;
-
+  
   foreach my $rep (1 .. 2) {
     ### $seq
     if (my $radix = $seq->characteristic('digits')) {
@@ -228,7 +236,7 @@ $|=1;
     }
     print "by next(): ";
     my $show_i = 1;
-
+    
     my $check_pred_upto = ! $seq->characteristic('digits')
       && ! $seq->characteristic('count');
     foreach my $want_i ($i_start .. $i_start + $hi) {
@@ -266,8 +274,8 @@ $|=1;
       if ($i != $want_i) {
         print " oops, i=$i expected i=$want_i\n";
       }
-
-
+      
+      
       if ($seq->can('pred')) {
         if (! $seq->pred($value)) {
           print " oops, pred($value) false\n";
@@ -304,7 +312,7 @@ $|=1;
       $seq->rewind;
     }
   }
-
+  
   if ($seq->can('ith')) {
     print "by ith():  ";
     foreach my $i ($seq->i_start .. $seq->i_start + $hi - 1) {
@@ -327,14 +335,14 @@ $|=1;
       if ($value > DBL_INT_MAX) {
         last;
       }
-
+      
       if ($seq->can('pred') && ! $seq->pred($value)) {
         print " oops, pred($value) false\n";
       }
     }
     print "\n";
   }
-
+  
   if ($seq->can('pred')
       && ! ($seq->characteristic('count'))) {
     print "by pred(): ";
@@ -349,7 +357,7 @@ $|=1;
     }
     print "\n";
   }
-
+  
   foreach my $method ('ith','pred') {
     if ($seq->can($method)) {
       require Data::Float;
@@ -368,7 +376,7 @@ $|=1;
         #   print "     **** maybe oops\n";
         # }
       }
-
+      
       # Note: not "require Math::BigFloat" since it does tie-ins to BigInt
       # in its import
       eval "use Math::BigFloat; 1" or die;

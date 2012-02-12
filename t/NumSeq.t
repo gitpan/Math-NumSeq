@@ -25,7 +25,7 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
-my $test_count = (tests => 325)[1];
+my $test_count = (tests => 333)[1];
 plan tests => $test_count;
 
 # uncomment this to run the ### lines
@@ -106,6 +106,15 @@ sub dbl_max_neg {
   return - POSIX::DBL_MAX();
 }
 
+sub ternary {
+  my ($str) = @_;
+  my $ret = 0;
+  foreach my $digit (split //, $str) { # high to low
+    $ret = 3*$ret + $digit;
+  }
+  return $ret;
+}
+
 #------------------------------------------------------------------------------
 # Math::NumSeq various classes
 
@@ -117,6 +126,93 @@ foreach my $elem
    # MobiusFunction.pm
    # PiBits.pm
    
+   
+   # [ 'Math::NumSeq::UndulatingNumbers', 0, # with a!=b
+   #   [ ternary(0),ternary(1),ternary(2),
+   #     ternary(10),            ternary(12),
+   #     ternary(20),ternary(21),
+   #     ternary(101),             ternary(121),
+   #     ternary(202),ternary(212),
+   #     ternary(1010),              ternary(1212),
+   #     ternary(2020),ternary(2121),
+   #     ternary(10101),               ternary(12121),
+   #     ternary(20202),ternary(21212),
+   #   ],
+   #   { radix => 3,
+   #     including_repdigits => 0 },
+   # ],
+   # [ 'Math::NumSeq::UndulatingNumbers', 0, # with a!=b
+   #   [ ternary(0),ternary(1),ternary(2),
+   #     ternary(10),ternary(11),ternary(12),
+   #     ternary(20),ternary(21),ternary(22),
+   #     ternary(101),ternary(111),ternary(121),
+   #     ternary(202),ternary(212),ternary(222),
+   #     ternary(1010),ternary(1111),ternary(1212),
+   #     ternary(2020),ternary(2121),ternary(2222),
+   #     ternary(10101),ternary(11111),ternary(12121),
+   #     ternary(20202),ternary(21212),ternary(22222),
+   #   ],
+   #   { radix => 3 },
+   # ],
+   # [ 'Math::NumSeq::UndulatingNumbers', 0, # with a!=b
+   #   [ 0,1,2,3,4,5,6,7,8,9,
+   #     10,12,13,14,15,16,17,18,19,
+   #     20,21,23,24,25,26,27,28,29,
+   #     30,31,32,34,35,36,37,38,39,
+   #     40,41,42,43,45,46,47,48,49,
+   #     50,51,52,53,54,56,57,58,59,
+   #     60,61,62,63,64,65,67,68,69,
+   #     70,71,72,73,74,75,76,78,79,
+   #     80,81,82,83,84,85,86,87,89,
+   #     90,91,92,93,94,95,96,97,98,
+   #     101,121,131,141,151,161,171,181,191,
+   #     202,212,232,242,252,262,272,282,292,
+   #     303,313,323,343,353,363,373,383,393,
+   #     404,414,424,434,454,464,474,484,494,
+   #     505,515,525,535,545,565,575,585,595,
+   #     606,616,626,636,646,656,676,686,696,
+   #     707,717,727,737,747,757,767,787,797,
+   #     808,818,828,838,848,858,868,878,898,
+   #     909,919,929,939,949,959,969,979,989,
+   #     1010,1212,1313,1414,1515,1616,1717,1818,1919,
+   #   ],
+   #   { including_repdigits => 0 },
+   # ],
+   # [ 'Math::NumSeq::UndulatingNumbers', 0, # with a!=b
+   #   [ 0x0,   # 0b00
+   #     0x1,   # 0b01
+   #     0x2,   # 0b10
+   #     0x5,   # 0b101
+   #     0xA,   # 0b1010
+   #     0x15,  # 0b10101
+   #     0x2A,  # 0b101010
+   #     0x55,  # 0b1010101
+   #     0xAA,  # 0b1010_1010
+   #     0x155, # 0b1_0101_0101
+   #   ],
+   #   { radix => 2,
+   #     including_repdigits => 0 },
+   # ],
+   
+   [ 'Math::NumSeq::LemoineCount', 1,
+     [ 0, 0, 0, 0, 0, 1, 1, 1, 2, 0, 2, 1, 2, 0, 2, 1, 4, 0, ], # per POD
+   ],
+   
+   [ 'Math::NumSeq::GoldbachCount', 1,
+     [ 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 0, 1, 1, 2, 1, 2, 0, ], # per POD
+   ],
+   [ 'Math::NumSeq::GoldbachCount', 1,
+     [ 0, 1, 1, 1, 2, 1, 2, 2, ],
+     { goldbach_type => 'even' },
+   ],
+   
+   [ 'Math::NumSeq::ReReplace', 1,
+     [ 1,2,1,2,3,3,1,2,4,4,3,4, ] # from the POD
+   ],
+   
+   [ 'Math::NumSeq::ReRound', 1,
+     [ 1, 2, 4, 6, 10, 12, ]
+   ],
    [ 'Math::NumSeq::PrimeFactorCount', 1,
      [ 0,  # 1
        1,  # 2
@@ -140,7 +236,7 @@ foreach my $elem
      ],
      { multiplicity => 'distinct' },
    ],
-
+   
    [ 'Math::NumSeq::PrimeFactorCount', 1,
      [ 0,  # 1
        0,  # 2
@@ -265,9 +361,6 @@ foreach my $elem
    [ 'Math::NumSeq::PythagoreanHypots', 1,
      [ 5, 13, 17, 25, 29, 37, ],
      { pythagorean_type => 'primitive' },
-   ],
-   [ 'Math::NumSeq::ReRound', 1,
-     [ 1, 2, 4, 6, 10, 12, ]
    ],
    [ 'Math::NumSeq::UlamSequence', 1,
      [ 1, 2, 3, 4, 6, 8, 11, 13, 16, 18, 26, ]
@@ -1106,59 +1199,6 @@ foreach my $elem
    [ 'Math::NumSeq::Tetrahedral', 0,
      [ 0, 1, 4, 10, 20, 35, 56, 84, 120 ] ],
    
-   # # with a!=b
-   # [ 'Math::NumSeq::UndulatingNumbers', 0,
-   #   [ 0,1,2,3,4,5,6,7,8,9,
-   #     10,12,13,14,15,16,17,18,19,
-   #     20,21,23,24,25,26,27,28,29,
-   #     30,31,32,34,35,36,37,38,39,
-   #     40,41,42,43,45,46,47,48,49,
-   #     50,51,52,53,54,56,57,58,59,
-   #     60,61,62,63,64,65,67,68,69,
-   #     70,71,72,73,74,75,76,78,79,
-   #     80,81,82,83,84,85,86,87,89,
-   #     90,91,92,93,94,95,96,97,98,
-   #     101,121,131,141,151,161,171,181,191,
-   #     202,212,232,242,252,262,272,282,292,
-   #     303,313,323,343,353,363,373,383,393,
-   #     404,414,424,434,454,464,474,484,494,
-   #     505,515,525,535,545,565,575,585,595,
-   #     606,616,626,636,646,656,676,686,696,
-   #     707,717,727,737,747,757,767,787,797,
-   #     808,818,828,838,848,858,868,878,898,
-   #     909,919,929,939,949,959,969,979,989,
-   #     1010,1212,1313,1414,1515,1616,1717,1818,1919,
-   #   ] ],
-   #
-   # # with a!=b
-   # [ 'Math::NumSeq::UndulatingNumbers', 0,
-   #   [ 0x0,   # 0b00
-   #     0x1,   # 0b01
-   #     0x2,   # 0b10
-   #     0x5,   # 0b101
-   #     0xA,   # 0b1010
-   #     0x15,  # 0b10101
-   #     0x2A,  # 0b101010
-   #     0x55,  # 0b1010101
-   #     0xAA,  # 0b1010_1010
-   #     0x155, # 0b1_0101_0101
-   #   ],
-   #   { radix => 2 },
-   # ],
-   #
-   # # # http://oeis.org/A033619
-   # # # including a==b
-   # # [ 'Math::NumSeq::UndulatingNumbers', 0,
-   # #   [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
-   # #     15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27,
-   # #     28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
-   # #     41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53,
-   # #     54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66,
-   # #     67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79,
-   # #     80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92,
-   # #     93, 94, 95, 96, 97, 98, 99, 101, 111, 121, 131, 141,
-   # #     151 ] ],
-   
    [ 'Math::NumSeq::Emirps', 0,
      [ 13, 17, 31, 37, 71, 73, 79, 97, 107, 113, 149, 157,
        167, 179, 199, 311, 337, 347, 359, 389, 701, 709,
@@ -1388,7 +1428,7 @@ foreach my $elem
 
     my $got_str = join(',', @$got);
     my $want_str = join(',', @$want);
-    ok ($got_str, $want_str, "$name, lo=$lo hi=$hi");
+    ok ($got_str, $want_str, "$name by next(), lo=$lo hi=$hi");
     if ($got_str ne $want_str) {
       MyTestHelpers::diag ("got len ".scalar(@$got));
       MyTestHelpers::diag ("want len ".scalar(@$want));

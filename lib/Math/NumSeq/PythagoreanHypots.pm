@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 32;
+$VERSION = 33;
 
 use Math::NumSeq 7; # v.7 for _is_infinite()
 @ISA = ('Math::NumSeq');
@@ -33,7 +33,7 @@ use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 #use Smart::Comments;
 
 
-use constant description => Math::NumSeq::__('The hypotenuses of Pythagorean triples, ie. integer z for which x^2+y^2=z^2, for some integers x>=1,y>=1.  Primitives are those z where x,y have no common factor.');
+use constant description => Math::NumSeq::__('The hypotenuses of Pythagorean triples, ie. integers z for which there\'s some x>=1,y>=1 satisfying x^2+y^2=z^2.  Primitives hypotenuses are those z where x,y have no common factor.');
 use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
 use constant values_min => 5;

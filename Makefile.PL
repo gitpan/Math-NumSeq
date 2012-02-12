@@ -20,10 +20,8 @@
 use 5.004;
 use strict;
 use ExtUtils::MakeMaker;
-use lib 'inc';
-use MyMakeMakerExtras;
 
-MyMakeMakerExtras::WriteMakefile
+WriteMakefile
   (NAME         => 'Math::NumSeq',
    ABSTRACT     => 'Number sequences.',
    VERSION_FROM => 'lib/Math/NumSeq.pm',
@@ -78,29 +76,13 @@ MyMakeMakerExtras::WriteMakefile
    },
   );
 
-       # maximum_devel =>
-       # { description => 'Stuff used variously for development.',
-       #   requires => { 'B::Concise'       => 0,
-       #                 'Math::BigRat'     => 0,
-       #                 'Math::Fibonacci'  => 0,
-       #                 'Math::Polynomial' => 1,
-       #                 'Math::Prime::TiedArray'  => 1,
-       #                 'Math::TriangularNumbers' => 1,
-       #                 'Devel::TimeThis'  => 1,
-       #                 'Bit::Vector'      => 0,
-       #                 'String::Parity'   => 0,
-       #                 'String::BitCount' => 0,
-       #                 'Path::Class'      => 0,
-       #               },
-       # },
-
 #------------------------------------------------------------------------------
+# updating BuiltinTable.pm
+
 package MY;
 sub postamble {
   my ($makemaker) = @_;
-  return MyMakeMakerExtras::postamble ($makemaker) . <<'HERE';
-
-#------------------------------------------------------------------------------
+  return <<'HERE';
 
 oeis lib/Math/NumSeq/OEIS/Catalogue/Plugin/BuiltinTable.pm: tools/make-oeis-catalogue.pl lib/Math/NumSeq/*.pm
 	$(PERL) tools/make-oeis-catalogue.pl || (rm -f $@; false)

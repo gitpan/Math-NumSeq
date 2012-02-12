@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 32;
+$VERSION = 33;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -29,7 +29,6 @@ use Math::NumSeq;
 #use Smart::Comments;
 
 
-use constant description => Math::NumSeq::__('Reverse-add sequence, reverse the digits and add.');
 use constant i_start => 0;
 
 use constant characteristic_integer => 1;
@@ -62,6 +61,15 @@ use constant parameter_info_array =>
    },
    Math::NumSeq::Base::Digits->parameter_info_list(),
   ];
+
+sub description {
+  my ($self) = @_;
+  my $ret = Math::NumSeq::__('Reverse-add sequence, reverse the digits and add.');
+  if (ref $self) { # object method
+    $ret .= "\nStarting from $self->{'start'}, in radix $self->{'radix'}.";
+  }
+  return $ret;
+}
 
 #------------------------------------------------------------------------------
 my %oeis_anum;

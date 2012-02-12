@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 32;
+$VERSION = 33;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 625 A-numbers in 84 modules
+# total 630 A-numbers in 87 modules
 
 use constant info_arrayref =>
 [
@@ -1195,6 +1195,22 @@ use constant info_arrayref =>
     ]
   },
   {
+    'anum' => 'A061358',
+    'class' => 'Math::NumSeq::GoldbachCount',
+    'parameters' => [
+      'i_start',
+      0
+    ]
+  },
+  {
+    'anum' => 'A045917',
+    'class' => 'Math::NumSeq::GoldbachCount',
+    'parameters' => [
+      'goldbach_type',
+      'even'
+    ]
+  },
+  {
     'anum' => 'A001462',
     'class' => 'Math::NumSeq::GolombSequence'
   },
@@ -1277,6 +1293,18 @@ use constant info_arrayref =>
   {
     'anum' => 'A000002',
     'class' => 'Math::NumSeq::Kolakoski'
+  },
+  {
+    'anum' => 'A046926',
+    'class' => 'Math::NumSeq::LemoineCount'
+  },
+  {
+    'anum' => 'A046924',
+    'class' => 'Math::NumSeq::LemoineCount',
+    'parameters' => [
+      'one_as_prime',
+      1
+    ]
   },
   {
     'anum' => 'A008836',
@@ -2513,6 +2541,10 @@ use constant info_arrayref =>
       'digit',
       9
     ]
+  },
+  {
+    'anum' => 'A100002',
+    'class' => 'Math::NumSeq::ReReplace'
   },
   {
     'anum' => 'A002491',

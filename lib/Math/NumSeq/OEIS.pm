@@ -21,7 +21,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION','@ISA';
-$VERSION = 32;
+$VERSION = 33;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -144,6 +144,16 @@ See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 =item C<$seq = Math::NumSeq::OEIS-E<gt>new (anum =E<gt> 'A000000')>
 
 Create and return a new sequence object.
+
+=item C<$str = $seq-E<gt>description()>
+
+Return a human-readable description of the sequence.  For the downloaded
+files this is the "name" part, a short description of the sequence.
+
+A small number of sequences may have non-ascii characters here.  In Perl 5.8
+and up they're decoded to Perl wide-chars.  Not sure what to do for earlier
+Perl, currently they're left as whatever bytes the download gave, probably
+utf-8.
 
 =back
 

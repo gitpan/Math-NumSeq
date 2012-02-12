@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 32;
+$VERSION = 33;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -28,13 +28,13 @@ use Math::NumSeq;
 #use Devel::Comments;
 
 
-use constant description => Math::NumSeq::__('Count of divisors 1 <= divisor <= i.');
+use constant description => Math::NumSeq::__('Count of divisors of i (including 1 and i).');
 use constant i_start => 1;
 use constant characteristic_count => 1;
 use constant characteristic_increasing => 0;
 
 
-# "proper" divisors just means 1 less in each value, not sure much value in
+# "proper" divisors just means 1 less in each value, not sure much use for
 # that.
 #
 # use constant parameter_info_array =>

@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 32;
+$VERSION = 33;
 
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IterateIth;
@@ -262,7 +262,8 @@ multiple of i-1 and subtracting an i-1 would leave it still so.
 
 =head1 SEE ALSO
 
-L<Math::NumSeq>
+L<Math::NumSeq>,
+L<Math::NumSeq::ReReplace>
 
 =head1 HOME PAGE
 

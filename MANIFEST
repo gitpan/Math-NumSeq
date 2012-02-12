@@ -18,6 +18,7 @@ devel/expression.pl
 devel/fibbinary.pl
 devel/fibonacci-word.pl
 devel/golden-sequence.pl
+devel/grep-oeis-non-ascii.pl
 devel/happy.pl
 devel/juggler.pl
 devel/kimberling.pl
@@ -59,8 +60,6 @@ devel/SafePrimes.t
 devel/sqrt-continued.pl
 devel/totient.pl
 devel/triangular.pl
-inc/my_pod2html
-inc/MyMakeMakerExtras.pm
 lib/Math/NumSeq.pm
 lib/Math/NumSeq/Abundant.pm
 lib/Math/NumSeq/All.pm
@@ -96,6 +95,7 @@ lib/Math/NumSeq/Fibonacci.pm
 lib/Math/NumSeq/FibonacciWord.pm
 lib/Math/NumSeq/File.pm
 lib/Math/NumSeq/FractionDigits.pm
+lib/Math/NumSeq/GoldbachCount.pm
 lib/Math/NumSeq/GolombSequence.pm
 lib/Math/NumSeq/HappyNumbers.pm
 lib/Math/NumSeq/HappySteps.pm
@@ -103,6 +103,7 @@ lib/Math/NumSeq/HarshadNumbers.pm
 lib/Math/NumSeq/JugglerSteps.pm
 lib/Math/NumSeq/KlarnerRado.pm
 lib/Math/NumSeq/Kolakoski.pm
+lib/Math/NumSeq/LemoineCount.pm
 lib/Math/NumSeq/LiouvilleFunction.pm
 lib/Math/NumSeq/LucasNumbers.pm
 lib/Math/NumSeq/MephistoWaltz.pm
@@ -135,6 +136,7 @@ lib/Math/NumSeq/RadixWithoutDigit.pm
 lib/Math/NumSeq/RepdigitAny.pm
 lib/Math/NumSeq/RepdigitRadix.pm
 lib/Math/NumSeq/Repdigits.pm
+lib/Math/NumSeq/ReReplace.pm
 lib/Math/NumSeq/ReRound.pm
 lib/Math/NumSeq/ReverseAdd.pm
 lib/Math/NumSeq/ReverseAddSteps.pm
@@ -203,11 +205,18 @@ xt/0-file-is-part-of.t
 xt/0-META-read.t
 xt/0-no-debug-left-on.t
 xt/0-Test-ConsistentVersion.t
-xt/0-Test-DistManifest.t
 xt/0-Test-Pod.t
 xt/0-Test-Synopsis.t
 xt/0-Test-YAML-Meta.t
 xt/MyOEIS.pm
 xt/NumSeq-oeis.t
 xt/pod_lists.t
+xtools/my-check-copyright-years.sh
+xtools/my-check-spelling.sh
+xtools/my-deb.sh
+xtools/my-diff-prev.sh
+xtools/my-kwalitee.sh
+xtools/my-manifest.sh
+xtools/my-tags.sh
+xtools/my-wunused.sh
 META.yml                                 Module meta-data (added by MakeMaker)
