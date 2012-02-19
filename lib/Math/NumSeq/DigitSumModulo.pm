@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 33;
+$VERSION = 34;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -66,35 +66,22 @@ use constant description => Math::NumSeq::__('Sum of the digits in the given rad
 #    A026147  numbers with ...
 #    A001285  thue-morse
 #
-my @oeis_anum = (undef,
+my @oeis_anum = (
+                 # OEIS-Catalogue array begin
+                 undef,
                  undef,
 
-                 'A010060', # 2 binary (Thue-Morse)
-                 # OEIS-Catalogue: A010060 radix=2
+                 'A010060', # radix=2 # binary (Thue-Morse)
+                 'A053838', # radix=3 # ternary
+                 'A053839', # radix=4
+                 'A053840', # radix=5
+                 'A053841', # radix=6
+                 'A053842', # radix=7
+                 'A053843', # radix=8
+                 'A053844', # radix=9
+                 'A053837', # radix=10
 
-                 'A053838', # 3 ternary
-                 # OEIS-Catalogue: A053838 radix=3
-
-                 'A053839', # 4
-                 # OEIS-Catalogue: A053839 radix=4
-
-                 'A053840', # 5
-                 # OEIS-Catalogue: A053840 radix=5
-
-                 'A053841', # 6
-                 # OEIS-Catalogue: A053841 radix=6
-
-                 'A053842', # 7
-                 # OEIS-Catalogue: A053842 radix=7
-
-                 'A053843', # 8
-                 # OEIS-Catalogue: A053843 radix=8
-
-                 'A053844', # 9
-                 # OEIS-Catalogue: A053844 radix=9
-
-                 'A053837', # 10
-                 # OEIS-Catalogue: A053837 radix=10
+                 # OEIS-Catalogue array end
                 );
 sub oeis_anum {
   my ($self) = @_;
@@ -188,7 +175,7 @@ where it's 0 called "evil" numbers
 
 =head1 FUNCTIONS
 
-See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
+See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 

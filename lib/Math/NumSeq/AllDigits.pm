@@ -1,15 +1,3 @@
-# endian => 'high'
-# endian => 'low'
-
-# endian => 'big'
-# endian => 'little'
-
-# order => forward
-#          reverse
-#          sort_inc
-#          sort_dec
-
-
 # Copyright 2011, 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
@@ -32,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 33;
+$VERSION = 34;
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
 
@@ -48,7 +36,7 @@ use constant default_i_start => 0;
 
 use constant parameter_info_array =>
   [
-   Math::NumSeq::Base::Digits->parameter_info_list, # 'radix'
+   Math::NumSeq::Base::Digits->parameter_info_list,  # 'radix'
    {
     name        => 'order',
     share_key   => 'order_frs',
@@ -276,7 +264,7 @@ digits within each integer,
 
 =head1 FUNCTIONS
 
-See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
+See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 
@@ -302,10 +290,28 @@ to radix-1.
 L<Math::NumSeq>,
 L<Math::NumSeq::All>,
 L<Math::NumSeq::SqrtDigits>,
-L<Math::NumSeq::DigitLength>
+L<Math::NumSeq::DigitLength>,
+L<Math::NumSeq::Runs>
+
+=head1 HOME PAGE
+
+http://user42.tuxfamily.org/math-numseq/index.html
+
+=head1 LICENSE
+
+Copyright 2010, 2011, 2012 Kevin Ryde
+
+Math-NumSeq is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+Math-NumSeq is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+more details.
+
+You should have received a copy of the GNU General Public License along with
+Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 =cut
-
-# Local variables:
-# compile-command: "math-image --values=AllDigits"
-# End:

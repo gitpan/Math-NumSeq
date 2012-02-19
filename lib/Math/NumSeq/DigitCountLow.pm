@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 33;
+$VERSION = 34;
 
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IterateIth;
@@ -60,8 +60,8 @@ $oeis_anum[1]->[3]->[0] = 'A007949'; # base 3 low 0s, starting i=1
 $oeis_anum[1]->[5]->[0] = 'A112765'; # base 5 low 0s, starting i=1
 # OEIS-Catalogue: A112765 radix=5 digit=0 i_start=1
 
-# $oeis_anum[1]->[6]->[0] = 'A122841'; # base 6 low 0s, starting i=1
-# # OEIS-Catalogue: A122841 radix=6 digit=0 i_start=1
+$oeis_anum[1]->[6]->[0] = 'A122841'; # base 6 low 0s, starting i=1
+# OEIS-Catalogue: A122841 radix=6 digit=0 i_start=1
 
 $oeis_anum[1]->[10]->[0] = 'A122840'; # base 10 low 0s, starting i=1
 # OEIS-Catalogue: A122840 radix=10 digit=0 i_start=1
@@ -140,7 +140,7 @@ the low end.
 
 =head1 FUNCTIONS
 
-See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
+See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 

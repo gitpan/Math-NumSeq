@@ -30,7 +30,7 @@ use Carp;
 use Fcntl;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 33;
+$VERSION = 34;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -89,3 +89,69 @@ sub next {
 
 1;
 __END__
+
+=for stopwords Ryde Math-NumSeq
+
+=head1 NAME
+
+Math::NumSeq::File -- sequence read from a file
+
+=head1 SYNOPSIS
+
+ use Math::NumSeq::File;
+ my $seq = Math::NumSeq::File->new (filename => 'foo.txt');
+ my ($i, $value) = $seq->next;
+
+=head1 DESCRIPTION
+
+A sequence of values read from a file.  This is designed to read a file of
+numbers in NumSeq style.
+
+The intention is to be flexible about the file format and to auto-detect as
+far as possible.  Currently the only format is plain text, either a single
+value per line, or a pair i index and value.
+
+    123                   # one value per line
+    456
+
+    1  123                # i and value per line
+    2  456
+
+=head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
+
+=over 4
+
+=item C<$seq = Math::NumSeq::File-E<gt>new (filename =E<gt> $filename)>
+
+Create and return a new sequence object to read C<$filename>.
+
+=back
+
+=head1 SEE ALSO
+
+L<Math::NumSeq>
+
+=head1 HOME PAGE
+
+http://user42.tuxfamily.org/math-numseq/index.html
+
+=head1 LICENSE
+
+Copyright 2011, 2012 Kevin Ryde
+
+Math-NumSeq is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+Math-NumSeq is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+more details.
+
+You should have received a copy of the GNU General Public License along with
+Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
+
+=cut

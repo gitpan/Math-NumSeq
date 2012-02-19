@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 33;
+$VERSION = 34;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -117,7 +117,7 @@ the product is 1 for numbers 0b1, 0b11, 0b111, etc, 2**k-1, or 0 otherwise.
 
 =head1 FUNCTIONS
 
-See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
+See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 

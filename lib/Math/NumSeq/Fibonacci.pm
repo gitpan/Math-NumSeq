@@ -21,7 +21,7 @@ use strict;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 33;
+$VERSION = 34;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
 
@@ -160,7 +160,7 @@ The Fibonacci sequence 0,1,1,2,3,5,8,13,21, etc.  The start is i=0 values
 
 =head1 FUNCTIONS
 
-See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
+See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 

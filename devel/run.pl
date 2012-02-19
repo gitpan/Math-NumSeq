@@ -33,7 +33,7 @@ $|=1;
 
 {
   my $pred_upto = 0;
-  
+
   my $values_class;
   # $values_class = $gen->values_class('Emirps');
   # $values_class = $gen->values_class('Repdigits');
@@ -95,7 +95,6 @@ $|=1;
   $values_class = 'Math::NumSeq::SqrtEngel';
   $values_class = 'App::MathImage::NumSeq::HappySteps';
   $values_class = 'App::MathImage::NumSeq::RepdigitRadix';
-  $values_class = 'App::MathImage::NumSeq::Runs';
   $values_class = 'App::MathImage::NumSeq::ConcatNumbers';
   $values_class = 'Math::NumSeq::TotientStepsSum';
   $values_class = 'App::MathImage::NumSeq::KolakoskiMajority';
@@ -135,20 +134,24 @@ $|=1;
   $values_class = 'Math::NumSeq::MathImageHypotCount';
   $values_class = 'Math::NumSeq::PlanePathTurn';
   $values_class = 'Math::NumSeq::PlanePathN';
-  $values_class = 'Math::NumSeq::MathImageHofstadterDiff';
   $values_class = 'Math::NumSeq::MathImageSlopingBinaryExcluded';
   $values_class = 'Math::NumSeq::MathImageLemoineCount';
   $values_class = 'Math::NumSeq::GoldbachCount';
-  $values_class = 'Math::NumSeq::MathImageUndulatingNumbers';
-  
+  $values_class = 'Math::NumSeq::UndulatingNumbers';
+  $values_class = 'Math::NumSeq::MathImageBinaryUndulants';
+  $values_class = 'Math::NumSeq::HofstadterFigure';
+  $values_class = 'Math::NumSeq::Runs';
+
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new (
-                                 radix => 3,
-                                including_repdigits => 1,
+                                runs_type => '1rep',
+                                # start => 5,
+                                # radix => 3,
+                                # including_repdigits => 1,
 
                                 # goldbach_type => 'even',
                                 # i_start => 3,
-                                
+
                                 # including_one => 1,
                                 # anum  => 'A160722',
                                 # start => 1,
@@ -162,12 +165,12 @@ $|=1;
                                 # abundant_type => 'primitive',
                                 # multiples => 1,
                                 # digit => 1,
-                                
+
                                 # sqrt => 46,
                                 # planepath => 'DragonMidpoint',
                                 # delta_type=>'dY',
                                 # line_type => 'Diagonal',
-                                
+
                                 # order => 'forward',
                                 # including_self => 0,
                                 #
@@ -178,7 +181,6 @@ $|=1;
                                 # # # expression => 'atan(x)',
                                 # # expression => '9*i*i',
                                 #
-                                # runs_type => '1to2N',
                                 # factor_count => 8,
                                 # multiplicity => 'distinct',
                                 #
@@ -186,23 +188,23 @@ $|=1;
                                 #
                                 # length => 2,
                                 # which => 'last',
-                                
+
                                 # polygonal => 6,
                                 # pairs => 'average',
-                                
+
                                 # coordinate_type => 'AbsDiff',
                                 #planepath => 'CoprimeColumns',
                                 # i_start => 1,
                                 # endian => 'little',
-                                
-                                 planepath => 'SquareSpiral',
+
+                                planepath => 'SquareSpiral',
                                 # planepath => 'ZOrderCurve,radix=10',
                                 # i_start => 1,
                                 # planepath => 'PythagoreanTree,coordinates=BA',
                                 # planepath=>'RationalsTree,tree_type=CW',
                                 # planepath => 'DivisibleColumns,divisor_type=proper',
                                 # planepath => 'HilbertCurve',
-                                
+
                                 # including_zero => 1,
                                 # # divisors_type => 'proper',
                                 # # algorithm_type => '1/2-3/2',
@@ -212,8 +214,8 @@ $|=1;
                                 # hi => 10, # 200*$rep,
                                 # where => 'low',
                                );
-  my $hi = 50;
-  
+  my $hi = 10;
+
   my $i_start = $seq->i_start;
   print "i_start $i_start\n";
   print "anum ",($seq->oeis_anum//'[undef]'),"\n";
@@ -224,11 +226,11 @@ $|=1;
   print "characteristic(smaller)    ",($seq->characteristic('smaller')//'[undef]'),"\n";
   print "parameters: ",join(', ',map{$_->{'name'}}$seq->parameter_info_list),"\n";
   print "\n";
-  
+
   my $values_min = $seq->values_min;
   my $values_max = $seq->values_max;
   my $saw_value_min;
-  
+
   foreach my $rep (1 .. 2) {
     ### $seq
     if (my $radix = $seq->characteristic('digits')) {
@@ -236,7 +238,7 @@ $|=1;
     }
     print "by next(): ";
     my $show_i = 1;
-    
+
     my $check_pred_upto = ! $seq->characteristic('digits')
       && ! $seq->characteristic('count');
     foreach my $want_i ($i_start .. $i_start + $hi) {
@@ -274,8 +276,8 @@ $|=1;
       if ($i != $want_i) {
         print " oops, i=$i expected i=$want_i\n";
       }
-      
-      
+
+
       if ($seq->can('pred')) {
         if (! $seq->pred($value)) {
           print " oops, pred($value) false\n";
@@ -298,8 +300,10 @@ $|=1;
           $i = Math::BigInt->new($i);
         }
         my $ith_value = $seq->ith($i);
-        if (defined $value && $ith_value != $value) {
-          print " oops, ith($i)=$ith_value next=$value\n";
+        unless ((defined $value == defined $ith_value)
+                && (! defined $value
+                    || $ith_value != $value)) {
+          print " oops, ith($i)=",$ith_value//'undef'," next=",$value//'undef',"\n";
         }
       }
     }
@@ -312,7 +316,7 @@ $|=1;
       $seq->rewind;
     }
   }
-  
+
   if ($seq->can('ith')) {
     print "by ith():  ";
     foreach my $i ($seq->i_start .. $seq->i_start + $hi - 1) {
@@ -335,14 +339,14 @@ $|=1;
       if ($value > DBL_INT_MAX) {
         last;
       }
-      
+
       if ($seq->can('pred') && ! $seq->pred($value)) {
         print " oops, pred($value) false\n";
       }
     }
     print "\n";
   }
-  
+
   if ($seq->can('pred')
       && ! ($seq->characteristic('count'))) {
     print "by pred(): ";
@@ -357,7 +361,7 @@ $|=1;
     }
     print "\n";
   }
-  
+
   foreach my $method ('ith','pred') {
     if ($seq->can($method)) {
       require Data::Float;
@@ -376,7 +380,7 @@ $|=1;
         #   print "     **** maybe oops\n";
         # }
       }
-      
+
       # Note: not "require Math::BigFloat" since it does tie-ins to BigInt
       # in its import
       eval "use Math::BigFloat; 1" or die;

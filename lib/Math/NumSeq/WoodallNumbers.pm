@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 33;
+$VERSION = 34;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -154,11 +154,11 @@ The Woodall numbers 1, 7, 23, 63, etc, i*2^i-1 starting from i=1.
 
 =head1 FUNCTIONS
 
-See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
+See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 
-=item C<$seq = Math::NumSeq::WoodallNumbers-E<gt>new (key=E<gt>value,...)>
+=item C<$seq = Math::NumSeq::WoodallNumbers-E<gt>new ()>
 
 Create and return a new sequence object.
 

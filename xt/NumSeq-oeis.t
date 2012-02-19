@@ -119,7 +119,10 @@ sub check_class {
   ### $class
   ### $parameters
 
-  return if $class eq 'Math::NumSeq::PlanePathCoord'; # tested in its dist
+  return if $class eq 'Math::NumSeq::PlanePathCoord' # tested in its own dist
+    || $class eq 'Math::NumSeq::PlanePathDelta'
+      || $class eq 'Math::NumSeq::PlanePathTurn'
+        || $class eq 'Math::NumSeq::PlanePathN';
 
 
   # skip all except ...
@@ -133,12 +136,12 @@ sub check_class {
   # return unless $class =~ /Luc|Fib|Cullen|Wood/;
   # return unless $class =~ /Lucas/;
   # return unless $class =~ /RadixWithout/;
-  # return unless $class =~ /Perrin/;
+  # return unless $class =~ /Modulo/;
   # return unless $class =~ /SqrtD/;
   # return unless $class =~ /Power/;
-  # return unless $class =~ /RepdigitRadix/;
-  # return unless $class =~ /ReverseAdd/;
-  # return unless $class =~ /Goldb/;
+  # return unless $class =~ /Repdigit/;
+  # return unless $class =~ /Hof/;
+  # return unless $class =~ /Undul/;
   # return unless $anum eq 'A156542';
 
   eval "require $class" or die;
@@ -215,12 +218,16 @@ sub check_class {
     # sophie germain shorten for now
     @$want = grep {$_ < 1_000_000} @$want;
 
+  } elsif ($anum eq 'A022937') {
+    # missing 1192 ...
+    @$want = grep {$_ < 1192} @$want;
+
   } elsif ($class =~ /AlmostPrimes/) {
     # AlmostPrimes shorten for now
     @$want = grep {$_ < 10_000_000} @$want;
 
-  # } elsif ($class =~ /PrimeFactorCount/) {
-  #   if ($#$want > 2000) { $#$want = 20000 }
+    # } elsif ($class =~ /PrimeFactorCount/) {
+    #   if ($#$want > 2000) { $#$want = 20000 }
 
   } elsif ($class =~ /ReverseAdd/) {
     # shorten the biggest nums
@@ -235,9 +242,27 @@ sub check_class {
            || $anum eq 'A036967' # Powerful all power=4
            || $anum eq 'A069492' # Powerful all power=5
            || $anum eq 'A069493' # Powerful all power=6
-          ) { 
+          ) {
     # shorten for now
     @$want = grep {$_ < 30_000} @$want;
+
+  } elsif (
+           $anum eq 'A004558'
+           || $anum eq 'A004559'
+           || $anum eq 'A004560'
+           || $anum eq 'A004561'
+           || $anum eq 'A004564'
+           || $anum eq 'A004565'
+           || $anum eq 'A004566'
+           || $anum eq 'A004568'
+           || $anum eq 'A004572'
+           || $anum eq 'A004573'
+           || $anum eq 'A004574'
+           || $anum eq 'A004580'
+           || $anum eq 'A004581'
+          ) {
+    splice @$want, -32;
+    MyTestHelpers::diag ("trim doubtful end $anum $name");
 
   } elsif ($anum eq 'A004542') {  # sqrt(2) in base 5
     # trim seeming bad end

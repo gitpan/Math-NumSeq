@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 33;
+$VERSION = 34;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -156,7 +156,7 @@ starting from 3,0,2.  So for example 29 is 12+17.
 
 =head1 FUNCTIONS
 
-See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
+See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 
@@ -174,5 +174,26 @@ Return the C<$i>'th value from the sequence.
 
 L<Math::NumSeq>,
 L<Math::NumSeq::Fibonacci>
+
+=head1 HOME PAGE
+
+http://user42.tuxfamily.org/math-numseq/index.html
+
+=head1 LICENSE
+
+Copyright 2010, 2011, 2012 Kevin Ryde
+
+Math-NumSeq is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+Math-NumSeq is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+more details.
+
+You should have received a copy of the GNU General Public License along with
+Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 =cut

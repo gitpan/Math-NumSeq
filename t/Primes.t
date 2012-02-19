@@ -36,7 +36,7 @@ use Math::NumSeq::Primes;
 # VERSION
 
 {
-  my $want_version = 33;
+  my $want_version = 34;
   ok ($Math::NumSeq::Primes::VERSION, $want_version, 'VERSION variable');
   ok (Math::NumSeq::Primes->VERSION,  $want_version, 'VERSION class method');
 

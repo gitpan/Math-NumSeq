@@ -23,10 +23,6 @@
 # ->shift
 # ->inverse  some with known ways to calculate
 # ->is_subset_of
-#
-# ->value_to_i_floor
-# ->pred undef if unknown ?
-
 
 # lo,hi   i or value
 # lo_value,hi_value
@@ -42,7 +38,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 33;
+$VERSION = 34;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -399,7 +395,8 @@ L<Math::NumSeq::PowerPart>
 L<Math::NumSeq::Even>,
 L<Math::NumSeq::Odd>,
 L<Math::NumSeq::All>,
-L<Math::NumSeq::AllDigits>
+L<Math::NumSeq::AllDigits>,
+L<Math::NumSeq::Runs>
 
 L<Math::NumSeq::Primes>,
 L<Math::NumSeq::TwinPrimes>,
@@ -455,6 +452,7 @@ L<Math::NumSeq::Beastly>,
 L<Math::NumSeq::Repdigits>,
 L<Math::NumSeq::RepdigitAny>,
 L<Math::NumSeq::RepdigitRadix>,
+L<Math::NumSeq::UndulatingNumbers>,
 L<Math::NumSeq::HarshadNumbers>,
 L<Math::NumSeq::HappyNumbers>,
 L<Math::NumSeq::HappySteps>,
@@ -474,7 +472,8 @@ L<Math::NumSeq::ReverseAdd>,
 L<Math::NumSeq::ReverseAddSteps>,
 L<Math::NumSeq::JugglerSteps>,
 L<Math::NumSeq::SternDiatomic>,
-L<Math::NumSeq::NumAronson>
+L<Math::NumSeq::NumAronson>,
+L<Math::NumSeq::HofstadterFigure>
 
 L<Math::NumSeq::Kolakoski>,
 L<Math::NumSeq::GolombSequence>,

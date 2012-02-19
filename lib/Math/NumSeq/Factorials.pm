@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 33;
+$VERSION = 34;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -125,7 +125,7 @@ The sequence of factorials, 1, 2, 6, 24, 120, etc, being the product
 
 =head1 FUNCTIONS
 
-See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
+See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 

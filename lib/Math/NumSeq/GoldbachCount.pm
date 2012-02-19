@@ -25,7 +25,7 @@ use strict;
 use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 33;
+$VERSION = 34;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
@@ -39,7 +39,6 @@ use constant description => Math::NumSeq::__('The number of ways i can be repres
 use constant default_i_start => 1;
 use constant values_min => 0;
 use constant characteristic_count => 1;
-use constant characteristic_integer => 1;
 
 # not documented yet
 use constant parameter_info_array =>

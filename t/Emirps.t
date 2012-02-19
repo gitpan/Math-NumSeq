@@ -35,7 +35,7 @@ use Math::NumSeq::Emirps;
 # VERSION
 
 {
-  my $want_version = 33;
+  my $want_version = 34;
   ok ($Math::NumSeq::Emirps::VERSION, $want_version, 'VERSION variable');
   ok (Math::NumSeq::Emirps->VERSION,  $want_version, 'VERSION class method');
 

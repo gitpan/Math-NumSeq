@@ -28,7 +28,7 @@ use ExtUtils::Manifest;
 use Module::Util;
 
 use vars '$VERSION';
-$VERSION = 33;
+$VERSION = 34;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -96,6 +96,8 @@ foreach my $filename (@filenames) {
       next if /^\s*$/;
       ($anum,$parameters,$comment) = /^\s*'(A\d+)',?\s*(?:#\s*(.*?)(#.*)?)?$/
         or die "$where: oops, bad OEIS array line: $_";
+      defined $parameters
+        or die "$where: no parameters comment part in array line: $_";
     } else {
       next;
     }

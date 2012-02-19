@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 33;
+$VERSION = 34;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -46,23 +46,21 @@ use Math::NumSeq::Base::Digits;
 #    A036787 - roman numeral length == decimal length
 #    A036788 - roman numeral length <= decimal length
 #
-my @oeis_anum;
-BEGIN {
-  $oeis_anum[2] = 'A070939';  # 2 binary
-  # OEIS-Catalogue: A070939 radix=2
-
-  $oeis_anum[3] = 'A081604';  # 3 ternary
-  # OEIS-Catalogue: A081604 radix=3
-
-  $oeis_anum[4] = 'A110591';  # 4
-  # OEIS-Catalogue: A110591 radix=4
-
-  $oeis_anum[5] = 'A110592';  # 5
-  # OEIS-Catalogue: A110592 radix=5
-
-  $oeis_anum[10] = 'A055642';  # 10
-  # OEIS-Catalogue: A055642 radix=10
-}
+my @oeis_anum = (
+                 # OEIS-Catalogue array begin
+                 undef,     # 0
+                 undef,     # 1
+                 'A070939', # radix=2
+                 'A081604', # radix=3 # ternary
+                 'A110591', # radix=4
+                 'A110592', # radix=5
+                 undef,     # 6
+                 undef,     # 7
+                 undef,     # 8
+                 undef,     # 9
+                 'A055642', # radix=10
+                 # OEIS-Catalogue array end
+                );
 sub oeis_anum {
   my ($self) = @_;
   return $oeis_anum[$self->{'radix'}];
@@ -132,7 +130,7 @@ The length in digits of integers 0 upwards, so for example ternary
 
 =head1 FUNCTIONS
 
-See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
+See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 

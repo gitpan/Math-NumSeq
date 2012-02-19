@@ -16,6 +16,11 @@ You should have received a copy of the GNU General Public License along
 with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
+
+
+Version 34, February 2012
+    - new HofstadterFigure, Runs, UndulatingNumbers
+
 Version 33, February 2012
     - new GoldbachCount, LemoineCount, ReReplace
     - OEIS description() utf-8 and more entities from downloaded files

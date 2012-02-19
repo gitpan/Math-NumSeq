@@ -1,4 +1,4 @@
-# Copyright 2011 Kevin Ryde
+# Copyright 2011, 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -113,7 +113,7 @@ The sum of squares of digits in each i, so 0, 1, 4, 9, 16, ..., 81, 1, 2, 5,
 
 =head1 FUNCTIONS
 
-See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
+See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 
@@ -147,7 +147,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2011 Kevin Ryde
+Copyright 2011, 2012 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

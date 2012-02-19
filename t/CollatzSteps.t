@@ -35,7 +35,7 @@ use Math::NumSeq::CollatzSteps;
 # VERSION
 
 {
-  my $want_version = 33;
+  my $want_version = 34;
   ok ($Math::NumSeq::CollatzSteps::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::CollatzSteps->VERSION,  $want_version,

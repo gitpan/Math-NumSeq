@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 33;
+$VERSION = 34;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -54,15 +54,16 @@ use constant parameter_info_array =>
 #    A008834 - largest cube dividing n
 #    A008835 - largest 4th power dividing n
 #
-my @oeis_anum = (undef,
-                 undef,
-                 'A000188',  # 2 sqrt of largest square dividing n
-                 'A053150',  # 3 cbrt of largest cube dividing n
-                 'A053164',  # 4th root of largest 4th power dividing n
-                 # OEIS-Catalogue: A000188
-                 # OEIS-Catalogue: A053150 power=3
-                 # OEIS-Catalogue: A053164 power=4
-                );
+my @oeis_anum
+  = (
+     # OEIS-Catalogue array begin
+     undef,
+     undef,
+     'A000188',  #         # 2 sqrt of largest square dividing n
+     'A053150',  # power=3 # 3 cbrt of largest cube dividing n
+     'A053164',  # power=4 # 4th root of largest 4th power dividing n
+     # OEIS-Catalogue array end
+    );
 sub oeis_anum {
   my ($self) = @_;
   return $oeis_anum[$self->{'power'}];
@@ -294,5 +295,26 @@ C<$value> E<gt>= 1.
 
 L<Math::NumSeq>,
 L<Math::NumSeq::MobiusFunction>
+
+=head1 HOME PAGE
+
+http://user42.tuxfamily.org/math-numseq/index.html
+
+=head1 LICENSE
+
+Copyright 2011, 2012 Kevin Ryde
+
+Math-NumSeq is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+Math-NumSeq is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+more details.
+
+You should have received a copy of the GNU General Public License along with
+Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 =cut

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION';
-$VERSION = 33;
+$VERSION = 34;
 
 sub rewind {
   my ($self) = @_;
@@ -29,7 +29,11 @@ sub rewind {
 sub next {
   my ($self) = @_;
   my $i = $self->{'i'}++;
-  return ($i, $self->ith($i));
+  if (defined (my $value = $self->ith($i))) {
+    return ($i, $value);
+  } else {
+    return;
+  }
 }
 
 1;

@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 33;
+$VERSION = 34;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -46,52 +46,26 @@ use Math::NumSeq::Base::Digits;
 # 'A002385', # 10
 # 'A029732', # 16
 #
-my @oeis_anum = (undef,     # 0
+my @oeis_anum = (
+                 # OEIS-Catalogue array begin
+                 undef,     # 0
                  undef,     # 1
-                 'A006995', # 2
-                 # OEIS-Catalogue: A006995 radix=2
-
-                 'A014190', # 3
-                 # OEIS-Catalogue: A014190 radix=3
-
-                 'A014192', # 4
-                 # OEIS-Catalogue: A014192 radix=4
-
-                 'A029952', # 5
-                 # OEIS-Catalogue: A029952 radix=5
-
-                 'A029953', # 6
-                 # OEIS-Catalogue: A029953 radix=6
-
-                 'A029954', # 7
-                 # OEIS-Catalogue: A029954 radix=7
-
-                 'A029803', # 8
-                 # OEIS-Catalogue: A029803 radix=8
-
-                 'A029955', # 9
-                 # OEIS-Catalogue: A029955 radix=9
-
-                 'A002113', # 10
-                 # OEIS-Catalogue: A002113
-
-                 'A029956', # 11
-                 # OEIS-Catalogue: A029956 radix=11
-
-                 'A029957', # 12
-                 # OEIS-Catalogue: A029957 radix=12
-
-                 'A029958', # 13
-                 # OEIS-Catalogue: A029958 radix=13
-
-                 'A029959', # 14
-                 # OEIS-Catalogue: A029959 radix=14
-
-                 'A029960', # 15
-                 # OEIS-Catalogue: A029960 radix=15
-
-                 'A029730', # 16
-                 # OEIS-Catalogue: A029730 radix=16
+                 'A006995', # radix=2
+                 'A014190', # radix=3
+                 'A014192', # radix=4
+                 'A029952', # radix=5
+                 'A029953', # radix=6
+                 'A029954', # radix=7
+                 'A029803', # radix=8
+                 'A029955', # radix=9
+                 'A002113', #
+                 'A029956', # radix=11
+                 'A029957', # radix=12
+                 'A029958', # radix=13
+                 'A029959', # radix=14
+                 'A029960', # radix=15
+                 'A029730', # radix=16
+                 # OEIS-Catalogue array end
                 );
 sub oeis_anum {
   my ($self) = @_;
@@ -238,7 +212,7 @@ is decimal or the C<radix> parameter can select another base.
 
 =head1 FUNCTIONS
 
-See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
+See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 

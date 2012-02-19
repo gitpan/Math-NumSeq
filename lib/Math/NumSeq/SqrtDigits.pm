@@ -22,7 +22,7 @@ use Carp;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 33;
+$VERSION = 34;
 
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
@@ -66,12 +66,8 @@ use constant parameter_info_array =>
 my @oeis_anum;
 
 # base 2 binary
-$oeis_anum[2]->[5] = 'A004555';   # base 2, sqrt5
 $oeis_anum[2]->[6] = 'A004609';   # base 2, sqrt6
-$oeis_anum[2]->[7] = 'A004569';   # base 2, sqrt7
-# OEIS-Catalogue: A004555 sqrt=5 radix=2
 # OEIS-Catalogue: A004609 sqrt=6 radix=2
-# OEIS-Catalogue: A004569 sqrt=7 radix=2
 
 # sqrt 2
 $oeis_anum[2]->[2] = 'A004539';   # base 2, sqrt2
@@ -89,10 +85,71 @@ $oeis_anum[3]->[3] = 'A004548';   # base 3, sqrt3
 # OEIS-Catalogue: A004548 sqrt=3 radix=3
 # OEIS-Catalogue: A004547 sqrt=3 radix=2
 
+# sqrt 5
+$oeis_anum[2]->[5] = 'A004555';   # base 2, sqrt5
+$oeis_anum[3]->[5] = 'A004556';   # base 3, sqrt5
+$oeis_anum[4]->[5] = 'A004557';   # base 4, sqrt5
+$oeis_anum[5]->[5] = 'A004558';   # base 5, sqrt5
+$oeis_anum[6]->[5] = 'A004559';   # base 6, sqrt5
+$oeis_anum[7]->[5] = 'A004560';   # base 7, sqrt5
+$oeis_anum[8]->[5] = 'A004561';   # base 8, sqrt5
+$oeis_anum[9]->[5] = 'A004562';   # base 9, sqrt5
+# OEIS-Catalogue: A004555 sqrt=5 radix=2
+# OEIS-Catalogue: A004556 sqrt=5 radix=3
+# OEIS-Catalogue: A004557 sqrt=5 radix=4
+# OEIS-Catalogue: A004558 sqrt=5 radix=5
+# OEIS-Catalogue: A004559 sqrt=5 radix=6
+# OEIS-Catalogue: A004560 sqrt=5 radix=7
+# OEIS-Catalogue: A004561 sqrt=5 radix=8
+# OEIS-Catalogue: A004562 sqrt=5 radix=9
+
+# sqrt 6
+$oeis_anum[4]->[6] = 'A004563';   # base 4, sqrt6
+$oeis_anum[5]->[6] = 'A004564';   # base 5, sqrt6
+$oeis_anum[6]->[6] = 'A004565';   # base 6, sqrt6
+$oeis_anum[7]->[6] = 'A004566';   # base 7, sqrt6
+$oeis_anum[8]->[6] = 'A004567';   # base 8, sqrt6
+$oeis_anum[9]->[6] = 'A004568';   # base 9, sqrt6
+# OEIS-Catalogue: A004563 sqrt=6 radix=4
+# OEIS-Catalogue: A004564 sqrt=6 radix=5
+# OEIS-Catalogue: A004565 sqrt=6 radix=6
+# OEIS-Catalogue: A004566 sqrt=6 radix=7
+# OEIS-Catalogue: A004567 sqrt=6 radix=8
+# OEIS-Catalogue: A004568 sqrt=6 radix=9
+
+# sqrt 7
+$oeis_anum[2]->[7] = 'A004569';   # base 2, sqrt7
+$oeis_anum[3]->[7] = 'A004570';   # base 3, sqrt7
+$oeis_anum[4]->[7] = 'A004571';   # base 4, sqrt7
+$oeis_anum[5]->[7] = 'A004572';   # base 5, sqrt7
+$oeis_anum[6]->[7] = 'A004573';   # base 6, sqrt7
+$oeis_anum[7]->[7] = 'A004574';   # base 7, sqrt7
+$oeis_anum[8]->[7] = 'A004575';   # base 8, sqrt7
+$oeis_anum[9]->[7] = 'A004576';   # base 9, sqrt7
+# OEIS-Catalogue: A004569 sqrt=7 radix=2
+# OEIS-Catalogue: A004570 sqrt=7 radix=3
+# OEIS-Catalogue: A004571 sqrt=7 radix=4
+# OEIS-Catalogue: A004572 sqrt=7 radix=5
+# OEIS-Catalogue: A004573 sqrt=7 radix=6
+# OEIS-Catalogue: A004574 sqrt=7 radix=7
+# OEIS-Catalogue: A004575 sqrt=7 radix=8
+# OEIS-Catalogue: A004576 sqrt=7 radix=9
+#
+$oeis_anum[10]->[7] = 'A010465';   # base 10, sqrt7
+# OEIS-Catalogue: A010465 sqrt=7 radix=10
+
 # sqrt 8
+$oeis_anum[3]->[8] = 'A004578';   # base 3, sqrt8
+$oeis_anum[4]->[8] = 'A004579';   # base 4, sqrt8
+$oeis_anum[5]->[8] = 'A004580';   # base 5, sqrt8
+$oeis_anum[6]->[8] = 'A004581';   # base 6, sqrt8
 $oeis_anum[7]->[8] = 'A004582';   # base 7, sqrt8
 $oeis_anum[8]->[8] = 'A004583';   # base 8, sqrt8
 $oeis_anum[9]->[8] = 'A004584';   # base 9, sqrt8
+# OEIS-Catalogue: A004578 sqrt=8 radix=3
+# OEIS-Catalogue: A004579 sqrt=8 radix=4
+# OEIS-Catalogue: A004580 sqrt=8 radix=5
+# OEIS-Catalogue: A004581 sqrt=8 radix=6
 # OEIS-Catalogue: A004582 sqrt=8 radix=7
 # OEIS-Catalogue: A004583 sqrt=8 radix=8
 # OEIS-Catalogue: A004584 sqrt=8 radix=9
@@ -255,6 +312,9 @@ my %radix_to_stringize_method = ((Math::NumSeq::_bigint()->can('as_bin')
                                   : ()),
                                  (Math::NumSeq::_bigint()->can('bstr')
                                   ? (10 => 'bstr')
+                                  : ()),
+                                 (Math::NumSeq::_bigint()->can('as_hex')
+                                  ? (16 => 'as_hex')
                                   : ()));
 
 sub rewind {
@@ -303,10 +363,10 @@ sub _extend {
     ### string: $self->{'string'}
 
     # one leading zero for i=1 start
-    if ($radix == 2) {
-      substr($self->{'string'},0,2) = '0';  # replacing 0b from as_bin()
+    if ($radix == 2 || $radix == 16) {
+      substr($self->{'string'},0,2) = '0';  # replacing 0b or 0x
     } elsif ($radix != 8) {
-      # already leading 0 from as_oct()
+      # decimal insert 0, cf as_oct() already gives leading zero
       substr($self->{'string'},0,0) = '0';
     }
 
@@ -329,7 +389,6 @@ sub _extend {
   }
 }
 
-
 sub next {
   my ($self) = @_;
 
@@ -351,7 +410,7 @@ sub next {
       return;
     }
     ### string char: "i=$i substr=".substr($self->{'string'},$i,1)
-    return ($i, substr($self->{'string'},$i,1));
+    return ($i, hex(substr($self->{'string'},$i,1)));
 
   } else {
     # digit by digit from the top like this is a bit slow, should chop into
@@ -405,7 +464,7 @@ general case.)
 
 =head1 FUNCTIONS
 
-See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
+See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 

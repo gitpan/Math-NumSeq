@@ -47,6 +47,10 @@ HERE
     next if $module eq 'OEIS';
     next if $module =~ 'CunninghamPrimes'; # broken
     next if $module =~ 'PlanePathTurn'; # not yet
+
+    # restricted to ...
+    # next unless $module =~ 'BinaryUnd';
+
     my $class = App::MathImage::Generator->values_class($module);
     print "$class\n";
 
@@ -65,6 +69,8 @@ HERE
       my $values = '';
       my @values;
       my (undef, $first_value) = $seq->next or next PARAMETERS;
+      my $target_values_length = 120;
+      if ($class =~ /BinaryUnd/) { $target_values_length = 20; }
       while (length($values) < 120) {
         my ($i, $value) = $seq->next
           or last;

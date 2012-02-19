@@ -26,7 +26,7 @@ use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 use vars '$VERSION';
-$VERSION = 33;
+$VERSION = 34;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;

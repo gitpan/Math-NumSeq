@@ -23,7 +23,7 @@ use POSIX 'floor','ceil';
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 33;
+$VERSION = 34;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -155,7 +155,7 @@ The sequence of cubes, 0, 1, 8, 27, 64, 125, etc, i**3.
 
 =head1 FUNCTIONS
 
-See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
+See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 

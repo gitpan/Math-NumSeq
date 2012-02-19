@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 33;
+$VERSION = 34;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -55,22 +55,20 @@ sub values_max {
 #    A059178 cube root 2
 #    A059179 cube root 3
 #
-my @oeis_anum = (undef,     # 0
+my @oeis_anum = (
+                 # OEIS-Catalogue array begin
+                 undef,     # 0
                  undef,     # 1
-                 'A028254', # 2
-                 'A028257', # 3
+                 'A028254', # # 2
+                 'A028257', # sqrt=3
                  undef,     # 4
-                 'A059176', # 5
+                 'A059176', # sqrt=5
                  undef,     # 6
-                 'A161368', # 7
+                 'A161368', # sqrt=7
                  undef,     # 8
                  undef,     # 9
-                 'A059177', # 10
-                 # OEIS-Catalogue: A028254
-                 # OEIS-Catalogue: A028257 sqrt=3
-                 # OEIS-Catalogue: A059176 sqrt=5
-                 # OEIS-Catalogue: A161368 sqrt=7
-                 # OEIS-Catalogue: A059177 sqrt=10
+                 'A059177', # sqrt=10
+                 # OEIS-Catalogue array end
                 );
 sub oeis_anum {
   my ($self) = @_;
@@ -220,7 +218,7 @@ root.  This is unlikely to be interesting but it works.
 
 =head1 FUNCTIONS
 
-See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
+See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 
