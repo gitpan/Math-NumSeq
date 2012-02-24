@@ -35,7 +35,7 @@ use Math::NumSeq::FibonacciWord;
 # VERSION
 
 {
-  my $want_version = 34;
+  my $want_version = 35;
   ok ($Math::NumSeq::FibonacciWord::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::FibonacciWord->VERSION,  $want_version,
@@ -121,19 +121,22 @@ use Math::NumSeq::FibonacciWord;
 #------------------------------------------------------------------------------
 # bigfloat nan
 
-# Note: not "require Math::BigFloat" since it does tie-ins to BigInt in its
-# import
-my $have_bigfloat = eval "use Math::BigFloat; 1" or die;
-
 my $skip_bigfloat;
-if (! $have_bigfloat) {
+
+# Note: not "require Math::BigFloat" since it does tie-ins to BigInt in its
+if (! eval "use Math::BigFloat; 1") {
   MyTestHelpers::diag ("Math::BigFloat not available -- ",$@);
   $skip_bigfloat = "Math::BigFloat not available";
 }
 
+if (! Math::BigFloat->can('bnan')) {
+  MyTestHelpers::diag ("Math::BigFloat no bnan()");
+  $skip_bigfloat = "Math::BigFloat no bnan()";
+}
+
 {
   my @nans;
-  if ($have_bigfloat) {
+  unless ($skip_bigfloat) {
     my $seq = Math::NumSeq::FibonacciWord->new;
 
     my $nan = Math::BigFloat->bnan;

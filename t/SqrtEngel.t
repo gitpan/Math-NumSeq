@@ -20,7 +20,6 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 635;
 
 use lib 't';
 use MyTestHelpers;
@@ -32,11 +31,31 @@ use Math::NumSeq::SqrtEngel;
 #use Smart::Comments;
 
 
+my $test_count = (tests => 635)[1];
+plan tests => $test_count;
+
+use Math::BigInt;
+
+# SqrtEngel requires sqrt($bigint) operator
+{
+  my $n = Math::BigInt->new(123);
+  if (! $n->can('bsqrt')) {
+    MyTestHelpers::diag ('skip due to Math::BigInt no bsqrt()');
+    foreach (1 .. $test_count) {
+      skip ('skip due to Math::BigInt no bsqrt()', 1, 1);
+    }
+    exit 0;
+  }
+}
+
+
+
+
 #------------------------------------------------------------------------------
 # VERSION
 
 {
-  my $want_version = 34;
+  my $want_version = 35;
   ok ($Math::NumSeq::SqrtEngel::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::SqrtEngel->VERSION,  $want_version,

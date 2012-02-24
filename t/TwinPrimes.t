@@ -35,7 +35,7 @@ use Math::NumSeq::TwinPrimes;
 # VERSION
 
 {
-  my $want_version = 34;
+  my $want_version = 35;
   ok ($Math::NumSeq::TwinPrimes::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::TwinPrimes->VERSION,  $want_version,
@@ -97,8 +97,13 @@ sub collect {
 # value_to_i_estimate()
 
 {
-  my $seq = Math::NumSeq::TwinPrimes->new;
-  ok ($seq->can('value_to_i_estimate'), undef);
+  require Math::NumSeq::Primes;
+  my $primes = Math::NumSeq::Primes->new;
+  my $twin = Math::NumSeq::TwinPrimes->new;
+  my $i = $primes->value_to_i_estimate(1000);
+  my $j = $twin->value_to_i_estimate(1000);
+  ok ($i > $j, 1,
+     "$i $j");
 }
 
 exit 0;

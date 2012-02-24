@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 34;
+$VERSION = 35;
 
 use Math::NumSeq::Primes;
 @ISA = ('Math::NumSeq::Primes');
@@ -58,6 +58,7 @@ sub values_min {
   return $values_min{$self->{'pairs'}};
 }
 
+#------------------------------------------------------------------------------
 # cf A077800 - both, with repetition, so 3,5, 5,7, 11,13, ...
 #    A040040 - average/2 since the average is always even
 #    A054735 - sum twin primes (OFFSET=1)
@@ -82,6 +83,8 @@ sub oeis_anum {
   my ($self) = @_;
   return $oeis_anum{$self->{'pairs'}};
 }
+
+#------------------------------------------------------------------------------
 
 my %pairs_add = (first => 0,
                  average => 1,
@@ -123,11 +126,12 @@ sub next {
   }
 }
 
-# ENHANCE-ME: all pairs are 6k+/-1
-#
 my %pairs_other = (first => 2,
                    average => 1,
                    second => 0);
+my %pairs_mod = (first => 5,
+                 average => 0,
+                 second => 1);
 sub pred {
   my ($self, $value) = @_;
   if ((my $pairs = $self->{'pairs'}) eq 'both') {
@@ -135,19 +139,52 @@ sub pred {
             && ($self->SUPER::pred ($value + 2)
                 || $self->SUPER::pred ($value - 2)));
   } else {
+    # pairs are always 3n-1,3n+1 since otherwise one of them would be a 3n
+    # and also both odd so 6n-1,6n+1
+    if (my $mod = $pairs_mod{$pairs}) {
+      if ($value >= 6 && ($value % 6) != $mod) {
+        return 0;
+      }
+    }
     return ($self->SUPER::pred ($value - $pairs_add{$pairs})
             && $self->SUPER::pred ($value + $pairs_other{$pairs}));
   }
 }
 
-sub can {
-  my ($class, $method) = @_;
-  if ($method eq 'value_to_i_estimate') {
-    return undef;
-  }
-  return $class->SUPER::can($method);
-}
+# Hardy and Littlewood conjecture, then
+#     pi2(x) -> x / (ln x)^2
+#
+# Brun upper bound
+#     pi2(x) <= const * C2 * x/(ln x)^2 * (1 + O(ln ln x / ln x))
+#     with const < 68/9 ~= 7.55
+#
+#                   x
+# pi2(x) ~ 2*C2 * integral  1/(ln x)^2 dx
+#                   2
+#
+# cf pi2(x) ~ 2*C2 * pi(x)^2 / x
+#
+# integral 1/(ln x)^2 = li(x) - x/ln(x)
+#          li(x) = int 1/ln(x)
+#
 
+# C2 = product (1 - 1/(p-1)^2) for primes p>2
+#
+use constant _TWIN_PRIME_CONSTANT => 0.6601618158;
+
+# ENHANCE-ME: for BigInt $value maybe take a log2 and apply a factor, 
+sub value_to_i_estimate {
+  my ($self, $value) = @_;
+  ### value_to_i_estimate(): $value
+
+  if ($value < 2) { return 0; }
+
+  ### log: log($value)
+  ### div: $value/log($value)
+
+  my $log = log($value);
+  return int($value / ($log*$log) * (2 * _TWIN_PRIME_CONSTANT));
+}
 1;
 __END__
 
@@ -236,6 +273,11 @@ string) controls which of each twin-prime pair of values is returned
 Return true if C<$value> is a twin prime of the given C<pairs> type.  For
 example with "second" C<pred()> returns true when C<$value> is the second of
 a pair, ie. C<$value-2> is also a prime.
+
+=item C<$i = $seq-E<gt>value_to_i_estimate($value)>
+
+Return an estimate of the i value corresponding to C<$value>.  Currently
+this is-known 2*C*x/(log(x))^2.
 
 =back
 

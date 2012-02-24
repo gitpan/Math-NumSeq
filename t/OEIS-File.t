@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 7;
+plan tests => 26;
 
 use lib 't';
 use MyTestHelpers;
@@ -35,7 +35,7 @@ use Math::NumSeq::OEIS::File;
 # VERSION
 
 {
-  my $want_version = 34;
+  my $want_version = 35;
   ok ($Math::NumSeq::OEIS::File::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::OEIS::File->VERSION, $want_version,
@@ -54,20 +54,145 @@ use Math::NumSeq::OEIS::File;
 #------------------------------------------------------------------------------
 #
 
-foreach my $anum ('A003849', # special case a003849.txt
-                  'A027750', # special case a027750.txt
-                  'A005228', # detect a005228.txt is source code
+foreach my $elem (['0', '1',  -1],
+                  ['-1', '1',  -1],
+                  ['-2', '1',  -1],
+                  ['2', '-1',  1],
+
+                  ['20', '9',  1],
+                  ['-20', '-9',  -1],
+                  ['-20', '9',  -1],
+
                  ) {
+  my ($x,$y, $want) = @$elem;
+  {
+    my $got = Math::NumSeq::OEIS::File::_value_cmp($x,$y);
+    ok ($got, $want, "x=$x y=$y");
+  }
+  {
+    ($x,$y) = ($y,$x);
+    $want = -$want;
+    my $got = Math::NumSeq::OEIS::File::_value_cmp($x,$y);
+    ok ($got, $want, "x=$x y=$y (swapped)");
+  }
+}
+
+
+#------------------------------------------------------------------------------
+#
+
+foreach my $anum ('A004540',  # sqrt(2) in base 3
+                  'A000012',  # all 1s
+                  'A003849',  # special case a003849.txt
+                  'A027750',  # special case a027750.txt
+                  'A005228',  # detect a005228.txt is source code
+                  'A001489',  # negative integers 0 downwards
+                  'A067188',  # "full"
+                  'A000796',  # pi in decimal
+                 ) {
+  my $bad = 0;
+  my $skip;
   my $err;
   my $seq;
-  if (eval { $seq = Math::NumSeq::OEIS::File->new (anum => $anum); 1 }) {
-    $seq->next;
-    $seq->next;
-    $seq->next;
-  } else {
+  if (! eval { $seq = Math::NumSeq::OEIS::File->new (anum => $anum); 1 }) {
     $err = $@;
+    if ($err =~ /not found for A-number/) {
+      $skip = $err;
+    } else {
+      $bad = 1;
+    }
+  } else {
+    $seq->next;
+    $seq->next;
+    my ($i, $value);
+    unless (($i, $value) = $seq->next) {
+      $err = "oops, no values from $anum";
+      $bad = 1;
+    }
+
+    if ($anum eq 'A001489') {
+      unless (($value || 0) == '-2') {
+        $err = "oops, A001489 value not -2";
+        $bad = 1;
+      }
+    }
+
+    if ($anum eq 'A067188') {
+      my $values_min = $seq->values_min;
+      my $values_max = $seq->values_max;
+      unless (defined $values_min && $values_min == 10) {
+        $err = "oops, A067188 values_min not 10: $values_min";
+        $bad = 1;
+      }
+      unless (defined $values_max && $values_max == 68) {
+        $err = "oops, A067188 values_max not 68";
+        $bad = 1;
+      }
+    }
+
+    if ($anum eq 'A000796') {
+      my $values_min = $seq->values_min;
+      my $values_max = $seq->values_max;
+      my $digits = $seq->characteristic('digits');
+      unless (defined $values_min && $values_min == 0) {
+        $err = "oops, A000796 values_min not 0: $values_min";
+        $bad = 1;
+      }
+      unless (defined $values_max && $values_max == 9) {
+        $err = "oops, A000796 values_max not 9";
+        $bad = 1;
+      }
+      unless (defined $digits && $digits == 10) {
+        $err = "oops, A000796 characteristic(digits) not 10";
+        $bad = 1;
+      }
+    }
+
+    if ($anum eq 'A004540') {  # sqrt2 base 3
+      my $values_min = $seq->values_min;
+      my $values_max = $seq->values_max;
+      my $digits = $seq->characteristic('digits');
+      unless (defined $values_min && $values_min == 0) {
+        $err = "oops, A004540 values_min not 0: $values_min";
+        $bad = 1;
+      }
+      unless (defined $values_max && $values_max == 2) {
+        $err = "oops, A004540 values_max not 2";
+        $bad = 1;
+      }
+      unless (defined $digits && $digits == 3) {
+        $err = "oops, A004540 characteristic(digits) not 3: "
+          . (defined $digits ? $digits : 'undef');
+        $bad = 1;
+      }
+    }
+
+    if ($anum eq 'A000012') {
+      my $values_min = $seq->values_min;
+      my $values_max = $seq->values_max;
+      my $digits = $seq->characteristic('digits');
+      unless (defined $values_min && $values_min == 1) {
+        $err = "oops, A000012 values_min not 1";
+        $bad = 1;
+      }
+      unless (defined $values_max && $values_max == 1) {
+        $err = "oops, A000012 values_max not 1";
+        $bad = 1;
+      }
+      unless (! defined $digits) {
+        $err = "oops, A000012 characteristic(digits) not undef";
+        $bad = 1;
+      }
+    }
+
+
+
   }
-  ok (! defined $err || $err =~ /not found for A-number/);
+  skip ($skip,
+        $bad, 0, "$anum");
+  if ($bad) {
+    MyTestHelpers::diag("err: $err");
+  }
 }
 
 

@@ -35,7 +35,7 @@ plan tests => $test_count;
 # VERSION
 
 {
-  my $want_version = 34;
+  my $want_version = 35;
   ok ($Math::NumSeq::ReverseAdd::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::ReverseAdd->VERSION,  $want_version,
@@ -72,9 +72,9 @@ plan tests => $test_count;
 {
   my $str = "3377699871522813";
   my $n = Math::NumSeq::_bigint()->new($str);
-  MyTestHelpers::diag("n type: ",ref $n);
-  MyTestHelpers::diag("str   : ",$str);
-  MyTestHelpers::diag("n bstr: ",$n->bstr);
+  MyTestHelpers::diag("n type: ", ref $n);
+  MyTestHelpers::diag("str   : ", $str);
+  MyTestHelpers::diag("n str : ", "$n");
 
   my $rev = Math::NumSeq::ReverseAdd::_reverse_in_radix($n,2);
   my $revstr = "$rev";

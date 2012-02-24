@@ -36,7 +36,7 @@ use Math::NumSeq::Primes;
 # VERSION
 
 {
-  my $want_version = 34;
+  my $want_version = 35;
   ok ($Math::NumSeq::Primes::VERSION, $want_version, 'VERSION variable');
   ok (Math::NumSeq::Primes->VERSION,  $want_version, 'VERSION class method');
 
@@ -111,10 +111,21 @@ use Math::NumSeq::Primes;
   }
   {
     require Math::BigInt;
-    my $value = Math::BigInt->new(2);
-    foreach (1 .. 8) { $value *= $value; }  # 2**256
-    my $i = $seq->value_to_i_estimate($value);
-    ok ($i > 0, 1);
+    my $skip;
+
+    # value_to_i_estimate() requires log() operator
+    if (! Math::BigInt->can('blog')) {
+      $skip = 'due to Math::BigInt no blog()';
+    }
+
+    my $i = 0;
+    unless ($skip) {
+      my $value = Math::BigInt->new(2);
+      foreach (1 .. 8) { $value *= $value; }  # 2**256
+      $i = $seq->value_to_i_estimate($value);
+    }
+    skip ($skip,
+          $i > 0, 1);
   }
 }
 exit 0;

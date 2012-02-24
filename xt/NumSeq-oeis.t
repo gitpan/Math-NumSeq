@@ -129,7 +129,7 @@ sub check_class {
   #
   # return unless $class =~ /PrimeF/;
   # return unless $class =~ /Liou/;
-  # return unless $class =~ /Fib/;
+  # return unless $class =~ /Twin/;
   # return unless $class =~ /FactorCount/;
   # return unless $class =~ /Fib/;
   # return unless $class =~ /Star/;

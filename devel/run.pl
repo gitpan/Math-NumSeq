@@ -68,7 +68,6 @@ $|=1;
   $values_class = 'Math::NumSeq::SqrtDigits';
   $values_class = 'Math::NumSeq::DigitLength';
   $values_class = 'Math::NumSeq::DigitProduct';
-  $values_class = 'Math::NumSeq::TwinPrimes';
   $values_class = 'App::MathImage::NumSeq::Pell';
   $values_class = 'Math::NumSeq::Factorials';
   $values_class = 'App::MathImage::NumSeq::KlarnerRado';
@@ -127,7 +126,6 @@ $|=1;
   $values_class = 'Math::NumSeq::PowerPart';
   $values_class = 'Math::NumSeq::PrimeFactorCount';
   $values_class = 'Math::NumSeq::MathImageAbsCubicDiff';
-  $values_class = 'Math::NumSeq::OEIS';
   $values_class = 'Math::NumSeq::RepdigitAny';
   $values_class = 'Math::NumSeq::PlanePathDelta';
   $values_class = 'Math::NumSeq::MathImageLoeschian';
@@ -141,10 +139,18 @@ $|=1;
   $values_class = 'Math::NumSeq::MathImageBinaryUndulants';
   $values_class = 'Math::NumSeq::HofstadterFigure';
   $values_class = 'Math::NumSeq::Runs';
+  $values_class = 'Math::NumSeq::OEIS::File';
+  $values_class = 'Math::NumSeq::TwinPrimes';
+  $values_class = 'Math::NumSeq::MathImagePierpontPrimes';
 
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new (
-                                runs_type => '1rep',
+                                #anum  => 'A160722', # few
+                                # anum  => 'A196199', # bfile
+                                # anum  => 'A194831', # small bfile
+                                 anum  => 'A001082',
+
+                                # runs_type => '1rep',
                                 # start => 5,
                                 # radix => 3,
                                 # including_repdigits => 1,
@@ -153,7 +159,6 @@ $|=1;
                                 # i_start => 3,
 
                                 # including_one => 1,
-                                # anum  => 'A160722',
                                 # start => 1,
                                 #  radix => 4,
                                 # pythagorean_type => 'primitive',
@@ -223,7 +228,9 @@ $|=1;
   print "values_min ",($seq->values_min//'[undef]'),"\n";
   print "values_max ",($seq->values_max//'[undef]'),"\n";
   print "characteristic(increasing) ",($seq->characteristic('increasing')//'[undef]'),"\n";
+  print "characteristic(non_decreasing) ",($seq->characteristic('non_decreasing')//'[undef]'),"\n";
   print "characteristic(smaller)    ",($seq->characteristic('smaller')//'[undef]'),"\n";
+  print "characteristic hash: ",join(', ',%{$seq->{'characteristic'}||{}}),"\n";
   print "parameters: ",join(', ',map{$_->{'name'}}$seq->parameter_info_list),"\n";
   print "\n";
 

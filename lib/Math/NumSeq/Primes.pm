@@ -22,7 +22,7 @@ use POSIX ();
 use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 34;
+$VERSION = 35;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -190,6 +190,11 @@ Return true if C<$value> is a prime.
 
 In the current code a hard limit of 2**32 is placed on the C<$value> to be
 checked, in the interests of not going into a near-infinite loop.
+
+=item C<$i = $seq-E<gt>value_to_i_estimate($value)>
+
+Return an estimate of the i value corresponding to C<$value>.  Currently
+this is-known x/log(x).
 
 =back
 

@@ -219,6 +219,8 @@ xt/0-Test-Synopsis.t
 xt/0-Test-YAML-Meta.t
 xt/MyOEIS.pm
 xt/NumSeq-oeis.t
+xt/OEIS-File-ithreads.t
+xt/OEIS-File-weaken.t
 xt/pod_lists.t
 xtools/my-check-copyright-years.sh
 xtools/my-check-spelling.sh
@@ -226,6 +228,7 @@ xtools/my-deb.sh
 xtools/my-diff-prev.sh
 xtools/my-kwalitee.sh
 xtools/my-manifest.sh
+xtools/my-pc.sh
 xtools/my-tags.sh
 xtools/my-wunused.sh
 META.yml                                 Module meta-data (added by MakeMaker)

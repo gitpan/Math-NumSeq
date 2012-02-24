@@ -21,81 +21,76 @@ use 5.004;
 use strict;
 use Carp;
 use POSIX ();
+use File::Spec;
+use Symbol 'gensym';
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 34;
+$VERSION = 35;
 
-use Math::NumSeq::Base::Array;
-@ISA = ('Math::NumSeq::Base::Array');
+use Math::NumSeq;
+@ISA = ('Math::NumSeq');
+*_bigint = \&Math::NumSeq::_bigint;
 
 use vars '$VERSION';
-$VERSION = 34;
+$VERSION = 35;
+
+eval q{use Scalar::Util 'weaken'; 1}
+  || eval q{sub weaken { $_[0] = undef }; 1 }
+  || die "Oops, error making a weaken() fallback: $@";
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
 
 # use constant name => Math::NumSeq::__('OEIS File');
+use Math::NumSeq::OEIS;
+*parameter_info_array = \&Math::NumSeq::OEIS::parameter_info_array;
+
 sub description {
   my ($class_or_self) = @_;
   if (ref $class_or_self && defined $class_or_self->{'description'}) {
     return $class_or_self->{'description'};
+  } else {
+    return Math::NumSeq::__('OEIS sequence from file.');
   }
-  return Math::NumSeq::__('OEIS sequence from file.');
-}
-use Math::NumSeq::OEIS;
-*parameter_info_array = \&Math::NumSeq::OEIS::parameter_info_array;
-
-sub new {
-  my ($class, %options) = @_;
-  ### OEIS-File: %options
-
-  my %self;
-  if (my $anum = $options{'anum'}) {
-    my $self = {};
-    ### $anum
-    _read_values (\%self, $anum);
-    if (! _read_internal(\%self, $anum)) {
-      _read_html(\%self, $anum);
-    }
-    if (! $self{'array'}) {
-      croak 'B-file, Internal or HTML not found for A-number "',$anum,'"';
-    }
-
-    if ($self{'characteristic'}->{'radix'}) {
-      ### radix ...
-      my $aref = $self{'array'};
-      my $max = 0;
-      foreach my $i (1 .. $#$aref) {
-        if ($aref->[$i] > 50) {
-          last;
-        }
-        if ($aref->[$i] > $max) {
-          $max = $aref->[$i];
-        }
-      }
-      ### guess max from data: $max
-      $self{'values_max'} = $max;
-      $self{'radix'} = $max+1;
-    }
-  }
-
-  return $class->SUPER::new (%self,
-                             %options);
 }
 
-sub oeis_dir {
-  require File::Spec;
-  require File::HomeDir;
-  return File::Spec->catfile (File::HomeDir->my_home, 'OEIS');
+sub values_min {
+  my ($self) = @_;
+  ### OEIS-File values_min() ...
+  return _analyze($self)->{'values_min'};
+}
+sub values_max {
+  my ($self) = @_;
+  ### OEIS-File values_max() ...
+  return _analyze($self)->{'values_max'};
+}
+
+my %analyze_characteristics = (increasing            => 1,
+                               increasing_from_i     => 1,
+                               non_decreasing        => 1,
+                               non_decreasing_from_i => 1,
+                               smaller               => 1,
+                              );
+sub characteristic {
+  my ($self, $key) = @_;
+  if ($analyze_characteristics{$key}) {
+    _analyze($self);
+  }
+  return shift->SUPER::characteristic(@_);
 }
 
 my $max_value = POSIX::FLT_RADIX() ** (POSIX::DBL_MANT_DIG()-5);
 if ((~0 >> 1) > $max_value) {
   $max_value = (~0 >> 1);
 }
+my $min_value = -$max_value;
 
+sub oeis_dir {
+  require File::HomeDir;
+  return File::Spec->catfile (File::HomeDir->my_home, 'OEIS');
+}
 sub anum_to_bfile {
   my ($anum, $prefix) = @_;
   $prefix ||= 'b';
@@ -103,182 +98,334 @@ sub anum_to_bfile {
   return "$anum.txt";
 }
 
-sub _read_values {
-  my ($self, $anum) = @_;
-  ### Values-OEIS-File _read_values(): @_
+my %instances;
+sub DESTROY {
+  my ($self) = @_;
+  delete $instances{$self+0};
+}
+sub CLONE {
+  my ($class) = @_;
+  foreach my $self (values %instances) {
+    next unless $self;
+    next unless $self->{'fh'};
+    my $pos = _tell($self);
+    my $fh = gensym;
+    if (open $fh, "< $self->{'filename'}") {
+      $self->{'fh'} = $fh;
+      _seek ($self, $pos);
+    } else {
+      delete $self->{'fh'};
+      delete $self->{'filename'};
+    }
+  }
+}
 
-  require File::Spec;
- PREFIX: foreach my $prefix ('a', 'b') {
-    my $basefile = anum_to_bfile($anum,$prefix);
-    my $filename = File::Spec->catfile (oeis_dir(), $basefile);
-    ### $basefile
+
+# special case a000000.txt files to exclude
+#
+my %afile_exclude
+  = (
+     # a003849.txt has replication level words rather than the individual
+     # sequence values.
+     'a003849.txt' => 1,
+
+     # a027750.txt is unflattened divisors as lists.
+     # Its first line is a correct looking "1 1" so _afile_is_good() doesn't
+     # notice.
+     'a027750.txt' => 1,
+    );
+
+sub new {
+  ### OEIS-File new() ...
+  my $self = shift->SUPER::new(@_);
+
+  my $anum = $self->{'anum'};
+  my $oeis_dir = oeis_dir();
+  (my $num = $anum) =~ s/^A//;
+  foreach my $basefile ("a$num.txt",
+                        "b$num.txt") {
+    next if $afile_exclude{$basefile};
+
+    my $filename = File::Spec->catfile ($oeis_dir, $basefile);
     ### $filename
 
-    # a003849.txt has replication level words rather than the individual
-    # sequence values
-    next if $basefile eq 'a003849.txt';
-
-    # a027750.txt is unflattened divisors
-    next if $basefile eq 'a027750.txt';
-
-
-    if (! open FH, "< $filename") {
-      ### no bfile: $!
+    my $fh = gensym;
+    if (! open $fh, "< $filename") {
+      ### cannot open: $!
       next;
     }
-    my @array;
-    my $seen_good = 0;
-    while (defined (my $line = <FH>)) {
-      chomp $line;
-      $line =~ tr/\r//d;    # delete CR if CRLF line endings, eg. b009000.txt
-      ### $line
 
-      if ($line =~ /^\s*(#|$)/) {
-        ### ignore blank or comment ...
-        # comment lines with # eg. b002182.txt
-        next;
-      }
-
-      if (my ($i, $value) = ($line =~ /^([0-9]+)     # i
-                                       [ \t]+
-                                       (-?[0-9]+)    # value
-                                       [ \t]*
-                                       $/x)) {
-        if ($value > $max_value) {
-          ### stop at bignum value ...
-          last;
-        }
-        $seen_good = 1;
-        $array[$i] = $value;
-        next;
-      }
-
-      # forgive random non-number stuff in a000000.txt files, eg. a084888.txt
-      if (! $seen_good && $prefix eq 'a') {
-        ### non-number in a-file, skip ...
-        close FH or die "Error reading $filename: $!";
-        next PREFIX;
-      }
-      # bad line in b000000.txt file, or in an a000000.txt which had
-      # looked good until this point
-      ### linenum: $.
-      $line =~ s{([^\020-\176])}{sprintf '\\x{%04x}', ord($1)}eg;
-      die "oops, bad line $. in $filename: \"$line\"";
-    }
-    close FH or die "Error reading $filename: $!";
     $self->{'filename'} = $filename;
-    $self->{'array'} = \@array;
-    ### array size: scalar(@{$self->{'array'}})
+    $self->{'fh'} = $fh;
+    if (! _afile_is_good($self)) {
+      close delete $self->{'fh'};
+      delete $self->{'filename'};
+      next;
+    }
+
+    ### opened: $fh
+    last;
+  }
+
+  my $have_info = (_read_internal($self, $anum)
+                   || _read_html($self, $anum));
+
+  if (! $have_info && ! $self->{'fh'}) {
+    croak 'B-file, Internal or HTML not found for A-number "',$anum,'"';
+  }
+
+  weaken($instances{$self+0} = $self);
+  return $self;
+}
+
+sub _analyze {
+  my ($self) = @_;
+
+  if ($self->{'analyze_done'}) {
+    return $self;
+  }
+  $self->{'analyze_done'} = 1;
+
+  ### _analyze() ...
+
+  my $i_start = $self->i_start;
+  my ($i, $value);
+  my ($prev_i, $prev_value);
+
+  my $values_min;
+  my $values_max;
+  my $increasing_from_i = $i_start;
+  my $non_decreasing_from_i = $i_start;
+  my $strictly_smaller_count = 0;
+  my $smaller_count = 0;
+  my $total_count = 0;
+
+  my $analyze = sub {
+    ### $prev_value
+    ### $value
+    if (! defined $values_min || $value < $values_min) {
+      $values_min = $value;
+    }
+    if (! defined $values_max || $value > $values_max) {
+      $values_max = $value;
+    }
+
+    if (defined $prev_value) {
+      my $cmp = ($value <=> $prev_value);
+      if ($cmp < 0) {
+        # value < $prev_value
+        $increasing_from_i = $i;
+        $non_decreasing_from_i = $i;
+      }
+      if ($cmp <= 0) {
+        # value <= $prev_value
+        $increasing_from_i = $i;
+      }
+    }
+
+    $total_count++;
+    $smaller_count += (abs($value) <= $i);
+    $strictly_smaller_count += ($value < $i);
+
+    $prev_i = $value;
+    $prev_value = $value;
+  };
+
+  if (my $fh = $self->{'fh'}) {
+    my $oldpos = _tell($self);
+    while (($i, $value) = _readline($self)) {
+      $analyze->($value);
+      last if $total_count > 200;
+    }
+    _seek ($self, $oldpos);
+  } else {
+    $i = $i_start;
+    foreach (@{$self->{'array'}}) {
+      $i++;
+      $value = $_;
+      $analyze->();
+    }
+  }
+
+  my $range_is_small = (defined $values_max
+                        && $values_max - $values_min <= 16);
+  ### $range_is_small
+
+  # "full" means whole sequence in sample values
+  # "sign" means negatives in sequence
+  if (! defined $self->{'values_min'}
+      && ($range_is_small
+          || $self->{'characteristic'}->{'OEIS_full'}
+          || ! $self->{'characteristic'}->{'OEIS_sign'})) {
+    ### set values_min: $values_min
+    $self->{'values_min'} = $values_min;
+  }
+  if (! defined $self->{'values_max'}
+      && ($range_is_small
+          || $self->{'characteristic'}->{'OEIS_full'})) {
+    ### set values_max: $values_max
+    $self->{'values_max'} = $values_max;
+  }
+
+  $self->{'characteristic'}->{'smaller'}
+    = ($total_count == 0
+       || ($smaller_count / $total_count >= .9
+           && $strictly_smaller_count > 0));
+  ### decide smaller: $self->{'characteristic'}->{'smaller'}
+
+  ### $increasing_from_i
+  if (defined $prev_i && $increasing_from_i < $prev_i) {
+    if ($increasing_from_i - $i_start < 20) {
+      $self->{'characteristic'}->{'increasing_from_i'} = $increasing_from_i;
+    }
+    if ($increasing_from_i == $i_start) {
+      $self->{'characteristic'}->{'increasing'} = 1;
+    }
+  }
+
+  ### $non_decreasing_from_i
+  if (defined $prev_i && $non_decreasing_from_i < $prev_i) {
+    if ($non_decreasing_from_i - $i_start < 20) {
+      $self->{'characteristic'}->{'non_decreasing_from_i'} = $non_decreasing_from_i;
+    }
+    if ($non_decreasing_from_i == $i_start) {
+      $self->{'characteristic'}->{'non_decreasing'} = 1;
+    }
+  }
+
+  return $self;
+}
+
+# compare $x <=> $y but in strings in case they're bigger than IV or NV
+# my $cmp = _value_cmp ($value, $prev_value);
+sub _value_cmp {
+  my ($x, $y) = @_;
+  ### _value_cmp(): "$x  $y"
+  ### cmp: $x cmp $y
+
+  my $x_neg = substr($x,0,1) eq '-';
+  my $y_neg = substr($y,0,1) eq '-';
+  ### $x_neg
+  ### $y_neg
+
+  return ($y_neg <=> $x_neg
+          || ($x_neg ? -1 : 1) * (length($x) <=> length($y)
+                                  || $x cmp $y));
+}
+
+sub _seek {
+  my ($self, $pos) = @_;
+  seek ($self->{'fh'}, $pos, 0)
+    or croak "Cannot seek $self->{'filename'}: $!";
+}
+sub _tell {
+  my ($self) = @_;
+  my $pos = tell $self->{'fh'};
+  if ($pos < 0) {
+    croak "Cannot tell file position $self->{'filename'}: $!";
+  }
+  return $pos;
+}
+
+sub rewind {
+  my ($self, $pos) = @_;
+  $self->{'i'} = $self->i_start;
+  $self->{'array_pos'} = 0;
+  if ($self->{'fh'}) {
+    seek ($self->{'fh'}, 0, 0)
+      or croak "Cannot seek $self->{'filename'}: $!";
+  }
+}
+sub next {
+  my ($self) = @_;
+
+  my $value;
+  if (my $fh = $self->{'fh'}) {
+    ($self->{'i'}, $value) = _readline($self)
+      or return;
+  } else {
+    my $array = $self->{'array'};
+    my $pos = $self->{'array_pos'}++;
+    if ($pos > $#$array) {
+      return;
+    }
+    $value = $array->[$pos];
+  }
+  return ($self->{'i'}++, $value);
+}
+
+sub _readline {
+  my ($self) = @_;
+  my $fh = $self->{'fh'};
+  while (defined (my $line = <$fh>)) {
+    chomp $line;
+    $line =~ tr/\r//d;    # delete CR if CRLF line endings, eg. b009000.txt
+    ### $line
+
+    if ($line =~ /^\s*(#|$)/) {
+      ### ignore blank or comment ...
+      # comment lines with "#" eg. b002182.txt
+      next;
+    }
+
+    if (my ($i, $value) = ($line =~ /^([0-9]+)     # i
+                                     [ \t]+
+                                     (-?[0-9]+)    # value
+                                     [ \t]*
+                                     $/x)) {
+      ### _readline: "$i  $value"
+      if ($value > $max_value || $value < $min_value) {
+        $value = _bigint()->new("$value");
+      }
+      return ($i, $value);
+    }
   }
   return;
 }
 
-sub oeis_anum {
+sub _afile_is_good {
   my ($self) = @_;
-  return $self->{'anum'};
-}
-sub characteristic_increasing {
-  my ($self) = @_;
-  ### OEIS-File characteristic_increasing() ...
+  my $fh = $self->{'fh'};
+  while (defined (my $line = <$fh>)) {
+    chomp $line;
+    $line =~ tr/\r//d;    # delete CR if CRLF line endings, eg. b009000.txt
+    ### $line
 
-  if (! defined $self->{'characteristic'}->{'increasing'}) {
-    my $increasing = 1;
-    my $aref = $self->{'array'};
-    my $prev;
-    foreach my $i (0 .. $#$aref) {
-      next unless defined (my $value = $aref->[$i]);
-      if (defined $prev && $value <= $prev) {
-        $increasing = 0;
-        last;
-      }
-      $prev = $value;
+    if ($line =~ /^\s*(#|$)/) {
+      ### ignore blank or comment ...
+      next;
     }
-    ### $increasing
-    $self->{'characteristic'}->{'increasing'} = $increasing;
+
+    if ($line =~ /^([0-9]+)     # i
+                  [ \t]+
+                  (-?[0-9]+)    # value
+                  [ \t]*
+                  $/x) {
+      _seek ($self, 0);
+      return 1;
+    } else {
+      last;
+    }
   }
-  return $self->{'characteristic'}->{'increasing'};
+  return 0;
 }
-sub characteristic_smaller {
-  my ($self) = @_;
-  ### OEIS-File characteristic_smaller() ...
-
-  if (! defined $self->{'characteristic'}->{'smaller'}) {
-    my $aref = $self->{'array'};
-    my $strictly_smaller = 0;
-    my $smaller = 0;
-    my $total = 0;
-    foreach my $i (0 .. $#$aref) {
-      next unless defined (my $value = $aref->[$i]);
-      $total++;
-      $smaller += ($value <= $i);
-      $strictly_smaller += ($value < $i);
-    }
-    ### $smaller
-    ### $total
-    $self->{'characteristic'}->{'smaller'}
-      = ($total == 0
-         || ($smaller / $total >= .9
-             && $strictly_smaller > 0));
-    ### decide: $self->{'characteristic'}->{'smaller'}
-  }
-  return $self->{'characteristic'}->{'smaller'};
-}
-
-sub values_min {
-  my ($self) = @_;
-  ### OEIS-File values_min() ...
-  if (! exists $self->{'values_min'}) {
-    my $aref = $self->{'array'};
-    my $min;
-    foreach my $i (0 .. $#$aref) {
-      next unless defined (my $value = $aref->[$i]);
-      if (! defined $min || $value < $min) {
-        $min = $value;
-      }
-    }
-    if (! defined $min && $self->{'characteristic'}->{'oeis_nonn'}) {
-      $min = 0;
-    }
-    ### $min
-    $self->{'values_min'} = $min;
-  }
-  return $self->{'values_min'};
-}
-sub values_max {
-  my ($self) = @_;
-  ### OEIS-File values_max() ...
-  return undef;
-
-  # if (! exists $self->{'values_max'}) {
-  #   my $aref = $self->{'array'};
-  #   my $max;
-  #   foreach my $i (0 .. $#$aref) {
-  #     next unless defined (my $value = $aref->[$i]);
-  #     if (! defined $max || $value > $max) {
-  #       $max = $value;
-  #     }
-  #   }
-  #   ### $max
-  #   $self->{'values_max'} = $max;
-  # }
-  # return $self->{'values_max'};
-}
-
 sub _read_internal {
-  my ($self, $anum, $aref) = @_;
+  my ($self, $anum) = @_;
+  ### _read_internal(): $anum
 
   my $basefile = "$anum.internal";
   my $filename = File::Spec->catfile (oeis_dir(), $basefile);
   ### $basefile
   ### $filename
+
   if (! open FH, "<$filename") {
-    ### no .internal file: $!
-    return;
+    ### cannot open .internal file: $!
+    return 0;
   }
   my $contents = do { local $/; <FH> }; # slurp
   close FH or die "Error reading $filename: ",$!;
 
-  # "Internal" files are served as html with a <meta> charset indicator too.
+  # "Internal" files are served as html with a <meta> charset indicator
   $contents = _decode_html_charset($contents);
 
   my %characteristic = (integer => 1);
@@ -315,19 +462,48 @@ sub _read_internal {
   _set_characteristics ($self, $description,
                         $contents =~ /^%K (.*?)(<tt>|$)/m && $1);
 
+  # the eishelp1.html says
+  # %V,%W,%X lines for signed sequences
+  # %S,%T,%U lines for non-negative sequences
+  # though now %S is signed and unsigned both is it?
+  #
   if (! $self->{'array'}) {
-    $contents =~ m{^%S (.*?)(</tt>|$)}m
-      or croak "Oops list of values not found in ",$filename;
-    _split_sample_values ($self, $filename, $1, $offset);
+    my @samples;
+    while ($contents =~ m{^%[VWX] (.*?)(</tt>|$)}mg) {
+      push @samples, $1;
+    }
+    unless (@samples) {
+      while ($contents =~ m{^%[STU] (.*?)(</tt>|$)}mg) {
+        push @samples, $1;
+      }
+      unless (@samples) {
+        croak "Oops list of values not found in ",$filename;
+      }
+    }
+    _split_sample_values ($self, $filename,
+                          join (', ', @samples),
+                          $offset);
   }
+
+  # %O "OFFSET" is subscript of first number, or for digit expansions it's
+  # the position of the decimal point
+  # http://oeis.org/eishelp2.html#RO
+  if (! $self->{'characteristic'}->{'digits'}) {
+    $self->{'i_start'} = $offset;
+  }
+
+  return 1; # success
 }
 
 sub _read_html {
   my ($self, $anum) = @_;
+  ### _read_html(): $anum
+
   foreach my $basefile ("$anum.html", "$anum.htm") {
     my $filename = File::Spec->catfile (oeis_dir(), $basefile);
     ### $basefile
     ### $filename
+
     if (open FH, "< $filename") {
       my $contents = do { local $/; <FH> }; # slurp
       close FH or die;
@@ -384,6 +560,14 @@ sub _read_html {
         my $list = $1;
         _split_sample_values ($self, $filename, $list, $offset);
       }
+
+      # %O "OFFSET" is subscript of first number, or for digit expansions it's
+      # the position of the decimal point
+      # http://oeis.org/eishelp2.html#RO
+      if (! $self->{'characteristic'}->{'radix'}) {
+        $self->{'i_start'} = $offset;
+      }
+
       return 1;
     }
     ### no html: $!
@@ -406,19 +590,28 @@ sub _set_characteristics {
 
   foreach my $key (split /[, \t]+/, ($keywords||'')) {
     ### $key
-    if ($key eq 'nonn') {   # non-negative
-      $self->{'values_min'} = 0;
-    }
-    # "base" means values are dependent on some number base, but doesn't
-    # mean they're digits or small etc
-    # "cons" means decimal expansion of a number
-    if ($key eq 'cons') {
-      $self->{'characteristic'}->{'radix'} = 1;
-    }
-    if ($key eq 'cofr') {
-      $self->{'characteristic'}->{'continued_fraction'} = 1;
-    }
     $self->{'characteristic'}->{"OEIS_$key"} = 1;
+  }
+
+  if ($self->{'characteristic'}->{'OEIS_cofr'}) {
+    $self->{'characteristic'}->{'continued_fraction'} = 1;
+  }
+
+  # "cons" means decimal digits of a constant
+  # but don't reckon A000012 all-ones that way
+  # "base" means non-decimal, it seems, maybe
+  if ($self->{'characteristic'}->{'OEIS_cons'}
+      && ! $self->{'characteristic'}->{'OEIS_base'}
+      && $self->{'anum'} ne 'A000012') {
+    $self->{'values_min'} = 0;
+    $self->{'values_max'} = 9;
+    $self->{'characteristic'}->{'digits'} = 10;
+  }
+
+  if ($description =~ /expansion of .* in base (\d+)/i) {
+    $self->{'values_min'} = 0;
+    $self->{'values_max'} = $1 - 1;
+    $self->{'characteristic'}->{'digits'} = $1;
   }
 }
 
@@ -428,13 +621,6 @@ sub _split_sample_values {
     croak "Oops unrecognised list of values not found in ",$filename,"\n",$str;
   }
   $self->{'array'} = [ split /[, \t\r\n]+/, $str ];
-
-  # %O "OFFSET" is subscript of first number, or for digit expansions it's
-  # the position of the decimal point
-  # http://oeis.org/eishelp2.html#RO
-  if ($offset && ! $self->{'characteristic'}->{'radix'}) {
-    unshift @{$self->{'array'}}, (undef) x $offset;
-  }
 }
 
 use constant::defer _HAVE_ENCODE => sub {

@@ -17,6 +17,9 @@ with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 35, February 2012
+    - OEIS read a-file or b-file progressively, not all into array
+    - TwinPrimes new value_to_i_estimate()
 
 Version 34, February 2012
     - new HofstadterFigure, Runs, UndulatingNumbers

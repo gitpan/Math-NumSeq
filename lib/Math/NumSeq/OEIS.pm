@@ -21,7 +21,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION','@ISA';
-$VERSION = 34;
+$VERSION = 35;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -99,11 +99,13 @@ This module selects a NumSeq by its Online Encyclopedia of Integer Sequences
 A-number.
 
 If there's NumSeq code implementing the sequence then that's used, otherwise
-files if available.  See L<Math::NumSeq::OEIS::Catalogue> for querying the
+local files if available.  See L<Math::NumSeq::OEIS::Catalogue> for querying
 available A-numbers.
 
-Files should be in an F<OEIS> directory in the user's home directory.  It
-can be the HTML, "internal" format, B-file, or A-file.
+=head2 Files
+
+Files should be in an F<OEIS> directory in the user's home directory (see
+L<File::HomeDir>).  Files can be HTML, OEIS internal, B-file, and/or A-file.
 
     ~/OEIS/A000032.html
     ~/OEIS/A000032.internal
@@ -116,24 +118,26 @@ can be the HTML, "internal" format, B-file, or A-file.
     http://oeis.org/A000032/b000032.txt
     http://oeis.org/A000032/a000032.txt
 
-The "internal" format is more reliable for parsing than the HTML.  The
-B-file or A-file alone can be used, but in that case there's no
-C<$seq-E<gt>description()> and only a few of the
+The "internal" format is more reliable than the HTML for parsing.  The
+B-file or A-file can be used alone, but in that case there's no
+C<$seq-E<gt>description()> and it may limit the
 C<$seq-E<gt>characteristic()> attributes.
 
-The F<a000000.txt> or F<b000000.txt> files are generally a long list of
-values (the F<a.txt> longer than the F<b.txt>, when available).  Some
-sequences don't have them, only 30 or 40 sample values from HTML or internal
-page.  Those few samples might be enough for fast growing sequences.
+The F<b000000.txt> file is a long list of values.  The F<a000000.txt> too
+and longer, but sometimes an auxiliary info.  Some sequences don't have
+these, only 30 or 40 sample values from the HTML or internal page.  Those
+few samples might be enough for fast growing sequences.
 
-Sometimes more than one NumSeq module can generate a given OEIS sequence.
-For example Squares and Polygonal k=4 are both A000290.
+=head2 Other Notes
+
+Sometimes more than one NumSeq module generates an OEIS sequence.  For
+example A000290 both from Squares and from Polygonal k=4.
 C<Math::NumSeq::OEIS> tries to give the better or faster one.
 
 Sometimes the OEIS has duplicates, ie. two A-numbers which are the same
-sequence.  The code modules are setup with both A-numbers, where known, but
-the C<$seq-E<gt>oeis_anum()> method will generally read back as whichever is
-the "primary" one.
+sequence.  Both are catalogued so they both give NumSeq module code, but the
+C<$seq-E<gt>oeis_anum()> method will read back as whichever is the "primary"
+one.
 
 =head1 FUNCTIONS
 
@@ -145,25 +149,51 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 Create and return a new sequence object.
 
+=item C<($i, $value) = $seq-E<gt>next()>
+
+Return the next index and value in the sequence.
+
+In the current code when reading from a file any values bigger than a usual
+Perl IV or NV are returned as C<Math::BigInt> objects.  Is that a good idea?
+It preserves precision.
+
+An F<a000000.txt> or F<b000000.txt> is read progressively.  There's a Perl
+5.8 ithreads C<CLONE> which re-opens in a new thread so the C<$seq> in each
+thread has its own position.  But that doesn't help a C<fork()> so care
+should be taken that only one of the parent or child use the C<$seq> in that
+case, the same as for most open files when forking.  Is this a good idea?
+
 =item C<$str = $seq-E<gt>description()>
 
 Return a human-readable description of the sequence.  For the downloaded
 files this is the "name" part, a short description of the sequence.
 
-A small number of sequences may have non-ascii characters here.  In Perl 5.8
-and up they're decoded to Perl wide-chars.  Not sure what to do for earlier
+A few sequences may have non-ascii characters in the description.  For Perl
+5.8 and up they're decoded to wide-chars.  Not sure what to do for earlier
 Perl, currently they're left as whatever bytes the download gave, probably
 utf-8.
 
+=item C<$value = $seq-E<gt>values_min()>
+
+=item C<$value = $seq-E<gt>values_max()>
+
+Return the minimum or maximum value taken by values in the sequence, or
+C<undef> if unknown or infinity.
+
+For files C<values_min()> is guessed from the first few values if
+non-negative, but C<values_max()> considered to be infinite.  If the range
+seems to be limited (eg. sequences of -1,0,1) then min and max are obtained,
+and also for "full" sequences where the samples are all the values.
+
+=item C<$ret = $seq-E<gt>characteristic($key)>
+
+C<$key> "increasing", "non_decreasing" and "smaller" are determined from the
+sample values or the first few values from a a-file or b-file.  Looking at
+only the few values ensures a big file isn't read in its entirety and is
+normally enough.  The intention would be to try to look at enough values not
+to be tricked by decreasing values after the first few, etc.
+
 =back
-
-=head1 BUGS
-
-There's a hard-coded stop at file values bigger than an IV or an NV mantissa
-(whichever is larger).  The idea is not to lose precision reading into a
-float.  Perhaps reading into C<Math::BigInt> would be better, but perhaps
-when reading progressively unlike the current code which slurps the file in
-one go.
 
 =head1 SEE ALSO
 
@@ -176,7 +206,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2010, 2011, 2012 Kevin Ryde
+Copyright 2011, 2012 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

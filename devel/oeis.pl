@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010, 2011 Kevin Ryde
+# Copyright 2010, 2011, 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -23,6 +23,55 @@ use POSIX;
 
 # uncomment this to run the ### lines
 use Smart::Comments;
+
+{
+  # how many i to be sure of increasing / non_decreasing
+  # 100 in A179635 median of digits
+
+  require Math::NumSeq::OEIS::File;
+  my $oeis_dir = Math::NumSeq::OEIS::File->oeis_dir;
+  my $count = 0;
+  my $max_anum;
+  my $max_i = -1;
+  foreach my $filename (<$oeis_dir/A*.internal>) {
+    $filename =~ /(A[0-9]+)/;
+    my $anum = $1;
+    my $seq = Math::NumSeq::OEIS::File->new (anum => $anum);
+    my (undef, $prev_value) = $seq->next;
+    while (my ($i, $value) = $seq->next) {
+      if ($value < $prev_value) {
+        if ($i > $max_i) {
+          $max_anum = $anum;
+          $max_i = $i;
+        }
+        last;
+      }
+    }
+    $count++;
+  }
+  print "total $count A-numbers\n";
+  print "max_i $max_i in $max_anum\n";
+  exit 0;
+}
+
+{
+  # _anum_is_good() files
+
+  require Math::NumSeq::OEIS::File;
+  my $oeis_dir = Math::NumSeq::OEIS::File->oeis_dir;
+  my $count = 0;
+  foreach my $filename (<$oeis_dir/a*[0-9].txt>) {
+    open my $fh, '<', $filename or die;
+    my $seq = { fh => $fh,
+                filename => $filename };
+    if (! Math::NumSeq::OEIS::File::_afile_is_good($seq)) {
+      print "$filename:1: not good\n";
+    }
+    $count++;
+  }
+  print "total $count a-files\n";
+  exit 0;
+}
 
 {
   # speed of anum_after();
