@@ -28,7 +28,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 35;
+$VERSION = 36;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -72,6 +72,7 @@ sub ith {
   }
   return $sum;
 }
+
 sub pred {
   my ($self, $value) = @_;
   ### TotientCumulative pred(): $value

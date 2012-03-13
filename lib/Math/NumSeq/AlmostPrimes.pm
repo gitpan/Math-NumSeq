@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 35;
+$VERSION = 36;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -49,6 +49,9 @@ use constant parameter_info_array =>
      display => Math::NumSeq::__('Multiplicity'),
      type    => 'enum',
      choices => ['repeated','distinct'],
+     choices_display => [Math::NumSeq::__('Repeated'),
+                         Math::NumSeq::__('Distinct'),
+                        ],
      default => 'repeated',
      # description => Math::NumSeq::__(''),
    },

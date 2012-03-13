@@ -142,6 +142,8 @@ sub check_class {
   # return unless $class =~ /Repdigit/;
   # return unless $class =~ /Hof/;
   # return unless $class =~ /Undul/;
+  # return unless $class =~ /Concat/;
+  # return unless $class =~ /Totient/;
   # return unless $anum eq 'A156542';
 
   eval "require $class" or die;
@@ -217,10 +219,6 @@ sub check_class {
   } elsif ($anum eq 'A005384') {
     # sophie germain shorten for now
     @$want = grep {$_ < 1_000_000} @$want;
-
-  } elsif ($anum eq 'A022937') {
-    # missing 1192 ...
-    @$want = grep {$_ < 1192} @$want;
 
   } elsif ($class =~ /AlmostPrimes/) {
     # AlmostPrimes shorten for now

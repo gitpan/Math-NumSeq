@@ -30,7 +30,7 @@ use Carp;
 use Fcntl;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 35;
+$VERSION = 36;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 

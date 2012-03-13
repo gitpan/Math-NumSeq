@@ -16,6 +16,9 @@
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
+# http://oeis.org/wiki/Clear-cut_examples_of_keywords
+#
+
 package Math::NumSeq::OEIS::File;
 use 5.004;
 use strict;
@@ -26,14 +29,14 @@ use Symbol 'gensym';
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 35;
+$VERSION = 36;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_bigint = \&Math::NumSeq::_bigint;
 
 use vars '$VERSION';
-$VERSION = 35;
+$VERSION = 36;
 
 eval q{use Scalar::Util 'weaken'; 1}
   || eval q{sub weaken { $_[0] = undef }; 1 }

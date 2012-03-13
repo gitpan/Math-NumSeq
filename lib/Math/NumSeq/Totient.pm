@@ -19,17 +19,20 @@
 package Math::NumSeq::Totient;
 use 5.004;
 use strict;
+use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 35;
+$VERSION = 36;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
+*_is_infinite = \&Math::NumSeq::_is_infinite;
 
 # uncomment this to run the ### lines
-#use Devel::Comments;
+#use Smart::Comments;
+
 
 use constant description => Math::NumSeq::__('Totient function, the count of how many numbers coprime to N.');
 use constant characteristic_count => 1;
@@ -38,19 +41,28 @@ use constant characteristic_increasing => 0;
 use constant values_min => 1;
 use constant i_start => 1;
 
+# cf A007617 non-totients, all odds, plus evens per A005277
+#    A005277 even non-totients, n s.t. n==phi(something) no solution
+#    A058980 non-totients 0mod4
+
+# Dressler (1970) N(x) = num phi(n)<=x, then N(x)/x -> A
+# A = zeta(2)*zeta(3)/zeta(6) = product primes 1+1/(p*(p-1))
+#
+# 2p is a non-totient if 2p+1 composite (p not an S-G prime)
+# 4p is a non-totient iff 2p+1 and 4p+1 both composite
+# if n non-totient and 2n+1 composite then 2n also non-totient
+#
 use constant oeis_anum => 'A000010';
 
-sub ith {
-  my ($self, $i) = @_;
-  ### TotientSum ith(): $i
-  return _totient_by_sieve($self,$i);
+sub rewind {
+  my ($self) = @_;
+  $self->{'i'} = $self->i_start;
 }
-
-# ENHANCE-ME: do all values occur as totients?
-# sub pred {
-#   my ($self, $value) = @_;
-#   ### Totient pred(): $value
-# }
+sub next {
+  my ($self) = @_;
+  my $i = $self->{'i'}++;
+  return ($i, _totient_by_sieve($self,$i));
+}
 
 sub _totient_by_sieve {
   my ($self, $i) = @_;
@@ -86,6 +98,36 @@ sub _totient_by_sieve {
   my $ret = $self->{'array'}->[$i];
   return $ret - ($ret == $i);  # 1 less if a prime
 }
+
+sub ith {
+  my ($self, $i) = @_;
+  ### Totient ith(): $i
+
+  if (_is_infinite($i)) {
+    return $i;
+  }
+  if ($i < 0 || $i > 0xFFFF_FFFF) {
+    return undef;
+  }
+
+  my $prev = 0;
+  my $ret = 1;
+  foreach my $p (prime_factors($i)) {
+    if ($p == $prev) {
+      $ret *= $p;
+    } else {
+      $ret *= $p - 1;
+      $prev = $p;
+    }
+  }
+  return $ret;
+}
+
+# ENHANCE-ME: identify totients/non-totients
+# sub pred {
+#   my ($self, $value) = @_;
+#   ### Totient pred(): $value
+# }
 
 # sub _totient {
 #   my ($x) = @_;
@@ -137,6 +179,12 @@ i=1,
 
 For example i=6 has no common factor with 1 or 5, so the totient is 2.
 
+The totient can be calculated from the prime factorization by changing one
+copy of each distinct prime p to p-1.
+
+    totient(n) =        product          (p-1) * p^(e-1)
+                  prime factors p^e in n
+
 =head1 FUNCTIONS
 
 See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
@@ -150,6 +198,10 @@ Create and return a new sequence object.
 =item C<$value = $seq-E<gt>ith($i)>
 
 Return totient(i).
+
+This requires factorizing C<$i> and in the current code a hard limit of
+2**32 is placed on C<$i>, in the interests of not going into a near-infinite
+loop.  Above that the return is C<undef>.
 
 =back
 

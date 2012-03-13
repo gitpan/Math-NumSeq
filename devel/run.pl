@@ -84,7 +84,6 @@ $|=1;
   $values_class = 'Math::NumSeq::Polygonal';
   $values_class = 'App::MathImage::NumSeq::CunninghamChain';
   $values_class = 'App::MathImage::NumSeq::CunninghamPrimes';
-  $values_class = 'Math::NumSeq::FibonacciWord';
   $values_class = 'App::MathImage::NumSeq::FibbinaryBitCount';
   $values_class = 'Math::NumSeq::Fibbinary';
   $values_class = 'App::MathImage::NumSeq::ReRound';
@@ -94,15 +93,12 @@ $|=1;
   $values_class = 'Math::NumSeq::SqrtEngel';
   $values_class = 'App::MathImage::NumSeq::HappySteps';
   $values_class = 'App::MathImage::NumSeq::RepdigitRadix';
-  $values_class = 'App::MathImage::NumSeq::ConcatNumbers';
-  $values_class = 'Math::NumSeq::TotientStepsSum';
   $values_class = 'App::MathImage::NumSeq::KolakoskiMajority';
   $values_class = 'Math::NumSeq::LucasNumbers';
   $values_class = 'Math::NumSeq::StarNumbers';
   $values_class = 'Math::NumSeq::ReverseAddSteps';
   $values_class = 'Math::NumSeq::Expression';
   $values_class = 'App::MathImage::NumSeq::PiDigits';
-  $values_class = 'Math::NumSeq::PlanePathCoord';
   $values_class = 'Math::NumSeq::Palindromes';
   $values_class = 'Math::NumSeq::RadixWithoutDigit';
   $values_class = 'Math::NumSeq::Tribonacci';
@@ -130,8 +126,6 @@ $|=1;
   $values_class = 'Math::NumSeq::PlanePathDelta';
   $values_class = 'Math::NumSeq::MathImageLoeschian';
   $values_class = 'Math::NumSeq::MathImageHypotCount';
-  $values_class = 'Math::NumSeq::PlanePathTurn';
-  $values_class = 'Math::NumSeq::PlanePathN';
   $values_class = 'Math::NumSeq::MathImageSlopingBinaryExcluded';
   $values_class = 'Math::NumSeq::MathImageLemoineCount';
   $values_class = 'Math::NumSeq::GoldbachCount';
@@ -141,85 +135,108 @@ $|=1;
   $values_class = 'Math::NumSeq::Runs';
   $values_class = 'Math::NumSeq::OEIS::File';
   $values_class = 'Math::NumSeq::TwinPrimes';
+  $values_class = 'Math::NumSeq::PlanePathCoord';
+  $values_class = 'Math::NumSeq::PlanePathDelta';
   $values_class = 'Math::NumSeq::MathImagePierpontPrimes';
+  $values_class = 'Math::NumSeq::MathImageErdosSelfridgeClass';
+  $values_class = 'Math::NumSeq::MathImageDedekindPsiCumulative';
+  $values_class = 'Math::NumSeq::MathImageDedekindPsiSteps';
+  $values_class = 'Math::NumSeq::ConcatNumbers';
+  $values_class = 'Math::NumSeq::TotientPerfect';
+  $values_class = 'Math::NumSeq::TotientSteps';
+  $values_class = 'Math::NumSeq::PlanePathTurn';
+  $values_class = 'Math::NumSeq::FibonacciWord';
+  $values_class = 'Math::NumSeq::MathImageDeletablePrimes';
+  $values_class = 'Math::NumSeq::PlanePathN';
 
   eval "require $values_class; 1" or die $@;
-  my $seq = $values_class->new (
-                                #anum  => 'A160722', # few
-                                # anum  => 'A196199', # bfile
-                                # anum  => 'A194831', # small bfile
-                                 anum  => 'A001082',
+  my $seq = $values_class->new
+    (
+     # fibonacci_word_type => 'dense',
+     # concat_count => 3,
+     # including_self => 0,
+     # offset => 3,
+     # planepath => 'SquareSpiral',
+     # planepath => 'PixelRings',
+     # planepath => 'ZOrderCurve,radix=10',
+     # planepath => 'PythagoreanTree,coordinates=BA',
+     # planepath => 'RationalsTree,tree_type=CW',
+     # planepath => 'DivisibleColumns,divisor_type=proper',
+     # planepath => 'ArchimedeanChords',
+     # planepath => 'SacksSpiral',
+     # planepath => 'MultipleRings,step=2',
+     # planepath => 'DragonCurve',
+     # planepath => 'MultipleRings,step=1',
+     # planepath => 'FibonacciWordFractal',
+      planepath => 'CellularRule,rule=5',
+     # delta_type=>'Dir4',
+      line_type => 'Y_axis',
+     # coordinate_type => 'RSquared',
+     # turn_type => 'Right',
+     # i_start => 1,
 
-                                # runs_type => '1rep',
-                                # start => 5,
-                                # radix => 3,
-                                # including_repdigits => 1,
+     #anum  => 'A160722', # few
+     # anum  => 'A196199', # bfile
+     # anum  => 'A194831', # small bfile
+     # anum  => 'A001082',
 
-                                # goldbach_type => 'even',
-                                # i_start => 3,
+     # runs_type => '1rep',
+     # start => 5,
+     # radix => 3,
+     # including_repdigits => 1,
 
-                                # including_one => 1,
-                                # start => 1,
-                                #  radix => 4,
-                                # pythagorean_type => 'primitive',
-                                # prime_type => 'twin',
-                                # round_count => 2,
-                                # pairs => 'both',
-                                # powerful_type => 'all',
-                                # power => 3,
-                                # abundant_type => 'primitive',
-                                # multiples => 1,
-                                # digit => 1,
+     # goldbach_type => 'even',
+     # i_start => 3,
 
-                                # sqrt => 46,
-                                # planepath => 'DragonMidpoint',
-                                # delta_type=>'dY',
-                                # line_type => 'Diagonal',
+     # including_one => 1,
+     # start => 1,
+     #  radix => 4,
+     # pythagorean_type => 'primitive',
+     # prime_type => 'twin',
+     # round_count => 2,
+     # pairs => 'both',
+     # powerful_type => 'all',
+     # power => 3,
+     # abundant_type => 'primitive',
+     # multiples => 1,
+     # digit => 1,
 
-                                # order => 'forward',
-                                # including_self => 0,
-                                #
-                                # expression_evaluator => 'MS',
-                                # expression => '2*i+1',
-                                # # # expression => 'z=3; z*x^2 + 3*x + 2',
-                                # # # expression => 'x^2 + 3*x + 2',
-                                # # # expression => 'atan(x)',
-                                # # expression => '9*i*i',
-                                #
-                                # factor_count => 8,
-                                # multiplicity => 'distinct',
-                                #
-                                # round => 'lower',
-                                #
-                                # length => 2,
-                                # which => 'last',
+     # sqrt => 46,
 
-                                # polygonal => 6,
-                                # pairs => 'average',
+     # order => 'forward',
+     # including_self => 0,
+     #
+     # expression_evaluator => 'MS',
+     # expression => '2*i+1',
+     # # # expression => 'z=3; z*x^2 + 3*x + 2',
+     # # # expression => 'x^2 + 3*x + 2',
+     # # # expression => 'atan(x)',
+     # # expression => '9*i*i',
+     #
+     # factor_count => 8,
+     # multiplicity => 'distinct',
+     #
+     # round => 'lower',
+     #
+     # length => 2,
+     # which => 'last',
 
-                                # coordinate_type => 'AbsDiff',
-                                #planepath => 'CoprimeColumns',
-                                # i_start => 1,
-                                # endian => 'little',
+     # polygonal => 6,
+     # pairs => 'average',
 
-                                planepath => 'SquareSpiral',
-                                # planepath => 'ZOrderCurve,radix=10',
-                                # i_start => 1,
-                                # planepath => 'PythagoreanTree,coordinates=BA',
-                                # planepath=>'RationalsTree,tree_type=CW',
-                                # planepath => 'DivisibleColumns,divisor_type=proper',
-                                # planepath => 'HilbertCurve',
+     # i_start => 1,
+     # endian => 'little',
 
-                                # including_zero => 1,
-                                # # divisors_type => 'proper',
-                                # # algorithm_type => '1/2-3/2',
-                                # # algorithm_type => '1/3-3/2',
-                                # fraction => '1/975',
-                                # lo => 0,
-                                # hi => 10, # 200*$rep,
-                                # where => 'low',
-                               );
-  my $hi = 10;
+     # including_zero => 1,
+     # # divisors_type => 'proper',
+     # # algorithm_type => '1/2-3/2',
+     # # algorithm_type => '1/3-3/2',
+     # fraction => '1/975',
+     # lo => 0,
+     # hi => 10, # 200*$rep,
+     # where => 'low',
+    );
+  my $hi = 50;
 
   my $i_start = $seq->i_start;
   print "i_start $i_start\n";
@@ -237,6 +254,7 @@ $|=1;
   my $values_min = $seq->values_min;
   my $values_max = $seq->values_max;
   my $saw_value_min;
+  my $saw_value_max;
 
   foreach my $rep (1 .. 2) {
     ### $seq
@@ -268,10 +286,13 @@ $|=1;
           print " oops, value < values_min=$values_min\n";
         }
         if (defined $values_max && $value > $values_max) {
-          print " oops, value < values_max=$values_max\n";
+          print " oops, value > values_max=$values_max\n";
         }
         if (! defined $saw_value_min || $value < $saw_value_min) {
           $saw_value_min = $value;
+        }
+        if (! defined $saw_value_max || $value > $saw_value_max) {
+          $saw_value_max = $value;
         }
         # if ($value > DBL_INT_MAX) {
         #   print "\nstop at DBL_INT_MAX\n";
@@ -309,7 +330,8 @@ $|=1;
         my $ith_value = $seq->ith($i);
         unless ((defined $value == defined $ith_value)
                 && (! defined $value
-                    || $ith_value != $value)) {
+                    || $ith_value == $value
+                    || abs ($ith_value - $value) < 0.0000001)) {
           print " oops, ith($i)=",$ith_value//'undef'," next=",$value//'undef',"\n";
         }
       }
@@ -317,6 +339,9 @@ $|=1;
     print "\n";
     if (defined $values_min && $saw_value_min != $values_min) {
       print "hmm, saw_value_min=$saw_value_min not seq->values_min=$values_min\n";
+    }
+    if (defined $values_max && $saw_value_max != $values_max) {
+      print "hmm, saw_value_max=$saw_value_max not seq->values_max=$values_max\n";
     }
     if ($rep < 2) {
       print "rewind\n";

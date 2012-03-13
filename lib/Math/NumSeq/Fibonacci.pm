@@ -21,7 +21,7 @@ use strict;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 35;
+$VERSION = 36;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
 
@@ -186,7 +186,8 @@ L<Math::NumSeq::Fibbinary>,
 L<Math::NumSeq::FibonacciWord>,
 L<Math::NumSeq::Tribonacci>
 
-L<Math::Fibonacci>
+L<Math::Fibonacci>,
+L<Math::Fibonacci::Phi>
 
 =head1 HOME PAGE
 

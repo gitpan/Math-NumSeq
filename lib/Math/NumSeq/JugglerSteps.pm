@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 35;
+$VERSION = 36;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -43,6 +43,10 @@ use constant parameter_info_array =>
      type    => 'enum',
      default => 'both',
      choices => ['up','down','both'],
+     choices_display => [Math::NumSeq::__('Up'),
+                         Math::NumSeq::__('Down'),
+                         Math::NumSeq::__('Both'),
+                        ],
      description => Math::NumSeq::__('Which steps to count, the n^(3/2) ups, the n^(1/2) downs, or both.'),
    },
    { name    => 'juggler_type',
@@ -58,6 +62,9 @@ use constant parameter_info_array =>
    #   type    => 'enum',
    #   default => 'floor',
    #   choices => ['floor','round'],
+   # choices_display => [Math::NumSeq::__('Floor'),
+   #                     Math::NumSeq::__('Round'),
+   #                    ],
    #   description => Math::NumSeq::__('Rounding type.'),
    # },
   ];

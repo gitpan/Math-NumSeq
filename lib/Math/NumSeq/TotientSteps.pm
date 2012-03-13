@@ -18,9 +18,10 @@
 package Math::NumSeq::TotientSteps;
 use 5.004;
 use strict;
+use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 35;
+$VERSION = 36;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -41,27 +42,67 @@ use constant values_min => 0; # at i=1
 use constant i_start => 1;
 use constant oeis_anum => 'A003434';
 
-sub ith {
-  my ($self, $i) = @_;
-  ### TotientSteps ith(): $i
 
-  if (_is_infinite($i)) {
-    return $i;
-  }
 
+sub rewind {
+  my ($self) = @_;
+  $self->{'i'} = $self->i_start;
+}
+sub next {
+  my ($self) = @_;
+
+  my $v = my $i = $self->{'i'}++;
   my $count = 0;
   for (;;) {
-    if ($i <= 1) {
-      return $count;
+    if ($v <= 1) {
+      return ($i, $count);
     }
-    $i = _totient_by_sieve($self,$i);
+    $v = _totient_by_sieve($self,$v);
     $count++;
   }
 }
 
+
+sub ith {
+  my ($self, $i) = @_;
+  ### TotientSteps ith(): $i
+
+  if ($i < 0 || $i > 0xFFFF_FFFF) {
+    return undef;
+  }
+  if (_is_infinite($i)) {
+    return $i;
+  }
+
+  my %factors;
+  my %primes;
+  foreach my $p (prime_factors($i)) {
+    $primes{$p}++;
+  }
+
+  my $count = 0;
+  while (%primes) {
+    ### %primes
+    $count++;
+
+    my %next;
+    while (my ($p, $e) = each %primes) {
+      if (--$e) {
+        $next{$p} += $e;
+      }
+      foreach my $f (@{ $factors{$p} ||= [ prime_factors($p-1) ] }) {
+        $next{$f}++;
+      }
+    }
+
+    %primes = %next;
+  }
+  return $count;
+}
+
 sub pred {
   my ($self, $value) = @_;
-  return ($value==int($value) && $value >= 1);
+  return ($value==int($value) && $value >= values_min());
 }
 
 1;
@@ -81,9 +122,12 @@ Math::NumSeq::TotientSteps -- count of repeated totients to reach 1
 
 =head1 DESCRIPTION
 
-How many repeated applications of the totient function to reach 1, so 0, 1,
-2, 2, 3, 2, etc.  For example i=5 goes 5- E<gt> 4 -E<gt> 2 -E<gt> 1 so 3
-steps.
+How many repeated applications of the totient function to reach 1, so from
+i=1
+
+    0, 1, 2, 2, 3, 2, 3, 3, 3, 3, 4, 3, 4, ...
+
+For example i=5 goes 5- E<gt> 4 -E<gt> 2 -E<gt> 1 so value=3 steps.
 
 =head1 FUNCTIONS
 
@@ -97,12 +141,12 @@ Create and return a new sequence object.
 
 =item C<$value = $seq-E<gt>ith($i)>
 
-Return the count totient of steps to run i down to 1.
+Return the count of totient(i) steps to get down to 1.
 
 =item C<$value = $seq-E<gt>pred($value)>
 
 Return true if C<$value> occurs in the sequence, which simply means a count
-C<$value E<gt>= 1>.
+C<$value E<gt>= 0>.
 
 =back
 
@@ -110,8 +154,8 @@ C<$value E<gt>= 1>.
 
 L<Math::NumSeq>,
 L<Math::NumSeq::Totient>,
-L<Math::NumSeq::TotientPerfect>,
-L<Math::NumSeq::TotientStepsSum>
+L<Math::NumSeq::TotientStepsSum>,
+L<Math::NumSeq::DedekindPsiSteps>
 
 =head1 HOME PAGE
 

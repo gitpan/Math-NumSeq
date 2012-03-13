@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 35;
+$VERSION = 36;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 688 A-numbers in 90 modules
+# total 693 A-numbers in 93 modules
 
 use constant info_arrayref =>
 [
@@ -523,12 +523,48 @@ use constant info_arrayref =>
     ]
   },
   {
+    'anum' => 'A087737',
+    'class' => 'Math::NumSeq::ConcatNumbers',
+    'parameters' => [
+      'radix',
+      2,
+      'i_start',
+      1
+    ]
+  },
+  {
+    'anum' => 'A001704',
+    'class' => 'Math::NumSeq::ConcatNumbers',
+    'parameters' => [
+      'i_start',
+      1
+    ]
+  },
+  {
+    'anum' => 'A001703',
+    'class' => 'Math::NumSeq::ConcatNumbers',
+    'parameters' => [
+      'i_start',
+      1,
+      'concat_count',
+      3
+    ]
+  },
+  {
     'anum' => 'A000578',
     'class' => 'Math::NumSeq::Cubes'
   },
   {
     'anum' => 'A002064',
     'class' => 'Math::NumSeq::CullenNumbers'
+  },
+  {
+    'anum' => 'A173290',
+    'class' => 'Math::NumSeq::DedekindPsiCumulative'
+  },
+  {
+    'anum' => 'A019269',
+    'class' => 'Math::NumSeq::DedekindPsiSteps'
   },
   {
     'anum' => 'A080791',

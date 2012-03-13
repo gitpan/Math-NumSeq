@@ -35,7 +35,7 @@ use Math::NumSeq::FibonacciWord;
 # VERSION
 
 {
-  my $want_version = 35;
+  my $want_version = 36;
   ok ($Math::NumSeq::FibonacciWord::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::FibonacciWord->VERSION,  $want_version,
@@ -65,7 +65,7 @@ use Math::NumSeq::FibonacciWord;
 }
 
 #------------------------------------------------------------------------------
-# Fibbinary mod 2
+# equals Fibbinary mod 2
 
 {
   require Math::NumSeq::Fibbinary;

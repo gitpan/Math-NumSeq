@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 35;
+$VERSION = 36;
 use Math::NumSeq;
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
@@ -96,7 +96,7 @@ sub oeis_anum {
   if ($digit == -1) {
     $digit = $radix-1;
   } elsif ($digit >= $radix) {
-    return 'A000004'; # all zeros, 
+    return 'A000004'; # all zeros, starting i=0
   }
   return $oeis_anum[$self->i_start]->[$radix]->[$digit];
 }

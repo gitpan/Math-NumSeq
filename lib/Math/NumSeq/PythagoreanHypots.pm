@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 35;
+$VERSION = 36;
 
 use Math::NumSeq 7; # v.7 for _is_infinite()
 @ISA = ('Math::NumSeq');
@@ -45,6 +45,9 @@ use constant parameter_info_array =>
      type        => 'enum',
      default     => 'all',
      choices     => ['all','primitive'],
+     choices_display => [Math::NumSeq::__('All'),
+                         Math::NumSeq::__('Primitive'),
+                        ],
     },
   ];
 

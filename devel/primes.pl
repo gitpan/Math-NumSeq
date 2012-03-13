@@ -21,10 +21,100 @@ use 5.010;
 use strict;
 use warnings;
 use POSIX;
+use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
+use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
+use List::Util 'max','min';
+use Math::Trig 'pi';
 
 use Smart::Comments;
 
 # use blib "$ENV{HOME}/perl/bit-vector/Bit-Vector-7.1/blib";
+
+{
+  # deletable primes high zeros
+  use Math::NumSeq::MathImageDeletablePrimes;
+  my $seq = Math::NumSeq::MathImageDeletablePrimes->new;
+
+  for my $value (0 .. 100000) {
+    (my $low = $value) =~ s/.0+//
+      or next;
+    is_prime($value) or next;
+    if ($seq->pred($value)) { next; }
+    $seq->pred($low) or next;
+
+    print "$value $low\n";
+  }
+  exit 0;
+}
+
+{
+  # dedekind psi cumulative estimate
+  require Math::NumSeq::DedekindPsiCumulative;
+  my $seq = Math::NumSeq::DedekindPsiCumulative->new;
+
+  my $target = 2;
+  for (;;) {
+    my ($i, $value) = $seq->next;
+    if ($i >= $target) {
+      $target *= 2;
+      my $est_i = $seq->value_to_i_estimate($value);
+      my $factor = $est_i / $i;
+      my $O = ($value - (15*$i**2)/(2*pi()*pi())) / ($i*log($i));
+      my $est_value = ($i**2) * 15/(2*pi()*pi()); #  + 0 * ($i*log($i));
+      printf "%d %d   %d %.0f  %.3f  O=%.3f\n",
+        $i, $est_i, $value, $est_value, $factor, $O;
+    }
+  }
+  exit 0;
+}
+
+{
+  # Math::NumSeq::MathImagePierpontPrimes;
+
+  # Erdos-Selfridge
+  # 1+ 2, 3, 5, 7, 11, 17, 23, 31, 47, 53, 71, 107, 127, 191, 383, 431, 647,
+  # 2+ 13, 19, 29, 41, 43, 59, 61, 67, 79, 83, 89, 97, 101, 109, 131, 137,
+  # 3+ 37, 103, 113, 151, 157, 163, 173, 181, 193, 227, 233, 257, 277, 311,
+  # 4+ 73, 313, 443, 617, 661, 673, 677, 691, 739, 757, 823, 887, 907, 941,
+  my @es_class = (undef, undef, 0, 0);
+  sub es_class {
+    my ($prime) = @_;
+    return ($es_class[$prime]
+            //= max (map { es_class($_)+1 } prime_factors($prime+1)));
+  }
+  
+  my @by_class;
+  my $seq = Math::NumSeq::Primes->new;
+  foreach (1 .. 50) {
+    my ($i, $value) = $seq->next;
+    my $es_class = es_class($value);
+    print "$value  $es_class\n";
+    push @{$by_class[$es_class]}, $value;
+  }
+
+  foreach my $i (keys @by_class) {
+    my $aref = $by_class[$i] || next;
+    print "$i  ",join(',',@$aref),"\n";
+  }
+
+  exit 0;
+}
+
+{
+  # pierpont offsets
+
+  my $offset = -7;
+  foreach my $x (1 .. 20) {
+    foreach my $y (1 .. 20) {
+      my $v = 2**$x * 3**$y + $offset;
+      last if $v > 0xFFF_FFFF;
+      if ($v > 0 && is_prime($v)) {
+        print "$x,$y $offset\n";
+      }
+    }
+  }
+  exit 0;
+}
 
 {
   # pierpont

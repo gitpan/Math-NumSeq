@@ -17,6 +17,12 @@ with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 36, March 2012
+    - new ConcatNumbers, DedekindPsiCumulative, DedekindPsiSteps
+    - FibonacciWord new fibonacci_word_type=>"dense"
+    - Totient, TotientPerfect, TotientSteps, TotientStepsSum use prime
+      factorization for bigger range in ith() and pred()
+
 Version 35, February 2012
     - OEIS read a-file or b-file progressively, not all into array
     - TwinPrimes new value_to_i_estimate()

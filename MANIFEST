@@ -78,8 +78,11 @@ lib/Math/NumSeq/Base/Sparse.pm
 lib/Math/NumSeq/BaumSweet.pm
 lib/Math/NumSeq/Beastly.pm
 lib/Math/NumSeq/CollatzSteps.pm
+lib/Math/NumSeq/ConcatNumbers.pm
 lib/Math/NumSeq/Cubes.pm
 lib/Math/NumSeq/CullenNumbers.pm
+lib/Math/NumSeq/DedekindPsiCumulative.pm
+lib/Math/NumSeq/DedekindPsiSteps.pm
 lib/Math/NumSeq/DigitCount.pm
 lib/Math/NumSeq/DigitCountHigh.pm
 lib/Math/NumSeq/DigitCountLow.pm
@@ -169,6 +172,7 @@ lib/Math/NumSeq/WoodallNumbers.pm
 Makefile.PL
 MANIFEST			This list of files
 MANIFEST.SKIP
+META.yml
 SIGNATURE
 t/AsciiSelf.t
 t/bigint-preload.t
@@ -217,11 +221,13 @@ xt/0-Test-ConsistentVersion.t
 xt/0-Test-Pod.t
 xt/0-Test-Synopsis.t
 xt/0-Test-YAML-Meta.t
+xt/FibonacciWord-oeis.t
 xt/MyOEIS.pm
 xt/NumSeq-oeis.t
 xt/OEIS-File-ithreads.t
 xt/OEIS-File-weaken.t
 xt/pod_lists.t
+xt/Primes-oeis.t
 xtools/my-check-copyright-years.sh
 xtools/my-check-spelling.sh
 xtools/my-deb.sh
@@ -231,4 +237,3 @@ xtools/my-manifest.sh
 xtools/my-pc.sh
 xtools/my-tags.sh
 xtools/my-wunused.sh
-META.yml                                 Module meta-data (added by MakeMaker)

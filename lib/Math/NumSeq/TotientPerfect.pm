@@ -18,45 +18,103 @@
 package Math::NumSeq::TotientPerfect;
 use 5.004;
 use strict;
+use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 35;
+$VERSION = 36;
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
 @ISA = ('Math::NumSeq::Base::IteratePred',
         'Math::NumSeq');
+*_is_infinite = \&Math::NumSeq::_is_infinite;
 
 use Math::NumSeq::Totient;
 *_totient_by_sieve = \&Math::NumSeq::Totient::_totient_by_sieve;
 
 # uncomment this to run the ### lines
-#use Devel::Comments;
+#use Smart::Comments;
 
-use constant description => Math::NumSeq::__('Numbers for which the sum of repeated applications of the totient function equals N.  Eg. 9 because phi(9)=6, phi(6)=2, phi(2)=1 and their sum 6+2+1 = 9.');
+
+use constant description => Math::NumSeq::__('Numbers for which the sum of repeated applications of the totient function equals N.  Eg. 9 is perfect because phi(9)=6, phi(6)=2, phi(2)=1 and the sum 6+2+1 = 9.');
 use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
 use constant values_min => 3;
 use constant i_start => 1;
 use constant oeis_anum => 'A082897';
 
+
+sub rewind {
+  my ($self) = @_;
+  $self->{'i'} = $self->i_start;
+  $self->{'upto'} = 1;
+}
+sub next {
+  my ($self) = @_;
+
+ OUTER: for (;;) {
+    my $value = ($self->{'upto'} += 2);
+
+    my $sum = my $p = _totient_by_sieve($self,$value);
+    while ($p > 1) {
+      $sum += ($p = _totient_by_sieve($self,$p));
+      if ($sum > $value) {
+        next OUTER;
+      }
+    }
+    if ($sum == $value) {
+      return ($self->{'i'}++, $value);
+    }
+  }
+}
+
+
 sub pred {
   my ($self, $value) = @_;
-  if ($value < values_min
+
+  if ($value < $self->values_min
+      || _is_infinite($value)
       || ($value % 2) == 0) {  # even numbers not perfect
     return 0;
   }
-  my $sum = my $p = _totient_by_sieve($self,$value);
-  for (;;) {
-    if ($p <= 1) {
-      return ($sum == $value);
-    }
-    $sum += ($p = _totient_by_sieve($self,$p));
-    if ($sum > $value) {
-      return 0;
-    }
+  if ($value < 0 || $value > 0xFFFF_FFFF) {
+    return undef;
   }
-  return ($value >= 1);
+
+  my %factors;
+  my %primes;
+  foreach my $p (prime_factors($value)) {
+    $primes{$p}++;
+  }
+
+  my $sum = 0;
+  while (%primes) {
+    ### %primes
+
+    my %next;
+    while (my ($p, $e) = each %primes) {
+      if (--$e) {
+        $next{$p} += $e;
+      }
+      foreach my $f (@{ $factors{$p} ||= [ prime_factors($p-1) ] }) {
+        $next{$f}++;
+      }
+    }
+
+    my $next_value = 1;
+    while (my ($p, $e) = each %next) {
+      $next_value *= $p ** $e;
+    }
+    $sum += $next_value;
+    last unless $sum < $value;
+
+    %primes = %next;
+  }
+  ### final sum: $sum
+
+  return ($sum == $value);
 }
+
+
 
 1;
 __END__
@@ -76,8 +134,15 @@ Math::NumSeq::TotientPerfect -- sum of repeated totients is N itself
 =head1 DESCRIPTION
 
 Numbers for which the sum of repeated totients until reaching 1 gives the
-starting n itself.  For example totient(15)=8, totient(8)=4, totient(4)=2
-and totient(1)=1.  Adding them up 8+4+2+1=15 so 15 is a perfect totient.
+starting n itself.
+
+    3, 9, 15, 27, 39, 81, 111, 183, 243, 255, ...
+
+For example totient(15)=8, totient(8)=4, totient(4)=2 and totient(1)=1.
+Adding them up 8+4+2+1=15 so 15 is a perfect totient.
+
+The current implementation of C<next()> is merely a search by C<pred()>
+through all odd integers, which isn't very fast.
 
 =head1 FUNCTIONS
 

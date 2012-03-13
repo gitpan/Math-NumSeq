@@ -25,7 +25,7 @@ use strict;
 use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 35;
+$VERSION = 36;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
@@ -48,6 +48,9 @@ use constant parameter_info_array =>
     type        => 'enum',
     default     => 'all',
     choices     => ['all','even'],
+    choices_display => [Math::NumSeq::__('All'),
+                        Math::NumSeq::__('Even'),
+                       ],
     # description => Math::NumSeq::__('...'),
    },
   ];

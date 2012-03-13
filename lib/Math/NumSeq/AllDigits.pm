@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 35;
+$VERSION = 36;
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
 
@@ -43,6 +43,10 @@ use constant parameter_info_array =>
     type        => 'enum',
     default     => 'forward',
     choices     => ['forward','reverse','sorted'],
+    choices_display => [Math::NumSeq::__('Forward'),
+                        Math::NumSeq::__('Reverse'),
+                        Math::NumSeq::__('Sorted'),
+                       ],
     description => Math::NumSeq::__('Order for the digits within each integer.'),
    },
   ];
@@ -291,7 +295,8 @@ L<Math::NumSeq>,
 L<Math::NumSeq::All>,
 L<Math::NumSeq::SqrtDigits>,
 L<Math::NumSeq::DigitLength>,
-L<Math::NumSeq::Runs>
+L<Math::NumSeq::Runs>,
+L<Math::NumSeq::ConcatNumbers>
 
 =head1 HOME PAGE
 

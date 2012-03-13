@@ -20,9 +20,9 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 35;
+$VERSION = 36;
 use Math::NumSeq 7; # v.7 for _is_infinite()
-use Math::NumSeq::Base::IteratePred;        
+use Math::NumSeq::Base::IteratePred;
 @ISA = ('Math::NumSeq::Base::IteratePred',
         'Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -42,6 +42,9 @@ use constant parameter_info_array =>
      type    => 'enum',
      default => 'some',
      choices => ['some','all'],
+     choices_display => [Math::NumSeq::__('Some'),
+                         Math::NumSeq::__('All'),
+                        ],
      # description => Math::NumSeq::__(''),
    },
    { name    => 'power',

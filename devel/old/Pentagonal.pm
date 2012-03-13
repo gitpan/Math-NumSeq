@@ -1,4 +1,4 @@
-# Copyright 2010, 2011 Kevin Ryde
+# Copyright 2010, 2011, 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -34,6 +34,7 @@ use constant description => Math::NumSeq::__('The pentagonal numbers 1,5,12,22,e
 # overriding Polygonal base class
 use constant parameter_info_array =>
   [ { name    => 'pairs',
+      share_key => 'pairs_fsb',
       display => Math::NumSeq::__('Pairs'),
       type    => 'enum',
       default => 'first',

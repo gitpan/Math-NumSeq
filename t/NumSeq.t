@@ -25,7 +25,7 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
-my $test_count = (tests => 375)[1];
+my $test_count = (tests => 393)[1];
 plan tests => $test_count;
 
 # uncomment this to run the ### lines
@@ -125,7 +125,78 @@ foreach my $elem
    # Ln2Bits.pm
    # MobiusFunction.pm
    # PiBits.pm
-
+   
+   [ 'Math::NumSeq::ConcatNumbers', 0,
+     [ 1, 12, 23, 34, 45, 56, 67, 78, 89, 910, 1011, 1112, 1213 ],
+   ],
+   [ 'Math::NumSeq::ConcatNumbers', 0,
+     [ 12, 123, 234, 345, 456, 567, 678, 789, 8910, 91011, 101112, 111213 ],
+     { concat_count => 3 },
+   ],
+   [ 'Math::NumSeq::ConcatNumbers', 0,
+     [ 0x01,  # 0b1
+       0x06,  # 0b110
+       0x0B,  # 0b1011
+       0x1C,  # 0b11100
+       0x25,  # 0b100101
+       0x2E,  # 0b101110
+       0x37,  # 0b110111
+       0x78,  # 0b1111000
+       0x89,  # 0b10001001
+     ],
+     { radix => 2 },
+   ],
+   [ 'Math::NumSeq::ConcatNumbers', 0,
+     [ 0x06,  #         0b_0110  0,1,2
+       0x1B,  #        0b1_1011  1,2,3
+       0x5C,  #      0b101_1100  2,3,4
+       0xE5,  #    0b_1110_0101  3,4,5
+       0x12E, #   0b1_0010_1110  4,5,6
+       0x177, #   0b1_0111_0111  5,6,7
+       0x378, #  0b11_0111_1000  6,7,8
+     ],
+     { radix => 2,
+       concat_count => 3,
+     },
+   ],
+   [ 'Math::NumSeq::ConcatNumbers', 0,
+     [ 0x1B,   #           0b01_1011  0,1,2,3
+       0xDC,   #        0b_1101_1100  1,2,3,4
+       0x2E5,  #      0b10_1110_0101  2,3,4,5
+       0x72E,  #     0b111_0010_1110  3,4,5,6
+       0x977,  #   0b_1001_0111_0111  4,5,6,7
+       0x1778, #  0b1_0111_0111_1000  5,6,7,8
+       0x3789, # 0b11_0111_1000_1001  6,7,8,9
+     ],
+     { radix => 2,
+       concat_count => 4,
+     },
+   ],
+   
+   [ 'Math::NumSeq::DedekindPsiSteps', 0,
+     [ 0,0,0,0,
+       1, # 5 -> 5+1=6=2*3
+       0, # 6 = 2*3
+       1, # 7 -> 7+1=8
+       0, # 8 = 2*2*2
+       0, # 9 = 3*3
+       1, # 10 = 2*5 -> 3*6 = 2*3*3
+     ],
+   ],
+   
+   [ 'Math::NumSeq::ConcatNumbers', 0,
+     [ 1, 12, 23, 34, 45, 56, 67, 78, 89, 910, 1011, 1112, 1213 ],
+   ],
+   [ 'Math::NumSeq::ConcatNumbers', 0,
+     [ 1, 012, 023, 034, 045, 056, 067, 0710, 01011, 01112, 01213 ],
+     { radix => 8 },
+   ],
+   [ 'Math::NumSeq::ConcatNumbers', 0,
+     [ 1, 0x12, 0x23, 0x34, 0x45, 0x56, 0x67, 0x78, 0x89,
+       0x9A, 0xAB, 0xBC, 0xCD, 0xDE, 0xEF, 0xF10, 0x1011, 0x1112, 0x1213 ],
+     { radix => 16 },
+   ],
+   
    [ 'Math::NumSeq::HofstadterFigure', 0,
      [ 2, 3, 7, 12, 18, 26, 35, 45, ],
      { start => 2 },
@@ -133,7 +204,7 @@ foreach my $elem
    [ 'Math::NumSeq::HofstadterFigure', 0,
      [ 1, 3, 7, 12, 18, 26, 35, 45, 56, 69, 83, 98 ],
    ],
-
+   
    [ 'Math::NumSeq::Runs', 0,
      [ 0, 1, 2, 3, 4 ],
      { runs_type => '1rep' },
@@ -194,7 +265,7 @@ foreach my $elem
      { radix => 2, sqrt => 2 },
    ],
    
-
+   
    [ 'Math::NumSeq::UndulatingNumbers', 0, # with a!=b
      [ ternary(0),ternary(1),ternary(2),
        ternary(10),            ternary(12),

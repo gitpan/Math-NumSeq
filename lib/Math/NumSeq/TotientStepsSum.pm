@@ -18,9 +18,10 @@
 package Math::NumSeq::TotientStepsSum;
 use 5.004;
 use strict;
+use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 35;
+$VERSION = 36;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -34,7 +35,7 @@ use Math::NumSeq::Totient 13;
 #use Devel::Comments;
 
 
-use constant description => Math::NumSeq::__('Sum of totients when repeatedly applying until reach 1.');
+use constant description => Math::NumSeq::__('Sum of totients repeatedly applying until reach 1.');
 use constant characteristic_increasing => 0;
 use constant characteristic_integer => 1;
 use constant i_start => 1;
@@ -59,6 +60,22 @@ sub oeis_anum {
   return ($self->{'including_self'} ? 'A053478' : 'A092693');
 }
 
+sub rewind {
+  my ($self) = @_;
+  $self->{'i'} = $self->i_start;
+}
+sub next {
+  my ($self) = @_;
+
+  my $i = $self->{'i'}++;
+  my $sum = ($self->{'including_self'} ? $i : 0);
+  my $v = $i;
+  while ($v > 1) {
+    $sum += ($v = _totient_by_sieve($self,$v));
+  }
+  return ($i, $sum);
+}
+
 sub ith {
   my ($self, $i) = @_;
 
@@ -66,10 +83,36 @@ sub ith {
     return $i;
   }
 
-  my $sum = ($self->{'including_self'} ? $i : $i*0);
-  while ($i > 1) {
-    $sum += ($i = _totient_by_sieve($self,$i));
+  my %factors;
+  my %primes;
+  foreach my $p (prime_factors($i)) {
+    $primes{$p}++;
   }
+
+  my $sum = ($self->{'including_self'} ? $i : $i*0);
+  while (%primes) {
+    ### %primes
+
+    my %next;
+    while (my ($p, $e) = each %primes) {
+      if (--$e) {
+        $next{$p} += $e;
+      }
+      foreach my $f (@{ $factors{$p} ||= [ prime_factors($p-1) ] }) {
+        $next{$f}++;
+      }
+    }
+
+    my $next_value = 1;
+    while (my ($p, $e) = each %next) {
+      $next_value *= $p ** $e;
+    }
+    $sum += $next_value;
+
+    %primes = %next;
+  }
+  ### final sum: $sum
+
   return $sum;
 }
 
@@ -91,15 +134,21 @@ Math::NumSeq::TotientStepsSum -- sum of repeated totients to reach 1
 =head1 DESCRIPTION
 
 The sum of the totients on repeatedly applying the totient function to
-reach 1.  For example i=5 applying the totient function goes 5- E<gt> 4
--E<gt> 2 -E<gt> 1 so total value=5+4+2+1=12.
+reach 1.
 
-The default is to include the initial i value itself in the sum, with
-C<including_self =E<gt> 0> it's excluded, in which case i=5 has
+    1, 3, 6, 7, 12, 9, 16, 15, 18, 17, 28, 19, 32, ...
+
+For example i=5 applying the totient function goes 5 -E<gt> 4 -E<gt> 2
+-E<gt> 1 so total value=5+4+2+1=12.
+
+The default is to include the initial i value itself in the sum.  Option
+C<including_self =E<gt> 0> excludes, in which case for example i=5 has
 value=4+2+1=7.
 
-See L<Math::NumSeq::TotientPerfect> for starting i values which have a sum
-equal to i itself.
+    0, 1, 3, 3, 7, 3, 9, 7, 9, 7, 17, 7, 19, ...
+
+See L<Math::NumSeq::TotientPerfect> for i values which have a sum equal to i
+itself.
 
 =head1 FUNCTIONS
 
@@ -121,7 +170,8 @@ Return the totient steps sum running i down to 1.
 
 L<Math::NumSeq>,
 L<Math::NumSeq::Totient>,
-L<Math::NumSeq::TotientSteps>
+L<Math::NumSeq::TotientSteps>,
+L<Math::NumSeq::TotientPerfect>
 
 =head1 HOME PAGE
 
@@ -145,7 +195,3 @@ You should have received a copy of the GNU General Public License along with
 Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 =cut
-
-# Local variables:
-# compile-command: "math-image --values=TotientStepsSumSum"
-# End:

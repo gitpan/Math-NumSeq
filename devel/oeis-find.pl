@@ -34,7 +34,7 @@ use Module::Load;
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>start</title>
+<title>oeis-find</title>
 </head>
 <body>
 HERE
@@ -46,10 +46,9 @@ HERE
     next if $module eq 'Expression';
     next if $module eq 'OEIS';
     next if $module =~ 'CunninghamPrimes'; # broken
-    next if $module =~ 'PlanePathTurn'; # not yet
 
     # restricted to ...
-    # next unless $module =~ 'BinaryUnd';
+     next unless $module =~ /PathDelta/;
 
     my $class = App::MathImage::Generator->values_class($module);
     print "$class\n";
@@ -97,7 +96,7 @@ HERE
         $signed = 'signed:';
       }
 
-      special_values($module, $p_string, \@values);
+      special_values($module, $p_string, $seq, \@values);
 
       my $values_escaped = URI::Escape::uri_escape($values);
       print OUT "<br>\n$p_string\n" or die;
@@ -105,6 +104,15 @@ HERE
       print OUT <<HERE or die;
 $first_value, <a href="http://oeis.org/search?q=$signed$values_escaped&sort=&language=english&go=Search">$values</a>
 HERE
+
+      if (my @unzeros = unzeros(@values)) {
+        $first_value = shift @unzeros;
+        $values = join(',',@unzeros);
+        $values_escaped = URI::Escape::uri_escape($values);
+        print OUT <<HERE or die;
+<br> &nbsp; unzeros: $first_value, <a href="http://oeis.org/search?q=$signed$values_escaped&sort=&language=english&go=Search">$values</a>
+HERE
+      }
       $count++;
     }
     print OUT "</p>\n" or die;
@@ -122,19 +130,47 @@ HERE
 
 
 sub special_values {
-  my ($module, $params, $values_aref) = @_;
+  my ($module, $params, $seq, $values_aref) = @_;
   return unless @$values_aref;
   return if $module eq 'SqrtDigits';
 
+  $seq->rewind;
+  my ($i_start, $value_start) = $seq->next;
+
   if (all_same(@$values_aref)) {
-    print "$module $params:\n  all same $values_aref->[0]   length $#$values_aref\n";
+    if ($values_aref->[0] == 0 && $i_start != 0) {
+      # A000004 all zeros starts i=0, ignore other starts
+
+    } elsif ($values_aref->[0] == 1 && $i_start != 0) {
+      # A000012 all ones starts i=0, ignore other starts
+
+    } else {
+      print "$module $params:\n";
+      print "  all same $values_aref->[0]   length $#$values_aref\n";
+    }
 
   } elsif (defined (my $diff = constant_diff(@$values_aref))) {
-    print "$module $params:\n  constant increment $diff\n";
-    print "  ",join(',',@$values_aref),"\n";
+    if ($diff == -1 && $i_start != 0) {
+      # A001489 negatives starts i=0, ignore others
+
+    } elsif ($diff == 1 && $i_start != $value_start) {
+      # A001477 all integers starts i=0
+      # A000027 naturals starts i=1
+
+    } elsif ($diff == 2 && $i_start != 0) {
+      # A005843 even numbers starts i=0
+
+    } else {
+      print "$module $params:\n";
+      print "  constant increment $diff (i_start=$i_start value=$value_start)\n";
+      print "  ",join(',',@$values_aref),"\n";
+    }
 
   } elsif (is_squares(@$values_aref)) {
-    print "$module $params: squares\n";
+    if ($values_aref->[0] == 0) {
+      # A000290 starts i=0
+      print "$module $params: squares\n";
+    }
   }
 }
 sub is_squares {
@@ -150,6 +186,11 @@ sub is_squares {
   }
   return 1;
 }
+
+# constant_diff($a,$b,$c,...)
+# If all the given values have a constant difference then return that amount.
+# Otherwise return undef.
+#
 sub constant_diff {
   my $diff = shift;
   my $value = shift;
@@ -163,6 +204,10 @@ sub constant_diff {
   }
   return $diff;
 }
+
+# all_same($a,$b,$c,...)
+# Return true if all the given numbers are the same value.
+#
 sub all_same {
   my $value = shift;
   while (@_) {
@@ -171,6 +216,30 @@ sub all_same {
     }
   }
   return 1;
+}
+
+sub unzeros {
+  @_ or return;
+
+  if (! $_[0]) {
+    shift; # skip zero
+  }
+
+  my @ret;
+  my $seen_nonzero;
+  while (@_) {
+    $seen_nonzero ||= $_[0];
+    push @ret, shift;
+    if ($_[0]) {
+      return; # not alternate zeros
+    } else {
+      shift; # skip zero
+    }
+  }
+  if (! $seen_nonzero) {
+    return;
+  }
+  return @ret;
 }
 
 sub parameter_info_list_to_parameters {
@@ -262,7 +331,8 @@ sub info_extend_parameters {
 
   if ($info->{'type'} eq 'integer'
       || $info->{'name'} eq 'multiples') {
-    my $max = $info->{'minimum'}+10;
+    my $min = $info->{'minimum'} // -5;
+    my $max = $min + 10;
     if ($info->{'name'} eq 'rule') { $max = 255; }
     if ($info->{'name'} eq 'round_count') { $max = 20; }
     if ($info->{'name'} eq 'straight_spacing') { $max = 2; }

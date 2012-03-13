@@ -38,7 +38,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 35;
+$VERSION = 36;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -396,6 +396,7 @@ L<Math::NumSeq::Even>,
 L<Math::NumSeq::Odd>,
 L<Math::NumSeq::All>,
 L<Math::NumSeq::AllDigits>,
+L<Math::NumSeq::ConcatNumbers>,
 L<Math::NumSeq::Runs>
 
 L<Math::NumSeq::Primes>,
@@ -416,6 +417,8 @@ L<Math::NumSeq::TotientCumulative>,
 L<Math::NumSeq::TotientSteps>,
 L<Math::NumSeq::TotientStepsSum>,
 L<Math::NumSeq::TotientPerfect>,
+L<Math::NumSeq::DedekindPsiCumulative>,
+L<Math::NumSeq::DedekindPsiSteps>,
 L<Math::NumSeq::Abundant>,
 L<Math::NumSeq::PolignacObstinate>
 

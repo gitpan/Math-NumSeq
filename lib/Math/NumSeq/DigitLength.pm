@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 35;
+$VERSION = 36;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -41,6 +41,7 @@ use constant characteristic_increasing => 1;
 use Math::NumSeq::Base::Digits;
 *parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
 
+#------------------------------------------------------------------------------
 # cf A000523 - floor(log2(n))
 #    A036786 - roman numeral length <  decimal length
 #    A036787 - roman numeral length == decimal length
@@ -65,6 +66,9 @@ sub oeis_anum {
   my ($self) = @_;
   return $oeis_anum[$self->{'radix'}];
 }
+
+#------------------------------------------------------------------------------
+
 
 sub rewind {
   my ($self) = @_;
