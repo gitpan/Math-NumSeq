@@ -38,7 +38,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 36;
+$VERSION = 37;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -279,6 +279,13 @@ a sequence might have.
     increasing_from_i     integer, i for which v[i+1] > v[i]
     non_decreasing_from_i integer, i for which v[i+1] >= v[i]
 
+    value_is_radix    boolean, value is radix for i
+
+C<value_is_radix> means each value is a radix applying to the i of that
+value.  For example RepdigitRadix gives for i a radix value for which i is a
+repdigit.  Values from such a sequence might also be 0 or 1 or -1 or some
+such non-radix values to indicate no radix.
+
 =item C<$str = $seq-E<gt>oeis_anum()>
 
 Return the A-number (a string) for Sloane's Online Encyclopedia of Integer
@@ -403,6 +410,7 @@ L<Math::NumSeq::Primes>,
 L<Math::NumSeq::TwinPrimes>,
 L<Math::NumSeq::SophieGermainPrimes>,
 L<Math::NumSeq::AlmostPrimes>,
+L<Math::NumSeq::DeletablePrimes>,
 L<Math::NumSeq::Emirps>,
 L<Math::NumSeq::MobiusFunction>,
 L<Math::NumSeq::LiouvilleFunction>,

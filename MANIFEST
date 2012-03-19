@@ -18,7 +18,7 @@ devel/exe-cbrt.c
 devel/expression.pl
 devel/fibbinary.pl
 devel/fibonacci-word.pl
-devel/golden-sequence.pl
+devel/golomb-sequence.pl
 devel/grep-oeis-non-ascii.pl
 devel/happy.pl
 devel/hofstadter-figure.pl
@@ -83,6 +83,7 @@ lib/Math/NumSeq/Cubes.pm
 lib/Math/NumSeq/CullenNumbers.pm
 lib/Math/NumSeq/DedekindPsiCumulative.pm
 lib/Math/NumSeq/DedekindPsiSteps.pm
+lib/Math/NumSeq/DeletablePrimes.pm
 lib/Math/NumSeq/DigitCount.pm
 lib/Math/NumSeq/DigitCountHigh.pm
 lib/Math/NumSeq/DigitCountLow.pm
@@ -178,6 +179,7 @@ t/AsciiSelf.t
 t/bigint-preload.t
 t/CollatzSteps.t
 t/Cubes.t
+t/DeletablePrimes.t
 t/DigitProduct.t
 t/DivisorCount.t
 t/Emirps.t
@@ -221,7 +223,9 @@ xt/0-Test-ConsistentVersion.t
 xt/0-Test-Pod.t
 xt/0-Test-Synopsis.t
 xt/0-Test-YAML-Meta.t
+xt/DeletablePrimes-oeis.t
 xt/FibonacciWord-oeis.t
+xt/GolombSequence-oeis.t
 xt/MyOEIS.pm
 xt/NumSeq-oeis.t
 xt/OEIS-File-ithreads.t

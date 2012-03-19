@@ -128,7 +128,7 @@ sub check_class {
   # skip all except ...
   #
   # return unless $class =~ /PrimeF/;
-  # return unless $class =~ /Liou/;
+  # return unless $class =~ /Golomb/;
   # return unless $class =~ /Twin/;
   # return unless $class =~ /FactorCount/;
   # return unless $class =~ /Fib/;
@@ -211,6 +211,12 @@ sub check_class {
            || $anum eq 'A007300') {
     # UlamSequence shortened for now
     if ($#$want > 1000) { $#$want = 1000; }
+
+  } elsif ($anum eq 'A080605') { # Golomb odd, typo extra 23
+    if ($want->[64] == 23) {
+      MyTestHelpers::diag ("$anum delete stray extra 23");
+      splice @$want,64,1;
+    }
 
   } elsif ($anum eq 'A000004') {
     # shorten anything all zeros

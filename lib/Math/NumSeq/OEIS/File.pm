@@ -29,14 +29,14 @@ use Symbol 'gensym';
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 36;
+$VERSION = 37;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_bigint = \&Math::NumSeq::_bigint;
 
 use vars '$VERSION';
-$VERSION = 36;
+$VERSION = 37;
 
 eval q{use Scalar::Util 'weaken'; 1}
   || eval q{sub weaken { $_[0] = undef }; 1 }

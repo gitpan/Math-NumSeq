@@ -17,6 +17,11 @@ with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 37, March 2012
+    - new DeletablePrimes
+    - new characteristic('value_is_radix')
+    - GolombSequence new using_values=>all,odd,even,3k,squares,primes
+
 Version 36, March 2012
     - new ConcatNumbers, DedekindPsiCumulative, DedekindPsiSteps
     - FibonacciWord new fibonacci_word_type=>"dense"

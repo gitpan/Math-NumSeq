@@ -22,7 +22,7 @@ use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 use Math::NumSeq::Primes;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 36;
+$VERSION = 37;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -78,6 +78,7 @@ use constant 1.02 _PI => 4*atan2(1,1); # similar to Math::Complex pi()
 
 # Enrique Pérez Herrero in the OEIS
 # value = 15*n^2/(2*Pi^2) + O(n*log(n))
+#
 # sqrt(value) = sqrt(15/2)/pi * n
 # n = sqrt(value) * pi/sqrt(15/2)
 #

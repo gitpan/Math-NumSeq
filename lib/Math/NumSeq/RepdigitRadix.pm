@@ -25,7 +25,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 36;
+$VERSION = 37;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -39,10 +39,11 @@ use Math::Factor::XS 0.37 'factors';
 #use Smart::Comments;
 
 
-use constant description => Math::NumSeq::__('First base in which i is a repdigit (at most base=i-1 since "11" gives i).');
+use constant description => Math::NumSeq::__('First radix in which i is a repdigit (at most base=i-1 since "11" gives i).');
 use constant characteristic_smaller => 1;
 use constant characteristic_increasing => 0;
 use constant characteristic_integer => 1;
+use constant characteristic_value_is_radix => 1;
 sub values_min {
   my ($self) = @_;
   return ($self->i_start >= 3 ? 2 : 0);

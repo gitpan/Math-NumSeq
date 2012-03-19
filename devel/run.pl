@@ -76,7 +76,6 @@ $|=1;
   $values_class = 'Math::NumSeq::DigitCount';
   $values_class = 'App::MathImage::NumSeq::JugglerSteps';
   $values_class = 'Math::NumSeq::Kolakoski';
-  $values_class = 'App::MathImage::NumSeq::GolombSequence';
   $values_class = 'App::MathImage::NumSeq::UlamSequence';
   $values_class = 'Math::NumSeq::Fibonacci';
   $values_class = 'App::MathImage::NumSeq::ReplicateDigits';
@@ -138,7 +137,6 @@ $|=1;
   $values_class = 'Math::NumSeq::PlanePathCoord';
   $values_class = 'Math::NumSeq::PlanePathDelta';
   $values_class = 'Math::NumSeq::MathImagePierpontPrimes';
-  $values_class = 'Math::NumSeq::MathImageErdosSelfridgeClass';
   $values_class = 'Math::NumSeq::MathImageDedekindPsiCumulative';
   $values_class = 'Math::NumSeq::MathImageDedekindPsiSteps';
   $values_class = 'Math::NumSeq::ConcatNumbers';
@@ -146,12 +144,16 @@ $|=1;
   $values_class = 'Math::NumSeq::TotientSteps';
   $values_class = 'Math::NumSeq::PlanePathTurn';
   $values_class = 'Math::NumSeq::FibonacciWord';
-  $values_class = 'Math::NumSeq::MathImageDeletablePrimes';
+  $values_class = 'Math::NumSeq::DeletablePrimes';
   $values_class = 'Math::NumSeq::PlanePathN';
+  $values_class = 'Math::NumSeq::MathImageErdosSelfridgeClass';
+  $values_class = 'Math::NumSeq::MathImageLipschitzClass';
+  $values_class = 'Math::NumSeq::GolombSequence';
 
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new
     (
+     using_values => 'primes',
      # fibonacci_word_type => 'dense',
      # concat_count => 3,
      # including_self => 0,

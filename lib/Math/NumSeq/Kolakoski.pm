@@ -23,7 +23,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 36;
+$VERSION = 37;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -179,7 +179,8 @@ of the position i.
 
 =head1 SEE ALSO
 
-L<Math::NumSeq>
+L<Math::NumSeq>,
+L<Math::NumSeq::GolombSequence>
 
 =head1 HOME PAGE
 

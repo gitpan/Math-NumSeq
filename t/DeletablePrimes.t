@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -19,60 +19,55 @@
 
 use 5.004;
 use strict;
-use Test::More tests => 7;
+use Test;
+plan tests => 6;
 
 use lib 't';
 use MyTestHelpers;
 MyTestHelpers::nowarnings();
 
-use Math::NumSeq::PolignacObstinate;
+use Math::NumSeq::DeletablePrimes;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
+
 
 #------------------------------------------------------------------------------
 # VERSION
 
 {
   my $want_version = 37;
-  is ($Math::NumSeq::PolignacObstinate::VERSION, $want_version,
+  ok ($Math::NumSeq::DeletablePrimes::VERSION, $want_version,
       'VERSION variable');
-  is (Math::NumSeq::PolignacObstinate->VERSION,  $want_version,
+  ok (Math::NumSeq::DeletablePrimes->VERSION,  $want_version,
       'VERSION class method');
 
-  ok (eval { Math::NumSeq::PolignacObstinate->VERSION($want_version); 1 },
+  ok (eval { Math::NumSeq::DeletablePrimes->VERSION($want_version); 1 },
+      1,
       "VERSION class check $want_version");
   my $check_version = $want_version + 1000;
-  ok (! eval { Math::NumSeq::PolignacObstinate->VERSION($check_version); 1 },
+  ok (! eval { Math::NumSeq::DeletablePrimes->VERSION($check_version); 1 },
+      1,
       "VERSION class check $check_version");
 }
 
 
 #------------------------------------------------------------------------------
-# values
+# pred()
 
-foreach my $rep (1 .. 3) {
-  my $seq = Math::NumSeq::PolignacObstinate->new;
-  my @next;
-  for (1 .. 1000) {
-    my ($i, $value) = $seq->next;
-    $next[$value] = 1;
+foreach my $group ([ 2,
+                     [ 67, 0 ],
+                   ],
+                   [ 10,
+                     [ 2003, 0 ],
+                   ]) {
+  my ($radix, @elems) = @$group;
+  my $seq = Math::NumSeq::DeletablePrimes->new (radix => $radix);
+  foreach my $elem (@elems) {
+    my ($value, $want) = @$elem;
+    ok ($seq->pred($value), $want,
+        "value=$value");
   }
-  my $hi = $#next;
-
-  my $good = 1;
-  foreach my $value (1 .. $hi) {
-    my $pred = ($seq->pred($value)?1:0);
-    my $next = $next[$value] || 0;
-    if ($pred != $next) {
-      diag "rep=$rep: value=$value wrong pred=$pred next=$next";
-      $good = 0;
-      last;
-    }
-  }
-  ok ($good, "rep=$rep good");
 }
 
 exit 0;
-
-

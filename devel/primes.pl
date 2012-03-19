@@ -26,23 +26,94 @@ use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 use List::Util 'max','min';
 use Math::Trig 'pi';
 
-use Smart::Comments;
+#use Smart::Comments;
 
 # use blib "$ENV{HOME}/perl/bit-vector/Bit-Vector-7.1/blib";
 
 {
-  # deletable primes high zeros
-  use Math::NumSeq::MathImageDeletablePrimes;
-  my $seq = Math::NumSeq::MathImageDeletablePrimes->new;
+  # Lipschitz by seq
+  require Math::NumSeq::MathImageLipschitzClass;
+  my $seq = Math::NumSeq::MathImageLipschitzClass->new;
+  my @P;
+  my @I;
+  foreach (1 .. 1000) {
+    my ($i, $value) = $seq->next;
+    push @{$I[$value]}, $i;
+  }
+  $seq = Math::NumSeq::MathImageLipschitzClass->new (lipschitz_type => 'P');
+  foreach (1 .. 1000) {
+    my ($i, $value) = $seq->next;
+    if ($value) {
+      push @{$P[$value]}, $i;
+    }
+  }
 
-  for my $value (0 .. 100000) {
-    (my $low = $value) =~ s/.0+//
-      or next;
-    is_prime($value) or next;
-    if ($seq->pred($value)) { next; }
-    $seq->pred($low) or next;
+  foreach my $i (1 .. 10) {
+    my $Pstr = join(',', @{$P[$i]//[]});
+    print "P$i: $Pstr\n";
 
-    print "$value $low\n";
+    my $Istr = join(',', @{$I[$i]//[]});
+    print "I$i: $Istr\n";
+  }
+  exit 0;
+}
+
+{
+  # The development of prime number theory: from Euclid to Hardy and Littlewood
+  #
+  # Lipschitz 1890 Bemerkung zu dem aufsatze: Untersuchungen der
+  # Eigenschaften einer Gattung von unendlichen Reihen J. Reine Agnew Math
+  # 106 27-29
+  # http://resolver.sub.uni-goettingen.de/purl?PPN243919689_0106/dmdlog6
+  # http://www.digizeitschriften.de/index.php?id=resolveppn&PPN=PPN243919689_0106&DMDID=dmdlog6
+  #
+  # require Math::NumSeq::MathImageLipschitzClass;
+  # my $seq = Math::NumSeq::MathImageLipschitzClass->new;
+
+  my @P = (undef, { 2 => 1 });
+  my @I = (undef, { 2 => 1 });
+  my %I_left;
+  @I_left{3..1000} = (); # hash slice
+
+  foreach my $i (1 .. 10) {
+    my $Pstr = join(',',sort {$a<=>$b} keys %{$P[$i]});
+    print "P$i: $Pstr\n";
+
+    my $Istr = join(',',sort {$a<=>$b} keys %{$I[$i]});
+    print "I$i: $Istr\n";
+
+    foreach my $v (keys %{$I[$i]}) {
+      if (is_prime($v+1)) {
+        $P[$i+1]->{$v+1} = 1;
+      }
+    }
+
+    foreach my $v (keys %I_left) {
+      if (all_factor_in_Ps($i,$v)) {
+        $I[$i+1]->{$v} = 1;
+        delete $I_left{$v};
+      }
+    }
+  }
+
+  sub all_factor_in_Ps {
+    my ($i, $v) = @_;
+    foreach my $factor (prime_factors($v)) {
+      if (! factor_in_Ps($i, $factor)) {
+        return 0;
+      }
+    }
+    return 1;
+  }
+
+  sub factor_in_Ps {
+    my ($i, $factor) = @_;
+    foreach my $j (1 .. $i) {
+      if ($P[$j]->{$factor}) {
+        return 1;
+      }
+    }
+    return 0;
   }
   exit 0;
 }
@@ -61,9 +132,26 @@ use Smart::Comments;
       my $factor = $est_i / $i;
       my $O = ($value - (15*$i**2)/(2*pi()*pi())) / ($i*log($i));
       my $est_value = ($i**2) * 15/(2*pi()*pi()); #  + 0 * ($i*log($i));
-      printf "%d %d   %d %.0f  %.3f  O=%.3f\n",
+      printf "%d %d   %d %.0f  factor=%.3f  O=%.3f\n",
         $i, $est_i, $value, $est_value, $factor, $O;
     }
+  }
+  exit 0;
+}
+
+{
+  # deletable primes high zeros
+  use Math::NumSeq::DeletablePrimes;
+  my $seq = Math::NumSeq::DeletablePrimes->new;
+
+  for my $value (0 .. 100000) {
+    (my $low = $value) =~ s/.0+//
+      or next;
+    is_prime($value) or next;
+    if ($seq->pred($value)) { next; }
+    $seq->pred($low) or next;
+
+    print "$value $low\n";
   }
   exit 0;
 }

@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 36;
+$VERSION = 37;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 693 A-numbers in 93 modules
+# total 700 A-numbers in 94 modules
 
 use constant info_arrayref =>
 [
@@ -565,6 +565,18 @@ use constant info_arrayref =>
   {
     'anum' => 'A019269',
     'class' => 'Math::NumSeq::DedekindPsiSteps'
+  },
+  {
+    'anum' => 'A096246',
+    'class' => 'Math::NumSeq::DeletablePrimes',
+    'parameters' => [
+      'radix',
+      2
+    ]
+  },
+  {
+    'anum' => 'A080608',
+    'class' => 'Math::NumSeq::DeletablePrimes'
   },
   {
     'anum' => 'A080791',
@@ -1261,6 +1273,46 @@ use constant info_arrayref =>
   {
     'anum' => 'A001462',
     'class' => 'Math::NumSeq::GolombSequence'
+  },
+  {
+    'anum' => 'A080605',
+    'class' => 'Math::NumSeq::GolombSequence',
+    'parameters' => [
+      'using_values',
+      'odd'
+    ]
+  },
+  {
+    'anum' => 'A080606',
+    'class' => 'Math::NumSeq::GolombSequence',
+    'parameters' => [
+      'using_values',
+      'even'
+    ]
+  },
+  {
+    'anum' => 'A080607',
+    'class' => 'Math::NumSeq::GolombSequence',
+    'parameters' => [
+      'using_values',
+      '3k'
+    ]
+  },
+  {
+    'anum' => 'A013189',
+    'class' => 'Math::NumSeq::GolombSequence',
+    'parameters' => [
+      'using_values',
+      'squares'
+    ]
+  },
+  {
+    'anum' => 'A169682',
+    'class' => 'Math::NumSeq::GolombSequence',
+    'parameters' => [
+      'using_values',
+      'primes'
+    ]
   },
   {
     'anum' => 'A007770',

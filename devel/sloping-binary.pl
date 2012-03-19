@@ -23,6 +23,18 @@ use Math::NumSeq::MathImageSlopingBinaryExcluded;
 use Math::BigInt;
 
 {
+  # delta from 2^i
+
+  my $seq = Math::NumSeq::MathImageSlopingBinaryExcluded->new;
+  foreach (1 .. 50) {
+    my ($i, $value) = $seq->next;
+    $value = Math::BigInt->new(2)**$i - $value;
+    print "$value\n";
+  }
+  exit 0;
+}
+
+{
   my $seq = Math::NumSeq::MathImageSlopingBinaryExcluded->new;
   foreach (1 .. 50) {
     my ($i, $value) = $seq->next;

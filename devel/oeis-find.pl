@@ -48,7 +48,8 @@ HERE
     next if $module =~ 'CunninghamPrimes'; # broken
 
     # restricted to ...
-     next unless $module =~ /PathDelta/;
+    # next unless $module =~ /PathDelta/;
+    next unless $module =~ /Dele/;
 
     my $class = App::MathImage::Generator->values_class($module);
     print "$class\n";

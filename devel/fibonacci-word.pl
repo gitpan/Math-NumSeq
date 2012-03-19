@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2011 Kevin Ryde
+# Copyright 2011, 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -155,5 +155,39 @@ use constant PHI => (1 + sqrt(5)) / 2;
   print join(',',@array),"\n";
 
   print "  0,1,0,0,1,0,1,0,0,1,0,0,1,0,1,0,0,1,0,1,0,\n";
+  exit 0;
+}
+
+{
+  my @values = (0);
+  print join('',@values),"\n";
+  foreach (1 .. 8) {
+    my $oldlen = scalar(@values);
+    @values = map { $_ ? (0) : (0, 1) } @values;
+    my $newlen = scalar(@values);
+
+    my $old = join('', @values[0 .. $newlen-$oldlen-1]);
+    my $new = join('', @values[$oldlen .. $newlen-1]);
+    my $eq = ($old eq $new ? "eq" : "ne");
+
+    my $str = join('',@values);
+    substr($str,$oldlen,0) = '-';
+    print "len $newlen   $eq   $str\n";
+  }
+
+  # print "ith()         ";
+  # foreach my $i (0 .. $#values) {
+  #   print ith($i);
+  # }
+  # print "\n";
+      
+  # require Math::NumSeq::Fibbinary;
+  # my $seq = Math::NumSeq::Fibbinary->new;
+  # print "             ";
+  # foreach my $i (0 .. $#values) {
+  #   print $seq->pred($i) ? '0' : '1';
+  # }
+  # print "\n";
+
   exit 0;
 }

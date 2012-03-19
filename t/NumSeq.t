@@ -25,7 +25,7 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
-my $test_count = (tests => 393)[1];
+my $test_count = (tests => 399)[1];
 plan tests => $test_count;
 
 # uncomment this to run the ### lines
@@ -126,6 +126,16 @@ foreach my $elem
    # MobiusFunction.pm
    # PiBits.pm
    
+   [ 'Math::NumSeq::DeletablePrimes', 0,
+     [ 2,3,5,7,
+       13,17,23 ],
+   ],
+   [ 'Math::NumSeq::DeletablePrimes', 0,
+     [ 2,3,5,7,0xB,0xD,
+       0x13 ],
+     { radix => 16 },
+   ],
+
    [ 'Math::NumSeq::ConcatNumbers', 0,
      [ 1, 12, 23, 34, 45, 56, 67, 78, 89, 910, 1011, 1112, 1213 ],
    ],
