@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
 use Math::NumSeq 7; # v.7 for _is_infinite()
 @ISA = ('Math::NumSeq');
@@ -33,7 +33,8 @@ use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 #use Smart::Comments;
 
 
-use constant description => Math::NumSeq::__('The hypotenuses of Pythagorean triples, ie. integers z for which there\'s some x>=1,y>=1 satisfying x^2+y^2=z^2.  Primitives hypotenuses are those z where x,y have no common factor.');
+# use constant name => Math::NumSeq::__('Pyathagorean Hypotenuses');
+use constant description => Math::NumSeq::__('The hypotenuses of Pythagorean triples, ie. integers C for which there\'s some A>=1,B>=1 satisfying A^2+B^2=C^2.  Primitive hypotenuses are where A,B have no common factor.');
 use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
 use constant values_min => 5;
@@ -51,6 +52,8 @@ use constant parameter_info_array =>
     },
   ];
 
+#------------------------------------------------------------------------------
+
 # cf A002144 - primes 4n+1, the primitive elements of hypots x!=y
 #              -1 is a quadratic residue ...
 #    A002365 - the "y" of prime "c" ??
@@ -61,12 +64,10 @@ use constant parameter_info_array =>
 #    A008846 - primitives, x,y no common factor
 #    A004613 - all prime factors are 4n+1, is 1 then primitive hypots
 #
-#    A009000 hypots with repetitions
-#    A009001
-#    A009002
+#    A009000 - hypots with repetitions
 #    A009012 - "b" second number, ordered by "b", with repetitions
 #
-my %oeis_anum = (all       => 'A009003',  # distinct x!=y and x,y>0
+my %oeis_anum = (all       => 'A009003',  # distinct a!=b and a,b>0
                  primitive => 'A008846',
                 );
 # OEIS-Catalogue: A009003
@@ -75,6 +76,8 @@ sub oeis_anum {
   my ($self) = @_;
   return $oeis_anum{$self->{'pythagorean_type'}};
 }
+
+#------------------------------------------------------------------------------
 
 sub rewind {
   my ($self) = @_;
@@ -195,8 +198,8 @@ Math::NumSeq::PythagoreanHypots -- hypotenuses of Pythagorean triples
 
 =head1 DESCRIPTION
 
-The sequence of integers occurring as the hypotenuse of a Pythagorean
-triple, ie. the z in x^2+y^2=z^2.
+This is integers occurring as the hypotenuse of a Pythagorean triple,
+ie. the C in A^2+B^2=C^2.
 
     5, 10, 13, 15, 17, 20, ...
 
@@ -207,14 +210,16 @@ factor of the form 4k+1.
 
 =head2 Primitive Triples
 
-For any triple x,y,z a multiple k*x,k*y,k*z is also a triple.  The primitive
-triples are those where x,y have no common factor.  Option
-C<pythagorean_type =E<gt> "primitive"> restricts to those hypots occuring in
-primitive triples
+Option C<pythagorean_type =E<gt> "primitive"> restricts to those hypotenuses
+occurring in primitive triples.  For any triple A,B,C a multiple k*A,k*B,k*C
+is also a triple.  The primitive triples are those where A,B have no common
+factor which could be divided out.
 
     5, 13, 17, 25, 29, 37, ...
 
 It can be shown these are integers comprised only of prime factors 4k+1.
+(For all triples at least one 4k+1 prime factor, and for primitive triples
+all 4k+1 prime factors.)
 
 =head1 FUNCTIONS
 
@@ -232,9 +237,9 @@ Create and return a new sequence object.
 
 Return true if C<$value> occurs as a hypotenuse in a Pythagorean triple.
 
-This calculation requires checking the prime factors of C<$value>.  In the
-current code a hard limit of 2**32 is placed on C<$value> in the interests
-of not going into a near-infinite loop.
+This calculation requires checking the prime factors of C<$value> (to look
+for either one or all 4k+1).  In the current code a hard limit of 2**32 is
+placed on C<$value> in the interests of not going into a near-infinite loop.
 
 =back
 

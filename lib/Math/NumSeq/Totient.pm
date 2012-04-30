@@ -19,10 +19,12 @@
 package Math::NumSeq::Totient;
 use 5.004;
 use strict;
-use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
+use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
+# version 0.39 for prime_factors()
+use Math::Factor::XS 0.39 'factors', 'prime_factors';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -34,7 +36,8 @@ use Math::NumSeq::Base::IterateIth;
 #use Smart::Comments;
 
 
-use constant description => Math::NumSeq::__('Totient function, the count of how many numbers coprime to N.');
+# use constant name => Math::NumSeq::__('Totient');
+use constant description => Math::NumSeq::__('Euler totient function, the count of how many numbers coprime to N.');
 use constant characteristic_count => 1;
 use constant characteristic_smaller => 1;
 use constant characteristic_increasing => 0;
@@ -123,11 +126,90 @@ sub ith {
   return $ret;
 }
 
-# ENHANCE-ME: identify totients/non-totients
-# sub pred {
-#   my ($self, $value) = @_;
-#   ### Totient pred(): $value
-# }
+# totient(x)=p^a.q^b.r^c=n
+# seek a prime w for x with w-1 dividing in n
+# combinations of the primes of n to make w-1
+#
+# factor 2*f of n, arising from prime 2*f+1
+#
+# 8 arises from totient(15=3*5) = (3-1)*(5-1)=2*4
+# 484=2*2*11*11   2*11=23 prime
+#
+sub pred {
+  my ($self, $value) = @_;
+  ### Totient pred(): $value
+
+  if ($value <= 1) {
+    return ($value == 1); # $value==0 no, $value==1 yes
+  }
+  if ($value % 2) {
+    ### no because odd ...
+    return 0;
+  }
+  unless ($value <= 0xFFFF_FFFF) {
+    return undef;
+  }
+  if (_pred_f($value,$value)) {
+    return 1;
+  }
+  return 0;
+}
+sub _pred_f {
+  my ($n, $prev_factor) = @_;
+  ### _pred_f(): "n=$n  prev=$prev_factor"
+
+  if ($n & 1) {
+    ### no odd ...
+    return 0;
+  }
+
+  $n >>= 1;
+  ### halved: $n
+  if ($n == 1) {
+    return 1;  # totient(3)=2 occurs
+  }
+
+  foreach my $f (1, factors($n)) {
+    ### at: "n=$n f=$f"
+    if ($f >= $prev_factor) {
+      ### f too big, chop search ...
+      return 0;
+    }
+    my $p = 2*$f+1;
+    ### $p
+
+    my $r = $n / $f;
+    ### divide out: "f=$f to r=$r"
+
+    unless (is_prime($p)) {
+      ### no, not prime ...
+      next;
+    }
+
+    for (;;) {
+      if (_pred_f ($r, $f)) {  # recurse
+        return 1;
+      }
+      if ($r % $p) {
+        last;
+      }
+      if ($r == $p) {
+        return 1;
+      }
+      $r /= $p;
+      ### divide out prime: "p=$p to r=$r"
+    }
+  }
+
+  ### whole: "n=$n  p=".(2*$n+1)
+  if ($n >= $prev_factor) {
+    ### f too big, chop search ...
+    return 0;
+  }
+  return is_prime(2*$n+1);
+}
+
+
 
 # sub _totient {
 #   my ($x) = @_;
@@ -158,7 +240,7 @@ sub ith {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq Euler's totient coprime coprimes
+=for stopwords Ryde Math-NumSeq Euler's totient totients coprime coprimes ie recursing maxdivisor
 
 =head1 NAME
 
@@ -200,10 +282,53 @@ Create and return a new sequence object.
 Return totient(i).
 
 This requires factorizing C<$i> and in the current code a hard limit of
-2**32 is placed on C<$i>, in the interests of not going into a near-infinite
+2**32 is placed on C<$i> in the interests of not going into a near-infinite
 loop.  Above that the return is C<undef>.
 
+=item C<$bool = $seq-E<gt>pred($value)>
+
+Return true if C<$value> occurs in the sequence, ie. C<$value> is the
+totient of something.
+
 =back
+
+=head1 FORMULAS
+
+=head2 Predicate
+
+Totient(n) E<gt> 1 is always even because the factors factor p-1 for odd
+prime p is even, or if no odd primes in n then totient(2^k)=2^(k-1) is even.
+So odd numbers E<gt> 1 don't occur as totients.
+
+The strategy is to look at the divisors of the given value to find the p-1,
+q-1 etc parts arising as totient(n=p*q) etc.
+
+    initial maxdivisor unlimited
+    try divisors of value, with divisor < maxdivisor
+      if p=divisor+1 is prime then
+        remainder = value/divisor
+        loop
+          if recurse pred(remainder, maxdivisor=divisor) then yes
+          if remainder divisible by p then remainder/=p
+          else next divisor of value
+
+The divisors tried include 1 and the value itself.  1 becomes p=2 casting
+out possible factors of 2.  For value itself if p=value+1 prime then simply
+totient(value+1)=value means it is a totient.
+
+Care must be taken not to repeat a prime p, since value=(p-1)*(p-1) is not a
+totient form.  One way to do this is to demand only smaller divisors when
+recursing, hence the "maxdivisor".
+
+Any divisors E<gt> 1 will have to be even to give p=divisor+1 odd to be a
+prime.  Effectively each p-1, q-1, etc part of the target takes at least one
+factor of 2 out of the value.  It might be possible to handle the 2^k part
+of the target value specially, for instance noting that on reaching the last
+factor of 2 there can be no further recursion, only value=p^a*(p-1) can be a
+totient.
+
+This search implicitly produces an n=p^a*q^b*etc with totient(n)=value but
+for the C<pred()> method that n is not required, only the fact it exists.
 
 =head1 SEE ALSO
 

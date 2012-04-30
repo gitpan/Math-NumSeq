@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -30,6 +30,7 @@ use Math::NumSeq::Base::IterateIth;
 # uncomment this to run the ### lines
 #use Devel::Comments;
 
+# use constant name => Math::NumSeq::__('Juggler Steps');
 use constant description => Math::NumSeq::__('Number of steps to reach 1 in the Juggler sqrt sequence.');
 use constant characteristic_count => 1;
 use constant characteristic_increasing => 0;

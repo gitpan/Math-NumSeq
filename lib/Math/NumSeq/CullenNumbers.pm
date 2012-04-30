@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -70,16 +70,28 @@ my $uv_i_limit = do {
 sub rewind {
   my ($self) = @_;
   my $i = $self->{'i'} = $self->i_start;
-  $self->{'pow'} = 2 ** $i;
+  $self->{'power'} = 2 ** $i;
+}
+sub _UNTESTED__seek_to_i {
+  my ($self, $i) = @_;
+  $self->{'i'} = $i;
+  if ($i >= $uv_i_limit) {
+    $i = Math::NumSeq::_bigint()->new("$i");
+  }
+  $self->{'power'} = 2 ** $i;
+}
+sub _UNTESTED__seek_to_value {
+  my ($self, $value) = @_;
+  $self->seek_to_i($self->value_to_i_ceil($value));
 }
 sub next {
   my ($self) = @_;
   my $i = $self->{'i'}++;
   if ($i == $uv_i_limit) {
-    $self->{'pow'} = Math::NumSeq::_bigint()->new($self->{'pow'});
+    $self->{'power'} = Math::NumSeq::_bigint()->new($self->{'power'});
   }
-  my $value = $self->{'pow'}*$i + 1;
-  $self->{'pow'} *= 2;
+  my $value = $self->{'power'}*$i + 1;
+  $self->{'power'} *= 2;
   return ($i, $value);
 }
 
@@ -117,26 +129,8 @@ sub pred {
   }
 }
 
-sub value_to_i_estimate {
-  my ($self, $value) = @_;
-
-  if ($value < 1) {
-    return 0;
-  }
-  $value -= 1;  # now seeking $value == $i * 2**$i
-
-  if (_is_infinite($value)) {
-    return $value;
-  }
-  my $i = 0;
-  for (;;) {
-    if ($value <= $i || $value % 2) {
-      return $i;
-    }
-    $value = int($value/2);
-    $i++;
-  }
-}
+use Math::NumSeq::WoodallNumbers;
+*value_to_i_estimate = \&Math::NumSeq::WoodallNumbers::value_to_i_estimate;
 
 1;
 __END__
@@ -155,7 +149,9 @@ Math::NumSeq::CullenNumbers -- Cullen numbers i*2^i+1
 
 =head1 DESCRIPTION
 
-The Cullen numbers 1, 3, 9, 25, etc, i*2^i+1.
+The Cullen numbers i*2^i+1 starting from i=0,
+
+    1, 3, 9, 25, 65, 161, 385, 897, 2049, 4609, 10241, ...
 
 =head1 FUNCTIONS
 
@@ -176,7 +172,17 @@ Return C<$i * 2**$i + 1>.
 Return true if C<$value> is a Cullen number, ie. is equal to i*2^i+1 for
 some i.
 
+=item C<$i = $seq-E<gt>value_to_i_estimate($value)>
+
+Return an estimate of the i corresponding to C<$value>.
+
 =back
+
+=head1 FORMULAS
+
+=head2 Value to i Estimate
+
+See L<Math::NumSeq::WoodallNumbers/Value to i Estimate>.
 
 =head1 SEE ALSO
 

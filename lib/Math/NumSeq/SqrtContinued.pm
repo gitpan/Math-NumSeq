@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -34,10 +34,12 @@ use Math::NumSeq::SqrtContinuedPeriod;
 #use Smart::Comments;
 
 
+# use constant name => Math::NumSeq::__('Sqrt Continued Fraction');
 use constant description => Math::NumSeq::__('Continued fraction expansion of a square root.');
 use constant i_start => 0;
 use constant characteristic_smaller => 1;
 use constant characteristic_increasing => 0;
+# use constant characteristic_continued_fraction => 1;
 
 use Math::NumSeq::SqrtDigits;
 use constant parameter_info_array =>
@@ -47,14 +49,11 @@ use constant parameter_info_array =>
 
 #------------------------------------------------------------------------------
 
-# cf A003285 contfrac sqrt(n) period, or 0 if square
-#    A097853 contfrac sqrt(n) period, or 1 if square
-#    A054269 contfract sqrt(prime) period
-#
 # http://oeis.org/index/Con#confC
 #
 my @oeis_anum = (
-                 # A010171 to A010175 OFFSET=1 ...
+                 # A010171 to A010175 have OFFSET=1, unlike the rest
+                 # OFFSET=0, but still include them in the catalogue for now
 
                  # OEIS-Catalogue array begin
                  undef,     # sqrt=0
@@ -168,10 +167,10 @@ my @oeis_anum = (
                  'A010170', # sqrt=99
 
                  undef,     # sqrt=100
-                 undef,     # sqrt=101
-                 undef,     # sqrt=102
+                 undef,     # sqrt=101, is 10, 20,20,rep
+                 undef,     # sqrt=102, is 10, 10,20,10,20,rep
                  'A010171', # sqrt=103
-                 undef,     # sqrt=104
+                 undef,     # sqrt=104, is 10, 5,20,5,20,rep
                  undef,     # sqrt=105
                  'A010172', # sqrt=106
                  'A010173', # sqrt=107
@@ -349,6 +348,7 @@ sub rewind {
   if ($sqrt <= 0) {
     $self->{'a'} = 0;
   } else {
+    # ENHANCE-ME: 'root' and 'perfect_square' one-off in new()
     my $root = $self->{'root'} = sqrt($sqrt);
     my $int = int($root);
     if ($root == $int) {
@@ -437,7 +437,7 @@ sub ith {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq BigInt SqrtContinuedPeriod
+=for stopwords Ryde Math-NumSeq BigInt SqrtContinuedPeriod i'th sqrt
 
 =head1 NAME
 
@@ -455,7 +455,7 @@ This is terms in the continued fraction expansion of a square root.  It
 approaches the root by
 
                       1   
-   sqrt(s) = a[0] + ----------- 
+   sqrt(S) = a[0] + ----------- 
                     a[1] +   1
                            -----------
                            a[2] +   1
@@ -463,13 +463,18 @@ approaches the root by
                                   a[3] + ...
 
 The first term a[0] is the integer part of the root, leaving a remainder
-S<0 E<lt> r E<lt> 1> which is expressed as r=1/R with S<R E<gt> 1>.  Then
-a[1] is the integer part of that R, and so on recursively.
+S<0 E<lt> r E<lt> 1> which is expressed as r=1/R with S<R E<gt> 1>
 
-Values a[1] onwards always repeat in a fixed sequence.  For example sqrt(14)
-is a[0]=3 and then 1,2,1,6 repeating.  For some a single value repeats, for
-example sqrt(2) is a[0]=1 then 2 repeating.  See SqrtContinuedPeriod for
-just the length of the period.
+                     1   
+   sqrt(S) = a[0] + ---
+                     R
+
+Then a[1] is the integer part of that R, and so on recursively.
+
+Values a[1] onwards are always a fixed-period repeating sequence.  For
+example sqrt(14) is a[0]=3 and then 1,2,1,6 repeating.  For some roots a
+single value repeats.  For example sqrt(2) is a[0]=1 then 2 repeating.  See
+SqrtContinuedPeriod for just the length of the period.
 
 =head1 FUNCTIONS
 
@@ -481,6 +486,15 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 Create and return a new sequence object giving the Continued expansion terms of
 C<sqrt($s)>.
+
+=item C<$value = $seq-E<gt>ith ($i)>
+
+Return the i'th term in the continued fraction, starting from i=0 for the
+integer part of the sqrt.
+
+=item C<$i = $seq-E<gt>i_start ()>
+
+Return 0, the first term in the sequence being i=0.
 
 =back
 

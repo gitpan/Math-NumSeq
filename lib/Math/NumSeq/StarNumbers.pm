@@ -22,17 +22,19 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
 use Math::NumSeq;
-@ISA = ('Math::NumSeq');
+use Math::NumSeq::Base::IterateIth;
+@ISA = ('Math::NumSeq::Base::IterateIth',
+        'Math::NumSeq');
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
 # use constant name => Math::NumSeq::__('Star Numbers');
 use constant description =>  Math::NumSeq::__('The star numbers 1, 13, 37, 73, 121, etc, 6*n*(n-1)+1, also called the centred 12-gonals.');
-use constant i_start => 1;
+use constant default_i_start => 1;
 use constant values_min => 1;
 use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
@@ -55,15 +57,6 @@ use constant characteristic_integer => 1;
 #
 use constant oeis_anum => 'A003154'; # star numbers
 
-sub rewind {
-  my ($self) = @_;
-  $self->{'i'} = ceil(_inverse(max(1,$self->{'lo'})));
-}
-sub next {
-  my ($self) = @_;
-  my $i = $self->{'i'}++;
-  return ($i, $self->ith($i));
-}
 sub ith {
   my ($self, $i) = @_;
   return 6*$i*($i-1)+1;
@@ -132,6 +125,12 @@ Return C<6*$i*($i-1)+1>.
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> is of the form 6*i*(i-1)+1 for some i.
+
+=item C<$i = $seq-E<gt>value_to_i_floor($value)>
+
+=item C<$i = $seq-E<gt>value_to_i_estimate($value)>
+
+Return the i for the star number E<lt>= $value.
 
 =back
 

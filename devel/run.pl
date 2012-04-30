@@ -54,22 +54,17 @@ $|=1;
   # $values_class = $gen->values_class('Palindromes');
   # # $values_class = $gen->values_class('MathSequence');
   # $values_class = $gen->values_class('DigitLength');
-  # $values_class = $gen->values_class('DigitLengthCumulative');
-  # $values_class = $gen->values_class('PrimeIndexCount');
   # $values_class = $gen->values_class('SumXsq3Ysq');
-  # $values_class = $gen->values_class('ProthNumbers');
   # $values_class = $gen->values_class('DigitSumModulo');
   # $values_class = $gen->values_class('PrimeFactorCount');
   # $values_class = $gen->values_class('ReverseAddSteps');
   # $values_class = $gen->values_class('Harshad');
   # $values_class = $gen->values_class('TotientPerfect');
-  # $values_class = $gen->values_class('FractionDigits');
   require Math::NumSeq::DigitLength;
   $values_class = 'Math::NumSeq::SqrtDigits';
   $values_class = 'Math::NumSeq::DigitLength';
   $values_class = 'Math::NumSeq::DigitProduct';
   $values_class = 'App::MathImage::NumSeq::Pell';
-  $values_class = 'Math::NumSeq::Factorials';
   $values_class = 'App::MathImage::NumSeq::KlarnerRado';
   $values_class = 'App::MathImage::NumSeq::DigitCountLow';
   $values_class = 'App::MathImage::NumSeq::DivisorCount';
@@ -77,7 +72,6 @@ $|=1;
   $values_class = 'App::MathImage::NumSeq::JugglerSteps';
   $values_class = 'Math::NumSeq::Kolakoski';
   $values_class = 'App::MathImage::NumSeq::UlamSequence';
-  $values_class = 'Math::NumSeq::Fibonacci';
   $values_class = 'App::MathImage::NumSeq::ReplicateDigits';
   $values_class = 'App::MathImage::NumSeq::SumTwoSquares';
   $values_class = 'Math::NumSeq::Polygonal';
@@ -85,22 +79,18 @@ $|=1;
   $values_class = 'App::MathImage::NumSeq::CunninghamPrimes';
   $values_class = 'App::MathImage::NumSeq::FibbinaryBitCount';
   $values_class = 'Math::NumSeq::Fibbinary';
-  $values_class = 'App::MathImage::NumSeq::ReRound';
   $values_class = 'Math::NumSeq::AlmostPrimes';
   $values_class = 'App::MathImage::NumSeq::DigitMiddle';
-  $values_class = 'Math::NumSeq::SternDiatomic';
   $values_class = 'Math::NumSeq::SqrtEngel';
   $values_class = 'App::MathImage::NumSeq::HappySteps';
   $values_class = 'App::MathImage::NumSeq::RepdigitRadix';
   $values_class = 'App::MathImage::NumSeq::KolakoskiMajority';
-  $values_class = 'Math::NumSeq::LucasNumbers';
   $values_class = 'Math::NumSeq::StarNumbers';
   $values_class = 'Math::NumSeq::ReverseAddSteps';
   $values_class = 'Math::NumSeq::Expression';
   $values_class = 'App::MathImage::NumSeq::PiDigits';
   $values_class = 'Math::NumSeq::Palindromes';
   $values_class = 'Math::NumSeq::RadixWithoutDigit';
-  $values_class = 'Math::NumSeq::Tribonacci';
   $values_class = 'Math::NumSeq::AsciiSelf';
   $values_class = 'App::MathImage::NumSeq::Squareful';
   $values_class = 'App::MathImage::NumSeq::SquareFreeKernel';
@@ -108,14 +98,10 @@ $|=1;
   $values_class = 'Math::NumSeq::SqrtContinuedPeriod';
   $values_class = 'Math::NumSeq::LiouvilleFunction';
   $values_class = 'Math::NumSeq::PolignacObstinate';
-  $values_class = 'Math::NumSeq::MathImageSqrtContinued';
   $values_class = 'Math::NumSeq::Powerful';
   $values_class = 'Math::NumSeq::RepdigitRadix';
-  $values_class = 'Math::NumSeq::MathImageReRound';
   $values_class = 'Math::NumSeq::MobiusFunction';
   $values_class = 'Math::NumSeq::MathImageSieveMultiples';
-  $values_class = 'Math::NumSeq::CullenNumbers';
-  $values_class = 'Math::NumSeq::WoodallNumbers';
   $values_class = 'Math::NumSeq::ReverseAdd';
   $values_class = 'Math::NumSeq::PythagoreanHypots';
   $values_class = 'Math::NumSeq::PowerPart';
@@ -124,40 +110,89 @@ $|=1;
   $values_class = 'Math::NumSeq::RepdigitAny';
   $values_class = 'Math::NumSeq::PlanePathDelta';
   $values_class = 'Math::NumSeq::MathImageLoeschian';
-  $values_class = 'Math::NumSeq::MathImageHypotCount';
-  $values_class = 'Math::NumSeq::MathImageSlopingBinaryExcluded';
-  $values_class = 'Math::NumSeq::MathImageLemoineCount';
-  $values_class = 'Math::NumSeq::GoldbachCount';
   $values_class = 'Math::NumSeq::UndulatingNumbers';
-  $values_class = 'Math::NumSeq::MathImageBinaryUndulants';
   $values_class = 'Math::NumSeq::HofstadterFigure';
-  $values_class = 'Math::NumSeq::Runs';
-  $values_class = 'Math::NumSeq::OEIS::File';
   $values_class = 'Math::NumSeq::TwinPrimes';
   $values_class = 'Math::NumSeq::PlanePathCoord';
-  $values_class = 'Math::NumSeq::PlanePathDelta';
   $values_class = 'Math::NumSeq::MathImagePierpontPrimes';
   $values_class = 'Math::NumSeq::MathImageDedekindPsiCumulative';
   $values_class = 'Math::NumSeq::MathImageDedekindPsiSteps';
-  $values_class = 'Math::NumSeq::ConcatNumbers';
   $values_class = 'Math::NumSeq::TotientPerfect';
   $values_class = 'Math::NumSeq::TotientSteps';
-  $values_class = 'Math::NumSeq::PlanePathTurn';
   $values_class = 'Math::NumSeq::FibonacciWord';
   $values_class = 'Math::NumSeq::DeletablePrimes';
-  $values_class = 'Math::NumSeq::PlanePathN';
-  $values_class = 'Math::NumSeq::MathImageErdosSelfridgeClass';
   $values_class = 'Math::NumSeq::MathImageLipschitzClass';
   $values_class = 'Math::NumSeq::GolombSequence';
+  $values_class = 'Math::NumSeq::OEIS::File';
+  $values_class = 'Math::NumSeq::GolayRudinShapiroCumulative';
+  $values_class = 'Math::NumSeq::ProthNumbers';
+  $values_class = 'Math::NumSeq::MathImageBinaryUndulants';
+  $values_class = 'Math::NumSeq::FractionDigits';
+  $values_class = 'Math::NumSeq::Fibonacci';
+  $values_class = 'Math::NumSeq::LucasNumbers';
+  $values_class = 'Math::NumSeq::MathImageLuckySieve';
+  $values_class = 'Math::NumSeq::Tribonacci';
+  $values_class = 'Math::NumSeq::MathImageSelfLengthCumulative';
+  $values_class = 'Math::NumSeq::Tetrahedral';
+  $values_class = 'Math::NumSeq::ConcatNumbers';
+  $values_class = 'Math::NumSeq::DigitLengthCumulative';
+  $values_class = 'Math::NumSeq::Primorials';
+  $values_class = 'Math::NumSeq::MathImageMaxZeros';
+  $values_class = 'Math::NumSeq::Factorials';
+  $values_class = 'Math::NumSeq::MoranNumbers';
+  $values_class = 'Math::NumSeq::MathImageRadixConversion';
+  $values_class = 'Math::NumSeq::CullenNumbers';
+  $values_class = 'Math::NumSeq::WoodallNumbers';
+  $values_class = 'Math::NumSeq::Runs';
+  $values_class = 'Math::NumSeq::MathImageHypotCount';
+  $values_class = 'Math::NumSeq::MathImageErdosSelfridgeClass';
+  $values_class = 'Math::NumSeq::GoldbachCount';
+  $values_class = 'Math::NumSeq::LemoineCount';
+  $values_class = 'Math::NumSeq::MathImageEratosthenesStage';
+  $values_class = 'Math::NumSeq::ReRound';
+  $values_class = 'Math::NumSeq::ReReplace';
+  $values_class = 'Math::NumSeq::SqrtContinued';
+  $values_class = 'Math::NumSeq::SternDiatomic';
+  $values_class = 'Math::NumSeq::CbrtContinued';
+  $values_class = 'Math::NumSeq::PlanePathN';
+  $values_class = 'Math::NumSeq::MathImageAlphabeticalLength';
+  $values_class = 'Math::NumSeq::MathImageSlopingExcluded';
+  $values_class = 'Math::NumSeq::PlanePathDelta';
+  $values_class = 'Math::NumSeq::PlanePathTurn';
+  $values_class = 'Math::NumSeq::MathImagePrimeIndexPrimes';
 
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new
     (
-     using_values => 'primes',
+     level => 2,
+     # cbrt => 2,
+     # sqrt => 104,
+     # on_values => 'odd',
+     # stage => 1,
+
+     # p_or_m => '-',
+     # runs_type => '1to2N',
+     # digit => 1,
+     # using_values => 'primes',
+     # values_type => 'radix',
+     #concat_count => 3,
+     # radix => 2,
+     # sqrt => 120,
+
+     # order => 'forward',
+     # fraction => '1/14',
+     # to_radix => 100000,
+     # extra_multiples => 1,
+     # using_values => 'primes',
      # fibonacci_word_type => 'dense',
-     # concat_count => 3,
      # including_self => 0,
      # offset => 3,
+
+      planepath => 'TerdragonCurve',
+     # planepath => 'GosperSide',
+     delta_type=>'TDir6',
+      turn_type => 'Right',
+     # planepath => 'GrayCode',
      # planepath => 'SquareSpiral',
      # planepath => 'PixelRings',
      # planepath => 'ZOrderCurve,radix=10',
@@ -170,24 +205,19 @@ $|=1;
      # planepath => 'DragonCurve',
      # planepath => 'MultipleRings,step=1',
      # planepath => 'FibonacciWordFractal',
-      planepath => 'CellularRule,rule=5',
-     # delta_type=>'Dir4',
-      line_type => 'Y_axis',
+     # planepath => 'CellularRule,rule=5',
+     # line_type => 'Y_axis',
      # coordinate_type => 'RSquared',
-     # turn_type => 'Right',
      # i_start => 1,
 
      #anum  => 'A160722', # few
      # anum  => 'A196199', # bfile
      # anum  => 'A194831', # small bfile
-     # anum  => 'A001082',
+     # anum  => 'A195467',
 
-     # runs_type => '1rep',
      # start => 5,
-     # radix => 3,
      # including_repdigits => 1,
 
-     # goldbach_type => 'even',
      # i_start => 3,
 
      # including_one => 1,
@@ -202,8 +232,6 @@ $|=1;
      # abundant_type => 'primitive',
      # multiples => 1,
      # digit => 1,
-
-     # sqrt => 46,
 
      # order => 'forward',
      # including_self => 0,
@@ -233,12 +261,11 @@ $|=1;
      # # divisors_type => 'proper',
      # # algorithm_type => '1/2-3/2',
      # # algorithm_type => '1/3-3/2',
-     # fraction => '1/975',
      # lo => 0,
      # hi => 10, # 200*$rep,
      # where => 'low',
     );
-  my $hi = 50;
+  my $hi = 20;
 
   my $i_start = $seq->i_start;
   print "i_start $i_start\n";
@@ -257,6 +284,8 @@ $|=1;
   my $values_max = $seq->values_max;
   my $saw_value_min;
   my $saw_value_max;
+  my $prev_value;
+  my $prev_i;
 
   foreach my $rep (1 .. 2) {
     ### $seq
@@ -268,6 +297,7 @@ $|=1;
 
     my $check_pred_upto = ! $seq->characteristic('digits')
       && ! $seq->characteristic('count');
+
     foreach my $want_i ($i_start .. $i_start + $hi) {
       my ($i,$value) = $seq->next;
       if (! defined $i) {
@@ -325,8 +355,28 @@ $|=1;
           $pred_upto = $value+1;
         }
       }
+      if ($seq->can('value_to_i_floor')) {
+        {
+          my $i_floor = $seq->value_to_i_floor($value);
+          unless ($i_floor == $i) {
+            print " oops, value_to_i_floor($value)=$i_floor want i=$i\n";
+          }
+        }
+        {
+          my $try_value = $value - 1;
+          unless (defined $prev_value && $try_value == $prev_value) {
+            my $want_i = $i - 1;
+            if ($want_i < $i_start) { $want_i = $i_start; }
+            my $i_floor = $seq->value_to_i_floor($try_value);
+            unless ($i_floor == $want_i) {
+              print " oops, value_to_i_floor($value-1=$try_value)=$i_floor want_i=$want_i\n";
+            }
+          }
+        }
+      }
       if ($seq->can('ith')) {
         if ($value >= 2**50) {
+          require Math::BigInt;
           $i = Math::BigInt->new($i);
         }
         my $ith_value = $seq->ith($i);
@@ -337,6 +387,8 @@ $|=1;
           print " oops, ith($i)=",$ith_value//'undef'," next=",$value//'undef',"\n";
         }
       }
+      $prev_value = $value;
+      $prev_i = $i;
     }
     print "\n";
     if (defined $values_min && $saw_value_min != $values_min) {
@@ -348,11 +400,12 @@ $|=1;
     if ($rep < 2) {
       print "rewind\n";
       $seq->rewind;
+      undef $prev_value;
     }
   }
 
   if ($seq->can('ith')) {
-    print "by ith():  ";
+    print "by ith():      ";
     foreach my $i ($seq->i_start .. $seq->i_start + $hi - 1) {
       my $value = $seq->ith($i);
       if (! defined $value) {
@@ -396,6 +449,13 @@ $|=1;
     print "\n";
   }
 
+  if ($seq->can('value_to_i_estimate')) {
+    my $est_i = $seq->value_to_i_estimate($prev_value);
+    my $f = $est_i/($prev_i||1);
+    $f = sprintf '%.4f', $f;
+    printf "value_to_i_estimate($prev_value) i=$prev_i est=$est_i  f=$f\n";
+  }
+
   foreach my $method ('ith','pred') {
     if ($seq->can($method)) {
       require Data::Float;
@@ -429,8 +489,8 @@ $|=1;
         if ($method eq 'pred' && $pred) {
           print "     **** oops\n";
         }
-        if ($method eq 'ith' && defined $pred) {
-          print "     **** maybe oops\n";
+        if ($method eq 'ith' && defined $pred && $pred==$pred) {
+          print "     **** oops, ith(nan) should be nan\n";
         }
       }
     }

@@ -21,7 +21,7 @@ use strict;
 use POSIX 'ceil';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -29,7 +29,7 @@ use Math::NumSeq;
 #use Devel::Comments;
 
 
-use constant name => Math::NumSeq::__('Multiples of a given K');
+# use constant name => Math::NumSeq::__('Multiples of a given K');
 use constant description => Math::NumSeq::__('The multiples K, 2*K, 3*K, 4*K, etc of a given number.');
 use constant default_i_start => 0;
 
@@ -122,6 +122,17 @@ sub rewind {
   my ($self) = @_;
   $self->{'i'} = $self->i_start;
 }
+sub _UNTESTED__seek_to_i {
+  my ($self, $i) = @_;
+  # if ($i >= $self->{'uv_i_limit'}) {
+  #   $i = Math::NumSeq::_bigint()->new("$i");
+  # }
+  $self->{'i'} = $i;
+}
+sub _UNTESTED__seek_to_value {
+  my ($self, $value) = @_;
+  $self->{'i'} = $self->value_to_i_ceil($value);
+}
 sub next {
   my ($self) = @_;
   my $i = $self->{'i'}++;
@@ -154,6 +165,24 @@ sub value_to_i_estimate {
   }
   return int($value / $multiples);
 }
+
+use Math::NumSeq::All;
+*_floor = \&Math::NumSeq::All::_floor;
+
+sub value_to_i_floor {
+  my ($self, $value) = @_;
+  return _floor($value/$self->{'multiples'});
+}
+sub _UNTESTED__value_to_i_ceil {
+  my ($self, $value) = @_;
+  if ($value < 0) { return 0; }
+  my $i = $self->value_to_i_floor($value);
+  if ($value > $self->ith($i)) {
+    $i += 1;
+  }
+  return $i;
+}
+
 
 
 1;
@@ -193,6 +222,14 @@ Return C<$multiples * $i>.
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> is an integer multiple of the given C<multiples>.
+
+=item C<$i = $seq-E<gt>value_to_i_floor($value)>
+
+Return floor(value/multiples).
+
+=item C<$i = $seq-E<gt>value_to_i_estimate($value)>
+
+Return an estimate of the i corresponding to C<$value>.
 
 =back
 

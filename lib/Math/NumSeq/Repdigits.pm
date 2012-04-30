@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -71,9 +71,8 @@ sub rewind {
   my $radix = $self->{'radix'};
   if ($radix < 2) { $radix = $self->{'radix'} = 10; }
 
-  if ($radix == 2) {
-    $self->{'i'} = $self->i_start;
-  } else {
+  $self->{'i'} = $self->i_start;
+  if ($radix != 2) {
     $self->{'n'} = -1;
     $self->{'inc'} = 1;
     $self->{'digit'} = -1;

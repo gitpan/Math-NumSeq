@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2011 Kevin Ryde
+# Copyright 2011, 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -23,6 +23,39 @@ use Math::BigInt try => 'GMP';
 
 # uncomment this to run the ### lines
 use Smart::Comments;
+
+{
+  # non-decreasing
+
+  require Math::NumSeq::SqrtEngel;
+  require Math::NumSeq::Squares;
+  foreach my $sqrt (2 .. 10000) {
+    next if (Math::NumSeq::Squares->pred($sqrt));
+    print "$sqrt\n";
+
+    my $seq = Math::NumSeq::SqrtEngel->new (sqrt => $sqrt);
+    my ($prev_i, $prev_value) = $seq->next;
+    my $same = 0;
+    my @values = ($prev_value);
+    for (;;) {
+      my ($i, $value) = $seq->next or last;
+      push @values, $value;
+      $same ||= ($value == $prev_value && $value != 1);
+      if ($value < $prev_value) {
+        die "$sqrt decreasing i=$i";
+      }
+      last if $value > 1_000_000;
+    }
+    while (@values && $values[0] == 1) {
+      shift @values;
+    }
+    if ($same) {
+      my $values = join(',',@values);
+      print "$sqrt same: $values\n";
+    }
+  }
+  exit 0;
+}
 
 {
   # A028254

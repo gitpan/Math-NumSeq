@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -49,7 +49,15 @@ sub values_min {
 
 sub rewind {
   my ($self) = @_;
-  $self->{'i'} = $self->i_start;
+  $self->seek_to_i($self->i_start);
+}
+sub seek_to_i {
+  my ($self, $i) = @_;
+  $self->{'i'} = $i;
+}
+sub seek_to_value {
+  my ($self, $value) = @_;
+  $self->seek_to_i($self->value_to_i_ceil($value));
 }
 sub next {
   my ($self) = @_;
@@ -65,6 +73,70 @@ sub ith {
 sub pred {
   my ($self, $value) = @_;
   return ($value == int($value));
+}
+
+sub value_to_i_floor {
+  my ($self, $value) = @_;
+  return _floor($value);
+}
+sub value_to_i_ceil {
+  my ($self, $value) = @_;
+  return _ceil($value);
+}
+sub value_to_i_estimate {
+  my ($self, $value) = @_;
+  return int($value);
+}
+
+#------------------------------------------------------------------------------
+# generic
+
+# _floor() trying to work with BigRat/BigFloat too.
+#
+# For reference, POSIX::floor() in perl 5.12.4 is a bit bizarre on UV=64bit
+# and NV=53bit double.  UV=2^64-1 rounds up to NV=2^64 which floor() then
+# returns, so floor() in fact increases the value of what was an integer
+# already.
+#
+sub _floor {
+  my ($x) = @_;
+  ### _floor(): "$x", $x
+  my $int = int($x);
+  if ($x == $int) {
+    ### is an integer ...
+    return $x;
+  }
+  $x -= $int;
+  ### frac: "$x"
+  if ($x >= 0) {
+    ### frac is non-negative ...
+    return $int;
+  } else {
+    ### frac is negative ...
+    return $int-1;
+  }
+}
+
+# _ceil() trying to work with BigRat/BigFloat too.
+#
+sub _ceil {
+  my ($x) = @_;
+  ### _ceil(): "$x", $x
+
+  my $int = int($x);
+  if ($x == $int) {
+    ### is an integer ...
+    return $x;
+  }
+  $x -= $int;
+  ### frac: "$x"
+  if ($x > 0) {
+    ### frac is positive ...
+    return $int+1;
+  } else {
+    ### frac is non-negative ...
+    return $int;
+  }
 }
 
 1;
@@ -99,6 +171,11 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 Create and return a new sequence object.
 
+=item C<$i = $seq-E<gt>seek_to_value($value)>
+
+Move the current i so that C<next()> will give C<$value> on the next call,
+or ceil($value) if C<$value> is an integer.
+
 =item C<$value = $seq-E<gt>ith($i)>
 
 Return C<$i>.
@@ -106,6 +183,12 @@ Return C<$i>.
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> is an integer.
+
+=item C<$i = $seq-E<gt>value_to_i_ceil($value)>
+
+=item C<$i = $seq-E<gt>value_to_i_estimate($value)>
+
+Return floor($value).
 
 =back
 

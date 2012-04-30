@@ -35,7 +35,7 @@ plan tests => $test_count;
 # VERSION
 
 {
-  my $want_version = 37;
+  my $want_version = 38;
   ok ($Math::NumSeq::ReverseAdd::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::ReverseAdd->VERSION,  $want_version,
@@ -78,6 +78,7 @@ plan tests => $test_count;
 
   my $rev = Math::NumSeq::ReverseAdd::_reverse_in_radix($n,2);
   my $revstr = "$rev";
+  $revstr =~ s/^\+//; # leading + from perl 5.6.2 BigInt
   ok ($revstr, "3377699468869635");
 
   my $bigint = Math::NumSeq::_bigint();
@@ -94,6 +95,7 @@ plan tests => $test_count;
   my $n = Math::NumSeq::_bigint()->new($str);
   my $rev = Math::NumSeq::ReverseAdd::_reverse_in_radix($n,4);
   my $revstr = "$rev";
+  $revstr =~ s/^\+//; # leading + from perl 5.6.2 BigInt
   ok ($revstr, "1");
 }
 {
@@ -101,6 +103,7 @@ plan tests => $test_count;
   my $n = Math::NumSeq::_bigint()->new($str);
   my $rev = Math::NumSeq::ReverseAdd::_reverse_in_radix($n,8);
   my $revstr = "$rev";
+  $revstr =~ s/^\+//; # leading + from perl 5.6.2 BigInt
   ok ($revstr, "1");
 }
 {
@@ -108,6 +111,7 @@ plan tests => $test_count;
   my $n = Math::NumSeq::_bigint()->new($str);
   my $rev = Math::NumSeq::ReverseAdd::_reverse_in_radix($n,16);
   my $revstr = "$rev";
+  $revstr =~ s/^\+//; # leading + from perl 5.6.2 BigInt
   ok ($revstr, "1");
 }
 {
@@ -115,6 +119,7 @@ plan tests => $test_count;
   my $n = Math::NumSeq::_bigint()->new($str);
   my $rev = Math::NumSeq::ReverseAdd::_reverse_in_radix($n,10);
   my $revstr = "$rev";
+  $revstr =~ s/^\+//; # leading + from perl 5.6.2 BigInt
   ok ($revstr, "4321");
 }
 

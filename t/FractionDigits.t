@@ -27,11 +27,12 @@ BEGIN { MyTestHelpers::nowarnings(); }
 
 use Math::NumSeq::FractionDigits;
 
+my $test_count = (tests => 49)[1];
+plan tests => $test_count;
+
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-my $test_count = (tests => 29)[1];
-plan tests => $test_count;
 
 {
   require Math::BigInt;
@@ -53,7 +54,7 @@ plan tests => $test_count;
 # VERSION
 
 {
-  my $want_version = 37;
+  my $want_version = 38;
   ok ($Math::NumSeq::FractionDigits::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::FractionDigits->VERSION,  $want_version,
@@ -66,6 +67,41 @@ plan tests => $test_count;
   ok (! eval { Math::NumSeq::FractionDigits->VERSION($check_version); 1 },
       1,
       "VERSION class check $check_version");
+}
+
+
+#------------------------------------------------------------------------------
+# _modpow()
+
+{
+  foreach my $elem ([5,0,7,   1],
+                    [5,1,7,   5],
+                    [5,2,7,   4],
+                    [5,3,7,   6],
+                    [5,4,7,   2],
+                    [5,5,7,   3],
+                    [5,6,7,   1],
+                    [5,7,7,   5],
+                    [5,8,7,   4],
+                    [5,9,7,   6],
+
+                    [10,0,14,   1],
+                    [10,1,14,  10],
+                    [10,2,14,   2],
+                    [10,3,14,   6],
+                    [10,4,14,   4],
+                    [10,5,14,  12],
+                    [10,6,14,   8],
+                    [10,7,14,  10],
+                    [10,8,14,   2],
+
+                    [10,100,14,  4],
+
+                   ) {
+    my ($base,$exp,$mod, $want) = @$elem;
+    my $got = Math::NumSeq::FractionDigits::_modpow($base,$exp,$mod);
+    ok ($got, $want, "_modpow($base,$exp,$mod)");
+  }
 }
 
 
@@ -105,6 +141,7 @@ plan tests => $test_count;
       'characteristic(increasing)');
   ok (! $seq->characteristic('non_decreasing'), 1,
       'characteristic(non_decreasing)');
+
   ok ($seq->characteristic('increasing_from_i'), undef,
       'characteristic(increasing_from_i)');
   ok ($seq->characteristic('non_decreasing_from_i'), undef,

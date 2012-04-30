@@ -22,7 +22,7 @@ use POSIX ();
 use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -57,11 +57,37 @@ use constant _MAX_PRIME_XS => do {
 
 sub rewind {
   my ($self) = @_;
-  $self->{'i'} = 1;
+  $self->{'i'} = $self->i_start;
   $self->{'array_lo'} = 1;
   $self->{'array_hi'} = 1;
   @{$self->{'array'}} = ();
 }
+# needs a prime_count() for arbitrary seek
+#
+# sub _UNTESTED__seek_to_value {
+#   my ($self, $value) = @_;
+#   my $array = $self->{'array'};
+#   if (@array) {
+#     if ($value >= $array->[0] && $value <= $array->[-1]) {
+#       # seek forward within $array
+#       while ($value > $array->[0]) {
+#         shift @$array;
+#         $self->{'i'}++;
+#       }
+#       return;
+#     }
+#   }
+#   $value = int($value);
+#   if ($value > _MAX_PRIME_XS) {
+#     # past limit
+#     $self->{'array'} = undef;
+#     return;
+#   }
+#   $self->{'i'} = _primes_count(0,$value);
+#   $self->{'array_lo'} = 0;
+#   $self->{'array_hi'} = $value-1;
+#   @{$self->{'array'}} = ();
+# }
 
 sub next {
   my ($self) = @_;
@@ -94,6 +120,8 @@ sub next {
   }
   return ($self->{'i'}++, shift @{$self->{'array'}});
 }
+
+
 
 sub _primes_list {
   my ($lo, $hi) = @_;
@@ -136,16 +164,33 @@ sub pred {
 #   return $array->[$i];
 # }
 
-# ENHANCE-ME: for BigInt $value maybe take a log2 and apply a factor, 
+use Math::NumSeq::Fibonacci;
+*_blog2_estimate = \&Math::NumSeq::Fibonacci::_blog2_estimate;
+
 sub value_to_i_estimate {
   my ($self, $value) = @_;
-  ### value_to_i_estimate(): $value
+  ### value_to_i_estimate(): "$value"
 
   if ($value < 2) { return 0; }
 
+  $value = int($value);
+  if (defined (my $blog2 = _blog2_estimate($value))) {
+    # est = v/log(v)
+    # log2(v) = log(v)/log(2)
+    # est = v/((log2(v)*log(2)))
+    #     = v/log2(v) * 1/log(2)
+    #    ~= v/log2(v) * 13/9
+    #    ~= (13*v) / (9*log2(v))
+    # using 13/9 as an approximation to 1/log(2) to stay in BigInt
+    #
+    ### $blog2
+    ### num: $value*13
+    ### den: 9 * $blog2
+    return ($value * 13) / (9 * $blog2);
+  }
+
   ### log: log($value)
   ### div: $value/log($value)
-
   return int($value/log($value));
 }
 
@@ -166,13 +211,14 @@ Math::NumSeq::Primes -- prime numbers
 
 =head1 DESCRIPTION
 
-The prime numbers, 2, 3, 5, 7, 11, 13, etc, not divisible by anything except
-themselves and 1.
+The prime numbers, not divisible by anything except themselves and 1.
+
+    2, 3, 5, 7, 11, 13, ...
 
 Currently this is implemented with C<Math::Prime::XS> generating blocks of
-primes for the iteration with a sieve of Eratosthenes.  The result is
-reasonably progressive.  On a 32-bit system there's a hard limit at 2^31
-(though even approaching that takes a long time to calculate).
+primes with a sieve of Eratosthenes.  The result is reasonably progressive.
+On a 32-bit system there's a hard limit at 2^31 (though even approaching
+that takes a long time to calculate).
 
 =head1 FUNCTIONS
 
@@ -193,8 +239,12 @@ checked, in the interests of not going into a near-infinite loop.
 
 =item C<$i = $seq-E<gt>value_to_i_estimate($value)>
 
-Return an estimate of the i value corresponding to C<$value>.  Currently
-this is-known x/log(x).
+Return an estimate of the i corresponding to C<$value>.  Currently this is
+the well-known asymptotic
+
+    i ~= value/log(value)
+
+C<$value> can be any size, it's not limited as in C<pred()>.
 
 =back
 

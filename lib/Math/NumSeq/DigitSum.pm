@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -166,7 +166,7 @@ sub ith {
   my $sum = 0;
   while ($i) {
     $sum += ($i % $radix) ** $power;
-    $i = int($i/$radix)
+    $i = int($i/$radix);
   }
   return $sum;
 }

@@ -30,7 +30,7 @@ use Math::NumSeq::SqrtDigits;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-my $test_count = (tests => 44)[1];
+my $test_count = (tests => 50)[1];
 plan tests => $test_count;
 
 {
@@ -53,7 +53,7 @@ plan tests => $test_count;
 # VERSION
 
 {
-  my $want_version = 37;
+  my $want_version = 38;
   ok ($Math::NumSeq::SqrtDigits::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::SqrtDigits->VERSION,  $want_version,
@@ -75,7 +75,19 @@ plan tests => $test_count;
 {
   my $seq = Math::NumSeq::SqrtDigits->new;
   ok ($seq->characteristic('digits'), 10, 'characteristic(digits)');
+  ok ($seq->characteristic('smaller'), 1, 'characteristic(smaller)');
+  ok (! $seq->characteristic('count'), 1, 'characteristic(count)');
   ok ($seq->characteristic('integer'), 1, 'characteristic(integer)');
+
+  ok (! $seq->characteristic('increasing'), 1,
+      'characteristic(increasing)');
+  ok (! $seq->characteristic('non_decreasing'), 1,
+      'characteristic(non_decreasing)');
+
+  ok ($seq->characteristic('increasing_from_i'), undef,
+      'characteristic(increasing_from_i)');
+  ok ($seq->characteristic('non_decreasing_from_i'), undef,
+      'characteristic(non_decreasing_from_i)');
 
   ok ($seq->i_start, 1, 'i_start()');
 

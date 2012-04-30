@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -49,12 +49,14 @@ use constant parameter_info_array =>
      display => Math::NumSeq::__('Pairs'),
      type    => 'enum',
      default => 'first',
-     choices => ['first','second','both','average'],
+     choices => ['first',
+                 'second',
+                 'both',
+                 'average'],
      choices_display => [Math::NumSeq::__('First'),
                          Math::NumSeq::__('Second'),
                          Math::NumSeq::__('Both'),
-                         Math::NumSeq::__('Average'),
-                        ],
+                         Math::NumSeq::__('Average')],
      description => Math::NumSeq::__('Which of the pair of values to show.'),
    },
   ];
@@ -66,19 +68,22 @@ sub description {
       . ($self->{'pairs'} eq 'second' ? " of the second kind"
          : $self->{'pairs'} eq 'both' ? " of both first and second kind"
          : $self->{'pairs'} eq 'average' ? ", average of first and second kind"
-         : '')
-    } else {
-      # class method
-      return Math::NumSeq::__('Polygonal numbers');
-    }
+         : '');
+  } else {
+    # class method
+    return Math::NumSeq::__('Polygonal numbers');
+  }
 }
 
 
 #------------------------------------------------------------------------------
+# cf A183221 complement of 9-gonals
+#    A008795 molien from naive interleaved unsorted "average" polygonal=3
+#    A144065 generalized pentagonals - 1,
+#              being 2*3*4*(n+1)+1 is a perfect square
+
 my %oeis_anum;
 
-# cf A008795 molien from naive interleaved unsorted "average" polygonal=3
-#
 $oeis_anum{'first'}->[3]   = 'A000217';  # 3 triangular
 $oeis_anum{'second'}->[3]  = 'A000217';  # triangular same as "first"
 $oeis_anum{'both'}->[3]    = 'A000217';  # no duplicates
@@ -380,9 +385,14 @@ sub pred {
   return ($value == $i * (($k-2)*$i + $self->{'add'}) / 2);
 }
 
+# P(i) = (k-2)/2 * i*(i+1) - (k-3)*i
+# P(i) ~= (k-2)/2 * i*i
+# i ~= sqrt( P(i)*2/(k-2) )
+#
 sub value_to_i_estimate {
   my ($self, $value) = @_;
-  return int(sqrt($value));
+  if ($value < 0) { return 0; }
+  return int(sqrt(int($value)*2/($self->{'k'}-2)));
 }
 
 1;
@@ -406,66 +416,79 @@ The sequence of polygonal numbers.  The 3-gonals are the triangular numbers
 i*(i+1)/2, the 4-gonals are squares i*i, the 5-gonals are pentagonals
 (3i-1)*i/2, etc.
 
-The numbers are how many points are in a triangle, square, penatgon,
-hexagon, etc of side i,
-
-      Squares                      Pentagons
-
-    *          i=1  1                *
-
-                                     *
-    * *        i=2  3              *   *
-    * *                             * *
-
-                                
-                                      *      
-    * * *                           *   *    
-    * * *      i=3  6             *  *    *  
-    * * *                          *   * *   
-                                    * * *    
-
-
-
-                                       * 
-    * * * *                          *           * * *     
-    * * * *    i=4  10             *   *      *  *   *    *
-    * * * *                      *  *    *     *  *    * * 
-    * * * *                       *   * *       *   * * *  
-                                   * * *         * * * *   
-From a given i, the next value is formed by adding i+1, being a new row of
-that length on the bottom of the triangle.
-
-
-
-
-
-
-  In general the k-gonals for kE<gt>=3 are
+In general the k-gonals for kE<gt>=3 are
 
     P(i) = (k-2)/2 * i*(i+1) - (k-3)*i
 
-C<pairs =E<gt> 'second'> gives the polygonals of the second kind, which are
-the same formula negating the i.
+The values are how many points are in a triangle, square, pentagon, hexagon,
+etc of side i.  For example the triangular numbers,
 
-    S(i) = (k-2)/2 * i*(i-1) + (k-3)*i
+                                         d
+                             c          c d
+                b           b c        b c d
+    a          a b         a b c      a b c d
 
-The result is positive values, bigger than the plain polygonals.  For
+    i=1        i=2         i=3        i=4
+    value=1    value=3     value=6    value=10
+
+Or the squares,
+
+                                      d d d d
+                           c c c      c c c d
+               b b         b b c      b b c d
+    a          a b         a b c      a b c d
+
+    i=1        i=2         i=3        i=4
+    value=1    value=4     value=9    value=16
+
+Or pentagons (which should be a pentagonal grid, so skewing a bit here),
+
+                                              d
+                                            d   d
+                               c          d  c    d
+                             c   c      d  c   c    d
+                  b        c  b    c     c  b    c d
+                b   b       b   b c       b   b c d
+    a            a b         a b c         a b c d
+
+    i=1        i=2         i=3          i=4
+    value=1    value=5     value=12     value=22
+
+The letters "a", "b" "c" show the extra added onto the previous figure to
+grow its points.  Each side except two are extended.  In general the
+k-gonals increment by k-2 sides of i points, plus 1 at the end of the last
+side, so
+
+   P(i+1) = P(i) + (k-2)*i + 1
+
+=head2 Second Kind
+
+Option C<pairs =E<gt> 'second'> gives the polygonals of the second kind,
+which are the same formula but with a negative i.
+
+    S(i) = P(-i) = (k-2)/2 * i*(i-1) + (k-3)*i
+
+The result is still positive values, bigger than the plain P(i).  For
 example the pentagonals are 0,1,5,12,22,etc and the second pentagonals are
 0,2,7,15,26,etc.
 
+=head2 Both Kinds
+
 C<pairs =E<gt> 'both'> gives the firsts and seconds interleaved.  P(0) and
-S(0) are both 0 and is given just once at i=0,
+S(0) are both 0 and that value is given just once at i=0, so
 
-    0, P(1),S(1), P(2),S(2), P(3),S(3), ...
+    0, P(1), S(1), P(2), S(2), P(3), S(3), ...
 
-C<pairs =E<gt> 'average'> is the average of the first and second, which ends
-up being simply a multiple of the perfect squares,
+=head2 Average
+
+Option C<pairs =E<gt> 'average'> is the average of the first and second,
+which ends up being simply a multiple of the perfect squares,
 
     A(i) = (P(i)+S(i))/2
          = (k-2)/2 * i*i
 
-This is an integer if k is even, or if k is odd but i is even.  If both k
-and i odd then it's an 0.5.
+This is an integer if k is even, or k odd and i is even.  If k and i both
+odd then it's an 0.5 fraction.
 
 =head1 FUNCTIONS
 
@@ -492,6 +515,10 @@ Return the C<$i>'th polygonal value, of the given C<pairs> type.
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> is a polygonal number, of the given C<pairs> type.
+
+=item C<$i = $seq-E<gt>value_to_i_estimate($value)>
+
+Return an estimate of the i corresponding to C<$value>.
 
 =back
 

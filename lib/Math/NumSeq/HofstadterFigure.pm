@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -29,6 +29,7 @@ use Math::NumSeq;
 #use Smart::Comments;
 
 
+# use constant name => Math::NumSeq::__('Hofstadter Figure');
 use constant description => Math::NumSeq::__('Hofstadter figure sequence.');
 use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
@@ -311,7 +312,7 @@ sub next {
 1;
 __END__
 
-=for stopwords Ryde 
+=for stopwords Ryde Math-NumSeq incrementing
 
 =head1 NAME
 
@@ -363,6 +364,8 @@ first difference would always be the same, contradicting the conditions for
 the sequence.
 
 =head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 

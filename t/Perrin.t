@@ -35,7 +35,7 @@ plan tests => $test_count;
 # VERSION
 
 {
-  my $want_version = 37;
+  my $want_version = 38;
   ok ($Math::NumSeq::Perrin::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::Perrin->VERSION,  $want_version,

@@ -26,7 +26,7 @@ use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 use vars '$VERSION';
-$VERSION = 37;
+$VERSION = 38;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -46,6 +46,7 @@ sub anum_to_info {
   my $dir = Math::NumSeq::OEIS::File::oeis_dir();
   foreach my $basename
     ("$anum.internal",
+     "$anum.internal.html",
      "$anum.html",
      "$anum.htm",
      Math::NumSeq::OEIS::File::anum_to_bfile($anum),
@@ -99,9 +100,11 @@ sub _info_arrayref {
   }
   while (defined (my $basename = readdir DIR)) {
     ### $basename
-    # FIXME: case insensitive ?
+    # Case insensitive for MS-DOS.  But dunno what .internal or
+    # .internal.html will be or should be on an 8.3 DOS filesystem.  Maybe
+    # "A000000.int", maybe "A000000i.htm" until 7-digit A-numbers.
     if ($basename =~ /^A(\d*)\.(html?|internal)
-                    |[ab](\d*)\.txt/x) {
+                    |[ab](\d*)\.txt/ix) {
       my $anum = 'A'.($1||$3);
       unless ($seen{$anum}++) {
         push @ret, _make_info($anum);
@@ -133,9 +136,8 @@ __END__
 #   my $after_num;
 #   while (defined (my $basename = readdir DIR)) {
 #     # ### $basename
-#     # FIXME: case insensitive ?
 #     if ($basename =~ /^A(\d*)\.(html?|internal)
-#                     |[ab](\d*)\.txt/x) {
+#                     |[ab](\d*)\.txt/xi) {
 #       my $num = ($1||$3);
 #       if ($num > $anum_num
 #           && (! defined $after_num

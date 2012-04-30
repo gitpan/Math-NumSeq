@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -139,8 +139,8 @@ sub ith {
   my ($self, $i) = @_;
   ### FibonacciWord ith(): $i
 
-  # if $i is inf or nan then $i*0 is nan and the while loop zero-trips and
-  # return is nan
+  # if $i is inf or nan then $f0=$i*0 is nan and the while loop zero-trips
+  # and return is nan
 
   my $f0 = ($i * 0) + 1;  # inherit bignum 1
   my $f1 = $f0 + 1;       # inherit bignum 2
@@ -251,6 +251,8 @@ Adjacent 1,1 never occurs in the plain Fibonacci word, so there's no value 3
 in the dense form.
 
 =head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 

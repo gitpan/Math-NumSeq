@@ -25,7 +25,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -39,6 +39,7 @@ use Math::Factor::XS 0.37 'factors';
 #use Smart::Comments;
 
 
+# use constant name => Math::NumSeq::__('Repdigit Radix');
 use constant description => Math::NumSeq::__('First radix in which i is a repdigit (at most base=i-1 since "11" gives i).');
 use constant characteristic_smaller => 1;
 use constant characteristic_increasing => 0;
@@ -235,30 +236,30 @@ sub ith {
   return (defined $r_found ? $r_found : $i-1);
 
 
-  for (my $radix = 2; ; $radix++) {
-    ### $radix
-
-    my $one = $radix + 1;  # ... or 3 digits 111 ($radix + 1) *
-    unless ($one <= $i) {
-      ### stop at ones too big not a 3-digit repdigit: $one
-      return $i-1;
-    }
-    ### $one
-
-    do {
-      if ($one == $i) {
-        return $radix;
-      }
-      foreach my $digit (2 .. $radix-1) {
-        ### $digit
-        if ((my $repdigit = $digit * $one) <= $i) {
-          if ($repdigit == $i) {
-            return $radix;
-          }
-        }
-      }
-    } while (($one = $one * $radix + 1) <= $i);
-  }
+  # for (my $radix = 2; ; $radix++) {
+  #   ### $radix
+  # 
+  #   my $one = $radix + 1;  # ... or 3 digits 111 ($radix + 1) *
+  #   unless ($one <= $i) {
+  #     ### stop at ones too big not a 3-digit repdigit: $one
+  #     return $i-1;
+  #   }
+  #   ### $one
+  # 
+  #   do {
+  #     if ($one == $i) {
+  #       return $radix;
+  #     }
+  #     foreach my $digit (2 .. $radix-1) {
+  #       ### $digit
+  #       if ((my $repdigit = $digit * $one) <= $i) {
+  #         if ($repdigit == $i) {
+  #           return $radix;
+  #         }
+  #       }
+  #     }
+  #   } while (($one = $one * $radix + 1) <= $i);
+  # }
 }
 
 # value = root^power
@@ -293,7 +294,7 @@ sub _nth_root_floor {
 1;
 __END__
 
-=for stopwords Ryde 
+=for stopwords Ryde radix repdigit repdigits len radices ie repunit nthroot Math-NumSeq
 
 =head1 NAME
 
@@ -320,6 +321,8 @@ For example i=8 is "22" in base 3.
 Is this behaviour for i=0,1,2 any good?  Perhaps it will change.
 
 =head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 

@@ -21,7 +21,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION','@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -81,7 +81,7 @@ sub new {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq NumSeq ie OEIS Online
+=for stopwords Ryde Math-NumSeq NumSeq ie OEIS Online ithreads ascii utf eg cofr recognised booleans
 
 =head1 NAME
 
@@ -187,11 +187,39 @@ and also for "full" sequences where the samples are all the values.
 
 =item C<$ret = $seq-E<gt>characteristic($key)>
 
-C<$key> "increasing", "non_decreasing" and "smaller" are determined from the
-sample values or the first few values from a a-file or b-file.  Looking at
-only the few values ensures a big file isn't read in its entirety and is
+For a file the various standard characteristics are obtained as follows
+
+=over
+
+=item *
+
+"increasing", "non_decreasing" and "smaller" are determined from
+the sample values or the first few values from a a-file or b-file.  Looking
+at only the few values ensures a big file isn't read in its entirety and is
 normally enough.  The intention would be to try to look at enough values not
 to be tricked by decreasing values after the first few, etc.
+
+=item * 
+
+"digits" is from KEYWORDS "cons" for decimal constants.  Some other digit
+sequences are recognised by their DESCRIPTION part though this may be
+unreliable.
+
+=item * 
+
+"count" is obtained from a DESCRIPTION with "number of".  This is probably
+unreliable.
+
+=item *
+
+All the "KEYWORDS" from the OEIS are provided as booleans under
+names "OEIS_easy" etc.  So for example
+
+    if ($seq->characteristic("OEIS_nice")) {
+      print "nooiice ...\n";
+    }
+
+=back
 
 =back
 

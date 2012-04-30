@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -29,7 +29,7 @@ use Math::NumSeq::Base::IterateIth;
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
 # uncomment this to run the ### lines
-#use Devel::Comments;
+#use Smart::Comments;
 
 
 # use constant name => Math::NumSeq::__('Proth Numbers');
@@ -51,11 +51,57 @@ use constant characteristic_integer => 1;
 #
 use constant oeis_anum => 'A080075';
 
-# ENHANCE-ME: for next() keep the k and its increment 
+
+# $uv_limit is the biggest power 4**k which fits in a UV
+#
+my $uv_limit = do {
+  my $max = ~0;
+
+  # limit <= floor(max/4) means 4*limit <= max is still good
+  my $limit = 4;
+  while ($limit <= ($max >> 2)) {
+    $limit <<= 2;
+  }
+
+  ### ProthNumbers UV limit ...
+  ### $limit
+  ### limit: sprintf('%#X',$limit)
+
+  $limit
+};
+
+sub rewind {
+  my ($self) = @_;
+  $self->{'value'} = 1;
+  $self->{'inc'} = 2;
+  $self->{'limit'} = 4;
+  $self->{'i'} = $self->i_start;
+}
+
+sub next {
+  my ($self) = @_;
+  ### ProthNumbers next(): sprintf('value=%b inc=%b limit=%b', $self->{'value'}, $self->{'inc'}, $self->{'limit'})
+
+  my $value = ($self->{'value'} += $self->{'inc'});
+  if ($value >= $self->{'limit'}) {
+    ### bigger 2^n now ...
+    if ($self->{'limit'} == $uv_limit) {
+      ### go to BigInt
+      $self->{'value'} = Math::NumSeq::_bigint()->new($self->{'value'});
+      $self->{'inc'}   = Math::NumSeq::_bigint()->new($self->{'inc'});
+      $self->{'limit'} = Math::NumSeq::_bigint()->new("$self->{'limit'}");
+    }
+    $self->{'inc'} *= 2;
+    $self->{'limit'} *= 4;
+  }
+
+  return ($self->{'i'}++, $value);
+}
 
 sub ith {
   my ($self, $i) = @_;
   ### ProthNumbers ith(): $i
+
   if ($i == 1) {
     return 3;
   }
@@ -98,6 +144,10 @@ sub pred {
           && ! _is_infinite($value)) {
     return 0;
   }
+
+  # ENHANCE-ME: maybe BigInt as_bin() and string match position of lowest 1
+  # ENHANCE-ME: maybe (v^(v-1))+1 for lowest 1, ask if v < m*m
+  #
   my $pow = ($value*0) + 2; # inherit bignum 2
   for (;;) {
     ### at: "$value   $pow"
@@ -112,9 +162,13 @@ sub pred {
   }
 }
 
+# use 41/29 ~= sqrt(2) in case $value is a Math::BigInt, since can't
+# multiply BigInt*float
+#
 sub value_to_i_estimate {
   my ($self, $value) = @_;
-  return int(sqrt($value));
+  if ($value < 0) { return 0; }
+  my $est = int(sqrt(int($value)) * 41 / 29);
 }
 
 1;
@@ -134,23 +188,33 @@ Math::NumSeq::ProthNumbers -- Proth number sequence
 
 =head1 DESCRIPTION
 
-The Proth numbers 3, 5, 9, 13, 17, etc, being integers k*2^n+1 where
+The Proth numbers
+
+    3, 5, 9, 13, 17, 25, 33, 41, 49, 57, 65, 81, 97, 113, ...
+
+being integers of the form k*2^n+1 for some k and n and where
 S<k E<lt> 2^n>.
 
 The k E<lt> 2^n condition means the values in binary have low half 00..01
 and high half some value k,
 
-    value    binary
-      3       11   
-      5       101    
-      9      1001
-     13      1101
-     17      10001
-     25      11001
-     33     100001
+    value    binary        k  n  2^n
+      3       11           1  1   2
+      5       101          1  2   4
+      9      1001          2  2   4
+     13      1101          3  2   4
+     17      10001         2  3   8
+     25      11001         3  3   8
+     33     100001         4  3   8
+     41     101001         5  3   8
               ^^
               ||
      k part --++-- low part
+
+Taking all k E<lt> 2^n duplicates some values, as for example 33 is k=4 n=3
+as 4*2^3+1 and also k=2 n=4 as 2*2^4+1.  This happens for any even k.
+Incrementing n on reaching k=2^n-1 makes a regular pattern, per L</Ith>
+below.
 
 =head1 FUNCTIONS
 
@@ -171,9 +235,31 @@ Return the C<$i>'th Proth number.  The first number is 3 at C<$i==1>.
 Return true if C<$value> is a Proth number, meaning is equal to k*2^n+1 for
 some k and n with k E<lt> 2^n.
 
+=item C<$i = $seq-E<gt>value_to_i_estimate($value)>
+
+Return an estimate of the i corresponding to C<$value>.  This is roughly
+sqrt(2*$value).
+
 =back
 
 =head1 FORMULAS
+
+=head2 Next
+
+Successive values can be calculated by keeping track of the 2^n power and
+incrementing k by adding such a power,
+
+    initial
+      value = 1   # to give 3 on first next() call
+      inc = 2
+      limit = 4
+
+    next()
+      value += inc
+      if value >= limit
+         inc *= 2       # ready for next time
+         limit *= 4
+      return value
 
 =head2 Ith
 

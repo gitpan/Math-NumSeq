@@ -21,7 +21,7 @@ use strict;
 use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -33,6 +33,7 @@ use Math::NumSeq::Base::IterateIth;
 #use Smart::Comments;
 
 
+# use constant name => Math::NumSeq::__('Dedekind Psi Steps');
 use constant description => Math::NumSeq::__('Number of repeated applications of the Dedekind psi function to reach factors 2 and 3 only.');
 use constant default_i_start => 1;
 use constant characteristic_count => 1;
@@ -188,7 +189,7 @@ loop.  Above that the return is C<undef>.
 =head1 SEE ALSO
 
 L<Math::NumSeq>,
-L<Math::NumSeq::TotientSteps>
+L<Math::NumSeq::TotientSteps>,
 L<Math::NumSeq::DedekindPsiCumulative>
 
 =head1 HOME PAGE

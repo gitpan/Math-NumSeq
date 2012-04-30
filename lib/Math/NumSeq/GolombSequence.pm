@@ -27,7 +27,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -35,6 +35,7 @@ use Math::NumSeq;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
+# use constant name => Math::NumSeq::__('Golomb Sequence');
 use constant description => Math::NumSeq::__('Golomb sequence 1,2,2,3,3,4,4,4,etc, its own run lengths.');
 use constant i_start => 1;
 use constant values_min => 1;
@@ -106,7 +107,7 @@ sub oeis_anum {
 
 sub rewind {
   my ($self) = @_;
-  $self->{'i'} = 1;
+  $self->{'i'} = $self->i_start;
 
   my $using_values = $self->{'using_values'};
   $self->{'upto_func'} = $self->can("_upto_$using_values")

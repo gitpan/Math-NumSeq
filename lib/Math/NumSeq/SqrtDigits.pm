@@ -22,7 +22,7 @@ use Carp;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
@@ -43,7 +43,7 @@ use constant parameter_info_array =>
     default => 2,
     minimum => 2,
     width   => 5,
-    description => Math::NumSeq::__('The number to take the square root of.  If this is a perfect square then there\'s just a handful of digits, non squares go on infinitely.'),
+    description => Math::NumSeq::__('Number to take the square root of.  If this is a perfect square then there\'s just a handful of digits, non squares go on infinitely.'),
    },
    Math::NumSeq::Base::Digits->parameter_info_list,
   ];
@@ -52,14 +52,9 @@ use constant parameter_info_array =>
 # cf
 #   A020807 - sqrt(1/50) decimal
 #   A020811 - sqrt(1/54) decimal
-#   A010503 - sqrt(1/2) decimal == sqrt(2)/2
+#   A010503 - sqrt(1/2) decimal == sqrt(2)/2 = sqrt(50)/10
 #   A155781 - log15(22) decimal
 #   A011368 - 16^(1/9) decimal
-#   A010121 - continued fraction sqrt(7)
-#   A010122 - continued fraction sqrt(13)
-#   A010123 - continued fraction sqrt(14)
-#   A010124 - continued fraction sqrt(19)
-#   A010125 - continued fraction sqrt(21)
 #
 #   A092855 - the bit positions of sqrt(2)-1 in binary
 #

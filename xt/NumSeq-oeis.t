@@ -127,11 +127,11 @@ sub check_class {
 
   # skip all except ...
   #
-  # return unless $class =~ /PrimeF/;
+  # return unless $class =~ /Fibonacci$/;
   # return unless $class =~ /Golomb/;
   # return unless $class =~ /Twin/;
   # return unless $class =~ /FactorCount/;
-  # return unless $class =~ /Fib/;
+  # return unless $class =~ /Cbrt/;
   # return unless $class =~ /Star/;
   # return unless $class =~ /Luc|Fib|Cullen|Wood/;
   # return unless $class =~ /Lucas/;
@@ -144,7 +144,9 @@ sub check_class {
   # return unless $class =~ /Undul/;
   # return unless $class =~ /Concat/;
   # return unless $class =~ /Totient/;
-  # return unless $anum eq 'A156542';
+  # return unless $class =~ /Golay/;
+  # return unless $class =~ /Trib/;
+  # return unless $anum eq 'A137164';
 
   eval "require $class" or die;
 
@@ -155,13 +157,17 @@ sub check_class {
   my $max_value = undef;
   if ($class eq 'Math::NumSeq::Factorials'
       || $class eq 'Math::NumSeq::Primorials'
-      || $class eq 'Math::NumSeq::Fibonacci' # incl LucasNumbers
+      || $class eq 'Math::NumSeq::Fibonacci'
+      || $class eq 'Math::NumSeq::Pell'
       || $class eq 'Math::NumSeq::LucasNumbers'
       || $class eq 'Math::NumSeq::Perrin'
       || $class eq 'Math::NumSeq::Cubes'
+      || $class eq 'Math::NumSeq::Tribonacci'
+      || $class eq 'Math::NumSeq::ProthNumbers'
       || $class eq 'Math::NumSeq::CullenNumbers'
       || $class eq 'Math::NumSeq::WoodallNumbers'
       || $class eq 'Math::NumSeq::ReverseAdd'
+      || $class eq 'Math::NumSeq::MathImageRadixConversion'
      ) {
     $max_value = 'unlimited';
   }
@@ -189,6 +195,18 @@ sub check_class {
     if ($want->[9] == 2) {
       unshift @$want, 1;
     }
+
+  } elsif ($anum eq 'A002945'
+           || $anum eq 'A002946'
+           || $anum eq 'A010239') {
+    MyTestHelpers::diag ("  shorten CbrtContinued to 400 values");
+    if ($#$want > 400) {
+      $#$want = 400;
+    }
+
+  } elsif ($anum eq 'A000959') {
+    MyTestHelpers::diag ("  shorten lucky numbers to < 20_000");
+    @$want = grep {$_ < 20_000} @$want;
 
   } elsif ($anum eq 'A082897') {
     # perfect totients
@@ -290,10 +308,6 @@ sub check_class {
     # trim
     splice @$want, -13;
     MyTestHelpers::diag ("trim doubtful end $anum $name");
-
-  } elsif ($anum eq 'A022000') {  # FIXME: not 1/996 ???
-    MyTestHelpers::diag ("skip doubtful $anum $name");
-    return;
   }
   if ($class =~ /SqrtDigits/) {
     unless (Math::BigInt::GMP->VERSION) {  # plain Calc sqrt a bit slow
@@ -463,21 +477,28 @@ sub check_class {
           $data_min = -1;
         }
       }
-      my $values_min = $seq->values_min;
-      if (defined $values_min
-          && defined $data_min
-          && $values_min != $data_min) {
-        $good = 0;
-        MyTestHelpers::diag ("bad: $name values_min $values_min but data min $data_min");
+      unless ($seq->isa('Math::NumSeq::FractionDigits')) {
+        # FractionDigits doesn't have actual values_min yet, only 0 to radix-1
+
+        my $values_min = $seq->values_min;
+        if (defined $values_min
+            && defined $data_min
+            && $values_min != $data_min) {
+          $good = 0;
+          MyTestHelpers::diag ("bad: $name values_min $values_min but data min $data_min");
+        }
       }
     }
     {
-      my $values_max = $seq->values_max;
-      if (defined $values_max) {
-        my $data_max = _max(@$want);
-        if ($values_max != $data_max) {
-          # $good = 0;
-          MyTestHelpers::diag ("bad: $name values_max=$values_max not seen in data, only $data_max");
+      unless ($seq->isa('Math::NumSeq::FractionDigits')) {
+
+        my $values_max = $seq->values_max;
+        if (defined $values_max) {
+          my $data_max = _max(@$want);
+          if ($values_max != $data_max) {
+            # $good = 0;
+            MyTestHelpers::diag ("bad: $name values_max=$values_max not seen in data, only $data_max");
+          }
         }
       }
     }
@@ -633,7 +654,7 @@ sub check_class {
     if (! $info) {
       $good = 0;
       MyTestHelpers::diag ("bad: $anum");
-      MyTestHelpers::diag ("info false: ",$info);
+      MyTestHelpers::diag ("anum_to_info() false: ",$info);
       next;
     }
     if ($info->{'class'} eq 'Math::NumSeq::OEIS::File') {

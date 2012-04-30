@@ -35,7 +35,7 @@ use Math::NumSeq::MobiusFunction;
 # VERSION
 
 {
-  my $want_version = 37;
+  my $want_version = 38;
   ok ($Math::NumSeq::MobiusFunction::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::MobiusFunction->VERSION,  $want_version,

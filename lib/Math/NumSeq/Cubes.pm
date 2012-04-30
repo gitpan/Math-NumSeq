@@ -23,7 +23,7 @@ use POSIX 'floor','ceil';
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -39,8 +39,8 @@ use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
 use constant oeis_anum => 'A000578';
 
-my $uv_limit = do {
-  # Float integers too in 32 bits ?
+use constant 1.02 _UV_I_LIMIT => do {
+  # Float integers too when IV=32bits ?
   # my $max = 1;
   # for (1 .. 256) {
   #   my $try = $max*2 + 1;
@@ -81,10 +81,21 @@ sub rewind {
   my ($self) = @_;
   $self->{'i'} = ceil (cbrt (max(0,$self->{'lo'})));
 }
+sub seek_to_i {
+  my ($self, $i) = @_;
+  if ($i >= _UV_I_LIMIT) {
+    $i = Math::NumSeq::_bigint()->new("$i");
+  }
+  $self->{'i'} = $i;
+}
+sub seek_to_value {
+  my ($self, $value) = @_;
+  $self->seek_to_i($self->value_to_i_ceil($value));
+}
 sub next {
   my ($self) = @_;
   my $i = $self->{'i'}++;
-  if ($i == $uv_limit) {
+  if ($i == _UV_I_LIMIT) {
     $self->{'i'} = Math::NumSeq::_bigint()->new($self->{'i'});
   }
   return ($i, $i*$i*$i);
@@ -115,11 +126,15 @@ sub value_to_i_floor {
   my ($self, $value) = @_;
   return _cbrt_floor($value);
 }
+sub value_to_i_ceil {
+  my ($self, $value) = @_;
+  return _cbrt_ceil($value);
+}
 *value_to_i_estimate = \&value_to_i_floor;
 
 
 #------------------------------------------------------------------------------
-# generic
+# generic, shared
 
 sub _cbrt_floor {
   my ($x) = @_;
@@ -134,6 +149,15 @@ sub _cbrt_floor {
   return floor(cbrt($x));
 }
 
+sub _cbrt_ceil {
+  my ($x) = @_;
+  my $c = _cbrt_floor($x);
+  if ($c*$c*$c < $x) {
+    $c += 1;
+  }
+  return $c;
+}
+
 1;
 __END__
 
@@ -141,7 +165,7 @@ __END__
 
 =head1 NAME
 
-Math::NumSeq::Cubes -- cubes i^3
+Math::NumSeq::Cubes -- cubes i**3
 
 =head1 SYNOPSIS
 
@@ -151,7 +175,9 @@ Math::NumSeq::Cubes -- cubes i^3
 
 =head1 DESCRIPTION
 
-The sequence of cubes, 0, 1, 8, 27, 64, 125, etc, i**3.
+The sequence of cubes i**3,
+
+    0, 1, 8, 27, 64, 125, ...
 
 =head1 FUNCTIONS
 
@@ -167,13 +193,37 @@ Create and return a new sequence object.
 
 Return the next index and value in the sequence.
 
+If C<$value> overflows a usual Perl UV integer the return is promoted to
+C<Math::BigInt> to preserve all bits.
+
+=item C<$i = $seq-E<gt>seek_to_i($i)>
+
+Move the current sequence position to C<$i>.  The next call to C<next()>
+will return C<$i>.
+
+=item C<$i = $seq-E<gt>seek_to_value($value)>
+
+Move the current sequence position so that C<next()> will give C<$value> on
+the next call, or if C<$value> is not a cube then the next cube above
+C<$value>.
+
 =item C<$value = $seq-E<gt>ith($i)>
 
-Return C<$i ** 3>.
+Return C<$i*$i*$i>.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> is a cube.
+
+=item C<$i = $seq-E<gt>value_to_i_ceil($value)>
+
+=item C<$i = $seq-E<gt>value_to_i_floor($value)>
+
+Return the cube root of C<$value>, rounded up or down to the next integer.
+
+=item C<$i = $seq-E<gt>value_to_i_estimate($value)>
+
+Return an estimate of the i corresponding to C<$value>.
 
 =back
 

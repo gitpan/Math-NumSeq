@@ -20,7 +20,6 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 6;
 
 use lib 't';
 use MyTestHelpers;
@@ -31,11 +30,28 @@ use Math::NumSeq::CollatzSteps;
 # uncomment this to run the ### lines
 #use Devel::Comments;
 
+my $test_count = (tests => 6)[1];
+plan tests => $test_count;
+
+{
+  # Math::NumSeq::CollatzSteps uses Math::BigInt binc() and bmul()
+  #
+  require Math::NumSeq;
+  my $n = Math::NumSeq::_bigint()->new(123);
+  if (! $n->can('binc')) {
+    MyTestHelpers::diag ('skip due to Math::BigInt no binc() method');
+    foreach (1 .. $test_count) {
+      skip ('due to Math::BigInt no binc() method', 1, 1);
+    }
+    exit 0;
+  }
+}
+
 #------------------------------------------------------------------------------
 # VERSION
 
 {
-  my $want_version = 37;
+  my $want_version = 38;
   ok ($Math::NumSeq::CollatzSteps::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::CollatzSteps->VERSION,  $want_version,

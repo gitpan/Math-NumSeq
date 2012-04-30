@@ -21,7 +21,7 @@ use strict;
 use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
 @ISA = ('Math::NumSeq::Base::IteratePred',
@@ -35,6 +35,7 @@ use Math::NumSeq::Totient;
 #use Smart::Comments;
 
 
+# use constant name => Math::NumSeq::__('Totient Perfect Numbers');
 use constant description => Math::NumSeq::__('Numbers for which the sum of repeated applications of the totient function equals N.  Eg. 9 is perfect because phi(9)=6, phi(6)=2, phi(2)=1 and the sum 6+2+1 = 9.');
 use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;

@@ -24,7 +24,7 @@ use Math::Libm;
 use Module::Util;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -33,7 +33,7 @@ use Math::NumSeq;
 
 
 BEGIN {
-  my ($have_MS, $have_MEE, $have_LE, @evaluators);
+  my ($have_MS, $have_MEE, $have_LE, @evaluators, @evaluators_display);
   BEGIN {
     $have_MS
       = defined(Module::Util::find_installed('Math::Symbolic'));
@@ -49,12 +49,15 @@ BEGIN {
                    ($have_MS  ? 'MS'  : ()),
                    ($have_MEE ? 'MEE' : ()),
                    ($have_LE  ? 'LE'  : ()));
+    @evaluators_display = (Math::NumSeq::__('Perl'),
+                           ($have_MS  ? Math::NumSeq::__('MS')  : ()),
+                           ($have_MEE ? Math::NumSeq::__('MEE') : ()),
+                           ($have_LE  ? Math::NumSeq::__('LE')  : ()));
     ### @evaluators
   }
 
 #  use constant name => Math::NumSeq::__('Arbitrary Expression');
-use constant i_start => 0;
-  use constant description =>
+use constant description =>
     join ("\n",
           Math::NumSeq::__('An arbitrary expression.  It should be a function of \"i\" at 0,1,2, etc.  For example (2*i)^2 would give the even perfect squares.
 
@@ -73,7 +76,8 @@ Perl (the default) is either 2*i+1 or 2*$i+1.'),
            Math::NumSeq::__('Language::Expr is like $k**2 + $k - 1.')
            : ()));
 
-  use constant parameter_info_array =>
+use constant i_start => 0;
+use constant parameter_info_array =>
     [
      { name    => 'expression',
        display => Math::NumSeq::__('Expression'),
@@ -87,6 +91,7 @@ Perl (the default) is either 2*i+1 or 2*$i+1.'),
        type    => 'enum',
        default => $evaluators[0],
        choices => \@evaluators,
+       choices_display => \@evaluators_display,
        description => Math::NumSeq::__('The expression evaluator module, Perl for Perl itself, MS for Math::Symbolic, MEE for Math::Expression::Evaluator, LE for Language::Expr.'),
      },
     ];
@@ -125,6 +130,9 @@ $oeis_anum{'i*(4*i-1)'} = 'A033991';
 
 $oeis_anum{'(2*i)**3'} = 'A016743';  # even cubes (2i)^3
 # OEIS-Catalogue: A016743 expression=(2*i)**3
+
+$oeis_anum{'4**i'} = 'A000302';  # powers of 4
+# OEIS-Catalogue: A000302 expression=4**i
 
 sub oeis_anum {
   my ($self) = @_;
@@ -344,6 +352,32 @@ sub rewind {
   $self->{'above'} = 0;
 }
 
+sub next {
+  my ($self) = @_;
+  my $i = $self->{'i'}++;
+
+  for (;;) {
+    if ($self->{'above'} >= 10) {  #  || $i > $self->{'hi'}
+      return;
+    }
+    my $n = eval { $self->{'subr'}->($i) };
+    if (! defined $n) {
+      # eg. division by zero
+      ### expression undef: $@
+      $self->{'above'}++;
+      next;
+    }
+    ### expression result: $n
+    # if ($n > $self->{'hi'}) {
+    #   $self->{'above'}++;
+    # }
+    return ($i, $n);
+  }
+}
+
+#------------------------------------------------------------------------------
+# Math::Expression::Evaluator helpers
+
 # $me is a Math::Expression::Evaluator
 # return a list of the free variables in it
 sub _me_free_variables {
@@ -374,28 +408,6 @@ sub _me_free_variables {
   return keys %free;
 }
 
-sub next {
-  my ($self) = @_;
-  my $i = $self->{'i'}++;
-
-  for (;;) {
-    if ($self->{'above'} >= 10) {  #  || $i > $self->{'hi'}
-      return;
-    }
-    my $n = eval { $self->{'subr'}->($i) };
-    if (! defined $n) {
-      # eg. division by zero
-      ### expression undef: $@
-      $self->{'above'}++;
-      next;
-    }
-    ### expression result: $n
-    # if ($n > $self->{'hi'}) {
-    #   $self->{'above'}++;
-    # }
-    return ($i, $n);
-  }
-}
 
 1;
 __END__

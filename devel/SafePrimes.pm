@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
 use Math::NumSeq::Primes;
 @ISA = ('Math::NumSeq::Primes');
@@ -29,6 +29,7 @@ use Math::NumSeq::Primes;
 #use Smart::Comments;
 
 
+# use constant name => Math::NumSeq::__('Safe Primes');
 use constant description => Math::NumSeq::__('The safe primes 5,7,11,23,47, being primes where (P-1)/2 is also prime (those are the Sophie Germain primes).');
 use constant values_min => 5;
 use constant characteristic_increasing => 1;
@@ -64,8 +65,8 @@ sub next {
 sub pred {
   my ($self, $value) = @_;
   return (($value & 1)
-          && $self->SUPER::pred ($value)
-          && $self->SUPER::pred (($value-1)/2));
+          && $self->Math::NumSeq::Primes::pred ($value)
+          && $self->Math::NumSeq::Primes::pred (($value-1)/2));
 }
 
 1;

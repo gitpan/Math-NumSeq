@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -76,6 +76,12 @@ sub rewind {
   $self->{'length'} = 1;
   $self->{'limit'} = $self->{'radix'};
 }
+sub _UNTESTED__seek_to_i {
+  my ($self, $i) = @_;
+  $self->{'i'} = $i;
+  my $length = $self->{'length'} = $self->ith($i);
+  $self->{'limit'} = $self->{'radix'} ** ($length+1);
+}
 sub next {
   my ($self) = @_;
   ### DigitLength next(): $self
@@ -112,6 +118,20 @@ sub pred {
   return ($value >= 1 && $value == int($value));
 }
 
+# not actually documented yet ...
+sub value_to_i_floor {
+  my ($self, $value) = @_;
+
+  # radix**(value-1) is the first of length $value, except 0 is the first
+  # length 1
+  $value = int($value)-1;
+  if ($value <= 0) {
+    return 0;
+  }
+  return $self->{'radix'} ** $value;
+}
+*value_to_i_estimate = \&value_to_i_floor;
+
 1;
 __END__
 
@@ -129,8 +149,16 @@ Math::NumSeq::DigitLength -- length in digits
 
 =head1 DESCRIPTION
 
-The length in digits of integers 0 upwards, so for example ternary
-1,1,1,2,2,...,2,3,etc.  Zero is reckoned as length 1, a single digit 0.
+The length in digits of integers 0 upwards,
+
+    1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,...
+
+The default is decimal digits, or the optional C<radix> can give another
+base.  For example ternary
+
+    1,1,1,2,2,...,2,3,...
+
+Zero is reckoned as a single digit 0 which is length 1.
 
 =head1 FUNCTIONS
 

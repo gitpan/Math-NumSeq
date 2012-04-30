@@ -21,7 +21,7 @@ use strict;
 use Math::Prime::XS;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -34,6 +34,7 @@ use constant characteristic_integer => 1;
 use constant values_min => 1;
 
 # cf A034386 product of primes p <= i, so repeating 1, 2, 6, 6, 30, 30,
+#    A143293 partial sums of primorials
 #
 use constant oeis_anum => 'A002110'; # starting at 1
 
@@ -111,39 +112,52 @@ sub pred {
     if ($value <= 1) {
       return ($value == 1);
     }
-    if (($value % $prime) == 0) {
-      $value /= $prime;
-      if (($value % $prime) == 0) {
-        return 0;  # doubled prime factor
-      }
-    } else {
+    if ($value % $prime) {
       return 0;  # not divisible by this prime
     }
-    until (Math::Prime::XS::is_prime(++$prime)) {}
+
+    $value /= $prime;
+    if (($value % $prime) == 0) {
+      return 0;  # doubled prime factor
+    }
+
+    until (Math::Prime::XS::is_prime(++$prime)) {}  # next $prime
   }
 }
 
-sub value_to_i_estimate {
+sub value_to_i_floor {
   my ($self, $value) = @_;
   if (_is_infinite($value)) {
     return $value;
   }
-  my $i = 1;
+  if ($value < 2) {
+    return $self->i_start;
+  }
+
+  my $i = 0;
   my $prime = 2;
   for (;;) {
-    $value = int($value/$prime);
-    if ($value <= 1) {
+    ### $value
+    ### $i
+
+    if ($value < $prime) {
       return $i;
     }
+    $value = int($value/$prime);
+
     $i++;
-    until (Math::Prime::XS::is_prime(++$prime)) {}
+    until (Math::Prime::XS::is_prime(++$prime)) {}  # next $prime
   }
 }
+
+# ENHANCE-ME: maybe a slightly squashed down log() would be close enough
+#
+*value_to_i_estimate = \&value_to_i_floor;
 
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq primorials
+=for stopwords Ryde Math-NumSeq primorial primorials
 
 =head1 NAME
 
@@ -178,6 +192,14 @@ and the return is 1.
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> is equal to C<2*3*5*...*p[i]> for number of primes.
+
+=item C<$i = $seq-E<gt>value_to_i_floor($value)>
+
+Return the index i of C<$value> or of the next primorial below C<$value>.
+
+=item C<$i = $seq-E<gt>value_to_i_estimate($value)>
+
+Return an estimate of the i corresponding to C<$value>.
 
 =back
 

@@ -20,9 +20,10 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
+use Math::NumSeq;
 use Math::NumSeq::Primes;
-@ISA = ('Math::NumSeq::Primes');
+@ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
 
@@ -65,8 +66,8 @@ sub values_min {
 
 sub rewind {
   my ($self) = @_;
-  $self->SUPER::rewind;
-  $self->{'emirps_i'} = 1;
+  $self->{'i'} = $self->i_start;
+  $self->{'primes_seq'} = Math::NumSeq::Primes->new;
 }
 
 # ENHANCE-ME: The commented out code below took blocks of primes by radix
@@ -78,23 +79,25 @@ sub rewind {
 sub next {
   my ($self) = @_;
 
-  for (;;) {
-    (undef, my $prime) = $self->SUPER::next
-      or return;
+  my $primes_seq = $self->{'primes_seq'};
 
+  for (;;) {
+    (undef, my $prime) = $primes_seq->next
+      or return;
     my $rev = _reverse_in_radix($prime,$self->{'radix'});
+
     ### consider: $prime
     ### $rev
 
-    if ($rev != $prime && $self->SUPER::pred($rev)) {
+    if ($rev != $prime && $self->Math::NumSeq::Primes::pred($rev)) {
       ### yes ...
-      return (++$self->{'emirps_i'}, $prime)
+      return ($self->{'i'}++, $prime);
     }
   }
 }
 
-# ENHANCE-ME: Look for small divisors in both values simultaneously, in case
-# the reversal is even etc and easily excluded
+# ENHANCE-ME: are_all_prime() to look for small divisors in both values
+# simultaneously, in case the reversal is even etc and easily excluded.
 sub pred {
   my ($self, $value) = @_;
   if (_is_infinite($value)) {
@@ -102,8 +105,8 @@ sub pred {
   }
   my $rev = _reverse_in_radix($value,$self->{'radix'});
   return ($rev != $value
-          && $self->SUPER::pred($value)
-          && $self->SUPER::pred(_reverse_in_radix($value,$self->{'radix'})));
+          && $self->Math::NumSeq::Primes::pred($value)
+          && $self->Math::NumSeq::Primes::pred(_reverse_in_radix($value,$self->{'radix'})));
 }
 
 # return $n reversed in $radix

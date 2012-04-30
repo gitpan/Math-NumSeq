@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 700 A-numbers in 94 modules
+# total 711 A-numbers in 100 modules
 
 use constant info_arrayref =>
 [
@@ -1055,6 +1055,24 @@ use constant info_arrayref =>
     ]
   },
   {
+    'anum' => 'A126433',
+    'class' => 'Math::NumSeq::ErdosSelfridgeClass',
+    'parameters' => [
+      'on_values',
+      'primes'
+    ]
+  },
+  {
+    'anum' => 'A126805',
+    'class' => 'Math::NumSeq::ErdosSelfridgeClass',
+    'parameters' => [
+      'on_values',
+      'primes',
+      'p_or_m',
+      '-'
+    ]
+  },
+  {
     'anum' => 'A005843',
     'class' => 'Math::NumSeq::Even'
   },
@@ -1104,6 +1122,14 @@ use constant info_arrayref =>
     'parameters' => [
       'expression',
       '(2*i)**3'
+    ]
+  },
+  {
+    'anum' => 'A000302',
+    'class' => 'Math::NumSeq::Expression',
+    'parameters' => [
+      'expression',
+      '4**i'
     ]
   },
   {
@@ -1255,6 +1281,14 @@ use constant info_arrayref =>
     ]
   },
   {
+    'anum' => 'A020985',
+    'class' => 'Math::NumSeq::GolayRudinShapiro'
+  },
+  {
+    'anum' => 'A020986',
+    'class' => 'Math::NumSeq::GolayRudinShapiroCumulative'
+  },
+  {
     'anum' => 'A061358',
     'class' => 'Math::NumSeq::GoldbachCount',
     'parameters' => [
@@ -1266,7 +1300,7 @@ use constant info_arrayref =>
     'anum' => 'A045917',
     'class' => 'Math::NumSeq::GoldbachCount',
     'parameters' => [
-      'goldbach_type',
+      'on_values',
       'even'
     ]
   },
@@ -1451,12 +1485,34 @@ use constant info_arrayref =>
     ]
   },
   {
+    'anum' => 'A046927',
+    'class' => 'Math::NumSeq::LemoineCount',
+    'parameters' => [
+      'on_values',
+      'odd'
+    ]
+  },
+  {
+    'anum' => 'A046925',
+    'class' => 'Math::NumSeq::LemoineCount',
+    'parameters' => [
+      'on_values',
+      'odd',
+      'one_as_prime',
+      1
+    ]
+  },
+  {
     'anum' => 'A008836',
     'class' => 'Math::NumSeq::LiouvilleFunction'
   },
   {
     'anum' => 'A000204',
     'class' => 'Math::NumSeq::LucasNumbers'
+  },
+  {
+    'anum' => 'A000959',
+    'class' => 'Math::NumSeq::LuckyNumbers'
   },
   {
     'anum' => 'A064990',
@@ -1561,6 +1617,10 @@ use constant info_arrayref =>
       'modulus',
       16
     ]
+  },
+  {
+    'anum' => 'A001101',
+    'class' => 'Math::NumSeq::MoranNumbers'
   },
   {
     'anum' => 'A000004',
@@ -2687,10 +2747,6 @@ use constant info_arrayref =>
     ]
   },
   {
-    'anum' => 'A100002',
-    'class' => 'Math::NumSeq::ReReplace'
-  },
-  {
     'anum' => 'A002491',
     'class' => 'Math::NumSeq::ReRound'
   },
@@ -3107,6 +3163,22 @@ use constant info_arrayref =>
     ]
   },
   {
+    'anum' => 'A071797',
+    'class' => 'Math::NumSeq::Runs',
+    'parameters' => [
+      'runs_type',
+      '1to2N+1'
+    ]
+  },
+  {
+    'anum' => 'A194029',
+    'class' => 'Math::NumSeq::Runs',
+    'parameters' => [
+      'runs_type',
+      '1toFib'
+    ]
+  },
+  {
     'anum' => 'A025581',
     'class' => 'Math::NumSeq::Runs',
     'parameters' => [
@@ -3185,6 +3257,10 @@ use constant info_arrayref =>
       'runs_type',
       '6rep'
     ]
+  },
+  {
+    'anum' => 'A064223',
+    'class' => 'Math::NumSeq::SelfLengthCumulative'
   },
   {
     'anum' => 'A005384',

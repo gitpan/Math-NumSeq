@@ -32,7 +32,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -44,6 +44,7 @@ use Math::Prime::XS 'is_prime';
 #use Smart::Comments;
 
 
+# use constant name => Math::NumSeq::__('Polignac Obstinate');
 use constant description => Math::NumSeq::__('Odd integers N not representable as prime+2^k.');
 use constant values_min => 1;
 use constant characteristic_increasing => 1;
@@ -130,7 +131,7 @@ sub pred {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq de Polignac Erdos ie
+=for stopwords Ryde Math-NumSeq de Polignac Erdos Pickover ie
 
 =head1 NAME
 
@@ -162,6 +163,8 @@ The value 3 is not in the sequence because it can be written prime+2^k, for
 prime=2 and k=0.
 
 =head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 

@@ -38,7 +38,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 37;
+$VERSION = 38;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -179,6 +179,11 @@ sub new {
   return $self;
 }
 
+sub tell_i {
+  my ($self) = @_;
+  return $self->{'i'};
+}
+
 #------------------------------------------------------------------------------
 # shared internals
 
@@ -202,7 +207,7 @@ use constant::defer _bigint => sub {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq Math-Aronson Math-PlanePath oopery genericness Online OEIS ie arrayref hashref filename enum Aronson
+=for stopwords Ryde Math-NumSeq Math-Aronson Math-PlanePath oopery genericness Online OEIS ie arrayref hashref filename enum Aronson bigint NaNs nan radix RepdigitRadix repdigit SqrtContinued NumSeq
 
 =head1 NAME
 
@@ -218,7 +223,7 @@ Math::NumSeq -- number sequences
 =head1 DESCRIPTION
 
 This is a base class for number sequences.  Sequence objects can iterate
-through values, and some sequences have random access and predicate.
+through values and some sequences have random access and/or predicate test.
 
 The idea is to generate things like squares or primes in a generic way.
 Some sequences, like squares, are so easy there's no need for this except
@@ -229,15 +234,29 @@ The intention is that all modules C<Math::NumSeq::Foo> are sequence classes,
 and that supporting things are deeper, such as under
 C<Math::NumSeq::Something::Helper> or C<Math::NumSeq::Base::SharedStuff>.
 
+=head2 Number Types
+
+The various methods try to support C<Math::BigInt> and similar overloaded
+number types.  So for instance C<pred()> might be applied to test a big
+value, or C<ith()> on a bigint to preserve precision from some rapidly
+growing sequence.  Infinities and NaNs are meant to give nan or infinite
+returns of some kind (some unspecified kind as yet).
+
 =head1 FUNCTIONS
 
 In the following "Foo" is one of the subclass names.
 
-=over 4
+=over
 
 =item C<$seq = Math::NumSeq::Foo-E<gt>new (key=E<gt>value,...)>
 
 Create and return a new sequence object.
+
+=back
+
+=head2 Iterating
+
+=over
 
 =item C<($i, $value) = $seq-E<gt>next()>
 
@@ -247,14 +266,26 @@ Return the next index and value in the sequence.
 
 Rewind the sequence to its starting point.
 
+=item C<$i = $seq-E<gt>tell_i($i)>
+
+Return the current i position.  This is the i which the next call to
+C<next()> will return.
+
+=back
+
+=head2 Information
+
+=over
+
 =item C<$i = $seq-E<gt>i_start()>
 
-Return the first index C<$i> in the sequence.  This is the position
-C<rewind()> returns to.
+Return the first C<$i> in the sequence.  This is the position C<rewind()>
+returns to.
 
 =item C<$str = $seq-E<gt>description()>
 
-A human-readable description of the sequence.
+A human-readable description of the sequence.  This might be translated into
+the locale language (but there's no message translations yet).
 
 =item C<$value = $seq-E<gt>values_min()>
 
@@ -279,49 +310,50 @@ a sequence might have.
     increasing_from_i     integer, i for which v[i+1] > v[i]
     non_decreasing_from_i integer, i for which v[i+1] >= v[i]
 
-    value_is_radix    boolean, value is radix for i
+    value_is_radix      boolean, value is radix for i
 
 C<value_is_radix> means each value is a radix applying to the i of that
-value.  For example RepdigitRadix gives for i a radix value for which i is a
-repdigit.  Values from such a sequence might also be 0 or 1 or -1 or some
+value.  For example RepdigitRadix gives a value which is a radix where i is
+a repdigit.  Values from such a sequence might also be 0 or 1 or -1 or some
 such non-radix values to indicate no radix.
 
 =item C<$str = $seq-E<gt>oeis_anum()>
 
-Return the A-number (a string) for Sloane's Online Encyclopedia of Integer
-Sequences of C<$seq>, or return C<undef> if not in the OEIS or not known.
+Return the A-number (a string) for C<$seq> in Sloane's Online Encyclopedia
+of Integer Sequences, or return C<undef> if not in the OEIS or not known.
 For example
 
     my $seq = Math::NumSeq::Squares->new;
     my $anum = $seq->oeis_anum;
-    # gives $anum eq "A000290"
+    # gives "A000290"
 
 The web page for that is then
 
     http://oeis.org/A000290
 
 Sometimes the OEIS has duplicates, ie. two A-numbers which are the same
-sequence.  C<$seq-E<gt>oeis_anum()> is generally the primary one in cases
-where the duplication is accidental or historical.
+sequence.  When that's accidental or historical C<$seq-E<gt>oeis_anum()> is
+generally whichever is reckoned the primary one.
 
 =item C<$aref = Math::NumSeq::Foo-E<gt>parameter_info_array()>
 
 =item C<@list = Math::NumSeq::Foo-E<gt>parameter_info_list()>
 
-Return an arrayref of list describing the parameters taken by a given class.
+Return an arrayref or list describing the parameters taken by a given class.
 This meant to help making widgets etc for user interaction in a GUI.  Each
 element is a hashref
 
     {
-      name        =>    parameter key arg for new()
-      share_key   =>    string, or undef
-      description =>    human readable string
-      type        =>    string "integer","boolean","enum" etc
-      default     =>    value
-      minimum     =>    number, or undef
-      maximum     =>    number, or undef
-      width       =>    integer, suggested display size
-      choices     =>    for enum, an arrayref     
+      name            => parameter key arg for new()
+      share_key       => string, or undef
+      description     => human readable string
+      type            => string "integer","boolean","enum" etc
+      default         => value
+      minimum         => number, or undef
+      maximum         => number, or undef
+      width           => integer, suggested display size
+      choices         => for enum, an arrayref     
+      choices_display => for enum, an arrayref     
     }
 
 C<type> is a string, one of
@@ -343,6 +375,10 @@ For "enum" the C<choices> field is the possible values, such as
       choices => ["strawberry","chocolate"],
     }
 
+C<choices_display>, if provided, is human-readable strings for those
+choices, possibly translated into another language (though there's no
+translations yet).
+
 C<minimum> and C<maximum> are omitted (or C<undef>) if there's no hard limit
 on the parameter.
 
@@ -355,11 +391,19 @@ different classes a C<share_key> allows the same meanings to be matched up.
 
 =head2 Optional Methods
 
-The following methods are only implemented for some sequences, since it's
+The following methods are only implemented for some sequences since it's
 sometimes difficult to generate an arbitrary numbered element etc.  Check
 with C<$seq-E<gt>can('ith')> etc before using.
 
 =over
+
+=item C<$i = $seq-E<gt>seek_to_i($i)>
+
+=item C<$i = $seq-E<gt>seek_to_value($value)>
+
+Move the current i so C<next()> returns the given C<$i> or C<$value> on the
+next call.  If C<$value> is not in the sequence then move so as to return
+the next higher value which is.
 
 =item C<$value = $seq-E<gt>ith($i)>
 
@@ -369,19 +413,25 @@ implement this method.
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> occurs in the sequence.  For example for the
-squares this would return true if C<$value> is a square or false if not.
+squares this returns true if C<$value> is a square or false if not.
+
+=item C<$i = $seq-E<gt>value_to_i_ceil($value)>
 
 =item C<$i = $seq-E<gt>value_to_i_floor($value)>
 
-Return the index i of C<$value>, or if C<$value> doesn't occur in the
-sequence then the i of the next lower value which does.  This method only
-exists for non-decreasing sequences.
+Return the index i of C<$value>, or if C<$value> is not in the sequence then
+the i of the next higher or lower value which is.  Usually these methods
+only exist for non-decreasing sequences.
 
 =item C<$i = $seq-E<gt>value_to_i_estimate($value)>
 
-Return an estimate of the i value corresponding to C<$value>.  This method
-only exists for non-decreasing sequences, and the accuracy of the estimate
-is unspecified, but when available it can at least hint at the growth rate.
+Return an estimate of the i corresponding to C<$value>.
+
+The accuracy of this estimate is unspecified, but can at least hint at the
+growth rate of the sequence.  For example if making an "intersection"
+checking for a given values in the sequence then if the estimated i is small
+it may be fastest to go through the sequence by C<next()> and compare,
+rather than apply C<pred()> to each target.
 
 =back
 
@@ -396,7 +446,7 @@ L<Math::NumSeq::Triangular>,
 L<Math::NumSeq::Polygonal>,
 L<Math::NumSeq::Tetrahedral>,
 L<Math::NumSeq::StarNumbers>,
-L<Math::NumSeq::Powerful>
+L<Math::NumSeq::Powerful>,
 L<Math::NumSeq::PowerPart>
 
 L<Math::NumSeq::Even>,
@@ -418,6 +468,7 @@ L<Math::NumSeq::PrimeFactorCount>,
 L<Math::NumSeq::DivisorCount>,
 L<Math::NumSeq::GoldbachCount>,
 L<Math::NumSeq::LemoineCount>,
+L<Math::NumSeq::ErdosSelfridgeClass>,
 L<Math::NumSeq::PythagoreanHypots>
 
 L<Math::NumSeq::Totient>,
@@ -453,6 +504,7 @@ L<Math::NumSeq::DigitCountHigh>
 
 L<Math::NumSeq::DigitLength>,
 L<Math::NumSeq::DigitLengthCumulative>,
+L<Math::NumSeq::SelfLengthCumulative>,
 L<Math::NumSeq::DigitProduct>,
 L<Math::NumSeq::DigitSum>,
 L<Math::NumSeq::DigitSumModulo>,
@@ -465,6 +517,7 @@ L<Math::NumSeq::RepdigitAny>,
 L<Math::NumSeq::RepdigitRadix>,
 L<Math::NumSeq::UndulatingNumbers>,
 L<Math::NumSeq::HarshadNumbers>,
+L<Math::NumSeq::MoranNumbers>,
 L<Math::NumSeq::HappyNumbers>,
 L<Math::NumSeq::HappySteps>,
 
@@ -472,10 +525,13 @@ L<Math::NumSeq::CullenNumbers>,
 L<Math::NumSeq::ProthNumbers>,
 L<Math::NumSeq::WoodallNumbers>,
 L<Math::NumSeq::BaumSweet>,
+L<Math::NumSeq::GolayRudinShapiro>,
+L<Math::NumSeq::GolayRudinShapiroCumulative>,
 L<Math::NumSeq::KlarnerRado>,
 L<Math::NumSeq::UlamSequence>,
 L<Math::NumSeq::ReRound>,
 L<Math::NumSeq::ReReplace>,
+L<Math::NumSeq::LuckyNumbers>,
 L<Math::NumSeq::MephistoWaltz>
 
 L<Math::NumSeq::CollatzSteps>,

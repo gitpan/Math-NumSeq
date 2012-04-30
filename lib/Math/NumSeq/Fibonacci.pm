@@ -21,7 +21,7 @@ use strict;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
 
@@ -39,8 +39,14 @@ use constant values_min => 0;
 use constant i_start => 0;
 use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
+
+# cf A105527 - index when n-nacci exceeds Fibonacci
+#
 use constant oeis_anum => 'A000045'; # fibonacci starting at i=0 0,1,1,2,3
 
+# the biggest f0 for which both f0 and f1 fit into a UV, and which therefore
+# for the next step will require BigInt
+#
 my $uv_limit = do {
   # Float integers too in 32 bits ?
   # my $max = 1;
@@ -66,6 +72,8 @@ my $uv_limit = do {
     $prev_f0 = $f0;
     ($f1,$f0) = ($f1+$f0,$f1);
   }
+
+  ### Fibonacci UV limit ...
   ### $prev_f0
   ### $f0
   ### $f1
@@ -81,6 +89,14 @@ sub rewind {
   $self->{'f1'} = 1;
   $self->{'i'} = $self->i_start;
 }
+# sub _UNTESTED__seek_to_i {
+#   my ($self, $i) = @_;
+#   $self->{'i'} = $i;
+#   if ($i >= $uv_i_limit) {
+#     $i = Math::NumSeq::_bigint()->new("$i");
+#   }
+#   ($self->{'f0'}, $self->{'f1'}) = $self->ith_pair($i);
+# }
 sub next {
   my ($self) = @_;
   ### Fibonacci next(): "f0=$self->{'f0'}, f1=$self->{'f1'}"
@@ -100,48 +116,148 @@ sub next {
   return ($self->{'i'}++, $ret);
 }
 
-# ENHANCE-ME: powering ...
 sub ith {
   my ($self, $i) = @_;
   ### Fibonacci ith(): $i
-  if ($i == 0) {
-    return $i;
-  }
-  my $f0 = ($i * 0);  # inherit bignum 0
-  my $f1 = $f0 + 1;   # inherit bignum 1
+
   if (_is_infinite($i)) {
     return $i;
   }
-  while (--$i > 0) {
-    $f0 += $f1;
-
-    unless (--$i > 0) {
-      return $f0;
-    }
-    $f1 += $f0;
+  if ($i == 0) {
+    return $i;
   }
-  return $f1;
+
+  my @bits = _bits_high_to_low($i);
+  ### @bits
+
+  # k=1, Fk1=F[k-1]=0, Fk=F[k]=1
+  shift @bits; # high 1
+  my $Fk1 = ($i * 0);  # inherit bignum 0
+  my $Fk  = $Fk1 + 1;  # inherit bignum 1
+
+  my $add = -2;
+  while (@bits > 1) {
+    ### remaining bits: @bits
+    ### Fk1: "$Fk1"
+    ### Fk: "$Fk"
+
+    # two squares and some adds
+    # F[2k+1] = 4*F[k]^2 - F[k-1]^2 + 2*(-1)^k
+    # F[2k-1] =   F[k]^2 + F[k-1]^2
+    # F[2k] = F[2k+1] - F[2k-1]
+    #
+    $Fk *= $Fk;
+    $Fk1 *= $Fk1;
+    my $F2kplus1 = 4*$Fk - $Fk1 + $add;
+    $Fk1 += $Fk; # F[2k-1]
+    my $F2k = $F2kplus1 - $Fk1;
+
+    if (shift @bits) {
+      $Fk1 = $F2k;     # F[2k]
+      $Fk = $F2kplus1; # F[2k+1]
+      $add = -2;
+    } else {
+      # $Fk1 is F[2k-1] already
+      $Fk = $F2k;  # F[2k]
+      $add = 2;
+    }
+  }
+
+  ### final ...
+  ### Fk1: "$Fk1"
+  ### Fk: "$Fk"
+  ### @bits
+
+  # last step needing just one of F[2k] or F[2k+1] by one multiply instead
+  # of two squares in the loop
+  # F[2k+1] = (2F[k]+F[k-1])*(2F[k]-F[k-1]) + 2*(-1)^k
+  # F[2k]   = F[k]*(F[k]+2F[k-1])
+  #
+  if (shift @bits) {
+    $Fk *= 2;
+    return ($Fk + $Fk1)*($Fk - $Fk1) + $add;
+  } else {
+    return $Fk * ($Fk + 2*$Fk1);
+  }
 }
 
-# FIXME: smaller than this
+sub _bits_high_to_low {
+  my ($n) = @_;
+  ### _bits_high_to_low(): "$n"
+
+  if (ref $n) {
+    if ($n->isa('Math::BigInt')
+        && $n->can('as_bin')) {
+      ### BigInt: $n->as_bin
+      return split //, substr($n->as_bin,2);
+    }
+  }
+  my @bits;
+  while ($n) {
+    push @bits, $n % 2;
+    $n = int($n/2);
+  }
+  return reverse @bits;
+}
+
+use constant 1.02 _PHI => (1 + sqrt(5)) / 2;
+use constant 1.02 _BETA => -1/_PHI;
+
 sub value_to_i_estimate {
   my ($self, $value) = @_;
   if (_is_infinite($value)) {
     return $value;
   }
-  my $i = 1;
-  for (;; $i++) {
-    $value = int($value/2);
-    if ($value <= 1) {
-      return $i;
+  if ($value <= 0) {
+    return 0;
+  }
+
+  if (defined (my $blog2 = _blog2_estimate($value))) {
+    # i ~= (log2(F(i)) + log2(phi)) / log2(phi-beta)
+    # with log2(x) = log(x)/log(2)
+    return int( ($blog2 + (log(_PHI - _BETA)/log(2)))
+                / (log(_PHI)/log(2)) );
+  }
+
+  # i ~= (log(F(i)) + log(phi)) / log(phi-beta)
+  return int( (log($value) + log(_PHI - _BETA))
+              / log(_PHI) );
+}
+
+#------------------------------------------------------------------------------
+# generic, shared
+
+# if $n is a BigInt, BigRat or BigFloat then return an estimate of log base 2
+# otherwise return undef.
+#
+# For Math::BigInt 
+#
+# For BigRat the calculation is just a bit count of the numerator less the
+# denominator so may be off by +/-1 or +/-2 or some such.  For 
+#
+sub _blog2_estimate {
+  my ($n) = @_;
+
+  if (ref $n) {
+    ### _blog2_estimate(): "$n"
+
+    if ($n->isa('Math::BigRat')) {
+      return ($n->numerator->copy->blog(2) - $n->denominator->copy->blog(2))->numify;
+    }
+    if ($n->isa('Math::BigFloat')) {
+      return $n->as_int->blog(2)->numify;
+    }
+    if ($n->isa('Math::BigInt')) {
+      return $n->copy->blog(2)->numify;
     }
   }
+  return undef;
 }
 
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq
+=for stopwords Ryde Math-NumSeq Ith bignum
 
 =head1 NAME
 
@@ -155,8 +271,11 @@ Math::NumSeq::Fibonacci -- Fibonacci numbers
 
 =head1 DESCRIPTION
 
-The Fibonacci sequence 0,1,1,2,3,5,8,13,21, etc.  The start is i=0 values
-0,1 and from there F(i) = F(i-1) + F(i-2).
+The Fibonacci sequence
+
+     0, 1, 1, 2, 3, 5, 8, 13, 21, ...
+
+The start is i=0 values 0,1 and from there F(i) = F(i-1) + F(i-2).
 
 =head1 FUNCTIONS
 
@@ -168,6 +287,13 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 Create and return a new sequence object.
 
+=item C<($i, $value) = $seq-E<gt>next()>
+
+Return the next index and value in the sequence.
+
+When C<$value> exceeds the range of a Perl unsigned integer the return is a
+C<Math::BigInt> to preserve precision.
+
 =item C<$value = $seq-E<gt>ith($i)>
 
 Return the C<$i>'th Fibonacci number.
@@ -176,7 +302,76 @@ Return the C<$i>'th Fibonacci number.
 
 Return true if C<$value> is a Fibonacci number.
 
+=item C<$i = $seq-E<gt>value_to_i_estimate($value)>
+
+Return an estimate of the i corresponding to C<$value>.  See L</Value to i
+Estimate> below.
+
 =back
+
+=head1 FORMULAS
+
+=head2 Ith
+
+Fibonacci F[i] can be calculated by a powering procedure with two squares
+per step.  A pair of values F[k] and F[k-1] are maintained and advanced
+according to bits of i from high to low
+
+    start k=1, F[k]=1, F[k-1]=0
+    add = -2       # 2*(-1)^k
+    
+    loop
+      F[2k+1] = 4*F[k]^2 - F[k-1]^2 + add
+      F[2k-1] =   F[k]^2 + F[k-1]^2
+
+      F[2k] = F[2k+1] - F[2k-1]
+
+      bit = next bit of i, high to low, skip high 1 bit
+      if bit == 1
+         take F[2k+1], F[2k] as new F[k],F[k-1]
+         add = -2
+      else bit == 0
+         take F[2k], F[2k-1] as new F[k],F[k-1]
+         add = 2
+
+For the last (least significant) bit of i an optimization can be made with a
+single multiple for that last step (instead of two squares).
+
+    bit = least significant bit of i
+    if bit == 1
+       F[2k+1] = (2F[k]+F[k-1])*(2F[k]-F[k-1]) + add
+    else
+       F[2k]   = F[k]*(F[k]+2F[k-1])
+
+The "add" amount is 2*(-1)^k and is +2 or -2 according to k odd or even,
+which means whether the previous bit taken from i was 1 or 0.  That can be
+easily noted from each bit, to be used in the following loop iteration or
+the final step F[2k+1] formula.
+
+For small i it's usually faster to just successively add F[k+1]=F[k]+F[k-1],
+but when in bignum range the doubling k-E<gt>2k by two squares becomes
+faster than k many individual additions for the same thing.
+
+=head2 Value to i Estimate
+
+F[i] increases as a power of phi, the golden ratio,
+
+    F[i] = (phi^i - beta^i) / (phi - beta)    # exactly
+
+    phi = (1+sqrt(5))/2
+    beta = -1/phi =-0.618
+
+So taking a log (natural logarithm) to get i and ignoring beta^i which
+quickly becomes small
+
+    log(F[i]) ~= i*log(phi) - log(phi-beta)
+    i ~= (log(F[i]) + log(phi-beta)) / log(phi)
+
+Or the same using log base 2 which can be estimated from the highest bit
+position of a bignum,
+
+    log2(F[i]) ~= i*log2(phi) - log2(phi-beta)
+    i ~= (log2(F[i]) + log2(phi-beta)) / log2(phi)
 
 =head1 SEE ALSO
 

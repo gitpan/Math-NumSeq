@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -30,7 +30,6 @@ use Math::NumSeq;
 
 # use constant name => Math::NumSeq::__('Mobius Function');
 use constant description => Math::NumSeq::__('The Mobius function, being 1 for an even number of prime factors, -1 for an odd number, or 0 if any repeated factors (ie. not square-free).');
-use constant characteristic_pn1 => 1;
 use constant characteristic_increasing => 0;
 use constant characteristic_integer => 1;
 use constant values_min => -1;
@@ -55,7 +54,7 @@ my @transform = (0, 0, 1, -1);
 
 sub rewind {
   my ($self) = @_;
-  $self->{'i'} = 1;
+  $self->{'i'} = $self->i_start;
   _restart_sieve ($self, 500);
 
   # my $lo = $options{'lo'} || 0;
@@ -195,6 +194,8 @@ i=3 are value -1 since they have one prime factor (they're primes), and i=4
 is value 0 because it's 2*2 which is a repeated prime 2.
 
 =head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 

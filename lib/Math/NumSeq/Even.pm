@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -38,7 +38,15 @@ use constant oeis_anum => 'A005843'; # even 0,2,4
 
 sub rewind {
   my ($self) = @_;
-  $self->{'i'} = int (($self->{'lo'}+1) / 2);
+  $self->{'i'} = $self->i_start;   # int (($self->{'lo'}+1) / 2);
+}
+sub seek_to_i {
+  my ($self, $i) = @_;
+  $self->{'i'} = $i;
+}
+sub seek_to_value {
+  my ($self, $value) = @_;
+  $self->seek_to_i($self->value_to_i_ceil($value));
 }
 sub next {
   my ($self) = @_;
@@ -69,7 +77,19 @@ sub value_to_i_floor {
     return int($value/2);
   }
 }
-*value_to_i_estimate = \&value_to_i_floor;
+sub value_to_i_ceil {
+  my ($self, $value) = @_;
+  my $i = int($value/2);
+  if (2*$i < $value) {
+    return $i+1;
+  } else {
+    return $i;
+  }
+}
+sub value_to_i_estimate {
+  my ($self, $value) = @_;
+  return int($value/2);
+}
 
 1;
 __END__
@@ -100,6 +120,15 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 Create and return a new sequence object.
 
+=item C<$i = $seq-E<gt>seek_to_i($i)>
+
+Move the current i so C<next()> returns C<$i> on the next call.
+
+=item C<$i = $seq-E<gt>seek_to_value($value)>
+
+Move the current i so that C<next()> gives C<$value> on the next call, or if
+C<$value> is an even integer then the next higher even.
+
 =item C<$value = $seq-E<gt>ith($i)>
 
 Return C<2*$i>.
@@ -107,6 +136,16 @@ Return C<2*$i>.
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> is even.
+
+=item C<$i = $seq-E<gt>value_to_i_ceil($value)>
+
+=item C<$i = $seq-E<gt>value_to_i_floor($value)>
+
+Return value/2 rounded up or down to the next integer.
+
+=item C<$i = $seq-E<gt>value_to_i_estimate($value)>
+
+Return an estimate of the i corresponding to C<$value>.
 
 =back
 

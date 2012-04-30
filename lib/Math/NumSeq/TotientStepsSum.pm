@@ -21,7 +21,7 @@ use strict;
 use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -35,6 +35,7 @@ use Math::NumSeq::Totient 13;
 #use Devel::Comments;
 
 
+# use constant name => Math::NumSeq::__('Totient Steps Sum');
 use constant description => Math::NumSeq::__('Sum of totients repeatedly applying until reach 1.');
 use constant characteristic_increasing => 0;
 use constant characteristic_integer => 1;
@@ -141,14 +142,13 @@ reach 1.
 For example i=5 applying the totient function goes 5 -E<gt> 4 -E<gt> 2
 -E<gt> 1 so total value=5+4+2+1=12.
 
-The default is to include the initial i value itself in the sum.  Option
+The default is to include the initial i itself in the sum.  Option
 C<including_self =E<gt> 0> excludes, in which case for example i=5 has
 value=4+2+1=7.
 
     0, 1, 3, 3, 7, 3, 9, 7, 9, 7, 17, 7, 19, ...
 
-See L<Math::NumSeq::TotientPerfect> for i values which have a sum equal to i
-itself.
+See L<Math::NumSeq::TotientPerfect> for totient sums equal to i itself.
 
 =head1 FUNCTIONS
 

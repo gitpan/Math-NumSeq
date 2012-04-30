@@ -19,13 +19,156 @@
 
 require 5;
 use strict;
-use Math::NumSeq::MathImageSlopingBinaryExcluded;
+use Math::NumSeq::MathImageSlopingExcluded;
 use Math::BigInt;
+
+# uncomment this to run the ### lines
+#use Smart::Comments;
+
+
+{
+  my $seq = Math::NumSeq::MathImageSlopingExcluded->new (radix => 2);
+  foreach (1 .. 30) {
+    my ($i, $value) = $seq->next;
+    # printf "%60s\n", $value;
+    my $vb = $value->as_bin;
+    $vb =~ s/^0b//;
+    printf "%60s\n", $vb;
+  }
+  exit 0;
+}
+
+{
+  # which values
+  # binary: 1,10,111,1100,11101,111110,1111011,11111000,111111001,1111111010,
+  # decimal: 9, 98, 997, 9996
+
+  require Math::BaseCnv;
+  my @seen;
+  my @table;
+  my $exp = 5;
+  my $radix = 10;
+  my $limit = $radix**$exp;
+  foreach my $i (0 .. $limit) {
+    $table[$i] = digit_split($i,$radix);
+  }
+  ### @table
+ JOIN: foreach my $i (0 .. $#table) {
+    my $this = $table[$i];
+    my $next = $table[$i+1];
+    if (! $next || @$next > @$this) {
+      # print "skip i=$i smaller\n";
+      next;
+    }
+    my @digits;
+    foreach my $j (reverse 0 .. $#$this) { # high to low
+      my $pos = $i - ($#$this-$j);
+      next JOIN if $pos < 0;
+      next JOIN if $pos > $#table;
+      my $digit = $table[$pos]->[$j];
+      die "i=$i pos=$pos j=$j" if ! defined $digit;
+      push @digits, $digit;  # digits[0] high
+    }
+
+    ### $i
+    ### @digits
+
+    my $sloping = digit_join(\@digits,$radix);
+    # my $sb = Math::BaseCnv::cnv($sloping,10,$radix);
+    # print "sloping i=$i   $sloping $sb\n";
+    $seen[$sloping] .= " $i";
+  }
+  foreach my $i (0 .. $limit/$radix) {
+    my $unseen = ($seen[$i] ? '' : '   ***');
+    my $ib = Math::BaseCnv::cnv($i,10,$radix);
+    printf "%4d %20s%s\n", $i, $ib, $unseen;
+  }
+  exit 0;
+}
+
+
+
+
+{
+  # by radix
+  require Math::BaseCnv;
+  foreach my $radix (2 .. 16) {
+    print "radix $radix\n";
+    my @seen;
+    my @table;
+    my $exp = int(log(500000)/log($radix));
+    my $limit = $radix**$exp;
+    foreach my $i (0 .. $limit) {
+      $table[$i] = digit_split($i,$radix);
+    }
+    ### @table
+  JOIN: foreach my $i (0 .. $#table) {
+      my $this = $table[$i];
+      my $next = $table[$i+1];
+      if (! $next || @$next > @$this) {
+        # print "skip i=$i smaller\n";
+        next;
+      }
+      my @digits;
+      foreach my $j (reverse 0 .. $#$this) { # high to low
+        my $pos = $i - ($#$this-$j);
+        next JOIN if $pos < 0;
+        next JOIN if $pos > $#table;
+        my $digit = $table[$pos]->[$j];
+        die "i=$i pos=$pos j=$j" if ! defined $digit;
+        push @digits, $digit;  # digits[0] high
+      }
+
+      ### $i
+      ### @digits
+
+      my $sloping = digit_join(\@digits,$radix);
+      # my $sb = Math::BaseCnv::cnv($sloping,10,$radix);
+      # print "sloping i=$i   $sloping $sb\n";
+      $seen[$sloping]++;
+    }
+    foreach my $i (0 .. $limit/$radix) {
+      if (! $seen[$i]) {
+        my $ib = Math::BaseCnv::cnv($i,10,$radix);
+        print "  $i  $ib\n";
+      }
+    }
+  }
+  exit 0;
+
+  sub digit_split {
+    my ($n, $radix) = @_;
+    ### _digit_split(): $n
+
+    if ($n == 0) {
+      return [0];
+    }
+    my @ret;
+    while ($n) {
+      push @ret, $n % $radix;  # ret[0] high digit
+      $n = int($n/$radix);
+    }
+    return \@ret;
+  }
+
+  sub digit_join {
+    my ($aref, $radix) = @_;
+    ### digit_join(): $aref
+
+    my $n = 0;
+    foreach my $digit (@$aref) {  # high to low
+      $n *= $radix;
+      $n += $digit;
+    }
+    return $n;
+  }
+
+}
 
 {
   # delta from 2^i
 
-  my $seq = Math::NumSeq::MathImageSlopingBinaryExcluded->new;
+  my $seq = Math::NumSeq::MathImageSlopingExcluded->new;
   foreach (1 .. 50) {
     my ($i, $value) = $seq->next;
     $value = Math::BigInt->new(2)**$i - $value;
@@ -34,11 +177,3 @@ use Math::BigInt;
   exit 0;
 }
 
-{
-  my $seq = Math::NumSeq::MathImageSlopingBinaryExcluded->new;
-  foreach (1 .. 50) {
-    my ($i, $value) = $seq->next;
-    printf "%60s\n", Math::BigInt->new($value)->as_bin;
-  }
-  exit 0;
-}

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq;
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
@@ -32,6 +32,7 @@ use Math::NumSeq::Base::IterateIth;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
+# use constant name => Math::NumSeq::__('Digit Count');
 use constant description => Math::NumSeq::__('How many of a given digit in each number, in a given radix, for example how many 1 bits in binary.');
 use constant values_min => 0;
 use constant default_i_start => 0;
@@ -54,9 +55,17 @@ use constant parameter_info_array =>
    },
   ];
 
+#------------------------------------------------------------------------------
+
 # cf A008687 - count 1s in twos-complement -n
-#
-my @oeis_anum;
+#    A000788 - cumulative count 1-bits in 0 to n
+#    A033093 - total count 0s in all bases 2 to n+1
+#    A059015 - cumulative count 0 bits
+#    A000788 - cumulative count 1 bits
+#    A077266 - triangle of count 0s in bases 2 to n+1
+#    A077268 - num bases with at least one 0
+
+my @oeis_anum;  # $oeis_anum[radix]->[digit]
 BEGIN {
   # cf A023416 treating "0" as a single digit zero
   $oeis_anum[0]->[2]->[0] = 'A080791'; # base 2 count 0s, start i=0
@@ -139,7 +148,7 @@ sub pred {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq radix
+=for stopwords Ryde Math-NumSeq radix radix-1
 
 =head1 NAME
 

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -42,7 +42,7 @@ use constant i_start => 1;
 # cf A026424 - the -1 positions, odd number of primes
 #    A028260 - the 1 positions, even number of primes
 #
-use constant oeis_anum => 'A008836'; # liouville -1,1
+use constant oeis_anum => 'A008836'; # liouville 1,-1
 
 
 # each 2-bit vec() value is
@@ -55,7 +55,7 @@ my @transform = (0, 0, 1, -1);
 
 sub rewind {
   my ($self) = @_;
-  $self->{'i'} = 1;
+  $self->{'i'} = $self->i_start;
   $self->{'multiplicity'} = 'repeated'; # for PrimeFactorCount ith()
   $self->{'prime_type'} = 'all';        # for PrimeFactorCount ith()
   _restart_sieve ($self, 500);
@@ -159,6 +159,8 @@ ie. zero, which is even, hence Liouville function 1.  Then i=2 and i=3 are
 because it's 2*2 which is an even number of prime factors (two 2s).
 
 =head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 

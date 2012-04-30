@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IteratePred;
 @ISA = ('Math::NumSeq::Base::IteratePred',
@@ -31,6 +31,7 @@ use Math::NumSeq::Base::IteratePred;
 #use Smart::Comments;
 
 
+# use constant name => Math::NumSeq::__('Powerful Numbers');
 use constant description => Math::NumSeq::__('Integers with either some or all primes squared or higher.');
 use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
@@ -206,7 +207,7 @@ sub pred {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq
+=for stopwords Ryde Math-NumSeq squarefrees squareful
 
 =head1 NAME
 
@@ -246,6 +247,8 @@ or better.  1 is included on the basis that it has no prime factors and
 doesn't contradict "all powers E<gt>=2". 
 
 =head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 

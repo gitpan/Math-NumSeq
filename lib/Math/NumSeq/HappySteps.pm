@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IterateIth;
@@ -32,7 +32,7 @@ use Math::NumSeq::Base::IterateIth;
 #use Devel::Comments;
 
 
-use constant name => Math::NumSeq::__('Happy Steps');
+# use constant name => Math::NumSeq::__('Happy Steps');
 use constant description => Math::NumSeq::__('How many sum of squares of digits steps to get to a repeating iteration.');
 use constant i_start => 1;
 use constant values_min => 1;
@@ -96,7 +96,7 @@ sub pred {
 1;
 __END__
 
-=for stopwords Ryde HappyNumbers HappySteps Math-NumSeq MERCHANTABILITY
+=for stopwords Ryde HappyNumbers HappySteps Math-NumSeq Radix
 
 =head1 NAME
 
@@ -138,6 +138,8 @@ When a non-happy falls into such a cycle its HappySteps count here is at
 least 26 (or whatever amount) to reach a repeat.
 
 =head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 

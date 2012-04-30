@@ -20,10 +20,25 @@
 require 5;
 use strict;
 use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
-use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
+use Math::Factor::XS 0.39 'factors', 'prime_factors'; # version 0.39 for prime_factors()
+use List::MoreUtils 'uniq';
+use List::Util 'reduce';
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
+
+{
+  # totients of distinct primes
+  require List::MoreUtils;
+  our ($a, $b); 
+  foreach my $n (2 .. 30) {
+    my @factors = uniq(prime_factors($n));
+    my $value = reduce { $a * $b } @factors;
+    print "$value,";
+  }
+  print "\n";
+  exit 0;
+}
 
 {
   # non-totients
@@ -47,106 +62,227 @@ use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
   print "\n";
 
   foreach my $i (0 .. $hi) {
-    #foreach my $i (54 .. 54) {
-    my $got = is_totient($i);
+  #foreach my $i (484) {
+    my $got = Math::NumSeq::Totient->pred($i);
     my $want = $is_totient[$i] || 0;
     if ((!!$got) != (!!$want)) {
       # if ($got != $want) {
-      print "$i got=$got want=$want from=$totient_from[$i]\n";
+      $got //= 'undef';
+      $want //= 'undef';
+      my $from = $totient_from[$i] // 'nowhere';
+      print "$i got=$got want=$want from=$from\n";
     }
   }
 
-  sub is_totient {
-    my ($n) = @_;
-    ### is_totient: $n
+  #   my $prev = 0;
+  #   my @primes;
+  #   my @counts;
+  #   foreach my $p (prime_factors($n)) {
+  #     if ($p == $prev) {
+  #       $counts[-1]++;
+  #     } else {
+  #       push @primes, $p;
+  #       push @counts, 1;
+  #       $prev = p;
+  #     }
+  #   }
+  #   return _is_totient_pc (\@primes, \@counts, $n+1);
+  # }
+  # sub _is_totient_pc {
+  #   my ($primes, $counts, $prev_product) = @_;
+  #   ### try ...
+  #   ### assert: @$primes > 0
+  #   ### assert: $primes->[0] == 2
+  # 
+  #   my @tcounts = (1);  # always one 2 from $primes->[0]
+  #   my @products = (2);
+  #   my $product = 2;
+  #   my $pos = 0;
+  #   my @ocounts = (@$counts);
+  # 
+  #   for (;;) {
+  #     if ($product >= $prev_product) {
+  #       return 0;
+  #     }
+  #     if ($pos < $#$primes) {
+  #       # descend
+  #       $pos++;
+  #       $tcount[$pos] = 0;
+  #       $ocount[$pos] = $counts->[$pos];
+  #     } else {
+  #       if ($tcount[$pos] >= $counts->[0]) {
+  #         # backtrack, increment
+  #         $pos--;
+  #         $tcount[$pos] >= $counts->[0]) {
+  # 
+  #     my $taken = $tcounts[$pos]++;
+  # 
+  #       $pos++;
+  #       my $prime = $primes->[$pos];
+  #       my $take;
+  #       if ($tcounts[0] < $counts->[0]) {
+  #         $take = 1;
+  #         $product *= $prime;
+  #       } else {
+  #         $take = $counts[$pos]; # all
+  #         $product *= $prime ** $take;
+  #       }
+  #       $tcounts[$pos] = $take;
+  # 
+  #       my $o = $counts[$pos] - $take;
+  #       if ($o) {
+  #         push @oprimes, $primes[$pos];
+  #         push @ocounts, $o;
+  #       }
+  # 
+  # 
+  # BITS: for (my $bits = 1 << $#$primes;
+  #            $bits < $bits_max;
+  #            $bits += 1) {
+  #     ### $bits
+  #     ### $primes
+  #     ### $prev_product
+  # 
+  #     my @other;
+  #     my $product = 1;
+  #     for (my $i = 0, my $mask = 1 << $#$primes;
+  #          $mask;
+  #          $mask >>= 1, $i++) {
+  #       if ($bits & $mask) {
+  #         $product *= $primes->[$i];
+  # 
+  #         if ($product >= $prev_product) {
+  #           ### at or past prev_product, skip ahead ...
+  #           $bits |= $mask-1;
+  #           next BITS;
+  #         }
+  # 
+  #       } else {
+  #         push @other, $primes->[$i];
+  #       }
+  #     }
+  #     ### $product
+  #     ### @other
+  # 
+  #     my $p = $product+1;
+  #     ### $p
+  # 
+  #     my $pcount = 0;
+  #     my $ppos = 0;
+  #     for (my $i = 0; $i < @other; $i++) {
+  #       if ($other[$i] == $p) {
+  #         $ppos = $i;
+  #         do {
+  #           $pcount++;
+  #         } while (++$i < @other && $other[$i] == $p);
+  #         splice @other, $ppos, $pcount;  # delete
+  #         last;
+  #       }
+  #     }
+  #     ### $pcount
+  # 
+  #     if (scalar(@other) && $other[0] != 2) {
+  #       ### no twos left in other ...
+  #       next;
+  #     }
+  # 
+  #     unless (is_prime($p)) {
+  #       ### p not prime, next twos ...
+  #       next;
+  #     }
+  # 
+  #     if (! @other) {
+  #       ### no other primes, so yes ...
+  #       return 1;
+  #     }
+  # 
+  #     foreach (0 .. $pcount) {
+  #       ### recurse ...
+  #       if (_is_totient_from_array (\@other, $product)) {
+  #         return 1;
+  #       }
+  #       splice @other, $ppos, 0, $p; # insert
+  #     }
+  #   }
+  #   return 0;
+  # }
 
-    if ($n <= 1) {
-      return ($n == 1); # $n==0 no, $n==1 yes
-    }
-    if ($n & 1) {
-      return 0;
-    }
 
-    return _is_totient_from_array ([prime_factors($n)], $n+1);
-  }
 
-  sub _is_totient_from_array {
-    my ($primes, $prev_product) = @_;
-    ### try ...
-    ### assert: @$primes > 0
-    ### assert: $primes->[0] == 2
 
-    my $bits_max = 1 << scalar(@$primes);
-  BITS: for (my $bits = 1 << $#$primes;  # always the 2 in $primes->[0]
-             $bits < $bits_max;
-             $bits += 1) {
-      ### $bits
-      ### $primes
-      ### $prev_product
 
-      my @other;
-      my $product = 1;
-      for (my $i = 0, my $mask = 1 << $#$primes;
-           $mask;
-           $mask >>= 1, $i++) {
-        if ($bits & $mask) {
-          $product *= $primes->[$i];
 
-          if ($product >= $prev_product) {
-            ### at or past prev_product, skip ahead ...
-            $bits |= $mask-1;
-            next BITS;
-          }
-
-        } else {
-          push @other, $primes->[$i];
-        }
-      }
-      ### $product
-      ### @other
-
-      my $p = $product+1;
-      ### $p
-
-      my $pcount = 0;
-      my $ppos = 0;
-      for (my $i = 0; $i < @other; $i++) {
-        if ($other[$i] == $p) {
-          $ppos = $i;
-          do {
-            $pcount++;
-          } while (++$i < @other && $other[$i] == $p);
-          splice @other, $ppos, $pcount;  # delete
-          last;
-        }
-      }
-      ### $pcount
-
-      if (scalar(@other) && $other[0] != 2) {
-        ### no twos left in other ...
-        next;
-      }
-
-      unless (is_prime($p)) {
-        ### p not prime, next twos ...
-        next;
-      }
-
-      if (! @other) {
-        ### no other primes, so yes ...
-        return 1;
-      }
-
-      foreach (0 .. $pcount) {
-        ### recurse ...
-        if (_is_totient_from_array (\@other, $product)) {
-          return 1;
-        }
-        splice @other, $ppos, 0, $p; # insert
-      }
-    }
-    return 0;
-  }
+  #   my $bits_max = 1 << scalar(@$primes);
+  # BITS: for (my $bits = 1 << $#$primes;  # always the 2 in $primes->[0]
+  #            $bits < $bits_max;
+  #            $bits += 1) {
+  #     ### $bits
+  #     ### $primes
+  #     ### $prev_product
+  # 
+  #     my @other;
+  #     my $product = 1;
+  #     for (my $i = 0, my $mask = 1 << $#$primes;
+  #          $mask;
+  #          $mask >>= 1, $i++) {
+  #       if ($bits & $mask) {
+  #         $product *= $primes->[$i];
+  # 
+  #         if ($product >= $prev_product) {
+  #           ### at or past prev_product, skip ahead ...
+  #           $bits |= $mask-1;
+  #           next BITS;
+  #         }
+  # 
+  #       } else {
+  #         push @other, $primes->[$i];
+  #       }
+  #     }
+  #     ### $product
+  #     ### @other
+  # 
+  #     my $p = $product+1;
+  #     ### $p
+  # 
+  #     my $pcount = 0;
+  #     my $ppos = 0;
+  #     for (my $i = 0; $i < @other; $i++) {
+  #       if ($other[$i] == $p) {
+  #         $ppos = $i;
+  #         do {
+  #           $pcount++;
+  #         } while (++$i < @other && $other[$i] == $p);
+  #         splice @other, $ppos, $pcount;  # delete
+  #         last;
+  #       }
+  #     }
+  #     ### $pcount
+  # 
+  #     if (scalar(@other) && $other[0] != 2) {
+  #       ### no twos left in other ...
+  #       next;
+  #     }
+  # 
+  #     unless (is_prime($p)) {
+  #       ### p not prime, next twos ...
+  #       next;
+  #     }
+  # 
+  #     if (! @other) {
+  #       ### no other primes, so yes ...
+  #       return 1;
+  #     }
+  # 
+  #     foreach (0 .. $pcount) {
+  #       ### recurse ...
+  #       if (_is_totient_from_array (\@other, $product)) {
+  #         return 1;
+  #       }
+  #       splice @other, $ppos, 0, $p; # insert
+  #     }
+  #   }
+  #   return 0;
+  # }
 
 
   # sub is_totient {

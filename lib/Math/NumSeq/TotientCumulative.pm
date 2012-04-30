@@ -28,7 +28,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -40,6 +40,7 @@ use Math::NumSeq::Totient;
 # uncomment this to run the ### lines
 #use Devel::Comments;
 
+# use constant name => Math::NumSeq::__('Totient Cumulative');
 use constant description => Math::NumSeq::__('Cumulative totient(1..n).');
 use constant i_start => 0;
 use constant values_min => 0;

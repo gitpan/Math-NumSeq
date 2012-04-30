@@ -27,7 +27,7 @@ BEGIN { MyTestHelpers::nowarnings(); }
 
 use Math::NumSeq::Tribonacci;
 
-my $test_count = (tests => 16)[1];
+my $test_count = (tests => 166)[1];
 plan tests => $test_count;
 
 
@@ -35,7 +35,7 @@ plan tests => $test_count;
 # VERSION
 
 {
-  my $want_version = 37;
+  my $want_version = 38;
   ok ($Math::NumSeq::Tribonacci::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::Tribonacci->VERSION,  $want_version,
@@ -80,6 +80,26 @@ plan tests => $test_count;
   ok ($seq->value_to_i_estimate(7), 6);
   ok ($seq->value_to_i_estimate(13),7);
 }
+
+#------------------------------------------------------------------------------
+# next() promote to bigint
+
+{
+  my $seq = Math::NumSeq::Tribonacci->new;
+  my $i;
+  ($i, my $f0) = $seq->next;
+  ($i, my $f1) = $seq->next;
+  ($i, my $f2) = $seq->next;
+  foreach (1 .. 150) {
+    ($i, my $value) = $seq->next;
+    my $zero = $value - $f2 - $f1 - $f0;
+    ok ($zero == 0, 1, "at i=$i  zero=$zero");
+    $f0 = $f1;
+    $f1 = $f2;
+    $f2 = $value;
+  }
+}
+
 
 exit 0;
 

@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2011 Kevin Ryde
+# Copyright 2011, 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -26,16 +26,20 @@ use Smart::Comments;
 
 
 {
-  require App::MathImage::NumSeq::RepdigitRadix;
-  my $seq = App::MathImage::NumSeq::RepdigitRadix->new;
+  # pred() which radices occur
+
+  require Math::NumSeq::RepdigitRadix;
+  my $seq = Math::NumSeq::RepdigitRadix->new;
   my @seen;
-  foreach (1 .. 5000) {
+  foreach (1 .. 9000) {
     my ($i,$value) = $seq->next;
     $seen[$value] = 1;
   }
+  my $count = 0;
   foreach my $radix (2 .. $#seen) {
     if (! $seen[$radix]) {
       print "$radix, ";
+      last if ++$count > 10;
     }
   }
   print "\n";

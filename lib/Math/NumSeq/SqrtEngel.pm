@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -30,6 +30,7 @@ use Math::NumSeq::Squares;
 #use Smart::Comments;
 
 
+# use constant name => Math::NumSeq::__('Sqrt Engel Expansion');
 use constant description => Math::NumSeq::__('Engel expansion for a square root.');
 use constant characteristic_increasing => 0; # in general
 use constant characteristic_non_decreasing => 1;
@@ -173,6 +174,13 @@ sub next {
 #   = 1/bw + 1/bvw + w/bvw - v/bvw
 #   = 1/bw + (1+w-v)/bvw
 #
+# 1/bv+1/bv1, should have had smaller v at previous stage
+# 1/bv < sqrt  1/b(v-1) > sqrt
+# sqrt-1/bv > 0
+#
+# 1/bv+1/bv(v-1)
+#   = 1/bv * (1 + 1/(v-1))
+
 
 1;
 __END__
@@ -195,7 +203,7 @@ This is terms in the Engel expansion of a square root.  It approaches the
 root by a series
 
               1         1              1
-   sqrt(s) = ---- + --------- + -------------- + ...
+   sqrt(S) = ---- + --------- + -------------- + ...
              a[1]   a[1]*a[2]   a[1]*a[2]*a[3]
 
 The sequence values are each successive a[i].  For example sqrt(2)
@@ -208,13 +216,13 @@ is
 
     1, 3, 5, 5, 16, etc
 
-Each new 1/prod term is the biggest which keeps the total below sqrt(s),
+Each new 1/prod term is the biggest which keeps the total below sqrt(S),
 which means each a[i] is the smallest possible.
 
-For a perfect square the expansion is a trivial 1s sequence adding up to the
-root.  This is unlikely to be interesting but it works.
+For a perfect square the expansion is a finite 1s sequence adding up to the
+root.  This works, but is unlikely to be interesting.
 
-    1/1+1/1+...+1/1 = sqrt(perfect square)
+    1/1 + 1/1 + ... + 1/1 = sqrt(perfect square)
 
 =head1 FUNCTIONS
 
@@ -222,10 +230,10 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 
-=item C<$seq = Math::NumSeq::SqrtEngel-E<gt>new (sqrt =E<gt> $s)>
+=item C<$seq = Math::NumSeq::SqrtEngel-E<gt>new (sqrt =E<gt> $integer)>
 
 Create and return a new sequence object giving the Engel expansion terms of
-C<sqrt($s)>.
+C<sqrt($integer)>.
 
 =back
 

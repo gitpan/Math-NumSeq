@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
@@ -40,6 +40,9 @@ use constant characteristic_integer => 1;
 use Math::NumSeq::Base::Digits;
 *parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
 
+
+#------------------------------------------------------------------------------
+
 my @oeis_anum;
 
 $oeis_anum[2]  = 'A049445';  # binary 1s divide N  OFFSET=1
@@ -57,6 +60,9 @@ sub oeis_anum {
   my ($self) = @_;
   return $oeis_anum[$self->{'radix'}];
 }
+
+
+#------------------------------------------------------------------------------
 
 sub pred {
   my ($self, $value) = @_;
@@ -124,7 +130,8 @@ its digits (in the given C<radix>).
 =head1 SEE ALSO
 
 L<Math::NumSeq>,
-L<Math::NumSeq::DigitSum>
+L<Math::NumSeq::DigitSum>,
+L<Math::NumSeq::MoranNumbers>
 
 =head1 HOME PAGE
 

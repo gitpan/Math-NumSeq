@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -28,6 +28,7 @@ use Math::NumSeq;
 #use Devel::Comments;
 
 
+# use constant name => Math::NumSeq::__('Numerical Aronson');
 use constant description => Math::NumSeq::__('Numerical version of Aronson\'s sequence');
 use constant values_min => 1;
 use constant characteristic_increasing => 1;
@@ -55,7 +56,7 @@ use constant oeis_anum => 'A079000';
 
 sub rewind {
   my ($self) = @_;
-  $self->{'i'} = 1;
+  $self->{'i'} = $self->i_start;
   $self->{'pow'} = 0;
   $self->{'j'} = -1;
 }

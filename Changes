@@ -17,6 +17,27 @@ with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 38, April 2012
+    - new ErdosSelfridgeClass, GolayRudinShapiro,
+      GolayRudinShapiroCumulative, LuckyNumbers, MoranNumbers,
+      SelfLengthCumulative
+    - new tell_i(), possible seek_to_i(), seek_to_value(), value_to_i_ceil()
+    - OEIS fix next() $i from .html and .internal files
+    - ReRound fix value_to_i_estimate() for large extra_multiples
+    - FractionDigits new ith()
+    - Totient new pred()
+    - GoldbachCount new option on_values=>'even'
+    - LemoineCount new option on_values=>'odd'
+    - ReReplace new option stage=>123
+    - OEIS allow leading whitespace in b-files
+    - Fibonacci, LucasNumbers ith() by powering
+    - Pell, ProthNumbers, Tribonacci next() give BigInt when necessary
+    - Tetrahedral, Fibbinary, Factorials, Primorials,
+      DigitLengthCumulative, WoodallNumbers new value_to_i_floor(),
+      value_to_i_estimate()
+    - ConcatNumbers new value_to_i_estimate()
+    - Runs new runs_type=>'1toFib','1to2N+1'
+
 Version 37, March 2012
     - new DeletablePrimes
     - new characteristic('value_is_radix')

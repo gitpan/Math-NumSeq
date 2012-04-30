@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
 
@@ -31,6 +31,7 @@ use Math::NumSeq 7; # v.7 for _is_infinite()
 #use Smart::Comments;
 
 
+# use constant name => Math::NumSeq::__('All Integer Digits');
 use constant description => Math::NumSeq::__('Digits of all the integers.');
 use constant default_i_start => 0;
 
@@ -238,7 +239,7 @@ sub ith {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq
+=for stopwords Ryde Math-NumSeq radix
 
 =head1 NAME
 

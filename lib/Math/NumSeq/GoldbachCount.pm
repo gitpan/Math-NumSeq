@@ -25,7 +25,7 @@ use strict;
 use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
@@ -35,6 +35,7 @@ use Math::NumSeq::Primes;
 #use Smart::Comments;
 
 
+# use constant name => Math::NumSeq::__('Goldbach Count');
 use constant description => Math::NumSeq::__('The number of ways i can be represented as P+Q for primes P and Q.  The Goldbach conjecture is that all even i>=4 can be represented in at least one such way.');
 use constant default_i_start => 1;
 use constant values_min => 0;
@@ -44,13 +45,13 @@ use constant characteristic_count => 1;
 use constant parameter_info_array =>
   [
    {
-    name        => 'goldbach_type',
+    name        => 'on_values',
+    share_key   => 'on_values_even',
     type        => 'enum',
     default     => 'all',
     choices     => ['all','even'],
     choices_display => [Math::NumSeq::__('All'),
-                        Math::NumSeq::__('Even'),
-                       ],
+                        Math::NumSeq::__('Even')],
     # description => Math::NumSeq::__('...'),
    },
   ];
@@ -67,7 +68,7 @@ use constant parameter_info_array =>
 #    A185297 - sum of the p's p+q=2n
 #    A185298 - sum of the q's p+q=2n
 #    A002372 - count for two odd primes
-
+#
 #    A045917 - unordered 2n, start n=1 is 2
 #              odd or even primes, so n=2 is 4 count 1 for 2+2=4
 #    A002375 - unordered 2n, start n=1 is 2
@@ -76,11 +77,11 @@ use constant parameter_info_array =>
 my %oeis_anum = ('all'  => 'A061358', # ordered p>=q, start n=0
                  'even' => 'A045917', # unordered sum, start n=1 is 2
                  # OEIS-Catalogue: A061358 i_start=0
-                 # OEIS-Catalogue: A045917 goldbach_type=even
+                 # OEIS-Catalogue: A045917 on_values=even
                 );
 sub oeis_anum {
   my ($self) = @_;
-  return $oeis_anum{$self->{'goldbach_type'}};
+  return $oeis_anum{$self->{'on_values'}};
 }
 
 sub rewind {
@@ -89,7 +90,7 @@ sub rewind {
   $self->{'i'} = $self->i_start;
 
   # special case initial array for even so can then exclude prime p=2 from loop
-  $self->{'array'} = ($self->{'goldbach_type'} eq 'even'
+  $self->{'array'} = ($self->{'on_values'} eq 'even'
                       ? [ 0, 0, 1, 1 ]
                       : []);
   $self->{'size'} = 499;  # must be odd for 2i case
@@ -103,7 +104,7 @@ sub next {
     $self->{'size'} = int(1.1 * $self->{'size'}) | 1; # must be odd
 
     my $lo = $self->{'i'};
-    my $even_only = ($self->{'goldbach_type'} eq 'even');
+    my $even_only = ($self->{'on_values'} eq 'even');
     if  ($even_only) {
       $lo *= 2;
     }
@@ -139,7 +140,7 @@ sub next {
 
   my $value = shift @{$self->{'array'}} || 0;
   ### $value
-  if ($self->{'goldbach_type'} eq 'even') {
+  if ($self->{'on_values'} eq 'even') {
     shift @{$self->{'array'}}; # skip odd
   }
   return ($self->{'i'}++, $value);
@@ -149,7 +150,7 @@ sub ith {
   my ($self, $i) = @_;
   ### ith(): $i
 
-  if ($self->{'goldbach_type'} eq 'even') {
+  if ($self->{'on_values'} eq 'even') {
     $i *= 2;
   }
   if ($i <= 3) {
@@ -207,39 +208,58 @@ Math::NumSeq::GoldbachCount -- number of representations as sum of primes P+Q
 
 =head1 DESCRIPTION
 
-I<Not working yet ...>
-
-The number of ways each i can be represented as a sum of two primes P+Q.
+The number of ways each i can be represented as a sum of two primes P+Q,
+starting from i=1,
 
     0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 0, 1, 1, 2, 1, 2, 0, ...
 
-For example i=4 is 2+2 so just 1 way.  Or i=10 is 3+7 and 5+5 so 2 ways.
+For example i=4 can be represented only as 2+2 so just 1 way.  Or i=10 is
+3+7 and 5+5 so 2 ways.
 
-Goldbach's famous conjecture posits that for an even i there's always at
-least one P+Q=i.
+=head2 Even Numbers
 
-Odd numbers i can only occur as 2+Q, so for them the count is just 1 way if
-i-2 is prime or 0 ways if not.
+Option C<on_values =E<gt> 'even'> gives the count on just the even numbers,
+starting i=1 for number of ways "2" can be expressed (none),
+
+    0, 1, 1, 1, 2, 1, 2, 2, 2, 2, 3, 3, 3, 2, 3, 2, 4, 4, ...
+
+Goldbach's famous conjecture is that for an even i E<gt>= 4 there's always
+at least one P+Q=i, which would be a count here always E<gt>= 1.
+
+=head2 Odd Numbers
+
+Odd numbers i are not particularly interesting.  An odd number can only be
+i=2+Prime, so the count is simply
+
+    count(odd i) = 1  if i-2 prime
+                   0  if not
 
 =head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 
 =item C<$seq = Math::NumSeq::GoldbachCount-E<gt>new ()>
 
+=item C<$seq = Math::NumSeq::GoldbachCount-E<gt>new (on_values =E<gt> 'even')>
+
 Create and return a new sequence object.
 
 =item C<$value = $seq-E<gt>ith($i)>
 
-Return the number of ways C<$i> can be represented as a sum of primes P+Q.
+Return the sequence value at C<$i>, being the number of ways C<$i> can be
+represented as a sum of primes P+Q, or with the C<on_values=E<gt>'even'>
+option the number of ways for C<2*$i>.
 
-This requires checking all primes up to C<$i> and the current code has a
-hard limit of 2**24 in the interests of not going into a near-infinite loop.
+This requires checking all primes up to C<$i> (or C<2*$i>) and the current
+code has a hard limit of 2**24 in the interests of not going into a
+near-infinite loop.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value> occurs as a count.  All counts 0 up occur so this
-is simply integer C<$value E<gt>= 0>.
+Return true if C<$value> occurs as a count.  All counts 0 upwards occur so
+this is simply integer C<$value E<gt>= 0>.
 
 =back
 

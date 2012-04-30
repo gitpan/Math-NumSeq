@@ -22,7 +22,7 @@ use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 use Math::NumSeq::Primes;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -31,6 +31,7 @@ use Math::NumSeq;
 #use Smart::Comments;
 
 
+# use constant name => Math::NumSeq::__('Dedekind Psi Cumulative');
 use constant description => Math::NumSeq::__('Cumulative Dedekind Psi function.');
 use constant default_i_start => 1;
 use constant characteristic_integer => 1;
@@ -54,7 +55,7 @@ sub next {
   my ($self) = @_;
 
   my $i = $self->{'i'}++;
-  return ($i, 
+  return ($i,
           $self->{'total'} += _psi($i));
 }
 
@@ -81,18 +82,22 @@ use constant 1.02 _PI => 4*atan2(1,1); # similar to Math::Complex pi()
 #
 # sqrt(value) = sqrt(15/2)/pi * n
 # n = sqrt(value) * pi/sqrt(15/2)
+# with pi/sqrt(15/2) ~= 39/34 for the benefit of Math::BigInt which can't
+# do BigInt*flonum
 #
 # very close even neglecting n*log(n)
 #
+#
+#
 sub value_to_i_estimate {
   my ($self, $value) = @_;
-  return int (sqrt($value) * _PI/sqrt(15/2));
+  return int (sqrt(int($value)) * 39/34);
 }
 
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq ie
+=for stopwords Ryde Math-NumSeq ie Euler's totient
 
 =head1 NAME
 
@@ -110,14 +115,14 @@ The cumulative Dedekind Psi function,
 
     1,4,8,14,20,32,40,52,64,82,94,118,...
 
-The Psi function is
+where the Psi function is
 
     Psi(n) =        product          (p+1) * p^(e-1)
              prime factors p^e in n
 
 The p+1 means one copy of each distinct prime in n is changed from p to p+1.
 This is similar to Euler's totient function phi(n) (see
-L<Math::NumSeq::Totient>) but phi(n) changes to p-1 instead of p+1.
+L<Math::NumSeq::Totient>) but phi(n) is p-1 instead of p+1.
 
 =head1 FUNCTIONS
 
@@ -128,6 +133,17 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 =item C<$seq = Math::NumSeq::DedekindPsiCumulative-E<gt>new ()>
 
 Create and return a new sequence object.
+
+=item C<$i = $seq-E<gt>value_to_i_estimate($value)>
+
+Return an estimate of the i corresponding to C<$value>.  Currently this is
+based on the asymptotic
+
+    value = 15*n^2/(2*Pi^2) + O(n*log(n))
+
+which neglecting the O(n*log(n)) becomes
+
+    i ~= sqrt(value) * pi/sqrt(15/2)
 
 =back
 

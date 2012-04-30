@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -31,6 +31,7 @@ use Math::NumSeq::Base::IterateIth;
 # uncomment this to run the ### lines
 #use Devel::Comments;
 
+# use constant name => Math::NumSeq::__('Collatz Steps');
 use constant description => Math::NumSeq::__('Number of steps to reach 1 in the Collatz "3n+1" problem.');
 use constant i_start => 1;
 use constant values_min => 0;

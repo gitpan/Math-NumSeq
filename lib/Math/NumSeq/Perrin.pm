@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -29,7 +29,7 @@ use Math::NumSeq::Base::Sparse;
 #use Smart::Comments;
 
 
-# use constant name => Math::NumSeq::__('Perrin Numbers');
+# use constant name => Math::NumSeq::__('Perrin Sequence');
 use constant description => Math::NumSeq::__('Perrin numbers 3, 0, 2, 3, 2, 5, 5, 7, 10, etc, being P(i) = P(i-2) + P(i-3) starting from 3,0,2.');
 use constant i_start => 0;
 use constant characteristic_increasing_from_i => 1;
@@ -167,6 +167,10 @@ Create and return a new sequence object.
 =item C<$value = $seq-E<gt>ith($i)>
 
 Return the C<$i>'th value from the sequence.
+
+=item C<$i = $seq-E<gt>value_to_i_estimate($value)>
+
+Return an estimate of the i corresponding to C<$value>.
 
 =back
 

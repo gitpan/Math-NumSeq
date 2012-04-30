@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 12;
+plan tests => 77;
 
 use lib 't';
 use MyTestHelpers;
@@ -35,7 +35,7 @@ use Math::NumSeq::Cubes;
 # VERSION
 
 {
-  my $want_version = 37;
+  my $want_version = 38;
   ok ($Math::NumSeq::Cubes::VERSION, $want_version, 'VERSION variable');
   ok (Math::NumSeq::Cubes->VERSION,  $want_version, 'VERSION class method');
 
@@ -54,14 +54,21 @@ use Math::NumSeq::Cubes;
 
 {
   my $seq = Math::NumSeq::Cubes->new;
+  ok ($seq->i_start, 0, 'i_start()');
+
   ok (! $seq->characteristic('count'), 1, 'characteristic(count)');
   ok ($seq->characteristic('digits'), undef, 'characteristic(digits)');
   ok ($seq->characteristic('integer'), 1, 'characteristic(integer)');
+  ok (! $seq->characteristic('smaller'), 1, 'characteristic(smaller)');
 
   ok ($seq->characteristic('increasing'), 1, 'characteristic(increasing)');
   ok ($seq->characteristic('non_decreasing'), 1, 'characteristic(non_decreasing)');
   ok ($seq->characteristic('increasing_from_i'), $seq->i_start);
   ok ($seq->characteristic('non_decreasing_from_i'), $seq->i_start);
+
+  my @pnames = map {$_->{'name'}} $seq->parameter_info_list;
+  ok (join(',',@pnames),
+      '');
 }
 
 
@@ -74,6 +81,142 @@ use Math::NumSeq::Cubes;
       1,
       'pred() 27 is cube');
 
+}
+
+
+#------------------------------------------------------------------------------
+# value_to_i_floor()
+
+{
+  my $seq = Math::NumSeq::Cubes->new;
+  ok ($seq->value_to_i_floor(0), 0);
+  ok ($seq->value_to_i_floor(0.5), 0);
+  ok ($seq->value_to_i_floor(1), 1);
+  ok ($seq->value_to_i_floor(1.5), 1);
+  ok ($seq->value_to_i_floor(2), 1);
+  ok ($seq->value_to_i_floor(7.5), 1);
+  ok ($seq->value_to_i_floor(8), 2);
+  ok ($seq->value_to_i_floor(8.5), 2);
+  ok ($seq->value_to_i_floor(63.5), 3);
+  ok ($seq->value_to_i_floor(64), 4);
+  ok ($seq->value_to_i_floor(64.5), 4);
+
+  ok ($seq->value_to_i_floor(-0.5), -1);
+  ok ($seq->value_to_i_floor(-1), -1);
+
+  ok ($seq->value_to_i_floor(-1.5), -2);
+  ok ($seq->value_to_i_floor(-7.5), -2);
+  ok ($seq->value_to_i_floor(-8), -2);
+  ok ($seq->value_to_i_floor(-8.5), -3);
+
+  ok ($seq->value_to_i_floor(-63.5), -4);
+  ok ($seq->value_to_i_floor(-64), -4);
+  ok ($seq->value_to_i_floor(-64.5), -5);
+}
+
+
+#------------------------------------------------------------------------------
+# value_to_i_ceil()
+
+{
+  my $seq = Math::NumSeq::Cubes->new;
+  ok ($seq->value_to_i_ceil(0), 0);
+  ok ($seq->value_to_i_ceil(0.5), 1);
+  ok ($seq->value_to_i_ceil(1), 1);
+  ok ($seq->value_to_i_ceil(1.5), 2);
+  ok ($seq->value_to_i_ceil(2), 2);
+  ok ($seq->value_to_i_ceil(7.5), 2);
+  ok ($seq->value_to_i_ceil(8), 2);
+  ok ($seq->value_to_i_ceil(8.5), 3);
+  ok ($seq->value_to_i_ceil(63.5), 4);
+  ok ($seq->value_to_i_ceil(64), 4);
+  ok ($seq->value_to_i_ceil(64.5), 5);
+
+  ok ($seq->value_to_i_ceil(-0.5), 0);
+  ok ($seq->value_to_i_ceil(-1), -1);
+
+  ok ($seq->value_to_i_ceil(-1.5), -1);
+  ok ($seq->value_to_i_ceil(-7.5), -1);
+  ok ($seq->value_to_i_ceil(-8), -2);
+  ok ($seq->value_to_i_ceil(-8.5), -2);
+
+  ok ($seq->value_to_i_ceil(-63.5), -3);
+  ok ($seq->value_to_i_ceil(-64), -4);
+  ok ($seq->value_to_i_ceil(-64.5), -4);
+}
+
+
+#------------------------------------------------------------------------------
+# seek_to_value()
+
+{
+  my $seq = Math::NumSeq::Cubes->new;
+  {
+    $seq->seek_to_value(-27);
+    my ($i, $value) = $seq->next;
+    ok ($i, -3);
+    ok ($value, -27);
+  }
+  {
+    $seq->seek_to_value(-27.5);
+    my ($i, $value) = $seq->next;
+    ok ($i, -3);
+    ok ($value, -27);
+  }
+  {
+    $seq->seek_to_value(-26.5);
+    my ($i, $value) = $seq->next;
+    ok ($i, -2);
+    ok ($value, -8);
+  }
+  {
+    $seq->seek_to_value(-0.5);
+    my ($i, $value) = $seq->next;
+    ok ($i, 0);
+    ok ($value, 0);
+  }
+  {
+    $seq->seek_to_value(0);
+    my ($i, $value) = $seq->next;
+    ok ($i, 0);
+    ok ($value, 0);
+  }
+  {
+    $seq->seek_to_value(0.5);
+    my ($i, $value) = $seq->next;
+    ok ($i, 1);
+    ok ($value, 1);
+  }
+  {
+    $seq->seek_to_value(1);
+    my ($i, $value) = $seq->next;
+    ok ($i, 1);
+    ok ($value, 1);
+  }
+  {
+    $seq->seek_to_value(1.5);
+    my ($i, $value) = $seq->next;
+    ok ($i, 2);
+    ok ($value, 8);
+  }
+  {
+    $seq->seek_to_value(7.5);
+    my ($i, $value) = $seq->next;
+    ok ($i, 2);
+    ok ($value, 8);
+  }
+  {
+    $seq->seek_to_value(8);
+    my ($i, $value) = $seq->next;
+    ok ($i, 2);
+    ok ($value, 8);
+  }
+  {
+    $seq->seek_to_value(1000.5);
+    my ($i, $value) = $seq->next;
+    ok ($i, 11);
+    ok ($value, 11*11*11);
+  }
 }
 
 

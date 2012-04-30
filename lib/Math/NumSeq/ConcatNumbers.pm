@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -34,10 +34,8 @@ use Math::NumSeq::Base::IterateIth;
 use Math::NumSeq::NumAronson 8; # new in v.8
 *_round_down_pow = \&Math::NumSeq::NumAronson::_round_down_pow;
 
-# uncomment this to run the ### lines
-#use Smart::Comments;
 
-
+# use constant name => Math::NumSeq::__('Concatenate Numbers');
 use constant description =>
   Math::NumSeq::__('Concatenate i and i+1, eg. at i=99 value is 99100.');
 use constant default_i_start => 0;
@@ -181,14 +179,53 @@ sub ith {
 # #  return ( + 1 == ());
 # }
 
+# 123124 round down pow=100_000 exp=5 want to chop low 3 digits
+# 999_1000 round down pow=100_0000 exp=6 want to chop low 4 digits
+# so floor (exp+2)/2
+#
+# 123_124_125 round down pow=100_000_000 exp=8 want to chop low 6 digits
+# 999_1000_1001 round down pow=100_0000_0000 exp=4+4+2=10 want to chop low 8
+# so floor (exp+2)*2/3
+#
+# 123_124_125_126 round down pow=100_000_000_000 exp=11 want to chop low 9
+# 999_1000_1001_1002 round down pow=100_0000_0000_0000 exp=14 chop low 12
+# so floor (exp+2)*3/4
+#
+# usual case multiple of k digits, get exp=k*ilen-1 so ilen=(exp+1)/k
+# in between round up, so ilen=(exp+1+k-1)/k = 1+floor(exp/k)
+#
+sub value_to_i_estimate {
+  my ($self, $value) = @_;
+  ### value_to_i_estimate(): "$value"
+
+  my $radix = $self->{'radix'};
+  my $count = $self->{'concat_count'};
+  $value = int($value);
+
+  my ($pow, $exp) = _round_down_pow ($value, $radix);
+  # if $value==infinity then $exp==$pow==infinity here
+
+  $exp += 1;
+  my $ilen = int($exp/$count);
+  ### $ilen
+
+  if ($exp % $count) {
+    ### intermediate accumulation, treat as i=100-1 ...
+    return $radix ** $ilen - 1;
+  } else {
+    ### keep high ilen digits of value ...
+    return int ($value / ($radix ** ($exp-$ilen)))
+  }
+}
+
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq
+=for stopwords Ryde Math-NumSeq Concat
 
 =head1 NAME
 
-Math::NumSeq::ConcatNumbers -- concatenate digits i, i+1
+Math::NumSeq::ConcatNumbers -- concatenate digits of i, i+1
 
 =head1 SYNOPSIS
 
@@ -204,8 +241,22 @@ The concatenation of i and i+1 as digits, starting from i=0,
 
 The default is decimal, or optional C<radix> parameter selects another base.
 
-The default is two numbers each value, or option C<concat_count =E<gt> $c>
-can concatenate more.  C<concat_count> of 1 means all integers.
+Since the two i and i+1 usually have the same number of digits, the
+resulting concatenated value has an even number of digits.  The exception is
+at i=9 i+1=10, or i=99 i+1=100, etc, i=99..99 when the resulting value has
+an odd number of digits.
+
+Being an even number of digits makes power gaps between for instance 89 and
+1011, then 998999 and 10001001.
+
+=head2 Concat Count
+
+Option C<concat_count =E<gt> $c> selects how many of i,i+1,i+2,i+3,etc are
+concatenated.  For example C<concat_count =E<gt> 3> gives
+
+    12, 123, 234, 345, 456, 567, 678, 789, 8910, 91011, 101112, 111213, ...
+
+C<concat_count =E<gt> 1> means all integers (the same as L<Math::NumSeq::All>).
 
 =head1 FUNCTIONS
 

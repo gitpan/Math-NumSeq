@@ -23,7 +23,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -368,7 +368,7 @@ __END__
     # }
 
 
-=for stopwords Ryde Math-NumSeq ie
+=for stopwords Ryde Math-NumSeq ie ABABAB radix
 
 =head1 NAME
 
@@ -421,6 +421,12 @@ Create and return a new sequence object.  The default radix is 10.
 
 Return true if C<$value> is an undulating number, ie. has digits of the form
 ABABAB...
+
+=item C<$i = $seq-E<gt>value_to_i_floor($value)>
+
+=item C<$i = $seq-E<gt>value_to_i_estimate($value)>
+
+Return the i for the undulating number E<lt>= $value.
 
 =back
 

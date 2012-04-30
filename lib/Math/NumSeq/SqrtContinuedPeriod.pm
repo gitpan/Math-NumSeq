@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IterateIth;
@@ -32,6 +32,7 @@ use Math::NumSeq::Base::IterateIth;
 #use Smart::Comments;
 
 
+# use constant name => Math::NumSeq::__('Sqrt Continued Fraction Period');
 use constant description => Math::NumSeq::__('Period of the continued fraction expansion of sqrt(i), or 0 for perfect squares (where the expansion is finite)');
 use constant characteristic_count => 1;
 use constant characteristic_increasing => 0;
@@ -39,7 +40,7 @@ use constant default_i_start => 1;
 use constant values_min => 0;
 
 # cf A097853 contfrac sqrt(n) period, or 1 if square
-#    A054269 contfrac sqrt(prime) period
+#    A054269 contfrac sqrt(prime(i)) period
 #
 use constant oeis_anum => 'A003285';  # sqrt period, or 0 if square
 
@@ -83,7 +84,7 @@ sub ith {
                 ($i - $p*$p) / $q);
 
     ### assert: $p >= 0
-    ### assert: $q >= 0
+    ### assert: $q > 0
     ### assert: $p <= $root
     ### assert: $q <= 2*$root+1
     ### assert: (($p*$p - $i) % $q) == 0
@@ -127,6 +128,20 @@ For example sqrt(12) is 3 then terms 2,6 repeating, which is period 2.
 All square root continued fractions like this comprise an integer part
 followed by repeating terms of some length.  Perfect squares are an integer
 part only, nothing further, and the period for them is taken to be 0.
+
+The continued fraction calculation has denominator value at each stage of
+the form
+
+   den =(P+sqrt(S)) / Q
+
+   with
+
+   0 <= P <= root
+   0 < Q <= 2*root+1
+   where root=floor(sqrt(S))
+
+The limited range of P,Q means a finite set of combinations at most
+root*(2*root+1), which is roughly 2*S.  In practice it's much less.
 
 =head1 FUNCTIONS
 

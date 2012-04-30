@@ -20,11 +20,14 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
+
+use Math::NumSeq::Fibonacci;
+*_blog2_estimate = \&Math::NumSeq::Fibonacci::_blog2_estimate;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -37,13 +40,14 @@ use constant characteristic_integer => 1;
 use constant values_min => 1;
 use constant i_start => 1; # from 1*2^1-1==1
 
-# cf A002234 - Woodall primes
-#    A050918 - n for the Woodall primes
+# cf A002234 - n of Woodall primes
+#    A050918 - Woodall primes values
 #    A056821 - totient(woodall)
+#
 use constant oeis_anum => 'A003261';
 
 # pow*i+1
-my $uv_limit = do {
+my $uv_i_limit = do {
   my $max = ~0;
   my $limit = 1;
 
@@ -61,21 +65,43 @@ my $uv_limit = do {
 
   $limit
 };
-### $uv_limit
+### $uv_i_limit
 
 sub rewind {
   my ($self) = @_;
   my $i = $self->{'i'} = $self->i_start;
-  $self->{'pow'} = 2 ** $i;
+  $self->{'power'} = 2 ** $i;
 }
+sub _UNTESTED__seek_to_i {
+  my ($self, $i) = @_;
+  $self->{'i'} = $i;
+  if ($i >= $uv_i_limit) {
+    $i = Math::NumSeq::_bigint()->new("$i");
+  }
+  $self->{'power'} = 2 ** $i;
+}
+sub _UNTESTED__seek_to_value {
+  my ($self, $value) = @_;
+  $self->seek_to_i($self->value_to_i_ceil($value));
+}
+
+# diff = (i+1)*2^(i+1)-1 - (i*2^i-1)
+#      = i*2^(i+1) + 2^(i+1) - i*2^i
+#      = i*(2^(i+1) - 2^i) + 2^(i+1)
+#      = i*2^i + 2^(i+1)
+# 2*(i*2^i-1) + 2*2^i + 1
+#   = 2*i*2^i-2 + 2*2^i + 1
+#   = (2*i+2)*2^i - 1
+#   = (i+1)*2^(i+1) - 2
+#
 sub next {
   my ($self) = @_;
   my $i = $self->{'i'}++;
-  if ($i == $uv_limit) {
-    $self->{'pow'} = Math::NumSeq::_bigint()->new($self->{'pow'});
+  if ($i == $uv_i_limit) {
+    $self->{'power'} = Math::NumSeq::_bigint()->new($self->{'power'});
   }
-  my $value = $self->{'pow'}*$i - 1;
-  $self->{'pow'} *= 2;
+  my $value = $self->{'power'}*$i - 1;
+  $self->{'power'} *= 2;
   return ($i, $value);
 }
 
@@ -87,6 +113,7 @@ sub ith {
 sub pred {
   my ($self, $value) = @_;
   ### WoodallNumbers pred(): $value
+
   {
     my $int = int($value);
     if ($value != $int) { return 0; }
@@ -112,25 +139,56 @@ sub pred {
   }
 }
 
+# ENHANCE-ME: round_down_pow(value,2) then exp-=log2(exp) is maybe only
+# 0,+1,+2 away from being correct
+#
+sub value_to_i_floor {
+  my ($self, $value) = @_;
+  ### WoodallNumbers value_to_i_floor(): $value
+
+  $value = int($value) + 1;  # now seeking $value == $exp * 2**$exp
+  if ($value < 8) {
+    return 1;
+  }
+  if (_is_infinite($value)) {
+    return $value;
+  }
+
+  my $i = 1;
+  my $power =  ($value*0) + 2;   # 2^1=2,  inherit bignum 2
+
+  for (;;) {
+    my $try_value = $i*$power;
+
+    ### $i
+    ### try_value: "$try_value"
+
+    if ($try_value >= $value) {
+      return $i - 1 + ($try_value == $value);
+    }
+
+    if ($i == $uv_i_limit) {
+      $power = Math::NumSeq::_bigint()->new($power);
+    }
+    $power *= 2;
+    $i++;
+  }
+}
+
+# shared by Math::NumSeq::CullenNumbers
 sub value_to_i_estimate {
   my ($self, $value) = @_;
 
   if ($value < 1) {
     return 0;
   }
-  $value += 1;  # now seeking $value == $i * 2**$i
 
-  if (_is_infinite($value)) {
-    return $value;
+  my $i = _blog2_estimate($value);
+  if (! defined $i) {
+    $i = log($value) * (1/log(2));
   }
-  my $i = 0;
-  for (;;) {
-    if ($value <= $i || $value % 2) {
-      return $i;
-    }
-    $value = int($value/2);
-    $i++;
-  }
+  $i -= log($i) * (1/log(2));
+  return int($i);
 }
 
 1;
@@ -150,7 +208,9 @@ Math::NumSeq::WoodallNumbers -- Woodall numbers i*2^i-1
 
 =head1 DESCRIPTION
 
-The Woodall numbers 1, 7, 23, 63, etc, i*2^i-1 starting from i=1.
+The Woodall numbers i*2^i-1 starting from i=1,
+
+    1, 7, 23, 63, 159, 383, 895, 2047, 4607, 10239, ...
 
 =head1 FUNCTIONS
 
@@ -171,7 +231,23 @@ Return C<$i * 2**$i - 1>.
 Return true if C<$value> is a Woodall number, ie. is equal to i*2^i-1 for
 some i.
 
+=item C<$i = $seq-E<gt>value_to_i_floor($value)>
+
+Return the index i of C<$value> or of the next Woodall number below
+C<$value>.
+
+=item C<$i = $seq-E<gt>value_to_i_estimate($value)>
+
+Return an estimate of the i corresponding to C<$value>.
+
 =back
+
+=head1 FORMULAS
+
+=head2 Value to i Estimate
+
+An easy over-estimate is l=log2(value), which reverses value=2^l.  It can be
+reduced by the bit length of that l as i=l-log2(l) to get closer.
 
 =head1 SEE ALSO
 

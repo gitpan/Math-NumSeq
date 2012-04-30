@@ -26,13 +26,14 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
+# use constant name => Math::NumSeq::__('Baum-Sweet');
 use constant description => Math::NumSeq::__('Baum-Sweet sequence, 1 if i contains no odd-length run of 0 bits, 0 if it does.');
 use constant values_min => 0;
 use constant values_max => 1;
@@ -85,8 +86,12 @@ Math::NumSeq::BaumSweet -- Baum-Sweet sequence
 
 =head1 DESCRIPTION
 
-The Baum-Sweet sequence numbers 1,1,0,1,1,0,0,1,0,1,0,0,etc, being 1 if the
-index i contains no odd-length run of 0 bits, or 0 if it does.
+The Baum-Sweet sequence
+
+    1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, ...
+
+where each value is 1 if the index i contains no odd-length run of 0 bits,
+or 0 if it does.
 
 =head1 FUNCTIONS
 
@@ -112,6 +117,7 @@ Return true if C<$value> occurs in the sequence, which simply means 0 or 1.
 =head1 SEE ALSO
 
 L<Math::NumSeq>,
+L<Math::NumSeq::GolayRudinShapiro>,
 L<Math::NumSeq::Fibbinary>
 
 =head1 HOME PAGE

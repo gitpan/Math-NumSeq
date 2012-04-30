@@ -20,11 +20,15 @@ use 5.004;
 use strict;
 
 use vars '$VERSION';
-$VERSION = 37;
+$VERSION = 38;
 
 sub rewind {
   my ($self) = @_;
-  $self->{'i'} = $self->i_start;
+  $self->seek_to_i($self->i_start);
+}
+sub seek_to_i {
+  my ($self, $i) = @_;
+  $self->{'i'} = $i;
 }
 sub next {
   my ($self) = @_;

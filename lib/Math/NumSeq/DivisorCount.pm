@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -28,6 +28,7 @@ use Math::NumSeq;
 #use Devel::Comments;
 
 
+# use constant name => Math::NumSeq::__('Divisor Count');
 use constant description => Math::NumSeq::__('Count of divisors of i (including 1 and i).');
 use constant i_start => 1;
 use constant characteristic_count => 1;
@@ -84,7 +85,7 @@ sub oeis_anum {
 sub rewind {
   my ($self) = @_;
   ### DivisorCount rewind()
-  $self->{'i'} = 1;
+  $self->{'i'} = $self->i_start;
   _restart_sieve ($self, 5);
 }
 sub _restart_sieve {
@@ -189,7 +190,7 @@ sub pred {
 1;
 __END__
 
-=for stopwords Ryde
+=for stopwords Ryde Math-NumSeq
 
 =head1 NAME
 
@@ -209,6 +210,8 @@ The sequence starts from i=1 and 1 is divisible only by itself.  Then i=2 is
 divisible by 1 and 2.  Or for example i=6 is divisible by 4 numbers 1,2,3,6.
 
 =head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 

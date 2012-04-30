@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -28,6 +28,7 @@ use Math::NumSeq;
 #use Smart::Comments;
 
 
+# use constant name => Math::NumSeq::__('Ulam Sequence');
 use constant description => Math::NumSeq::__('Ulam sequence, 1,2,3,4,6,8,11,etc starting 1,2 then each member being uniquely representable as the sum of two earlier values.');
 use constant characteristic_increasing => 1;
 use constant i_start => 1;
@@ -77,7 +78,7 @@ my @transform = (0, 0, 1, -1);
 
 sub rewind {
   my ($self) = @_;
-  $self->{'i'} = 1;
+  $self->{'i'} = $self->i_start;
   $self->{'upto'} = 0;
   $self->{'string'} = '';
 
@@ -129,7 +130,7 @@ sub next {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq ie
+=for stopwords Ryde Math-NumSeq ie Ulam
 
 =head1 NAME
 

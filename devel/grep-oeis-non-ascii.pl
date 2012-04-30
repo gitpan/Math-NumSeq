@@ -37,7 +37,7 @@ use Text::Tabs;
 
 {
   # ampersands
-  foreach my $filename (<~/OEIS/*.internal>) {
+  foreach my $filename (<~/OEIS/*.internal>, <~/OEIS/*.internal.html>) {
     open FH, '<', $filename or next;
     my $contents = do { local $/; <FH> }; # slurp
     close FH or die;
@@ -58,7 +58,7 @@ use Text::Tabs;
 
 {
   # non-ascii
-  foreach my $filename (<~/OEIS/*.internal>) {
+  foreach my $filename (<~/OEIS/*.internal>, <~/OEIS/*.internal.html>) {
     open FH, '<', $filename or next;
     my $contents = do { local $/; <FH> }; # slurp
     close FH or die;

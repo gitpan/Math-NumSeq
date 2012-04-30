@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -34,7 +34,7 @@ use Math::NumSeq::Base::IterateIth;
 
 # use constant name => Math::NumSeq::__('Pronic Numbers');
 use constant description => Math::NumSeq::__('The pronic numbers 0, 2, 6, 12, 20, 30, etc, etc, i*(i+1).  These are twice the triangular numbers, and half way between perfect squares.');
-use constant i_start => 0;
+use constant default_i_start => 0;
 use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
 use constant values_min => 0; # at i=0
@@ -42,7 +42,15 @@ use constant oeis_anum => 'A002378'; # pronic, starting from 0
 
 sub rewind {
   my ($self) = @_;
-  $self->{'i'} = ceil(_inverse(max(0,$self->{'lo'})));
+  $self->{'i'} = $self->i_start;  # ->value_to_i_floor(max(0,$self->{'lo'}));
+}
+sub seek_to_i {
+  my ($self, $i) = @_;
+  $self->{'i'} = $i;
+}
+sub _UNTESTED__seek_to_value {
+  my ($self, $value) = @_;
+  $self->{'i'} = $self->value_to_i_ceil($value);
 }
 sub ith {
   my ($self, $i) = @_;
@@ -61,18 +69,18 @@ sub ith {
 sub pred {
   my ($self, $value) = @_;
   if ($value < 0) { return 0; }
-  my $i = _inverse($value);
+  my $i = $self->value_to_i_floor($value);
   return ($value == $i*($i+1));
 }
-sub _inverse {
-  my ($value) = @_;
-  return int((sqrt(4*$value + 1) - 1)/2);
-}
 
-sub value_to_i_estimate {
+sub value_to_i_floor {
   my ($self, $value) = @_;
-  return _inverse($value);
+  if ($value < 0) {
+    return 0;
+  }
+  return int((sqrt(4*int($value) + 1) - 1)/2);
 }
+*value_to_i_estimate = \&value_to_i_floor;
 
 1;
 __END__
@@ -91,8 +99,12 @@ Math::NumSeq::Pronic -- pronic numbers
 
 =head1 DESCRIPTION
 
-The sequence of pronic numbers 2, 6, 12, 20, 30, etc, i*(i+1).  These are
-twice the triangular numbers, and half way between perfect squares.
+The pronic numbers i*(i+1), starting from i=0,
+
+    0, 2, 6, 12, 20, 30, ...
+
+These are twice the triangular numbers, and half way between the perfect
+squares.
 
 =head1 FUNCTIONS
 
@@ -111,6 +123,11 @@ Return C<$i*($i+1)>.
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> is a pronic number, ie. i*(i+1) for some i.
+
+=item C<$i = $seq-E<gt>value_to_i_estimate($value)>
+
+Return an estimate of the i corresponding to C<$value>.  value=i*(i+1) is
+inverted by C<$i = int ((sqrt(4*$value + 1) - 1)/2)>.
 
 =back
 

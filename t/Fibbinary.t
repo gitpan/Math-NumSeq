@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 11;
+plan tests => 12;
 
 use lib 't';
 use MyTestHelpers;
@@ -28,12 +28,15 @@ MyTestHelpers::nowarnings();
 
 use Math::NumSeq::Fibbinary;
 
+# uncomment this to run the ### lines
+#use Smart::Comments;
+
 
 #------------------------------------------------------------------------------
 # VERSION
 
 {
-  my $want_version = 37;
+  my $want_version = 38;
   ok ($Math::NumSeq::Fibbinary::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::Fibbinary->VERSION,  $want_version,
@@ -70,6 +73,30 @@ use Math::NumSeq::Fibbinary;
   ok ($seq->pred(17), 1);
   ok ($seq->pred(17 * 2**256), 1);
 }
+
+#------------------------------------------------------------------------------
+# value_to_i_floor()
+
+{
+  my $bad = 0;
+  my $seq = Math::NumSeq::Fibbinary->new;
+  my ($i, $value) = $seq->next;
+ OUTER: foreach (1 .. 50) {
+    my ($next_i, $next_value) = $seq->next;
+    foreach my $try_value ($value .. $next_value-1) {
+      my $got_i = $seq->value_to_i_floor($try_value);
+      if ($i != $got_i) {
+        MyTestHelpers::diag ("value_to_i_floor($try_value) got $got_i want $i");
+        last OUTER if $bad++ > 20;
+      }
+    }
+    $i = $next_i;
+    $value = $next_value;
+  }
+  ok ($bad, 0, 'value_to_i_floor()');
+}
+
+
 exit 0;
 
 

@@ -48,8 +48,8 @@ HERE
     next if $module =~ 'CunninghamPrimes'; # broken
 
     # restricted to ...
-    # next unless $module =~ /PathDelta/;
-    next unless $module =~ /Dele/;
+    # next unless $module =~ /PathCoord/;
+     next unless $module =~ /PlanePath/;
 
     my $class = App::MathImage::Generator->values_class($module);
     print "$class\n";
@@ -113,6 +113,55 @@ HERE
         print OUT <<HERE or die;
 <br> &nbsp; unzeros: $first_value, <a href="http://oeis.org/search?q=$signed$values_escaped&sort=&language=english&go=Search">$values</a>
 HERE
+      }
+
+      unless ($module =~ /FractionDigits|DigitLength/) {
+        my $base_len = scalar(@values);
+
+        foreach (1 .. $base_len) {
+          my ($i, $value) = $seq->next or last;
+          push @values, $value;
+        }
+        if (my @undouble = undouble(@values)) {
+          unless (all_same(@undouble) || constant_diff(@undouble)) {
+            $first_value = shift @undouble;
+            $values = join(',',@undouble);
+            $values_escaped = URI::Escape::uri_escape($values);
+            print OUT <<HERE or die;
+<br> &nbsp; undouble: $first_value, <a href="http://oeis.org/search?q=$signed$values_escaped&sort=&language=english&go=Search">$values</a>
+HERE
+          }
+        }
+
+        foreach (1 .. $base_len) {
+          my ($i, $value) = $seq->next or last;
+          push @values, $value;
+        }
+        if (my @untriple = untriple(@values)) {
+          unless (all_same(@untriple) || constant_diff(@untriple)) {
+            $first_value = shift @untriple;
+            $values = join(',',@untriple);
+            $values_escaped = URI::Escape::uri_escape($values);
+            print OUT <<HERE or die;
+<br> &nbsp; untriple: $first_value, <a href="http://oeis.org/search?q=$signed$values_escaped&sort=&language=english&go=Search">$values</a>
+HERE
+          }
+        }
+
+        foreach (1 .. $base_len) {
+          my ($i, $value) = $seq->next or last;
+          push @values, $value;
+        }
+        if (my @unquad = unquad(@values)) {
+          unless (all_same(@unquad) || constant_diff(@unquad)) {
+            $first_value = shift @unquad;
+            $values = join(',',@unquad);
+            $values_escaped = URI::Escape::uri_escape($values);
+            print OUT <<HERE or die;
+<br> &nbsp; unquad: $first_value, <a href="http://oeis.org/search?q=$signed$values_escaped&sort=&language=english&go=Search">$values</a>
+HERE
+          }
+        }
       }
       $count++;
     }
@@ -219,6 +268,10 @@ sub all_same {
   return 1;
 }
 
+# @list = unzeros(@list)
+# if every second given arg is 0 then return the values without those zeros,
+# otherwise return an empty list
+# If the args are all 0 then return an empty list too.
 sub unzeros {
   @_ or return;
 
@@ -242,6 +295,143 @@ sub unzeros {
   }
   return @ret;
 }
+
+# @list = undouble(@list)
+# If pairs of two consecutive values are equal then return the undoubled
+# values, otherwise return an empty list.
+# If the args are all identical then return an empty list too.
+# An initial $_[0] can be a solitary value and is dropped if necessary.
+# The final $_[-1] can be a solitary value but is retained.
+#
+sub undouble {
+  @_ >= 2 or return;
+
+  if (first_diff_pos(@_) & 1) {
+    shift; # skip unmatched initial
+  }
+
+  my @ret;
+  my $seen_different = 0;
+  while (@_ >= 2) {
+    my $v1 = shift;
+    my $v2 = shift;
+    if ($v1 != $v2) {
+      return; # not doubled pairs
+    }
+    push @ret, $v1;
+    $seen_different ||= ($v1 != $ret[0])
+  }
+  if (! $seen_different) {
+    return;
+  }
+  return (@ret, @_);
+}
+
+# @list = untriple(@list)
+# If triples of four consecutive values are equal then return the untripled
+# values, otherwise return an empty list.
+# If the args are all identical then return an empty list too.
+# An initial 1 or 2 values can be skipped to get to a four-equal boundary.
+# Final 1 or 2 values don't have to be a triple but do have to be equal and
+# are included in the return.
+#
+sub untriple {
+  @_ >= 4 or return;
+
+  foreach (1 .. (first_diff_pos(@_) % 3)) {
+    shift; # skip unmatched initial 1 or 2
+  }
+
+  my @ret;
+  my $seen_different = 0;
+  while (@_ >= 4) {
+    my $v1 = shift;
+    my $v2 = shift;
+    my $v3 = shift;
+    if ($v1 != $v2 || $v1 != $v3) {
+      return; # not triples
+    }
+    push @ret, $v1;
+    $seen_different ||= ($v1 != $ret[0]);
+  }
+
+  if (@_) {
+    my $v1 = shift;
+    if (@_) {
+      my $v2 = shift;
+      if ($v1 != $v2) { return; }
+    }
+    push @ret, $v1;
+    $seen_different ||= ($v1 != $ret[0]);
+  }
+
+  if (! $seen_different) {
+    return;
+  }
+  return (@ret, @_);
+}
+
+# @list = unquad(@list)
+# If quads of four consecutive values are equal then return the unquadded
+# values, otherwise return an empty list.
+# If the args are all identical then return an empty list too.
+# An initial 1, 2 or 3 values can be skipped to get to a four-equal boundary.
+# Final 1, 2 or 3 values don't have to be a quad but do have to be equal and
+# are included in the return.
+#
+sub unquad {
+  @_ >= 4 or return;
+
+  foreach (1 .. (first_diff_pos(@_) & 3)) {
+    shift; # skip unmatched initial 1, 2 or 3
+  }
+
+  my @ret;
+  my $seen_different = 0;
+  while (@_ >= 4) {
+    my $v1 = shift;
+    my $v2 = shift;
+    my $v3 = shift;
+    my $v4 = shift;
+    if ($v1 != $v2 || $v1 != $v3 || $v1 != $v4) {
+      return; # not quads
+    }
+    push @ret, $v1;
+    $seen_different ||= ($v1 != $ret[0]);
+  }
+
+  if (@_) {
+    my $v1 = shift;
+    if (@_) {
+      my $v2 = shift;
+      if ($v1 != $v2) { return; }
+    }
+    if (@_) {
+      my $v3 = shift;
+      if ($v1 != $v3) { return; }
+    }
+    push @ret, $v1;
+    $seen_different ||= ($v1 != $ret[0]);
+  }
+
+  if (! $seen_different) {
+    return;
+  }
+  return (@ret, @_);
+}
+
+sub first_diff_pos {
+  my $pos = 0;
+  while (@_ >= 2) {
+    $pos++;
+    if ($_[0] != $_[1]) {
+      return $pos;
+    }
+    shift;
+  }
+  return 0;
+}
+
 
 sub parameter_info_list_to_parameters {
   my @parameters = ([]);
@@ -311,8 +501,15 @@ sub info_extend_parameters {
     my @new_parameters;
     foreach my $p (@$parameters) {
       foreach my $choice (@{$info->{'choices'}}) {
+        next if ($info->{'name'} eq 'serpentine_type' && $choice eq 'Peano');
         next if ($info->{'name'} eq 'rotation_type' && $choice eq 'custom');
         push @new_parameters, [ @$p, $info->{'name'}, $choice ];
+      }
+      if ($info->{'name'} eq 'serpentine_type') {
+        push @new_parameters, [ @$p, $info->{'name'}, '100_000_000' ];
+        push @new_parameters, [ @$p, $info->{'name'}, '101_010_101' ];
+        push @new_parameters, [ @$p, $info->{'name'}, '000_111_000' ];
+        push @new_parameters, [ @$p, $info->{'name'}, '111_000_111' ];
       }
     }
     @$parameters = @new_parameters;
@@ -344,12 +541,13 @@ sub info_extend_parameters {
     if ($info->{'name'} eq 'modulus') { $max = 32; }
     if ($info->{'name'} eq 'polygonal') { $max = 32; }
     if ($info->{'name'} eq 'factor_count') { $max = 12; }
+    if ($info->{'name'} eq 'diagonal_length') { $max = 5; }
     if (defined $info->{'maximum'} && $max > $info->{'maximum'}) {
       $max = $info->{'maximum'};
     }
     if ($info->{'name'} eq 'power' && $max > 6) { $max = 6; }
     my @new_parameters;
-    foreach my $choice ($info->{'minimum'} .. $max) {
+    foreach my $choice ($min .. $max) {
       foreach my $p (@$parameters) {
         push @new_parameters, [ @$p, $info->{'name'}, $choice ];
       }

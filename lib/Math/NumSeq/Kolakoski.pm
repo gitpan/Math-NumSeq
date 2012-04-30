@@ -23,7 +23,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -31,6 +31,7 @@ use Math::NumSeq;
 # uncomment this to run the ### lines
 #use Devel::Comments;
 
+# use constant name => Math::NumSeq::__('Kolakoski Sequence');
 use constant description => Math::NumSeq::__('Kolakoski sequence 1,2,2,1,1,2,1,etc its own run lengths.');
 use constant characteristic_increasing => 0;
 use constant characteristic_integer => 1;
@@ -71,7 +72,7 @@ use constant oeis_anum => 'A000002';
 
 sub rewind {
   my ($self) = @_;
-  $self->{'i'} = 1;
+  $self->{'i'} = $self->i_start;
   $self->{'digits'} = [1];
   $self->{'counts'} = [2];
 }

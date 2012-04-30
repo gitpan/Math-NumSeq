@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -32,11 +32,12 @@ use Math::NumSeq::Base::IterateIth;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
+# use constant name => Math::NumSeq::__('Fibbinary Bit Count');
+use constant description => Math::NumSeq::__('Bit count of fibbinary numbers (the numbers without adjacent 1 bits).');
 use constant i_start => 0; # same as Fibbinary.pm
 use constant values_min => 0;
 use constant characteristic_increasing => 0;
 use constant characteristic_count => 1;
-use constant description => Math::NumSeq::__('Bit count of fibbinary numbers (the numbers without adjacent 1 bits).');
 
 # cf A027941 new highest bit count positions, being Fibonacci(2i+1)-1
 #

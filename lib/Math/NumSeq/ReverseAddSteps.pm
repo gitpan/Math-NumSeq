@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -32,7 +32,7 @@ use Math::NumSeq::Base::IterateIth;
 #use Devel::Comments;
 
 
-# use constant name => Math::NumSeq::__('Reverse Add Steps');
+# use constant name => Math::NumSeq::__('Reverse-Add Steps');
 use constant description => Math::NumSeq::__('How many steps of reverse and add until a palindrome is reached (sometimes called the 196-algorithm).');
 use constant i_start => 1;
 use constant values_min => -1;
@@ -58,24 +58,24 @@ use Math::NumSeq::Base::Digits;
 #    A030547 - num steps, minimum 0, so palindromes value 1
 #    
 # ~/OEIS/a058042.txt  on reaching binary palindromes
-#
+
 my @oeis_anum;
 $oeis_anum[10] = 'A016016';  # steps to palindrome, or -1 if infinite
 # OEIS-Catalogue: A016016
+
 sub oeis_anum {
   my ($self) = @_;
   return $oeis_anum[$self->{'radix'}];
 }
+
+
 #------------------------------------------------------------------------------
 
 use constant 1.02;  # for leading underscore
 use constant _LIMIT => 100;
 
-sub rewind {
-  my ($self) = @_;
-  # $self->{'i'} = max(0,$self->{'lo'});
-
-  $self->{'i'} = 1;
+sub new {
+  my $self = shift->SUPER::new(@_);
 
   my $radix = $self->{'radix'};
   my $limit = ~0;
@@ -87,13 +87,8 @@ sub rewind {
   }
   $self->{'uv_limit'} = $uv_limit;
   ### $uv_limit
-}
 
-sub next {
-  my ($self) = @_;
-  ### ReverseAddSteps next(): $self->{'i'}
-  my $i = $self->{'i'}++;
-  return ($i, $self->ith($i));
+  return $self;
 }
 
 sub ith {
@@ -217,6 +212,8 @@ possible.  (Some binary infinites can be recognised from their bit pattern
 ...)
 
 =head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 

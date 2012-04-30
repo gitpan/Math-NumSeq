@@ -28,7 +28,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -38,6 +38,7 @@ use Math::NumSeq::Base::IterateIth;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
+# use constant name => Math::NumSeq::__('Stern Diatomic');
 use constant description => Math::NumSeq::__('Stern\'s diatomic sequence.');
 use constant i_start => 0;
 use constant values_min => 0;
@@ -45,10 +46,10 @@ use constant characteristic_smaller => 1;
 use constant characteristic_increasing => 0;
 use constant characteristic_integer => 1;
 
-# cf A126606 - this stern diatomic is A126606(i+1)/2
-#    A049455 - another variation ...
-#    A049456 - with the 1s doubled up ...
-#    A174980 - type ([0,1],1) ...
+# cf A126606 - starting 0,2 gives 2*diatomic
+#    A049455 - repeat 0..2^k
+#    A049456 - extra 1 at end of each row
+#    A174980 - type ([0,1],1), adding 1 extra at n=2^k
 #
 use constant oeis_anum => 'A002487';
 
@@ -102,18 +103,23 @@ Math::NumSeq::SternDiatomic -- Stern's diatomic sequence
 
 =head1 DESCRIPTION
 
-Moritz Stern's diatomic sequence 0,1,1,2,1,3,2,3,etc.  It's constructed by
-successive levels as D(2*i)=D(i) and D(2*i+1)=D(i+1), so effectively the
-sequence is extended by interleaving the previous level with sums of
-adjacent terms,
+This is Moritz Stern's diatomic sequence
 
-   1,            i=0
-   1,2,          i=1,2
-   1,3,2,3,      i=3,4,5,6
+    0, 1, 1, 2, 1, 3, 2, 3, ...
 
-The last row is a copy of 1,2 interleaving the sums 1+2 and 2+1.  For the
-latter it's the end 2 at i=2 and then the 1 at the start of the next row
-i=3.
+It's constructed by successive levels as D(2*i)=D(i) and
+D(2*i+1)=D(i)+D(i+1), so effectively the sequence is extended by
+interleaving the previous level with sums of adjacent terms,
+         
+   0,                i=0
+   1,                i=1
+   1,      2,        i=2,3
+   1,  3,  2,  3,    i=4,5,6,7
+   1,4,3,5,2,5,3,4,  i=8,9,...,15
+
+For example the i=4 row is a copy of the preceding 1,2 with sums 1+2 and 2+1
+interleaved.  The new entry at the end of each row is the sum of the last of
+the previous row and the first of the current row (which is always 1).
 
 =head1 FUNCTIONS
 
@@ -125,10 +131,14 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 Create and return a new sequence object.
 
+=item C<$value = $seq-E<gt>ith($i)>
+
+Return the C<$i>'th value of the sequence.
+
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value> occurs in the sequence, which means simply
-C<$value>=0>.
+Return true if C<$value> occurs in the sequence, which means simply integer
+C<$valueE<gt>=0>.
 
 =back
 

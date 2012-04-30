@@ -27,7 +27,7 @@ BEGIN { MyTestHelpers::nowarnings(); }
 
 use Math::NumSeq::Multiples;
 
-my $test_count = (tests => 10)[1];
+my $test_count = (tests => 41)[1];
 plan tests => $test_count;
 
 
@@ -35,7 +35,7 @@ plan tests => $test_count;
 # VERSION
 
 {
-  my $want_version = 37;
+  my $want_version = 38;
   ok ($Math::NumSeq::Multiples::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::Multiples->VERSION,  $want_version,
@@ -56,8 +56,16 @@ plan tests => $test_count;
 
 {
   my $seq = Math::NumSeq::Multiples->new (multiples => 29);
-  ok ($seq->characteristic('integer'), 1, 'characteristic(integer)');
   ok ($seq->i_start, 0, 'i_start()');
+  ok ($seq->characteristic('digits'), undef, 'characteristic(digits)');
+  ok (! $seq->characteristic('count'), 1, 'characteristic(count)');
+  ok ($seq->characteristic('integer'), 1, 'characteristic(integer)');
+  ok (! $seq->characteristic('smaller'), 1, 'characteristic(smaller)');
+
+  ok ($seq->characteristic('increasing'), 1,
+      'characteristic(increasing)');
+  ok ($seq->characteristic('non_decreasing'), 1,
+      'characteristic(non_decreasing)');
 
   my @pnames = map {$_->{'name'}} $seq->parameter_info_list;
   ok (join(',',@pnames),
@@ -66,7 +74,23 @@ plan tests => $test_count;
 
 {
   my $seq = Math::NumSeq::Multiples->new (multiples => 1.5);
+  ok ($seq->characteristic('digits'), undef, 'characteristic(digits)');
+  ok (! $seq->characteristic('count'), 1, 'characteristic(count)');
   ok (! $seq->characteristic('integer'), 1, 'characteristic(integer)');
+  ok (! $seq->characteristic('smaller'), 1, 'characteristic(smaller)');
+}
+
+{
+  my $seq = Math::NumSeq::Multiples->new (multiples => 0.25);
+  ok ($seq->characteristic('digits'), undef, 'characteristic(digits)');
+  ok (! $seq->characteristic('count'), 1, 'characteristic(count)');
+  ok (! $seq->characteristic('integer'), 1, 'characteristic(integer)');
+  ok (! $seq->characteristic('smaller'), 1, 'characteristic(smaller)');
+
+  ok ($seq->characteristic('increasing'), 1,
+      'characteristic(increasing)');
+  ok ($seq->characteristic('non_decreasing'), 1,
+      'characteristic(non_decreasing)');
 }
 
 #------------------------------------------------------------------------------
@@ -83,6 +107,38 @@ plan tests => $test_count;
   require POSIX;
   ok ($i >= POSIX::DBL_MAX(), 1);
 }
+
+
+#------------------------------------------------------------------------------
+# value_to_i_floor()
+
+{
+  my $seq = Math::NumSeq::Multiples->new (multiples => 10);
+
+  ok ($seq->value_to_i_floor(0), 0);
+  ok ($seq->value_to_i_floor(0.5), 0);
+  ok ($seq->value_to_i_floor(1), 0);
+
+  ok ($seq->value_to_i_floor(9.5), 0);
+  ok ($seq->value_to_i_floor(10), 1);
+  ok ($seq->value_to_i_floor(10.5), 1);
+
+  ok ($seq->value_to_i_floor(59.5), 5);
+  ok ($seq->value_to_i_floor(60), 6);
+  ok ($seq->value_to_i_floor(60.5), 6);
+
+  ok ($seq->value_to_i_floor(-0.5), -1);
+  ok ($seq->value_to_i_floor(-1), -1);
+
+  ok ($seq->value_to_i_floor(-9.5), -1);
+  ok ($seq->value_to_i_floor(-10), -1);
+  ok ($seq->value_to_i_floor(-10.5), -2);
+
+  ok ($seq->value_to_i_floor(-59.5), -6);
+  ok ($seq->value_to_i_floor(-60), -6);
+  ok ($seq->value_to_i_floor(-60.5), -7);
+}
+
 
 exit 0;
 

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -181,11 +181,11 @@ sub next {
 sub ith {
   my ($self, $i) = @_;
   ### ReverseAdd ith(): $i
-  
+
   if (_is_infinite($i)) {
     return undef;
   }
-  
+
   my $radix = $self->{'radix'};
   my $start = $self->{'start'} || return 0;  # start 0 gives 0
   my $value = ($i*0) + $start;  # inherit bignum from $i
@@ -301,7 +301,7 @@ my $bigint = Math::NumSeq::_bigint();
          ? 'from_bin'
          : sub {
            ### from_bin with 0b: "0b$_[1]"
-           $_[0]->from_bin("0b$_[1]")
+           $_[0]->from_bin("0b$_[1]");
          });
 
     $radix_to_stringize_method[4] = \&_bigint_as_base4;
@@ -319,7 +319,7 @@ my $bigint = Math::NumSeq::_bigint();
          ? 'from_hex'
          : sub {
            ### from_hex with 0x: "0x$_[1]"
-           $_[0]->from_hex("0x$_[1]")
+           $_[0]->from_hex("0x$_[1]");
          });
   }
   if ($bigint->can('bstr')) {
@@ -394,6 +394,8 @@ The default is digits reversed in decimal, but the C<radix> parameter can
 select another base.
 
 =head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 

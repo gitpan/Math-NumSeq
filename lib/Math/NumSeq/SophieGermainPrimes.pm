@@ -20,10 +20,11 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
+use Math::NumSeq;
 use Math::NumSeq::Primes;
-@ISA = ('Math::NumSeq::Primes');
+@ISA = ('Math::NumSeq');
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -41,35 +42,40 @@ use constant oeis_anum => 'A005384';
 
 sub rewind {
   my ($self) = @_;
-  $self->SUPER::rewind;
-  $self->{'sophie_aseq'} = Math::NumSeq::Primes->new;
-  $self->{'sophie_i'} = 0;
+  $self->{'i'} = $self->i_start;
+  $self->{'first_seq'} = Math::NumSeq::Primes->new;
+  $self->{'second_seq'} = Math::NumSeq::Primes->new;
 }
 
 sub next {
   my ($self) = @_;
 
-  my $aseq = $self->{'sophie_aseq'};
-  my $ahead = 0;
-  for (;;) {
-    (undef, my $prime) = $self->SUPER::next
-      or return;
+  my $first_seq = $self->{'first_seq'};
+  my $second_seq = $self->{'second_seq'};
 
-    my $target = 2*$prime+1;
-    while ($ahead < $target) {
-      (undef, $ahead) = $aseq->next
+  my $second = 0;
+  for (;;) {
+    (undef, my $first) = $first_seq->next
+      or return;
+    my $target = 2*$first+1;
+
+    while ($second < $target) {
+      (undef, $second) = $second_seq->next
         or return;
     }
-    if ($ahead == $target) {
-      return (++$self->{'sophie_i'}, $prime);
+    if ($second == $target) {
+      return ($self->{'i'}++, $first);
     }
   }
 }
 
+# ENHANCE-ME: are_all_prime() to look for small divisors in both values
+# simultaneously, in case the reversal is even etc and easily excluded.
+#
 sub pred {
   my ($self, $value) = @_;
-  return ($self->SUPER::pred ($value)
-          && $self->SUPER::pred (2*$value + 1));
+  return ($self->Math::NumSeq::Primes::pred ($value)
+          && $self->Math::NumSeq::Primes::pred (2*$value + 1));
 }
 
 1;

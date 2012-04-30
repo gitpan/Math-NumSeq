@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2011 Kevin Ryde
+# Copyright 2011, 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -19,14 +19,56 @@
 
 require 5;
 use strict;
+use Math::NumSeq::Fibbinary;
 
 # uncomment this to run the ### lines
-#use Devel::Comments;
+#use Smart::Comments;
+
+{
+  # value_to_i_estimate()
+
+  my $seq = Math::NumSeq::Fibbinary->new;
+  my $prev_value = 0;
+  foreach (1..5600) {
+    my ($i, $value) = $seq->next;
+
+    # foreach my $try_value ($prev_value+1 .. $value-1) {
+    #   my $est_i = $seq->value_to_i_estimate($try_value);
+    #   if (ref $est_i) { $est_i = $est_i->numify }
+    #   my $factor = $est_i / ($i||1);
+    #   printf "x  est=%d   tvalue=%b  f=%.3f\n",
+    #     $est_i, $try_value, $factor;
+    # }
+
+    {
+      # require Math::BigInt;
+      # $value = Math::BigInt->new($value);
+
+      my $est_i = $seq->value_to_i_estimate($value);
+      if (ref $est_i) { $est_i = $est_i->numify }
+      my $factor = $est_i / ($i||1);
+      printf "i=%d est=%d   value=%b  f=%.3f\n", $i, $est_i, $value, $factor;
+    }
+
+    $prev_value = $value;
+  }
+  exit 0;
+}
+
+{
+  # value_to_i_floor()
+  my $seq = Math::NumSeq::Fibbinary->new;
+  foreach my $k (0 .. 10) {
+    my $value = 2**$k;
+    my $i = $seq->value_to_i_floor($value);
+    printf "%d  i=%d value=%b\n", $k, $i, $value;
+  }
+  exit 0;
+}
 
 {
   # 2^32 F(k) = 3,524,578
   # 2^64 F(k) = 27,777,890,035,288 = 44 bits
-  require Math::NumSeq::Fibbinary;
   my $f0 = 0;
   my $f1 = 1;
   foreach my $i (0 .. 70) {

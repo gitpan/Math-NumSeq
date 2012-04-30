@@ -27,7 +27,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION','@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
 use Math::NumSeq 21; # v.21 for oeis_anum field
 use Math::NumSeq::Base::IterateIth;
@@ -38,13 +38,12 @@ use Math::NumSeq::Base::IterateIth;
 #use Smart::Comments;
 
 
+# use constant name => Math::NumSeq::__('Runs of Integers');
 use constant description => Math::NumSeq::__('Runs of integers of various kinds.');
 use constant characteristic_smaller => 1;
 use constant characteristic_increasing => 0;
 use constant characteristic_integer => 1;
 
-# d = -1/2 + sqrt(2 * $n + -3/4)
-#   = (sqrt(8*$n-3) - 1)/2
 
 use constant parameter_info_array =>
   [
@@ -53,21 +52,42 @@ use constant parameter_info_array =>
     display => Math::NumSeq::__('Runs Type'),
     type    => 'enum',
     default => '0toN',
-    choices => ['0toN','1toN','1to2N','0toNinc',
-                'Nto0','Nto1',
-                'Nrep','N+1rep','2rep','3rep',
+    choices => ['0toN',
+                '1toN',
+                '1to2N',
+                '1toFib',
+                '0toNinc',
+                'Nto0',
+                'Nto1',
+                'Nrep',
+                'N+1rep',
+                '2rep',
+                '3rep',
                ],
+    choices_display => [Math::NumSeq::__('0toN'),
+                        Math::NumSeq::__('1toN'),
+                        Math::NumSeq::__('1to2N'),
+                        Math::NumSeq::__('1toFib'),
+                        Math::NumSeq::__('0toNinc'),
+                        Math::NumSeq::__('Nto0'),
+                        Math::NumSeq::__('Nto1'),
+                        Math::NumSeq::__('Nrep'),
+                        Math::NumSeq::__('N+1rep'),
+                        Math::NumSeq::__('2rep'),
+                        Math::NumSeq::__('3rep'),
+                       ],
     # description => Math::NumSeq::__(''),
    },
   ];
 
 # cf A049581 diagonals absdiff, abs(x-y) not plain runs
+#    A061579 descending NtoPrev, permutation of the integers
+#    A076478 0 to 2^k-1, each written out in k many bits
 #
 my %runs_type_data
   = ('0toN' => { i_start    => 0,
                  value      => -1, # initial
                  values_min => 0,
-                 limit      => 1,
                  vstart     => 0,
                  vstart_inc => 0,
                  value_inc  => 1,
@@ -81,7 +101,6 @@ my %runs_type_data
      '1toN' => { i_start    => 1,
                  value      => 0, # initial
                  values_min => 1,
-                 limit      => 1,
                  vstart     => 1,
                  vstart_inc => 0,
                  value_inc  => 1,
@@ -94,7 +113,6 @@ my %runs_type_data
      '1to2N' => { i_start    => 1,
                   value      => 0, # initial
                   values_min => 1,
-                  limit      => 1,
                   vstart     => 1,
                   vstart_inc => 0,
                   value_inc  => 1,
@@ -104,6 +122,39 @@ my %runs_type_data
                   oeis_anum  => 'A074294',
                   # OEIS-Catalogue: A074294 runs_type=1to2N
                 },
+     '1to2N+1' => { i_start    => 1,
+                    value      => 0, # initial
+                    values_min => 1,
+                    vstart     => 1,
+                    vstart_inc => 0,
+                    value_inc  => 1,
+                    c          => 1, # initial
+                    count      => 0,
+                    count_inc  => 2,
+                    oeis_anum  => 'A071797', # "fractal" of odds
+                    # OEIS-Catalogue: A071797 runs_type=1to2N+1
+                  },
+     '1toFib' => { i_start    => 1,
+                   value      => 0, # initial
+                   values_min => 1,
+                   vstart     => 1,
+                   vstart_inc => 0,
+                   value_inc  => 1,
+                   c          => 1, # initial
+                   count      => 0,
+                   count_inc_func => sub {
+                     my ($self) = @_;
+                     (my $ret, $self->{'f0'}, $self->{'f1'})
+                       = ($self->{'f0'},
+                          $self->{'f1'},
+                          $self->{'f0'}+$self->{'f1'});
+                     return $ret-1;
+                   },
+                   f0 => 1,
+                   f1 => 2,
+                   oeis_anum  => 'A194029',  # 1 to Fibonacci(N)
+                   # OEIS-Catalogue: A194029 runs_type=1toFib
+                 },
      'Nto0' => { i_start    => 0,
                  value      => 1, # initial
                  values_min => 0,
@@ -134,7 +185,6 @@ my %runs_type_data
                  value_inc  => 0,
                  vstart     => 1,
                  vstart_inc => 1,
-                 limit      => 1,
                  c          => 1, # initial
                  count      => 0,
                  count_inc  => 1,
@@ -147,7 +197,6 @@ my %runs_type_data
                    value_inc  => 0,
                    vstart     => 0,
                    vstart_inc => 1,
-                   limit      => 1,
                    c          => 1, # initial
                    count      => 0,
                    count_inc  => 1,
@@ -160,7 +209,6 @@ my %runs_type_data
                     value_inc  => 1,
                     vstart     => 0,
                     vstart_inc => 1,
-                    limit      => 1,
                     c          => 1, # initial
                     count      => 0,
                     count_inc  => 1,
@@ -202,6 +250,7 @@ my @rep_oeis_anum = (undef, # 0rep, nothing
                      # # OEIS-Catalogue: A132292 runs_type=8rep
 
                     );
+
 sub rewind {
   my ($self) = @_;
   $self->{'runs_type'} ||= '0toN';
@@ -215,7 +264,6 @@ sub rewind {
               value_inc  => 0,
               vstart     => 0,
               vstart_inc => 1,
-              limit      => 1,
               c          => $rep,   # initial
               count      => $rep-1,
               count_inc  => 0,
@@ -225,24 +273,27 @@ sub rewind {
     $data = $runs_type_data{$self->{'runs_type'}}
       || croak "Unrecognised runs_type: ", $self->{'runs_type'};
   }
+  %$self = (%$self, %$data);
 
-  %$self = (%$self,
-            i => 0,
-            %$data);
+  $self->{'i'} = $self->i_start;
 }
 
-  sub next {
-    my ($self) = @_;
-    my $i = $self->{'i'}++;
-    if (--$self->{'c'} >= 0) {
-      return ($i,
-              ($self->{'value'} += $self->{'value_inc'}));
+sub next {
+  my ($self) = @_;
+  my $i = $self->{'i'}++;
+  if (--$self->{'c'} >= 0) {
+    return ($i,
+            ($self->{'value'} += $self->{'value_inc'}));
+  } else {
+    if (my $func = $self->{'count_inc_func'}) {
+      $self->{'c'} = &$func($self);
     } else {
       $self->{'c'} = ($self->{'count'} += $self->{'count_inc'});
-      return ($i,
-              ($self->{'value'} = ($self->{'vstart'} += $self->{'vstart_inc'})));
     }
+    return ($i,
+            ($self->{'value'} = ($self->{'vstart'} += $self->{'vstart_inc'})));
   }
+}
 
 sub ith {
   my ($self, $i) = @_;
@@ -259,7 +310,7 @@ sub ith {
     #   = (d+1)d/2 - i
 
     $i -= $self->{'i_start'};
-    my $d = int((sqrt(8*int($i)+1) + 1) / 2);
+    my $d = int((sqrt(8*$i+1) + 1) / 2);
     ### $d
     ### base: ($d-1)*$d/2
     ### rem: $i - ($d-1)*$d/2
@@ -268,13 +319,13 @@ sub ith {
   } elsif ($self->{'runs_type'} eq 'Nrep'
            || $self->{'runs_type'} eq 'N+1rep') {
     $i -= $self->{'i_start'};
-    return int((sqrt(8*int($i)+1) - 1) / 2) + $self->{'values_min'};
+    return int((sqrt(8*$i+1) - 1) / 2) + $self->{'values_min'};
 
   } elsif ($self->{'runs_type'} eq '0toNinc') {
     # i-(d-1)d/2 + d
     #   = i-((d-1)d/2 - d)
     #   = i-(d-3)d/2
-    my $d = int((sqrt(8*int($i)+1) + 1) / 2);
+    my $d = int((sqrt(8*$i+1) + 1) / 2);
     return $i - ($d-3)*$d/2 - 1;
 
   } elsif ($self->{'runs_type'} =~ /^(\d+)rep/) {
@@ -286,25 +337,48 @@ sub ith {
     return int($i/$rep);
 
   } elsif ($self->{'runs_type'} eq '1to2N') {
-    # N = (d^2 + d)
-    #   = (($d + 1)*$d)
-    # d = -1/2 + sqrt(1 * $n + 1/4)
-    #   = (-1 + 2*sqrt($n + 1/4)) / 2
-    #   = (-1 + sqrt(4*$n + 1)) / 2
-    #   = (sqrt(4*$n + 1) - 1) / 2
+    # runs beginning i=1,3,7,13,21,31    (Math::NumSeq::Pronic + 1)
+    # N = (d^2 - d + 1)
+    #   = ($d**2 - $d + 1)
+    #   = (($d - 1)*$d + 1)
+    # d = 1/2 + sqrt(1 * $n + -3/4)
+    #   = (1 + sqrt(4*$n - 3)) / 2
 
-    $i -= 1;
-    my $d = int((sqrt(4*int($i)+1) - 1) / 2);
+    my $d = int( (sqrt(4*$i-3) + 1) / 2);
 
     ### $d
     ### base: ($d-1)*$d/2
     ### rem: $i - ($d-1)*$d/2
 
-    return $i - ($d+1)*$d + $self->{'vstart'};
+    return $i - ($d-1)*$d;
+
+  } elsif ($self->{'runs_type'} eq '1to2N+1') {
+    ### 1to2N+1 ...
+    # values 1, 1,2,3, 1,2,3,4,5
+    # run beginning i=1,2,5,10,17,26
+    # N = (d^2 - 2 d + 2), starting d=1
+    # d = 1 + sqrt(1 * $n + -1)
+    #   = 1 + sqrt($n-1)
+
+    my $d = int(sqrt($i-1)) + 1;
+
+    ### $d
+    ### base: ($d-2)*$d
+    ### rem: $i - ($d-2)*$d
+
+    return $i - ($d-2)*$d - 1;
+
+  } elsif ($self->{'runs_type'} eq '1toFib') {
+    my $f0 = ($i*0) + 1;  # inherit bignum 1
+    my $f1 = $f0 + 1;     # inherit bignum 2
+    while ($f1 <= $i) {
+      ($f0,$f1) = ($f1,$f0+$f1);
+    }
+    return $i - $f0 + 1;
 
   } else { # 0toN, 1toN
     $i -= $self->{'i_start'};
-    my $d = int((sqrt(8*int($i)+1) + 1) / 2);
+    my $d = int((sqrt(8*$i+1) + 1) / 2);
 
     ### $d
     ### base: ($d-1)*$d/2
@@ -331,7 +405,7 @@ sub pred {
 1;
 __END__
 
-=for stopwords Ryde
+=for stopwords Ryde 0toN 1toN ie pronic 1toFib Math-NumSeq
 
 =head1 NAME
 
@@ -351,6 +425,8 @@ string) can be
     "0toN"      0, 0,1, 0,1,2, 0,1,2,3, etc runs 0..N
     "1toN"      1, 1,2, 1,2,3, 1,2,3,4, etc runs 1..N
     "1to2N"     1,2, 1,2,3,4, 1,2,3,4,5,6 etc runs 1..2N
+    "1to2N+1"   1, 1,2,3, 1,2,3,4,5, etc runs 1..2N+1
+    "1toFib"    1, 1, 1,2, 1,2,3,  1,2,3,4,5 etc runs 1..Fibonacci
     "Nto0"      0, 1,0, 2,1,0, 3,2,1,0, etc runs N..0
     "Nto1"      1, 2,1, 3,2,1, 4,3,2,1, etc runs N..1
     "0toNinc"   0, 1,2, 2,3,4, 3,4,5,6, etc runs 0..N increasing
@@ -359,7 +435,21 @@ string) can be
     "2rep"      0,0, 1,1, 2,2, etc two repetitions of each N
     "3rep"      0,0,0, 1,1,1, 2,2,2, etc three repetitions of N
 
+"0toN" and "1toN" differ only the latter being +1.  They're related to the
+triangular numbers (L<Math::NumSeq::Triangular>) in that each run starts at
+index i=Triangular+1, ie. i=1,2,4,7,11,etc.
+
+"1to2N" is related to the pronic numbers (L<Math::NumSeq::Pronic>) in that
+each run starts at index i=Pronic+1, ie. i=1,3,7,13,etc.
+
+"1toFib" not only runs up to each Fibonacci number
+(L<Math::NumSeq::Fibonacci>), but the runs start at i=Fibonacci too,
+ie. i=1,2,3,5,8,13,etc.  This arises because the cumulative total of
+Fibonacci numbers has F[1]+F[2]+...+F[k]+1 = F[k+2].
+
 =head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 

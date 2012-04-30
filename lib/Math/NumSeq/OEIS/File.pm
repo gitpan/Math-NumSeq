@@ -18,6 +18,7 @@
 
 # http://oeis.org/wiki/Clear-cut_examples_of_keywords
 #
+# ENHANCE-ME: share most of the a-file/b-file reading with Math::NumSeq::File
 
 package Math::NumSeq::OEIS::File;
 use 5.004;
@@ -29,14 +30,14 @@ use Symbol 'gensym';
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_bigint = \&Math::NumSeq::_bigint;
 
 use vars '$VERSION';
-$VERSION = 37;
+$VERSION = 38;
 
 eval q{use Scalar::Util 'weaken'; 1}
   || eval q{sub weaken { $_[0] = undef }; 1 }
@@ -149,6 +150,9 @@ sub new {
                         "b$num.txt") {
     next if $afile_exclude{$basefile};
 
+    next if $basefile =~ /^a/ && $self->{'_dont_use_afile'};
+    next if $basefile =~ /^b/ && $self->{'_dont_use_bfile'};
+
     my $filename = File::Spec->catfile ($oeis_dir, $basefile);
     ### $filename
 
@@ -161,6 +165,7 @@ sub new {
     $self->{'filename'} = $filename;
     $self->{'fh'} = $fh;
     if (! _afile_is_good($self)) {
+      ### this afile not good ...
       close delete $self->{'fh'};
       delete $self->{'filename'};
       next;
@@ -299,22 +304,22 @@ sub _analyze {
   return $self;
 }
 
-# compare $x <=> $y but in strings in case they're bigger than IV or NV
-# my $cmp = _value_cmp ($value, $prev_value);
-sub _value_cmp {
-  my ($x, $y) = @_;
-  ### _value_cmp(): "$x  $y"
-  ### cmp: $x cmp $y
-
-  my $x_neg = substr($x,0,1) eq '-';
-  my $y_neg = substr($y,0,1) eq '-';
-  ### $x_neg
-  ### $y_neg
-
-  return ($y_neg <=> $x_neg
-          || ($x_neg ? -1 : 1) * (length($x) <=> length($y)
-                                  || $x cmp $y));
-}
+# # compare $x <=> $y but in strings in case they're bigger than IV or NV
+# # my $cmp = _value_cmp ($value, $prev_value);
+# sub _value_cmp {
+#   my ($x, $y) = @_;
+#   ### _value_cmp(): "$x  $y"
+#   ### cmp: $x cmp $y
+# 
+#   my $x_neg = substr($x,0,1) eq '-';
+#   my $y_neg = substr($y,0,1) eq '-';
+#   ### $x_neg
+#   ### $y_neg
+# 
+#   return ($y_neg <=> $x_neg
+#           || ($x_neg ? -1 : 1) * (length($x) <=> length($y)
+#                                   || $x cmp $y));
+# }
 
 sub _seek {
   my ($self, $pos) = @_;
@@ -332,6 +337,8 @@ sub _tell {
 
 sub rewind {
   my ($self, $pos) = @_;
+  ### OEIS-File rewind() ...
+
   $self->{'i'} = $self->i_start;
   $self->{'array_pos'} = 0;
   if ($self->{'fh'}) {
@@ -339,20 +346,31 @@ sub rewind {
       or croak "Cannot seek $self->{'filename'}: $!";
   }
 }
+
 sub next {
   my ($self) = @_;
+  ### OEIS-File next(): "i=$self->{'i'}"
 
   my $value;
   if (my $fh = $self->{'fh'}) {
+    ### from readline ...
     ($self->{'i'}, $value) = _readline($self)
       or return;
   } else {
+    ### from array ...
     my $array = $self->{'array'};
     my $pos = $self->{'array_pos'}++;
     if ($pos > $#$array) {
       return;
     }
     $value = $array->[$pos];
+
+    # large values as Math::BigInt
+    # initially $array has strings, make bigint objects when required
+    if (! ref $value
+        && ($value > $max_value || $value < $min_value)) {
+      $value = $array->[$pos] = _bigint()->new("$value");
+    }
   }
   return ($self->{'i'}++, $value);
 }
@@ -371,7 +389,9 @@ sub _readline {
       next;
     }
 
-    if (my ($i, $value) = ($line =~ /^([0-9]+)     # i
+    # leading whitespace allowed as per b195467.txt
+    if (my ($i, $value) = ($line =~ /^\s*
+                                     ([0-9]+)      # i
                                      [ \t]+
                                      (-?[0-9]+)    # value
                                      [ \t]*
@@ -386,6 +406,9 @@ sub _readline {
   return;
 }
 
+# Return true if the a000000.txt file in $self->{'fh'} looks good.
+# Various a-files are source code or tables rather than sequence values.
+#
 sub _afile_is_good {
   my ($self) = @_;
   my $fh = $self->{'fh'};
@@ -399,6 +422,7 @@ sub _afile_is_good {
       next;
     }
 
+    # a line "0 123" means good
     if ($line =~ /^([0-9]+)     # i
                   [ \t]+
                   (-?[0-9]+)    # value
@@ -412,170 +436,186 @@ sub _afile_is_good {
   }
   return 0;
 }
+
 sub _read_internal {
   my ($self, $anum) = @_;
   ### _read_internal(): $anum
 
-  my $basefile = "$anum.internal";
-  my $filename = File::Spec->catfile (oeis_dir(), $basefile);
-  ### $basefile
-  ### $filename
+  return 0 if $self->{'_dont_use_internal'};
 
-  if (! open FH, "<$filename") {
-    ### cannot open .internal file: $!
-    return 0;
-  }
-  my $contents = do { local $/; <FH> }; # slurp
-  close FH or die "Error reading $filename: ",$!;
+  foreach my $basefile ("$anum.internal", "$anum.internal.html") {
+    my $filename = File::Spec->catfile (oeis_dir(), $basefile);
+    ### $basefile
+    ### $filename
 
-  # "Internal" files are served as html with a <meta> charset indicator
-  $contents = _decode_html_charset($contents);
-
-  my %characteristic = (integer => 1);
-  $self->{'characteristic'} = \%characteristic;
-
-  my $offset;
-  if ($contents =~ /^%O\s+(\d+)/m) {
-    $offset = $1;
-  } else {
-    $offset = 0;
-  }
-
-  my $description;
-  if ($contents =~ m{^%N (.*?)(<tt>|$)}m) {
-    $description = $1;
-    $description =~ s/\s+/ /g;
-    $description =~ s/<[^>]*?>//sg;  # <foo ...> tags
-    $description =~ s/&lt;/</g;      # unentitize <
-    $description =~ s/&gt;/>/g;      # unentitize >
-    $description =~ s/&amp;/&/g;     # unentitize &
-    $description =~ s/&#(\d+);/chr($1)/ge; # unentitize numeric ' and "
-    ### $description
-
-    if ($description =~ /^number of /i) {
-      $characteristic{'count'} = 1;
+    if (! open FH, "<$filename") {
+      ### cannot open .internal file: $!
+      next;
     }
-    # ENHANCE-ME: use __x() when available, or an sprintf "... %s" would be enough ...
-    $description .= "\n" . (defined $self->{'filename'}
-                            ? Math::NumSeq::__('Values from B-file ') . $self->{'filename'}
-                            : Math::NumSeq::__('First few values from ') . "$anum.internal");
-    $self->{'description'} = $description;
-  }
+    my $contents = do { local $/; <FH> }; # slurp
+    close FH or die "Error reading $filename: ",$!;
 
-  _set_characteristics ($self, $description,
-                        $contents =~ /^%K (.*?)(<tt>|$)/m && $1);
+    # "Internal" files are served as html with a <meta> charset indicator
+    $contents = _decode_html_charset($contents);
+    ### $contents
 
-  # the eishelp1.html says
-  # %V,%W,%X lines for signed sequences
-  # %S,%T,%U lines for non-negative sequences
-  # though now %S is signed and unsigned both is it?
-  #
-  if (! $self->{'array'}) {
-    my @samples;
-    while ($contents =~ m{^%[VWX] (.*?)(</tt>|$)}mg) {
-      push @samples, $1;
+    my %characteristic = (integer => 1);
+    $self->{'characteristic'} = \%characteristic;
+
+    my $offset;
+    if ($contents =~ /(^|<tt>)%O\s+(\d+)/m) {
+      $offset = $2;
+      ### %O line: $offset
+    } else {
+      $offset = 0;
     }
-    unless (@samples) {
-      while ($contents =~ m{^%[STU] (.*?)(</tt>|$)}mg) {
-        push @samples, $1;
+
+    my $description;
+    if ($contents =~ m{(^|<tt>)%N (.*?)(<tt>|$)}m) {
+      $description = $2;
+      $description =~ s/\s+/ /g;
+      $description =~ s/<[^>]*?>//sg;  # <foo ...> tags
+      $description =~ s/&lt;/</g;      # unentitize <
+      $description =~ s/&gt;/>/g;      # unentitize >
+      $description =~ s/&amp;/&/g;     # unentitize &
+      $description =~ s/&#(\d+);/chr($1)/ge; # unentitize numeric ' and "
+      _set_description ($self, $description, $filename);
+    }
+
+    _set_characteristics ($self, $description,
+                          $contents =~ /(^|<tt>)%K (.*?)(<tt>|$)/m
+                          && $2);
+
+    # the eishelp1.html says
+    # %V,%W,%X lines for signed sequences
+    # %S,%T,%U lines for non-negative sequences
+    # though now %S is signed and unsigned both is it?
+    #
+    if (! $self->{'array'}) {
+      my @samples;
+      while ($contents =~ m{(^|<tt>)%[VWX] (.*?)(</tt>|$)}mg) {
+        push @samples, $2;
       }
       unless (@samples) {
-        croak "Oops list of values not found in ",$filename;
+        while ($contents =~ m{(^|<tt>)%[STU] (.*?)(</tt>|$)}mg) {
+          push @samples, $2;
+        }
+        unless (@samples) {
+          croak "Oops list of values not found in ",$filename;
+        }
       }
+      _split_sample_values ($self, $filename,
+                            join (', ', @samples),
+                            $offset);
     }
-    _split_sample_values ($self, $filename,
-                          join (', ', @samples),
-                          $offset);
+
+    # %O "OFFSET" is subscript of first number, or for digit expansions it's
+    # the position of the decimal point
+    # http://oeis.org/eishelp2.html#RO
+    unless ($self->{'characteristic'}->{'digits'}) {
+      $self->{'i'} = $self->{'i_start'} = $offset;
+    }
+    ### i: $self->{'i'}
+    ### i_start: $self->{'i_start'}
+
+    return 1; # success
   }
 
-  # %O "OFFSET" is subscript of first number, or for digit expansions it's
-  # the position of the decimal point
-  # http://oeis.org/eishelp2.html#RO
-  if (! $self->{'characteristic'}->{'digits'}) {
-    $self->{'i_start'} = $offset;
-  }
-
-  return 1; # success
+  return 0; # file not found
 }
 
 sub _read_html {
   my ($self, $anum) = @_;
   ### _read_html(): $anum
 
+  return 0 if $self->{'_dont_use_html'};
+
   foreach my $basefile ("$anum.html", "$anum.htm") {
     my $filename = File::Spec->catfile (oeis_dir(), $basefile);
     ### $basefile
     ### $filename
 
-    if (open FH, "< $filename") {
-      my $contents = do { local $/; <FH> }; # slurp
-      close FH or die;
-
-      $contents = _decode_html_charset($contents);
-
-      my $description;
-      if ($contents =~
-          m{$anum\n.*?
-            <td[^>]*>\s*</td>   # blank <td ...></td>
-            <td[^>]*>           # <td ...>
-            \s*
-            (.*?)               # text
-            <(br|/td)>          # to <br> or </td>
-         }sx) {
-        $description = $1;
-        $description =~ s/\s+$//;       # trailing whitespace
-        $description =~ s/\s+/ /g;      # collapse whitespace
-        $description =~ s/<[^>]*?>//sg; # tags <foo ...>
-        $description =~ s/&lt;/</g;    # unentitize <
-        $description =~ s/&gt;/>/g;    # unentitize >
-        $description =~ s/&amp;/&/g;   # unentitize &
-        $description =~ s/&#(\d+);/chr($1)/ge; # unentitize numeric ' and "
-        ### $description
-
-        # __x('Values from B-file {filename}',
-        #     filename => $self->{'filename'})
-
-        $description .= "\n" . (defined $self->{'filename'}
-                                ? Math::NumSeq::__('Values from B-file ').$self->{'filename'}
-                                : Math::NumSeq::__('First few values from HTML'));
-        $self->{'description'} = $description;
-      }
-
-      # fragile grep out of the html ...
-      my $offset = ($contents =~ /OFFSET.*?<tt>(\d+)/s
-                    && $1);
-      ### $offset
-
-      # fragile grep out of the html ...
-      my $keywords;
-      if ($contents =~ m{KEYWORD.*?<tt[^>]*>(.*?)</tt>}s) {
-        ### html keywords match: $1
-        $keywords = $1;
-      } else {
-        # die "Oops, KEYWORD not matched: $anum";
-      }
-      _set_characteristics ($self, $description, $keywords);
-
-      if (! $self->{'array'}) {
-        # fragile grep out of the html ...
-        $contents =~ s{>graph</a>.*}{};
-        $contents =~ m{.*<tt>([^<]+)</tt>};
-        my $list = $1;
-        _split_sample_values ($self, $filename, $list, $offset);
-      }
-
-      # %O "OFFSET" is subscript of first number, or for digit expansions it's
-      # the position of the decimal point
-      # http://oeis.org/eishelp2.html#RO
-      if (! $self->{'characteristic'}->{'radix'}) {
-        $self->{'i_start'} = $offset;
-      }
-
-      return 1;
+    if (! open FH, "< $filename") {
+      ### cannot open: $!
+      next;
     }
-    ### no html: $!
+    my $contents = do { local $/; <FH> }; # slurp
+    close FH or die;
+
+    $contents = _decode_html_charset($contents);
+
+    my $description;
+    if ($contents =~
+        m{$anum\n.*?
+          <td[^>]*>\s*</td>   # blank <td ...></td>
+          <td[^>]*>           # <td ...>
+          \s*
+          (.*?)               # text
+          <(br|/td)>          # to <br> or </td>
+       }sx) {
+      $description = $1;
+      $description =~ s/\s+$//;       # trailing whitespace
+      $description =~ s/\s+/ /g;      # collapse whitespace
+      $description =~ s/<[^>]*?>//sg; # tags <foo ...>
+      $description =~ s/&lt;/</g;    # unentitize <
+      $description =~ s/&gt;/>/g;    # unentitize >
+      $description =~ s/&amp;/&/g;   # unentitize &
+      $description =~ s/&#(\d+);/chr($1)/ge; # unentitize numeric ' and "
+      _set_description ($self, $description, $filename);
+    }
+
+    # fragile grep out of the html ...
+    my $offset = ($contents =~ /OFFSET.*?<tt>(\d+)/s
+                  && $1);
+    ### $offset
+
+    # fragile grep out of the html ...
+    my $keywords;
+    if ($contents =~ m{KEYWORD.*?<tt[^>]*>(.*?)</tt>}s) {
+      ### html keywords match: $1
+      $keywords = $1;
+    } else {
+      # die "Oops, KEYWORD not matched: $anum";
+    }
+    _set_characteristics ($self, $description, $keywords);
+
+    if (! $self->{'array'}) {
+      # fragile grep out of the html ...
+      $contents =~ s{>graph</a>.*}{};
+      $contents =~ m{.*<tt>([^<]+)</tt>};
+      my $list = $1;
+      _split_sample_values ($self, $filename, $list, $offset);
+    }
+
+    # %O "OFFSET" is subscript of first number, but for digit expansions
+    # it's the position of the decimal point
+    # http://oeis.org/eishelp2.html#RO
+    if (! $self->{'characteristic'}->{'digits'}) {
+      $self->{'i'} = $self->{'i_start'} = $offset;
+    }
+    ### i: $self->{'i'}
+    ### i_start: $self->{'i_start'}
+
+    return 1;
   }
   return 0;
+}
+
+sub _set_description {
+  my ($self, $description, $few_filename) = @_;
+  ### _set_description(): $description
+
+  # ENHANCE-ME: maybe __x() if made available, or an sprintf "... %s" would
+  # be enough ...
+  $description .= "\n";
+  if (defined $self->{'filename'}) {
+    $description .= Math::NumSeq::__('Values from B-file ')
+      . $self->{'filename'};
+  } else {
+    $description .= Math::NumSeq::__('Values from ')
+      . $few_filename;
+  }
+  $self->{'description'} = $description;
 }
 
 sub _set_characteristics {
@@ -596,9 +636,9 @@ sub _set_characteristics {
     $self->{'characteristic'}->{"OEIS_$key"} = 1;
   }
 
-  if ($self->{'characteristic'}->{'OEIS_cofr'}) {
-    $self->{'characteristic'}->{'continued_fraction'} = 1;
-  }
+  # if ($self->{'characteristic'}->{'OEIS_cofr'}) {
+  #   $self->{'characteristic'}->{'continued_fraction'} = 1;
+  # }
 
   # "cons" means decimal digits of a constant
   # but don't reckon A000012 all-ones that way
@@ -611,10 +651,15 @@ sub _set_characteristics {
     $self->{'characteristic'}->{'digits'} = 10;
   }
 
-  if ($description =~ /expansion of .* in base (\d+)/i) {
-    $self->{'values_min'} = 0;
-    $self->{'values_max'} = $1 - 1;
-    $self->{'characteristic'}->{'digits'} = $1;
+  if (defined $description) {
+    if ($description =~ /expansion of .* in base (\d+)/i) {
+      $self->{'values_min'} = 0;
+      $self->{'values_max'} = $1 - 1;
+      $self->{'characteristic'}->{'digits'} = $1;
+    }
+    if ($description =~ /^number of /i) {
+      $self->{'characteristic'}->{'count'} = 1;
+    }
   }
 }
 

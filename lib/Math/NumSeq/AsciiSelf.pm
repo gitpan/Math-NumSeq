@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -30,8 +30,21 @@ use Math::NumSeq;
 #use Devel::Comments;
 
 
+# use constant name => Math::NumSeq::__('Ascii Self');
 use constant description => Math::NumSeq::__('Sequence is itself in ASCII.');
 use constant i_start => 1;
+use constant characteristic_increasing => 0;
+use constant characteristic_integer => 1;
+
+# use constant characteristic_charset => 'ASCII';
+# sub characteristic_charset_digits {
+#   my ($self) = @_;
+#   return $self->{'radix'};
+# }
+
+use Math::NumSeq::Base::Digits;
+*parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
+
 {
   my @values_min;
   my @values_max;
@@ -94,11 +107,8 @@ use constant i_start => 1;
             || $radix + ($radix <= 10 ? 47 : 65-10));
   }
 }
-use constant characteristic_increasing => 0;
-use constant characteristic_integer => 1;
 
-use Math::NumSeq::Base::Digits;
-*parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
+#------------------------------------------------------------------------------
 
 # cf A109648 ascii with comma and space
 my @oeis_anum;
@@ -109,6 +119,8 @@ sub oeis_anum {
   return $oeis_anum[$self->{'radix'}];
 }
 
+#------------------------------------------------------------------------------
+
 # ith() on radix 7 is wrong, report it as not available
 sub can {
   my ($self, $name) = @_;
@@ -118,17 +130,10 @@ sub can {
   return $self->SUPER::can($name);
 }
 
-# sub new {
-#   my $class = shift;
-#   my $self = $class->SUPER::new(@_);
-#   ### $self
-#   return $self;
-# }  
-
 sub rewind {
   my ($self) = @_;
   ### AsciiSelf rewind() ...
-  $self->{'i'} = 1;
+  $self->{'i'} = $self->i_start;
 
   # FIXME: this is a pre-calculation rather than a rewind ...
   my $radix = $self->{'radix'};

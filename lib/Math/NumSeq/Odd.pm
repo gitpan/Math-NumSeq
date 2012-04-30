@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -28,7 +28,7 @@ use Math::NumSeq;
 # use constant name => Math::NumSeq::__('Odd Integers');
 use constant description => Math::NumSeq::__('The odd integers 1, 3, 5, 7, 9, etc.');
 use constant values_min => 1;
-use constant i_start => 0;
+use constant default_i_start => 0;
 use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
 use constant oeis_anum => 'A005408'; # odd 1,3,5,...
@@ -38,7 +38,15 @@ use constant oeis_anum => 'A005408'; # odd 1,3,5,...
 
 sub rewind {
   my ($self) = @_;
-  $self->{'i'} = int ($self->{'lo'} / 2);
+  $self->{'i'} = $self->i_start;   # int ($self->{'lo'} / 2);
+}
+sub seek_to_i {
+  my ($self, $i) = @_;
+  $self->{'i'} = $i;
+}
+sub seek_to_value {
+  my ($self, $value) = @_;
+  $self->seek_to_i($self->value_to_i_ceil($value));
 }
 sub next {
   my ($self) = @_;
@@ -56,6 +64,29 @@ sub pred {
           && ($value % 2));
 }
 
+sub value_to_i_floor {
+  my ($self, $value) = @_;
+  if (($value -= 1) < 0) {
+    my $i = int($value/2);
+    if (2*$i > $value) {
+      return $i-1;
+    } else {
+      return $i;
+    }
+  } else {
+    return int($value/2);
+  }
+}
+sub value_to_i_ceil {
+  my ($self, $value) = @_;
+  $value -= 1;
+  my $i = int($value/2);
+  if (2*$i < $value) {
+    return $i+1;
+  } else {
+    return $i;
+  }
+}
 sub value_to_i_estimate {
   my ($self, $value) = @_;
   return int(($value-1)/2);
@@ -103,6 +134,15 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 Create and return a new sequence object.
 
+=item C<$i = $seq-E<gt>seek_to_i($i)>
+
+Move the current i so C<next()> returns C<$i> on the next call.
+
+=item C<$i = $seq-E<gt>seek_to_value($value)>
+
+Move the current i so that C<next()> gives C<$value> on the next call, or if
+C<$value> is an even integer then the next higher even.
+
 =item C<$value = $seq-E<gt>ith($i)>
 
 Return C<2*$i + 1>.
@@ -110,6 +150,16 @@ Return C<2*$i + 1>.
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> is odd.
+
+=item C<$i = $seq-E<gt>value_to_i_ceil($value)>
+
+=item C<$i = $seq-E<gt>value_to_i_floor($value)>
+
+Return (value-1)/2 rounded up or down to the next integer.
+
+=item C<$i = $seq-E<gt>value_to_i_estimate($value)>
+
+Return an estimate of the i corresponding to C<$value>.
 
 =back
 

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -30,6 +30,7 @@ use Math::NumSeq::Primorials;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
+# use constant name => Math::NumSeq::__('Almost Primes');
 use constant description => Math::NumSeq::__('Products of a fixed number of primes, default the semi-primes, 4, 6, 9, 10, 14 15, etc with just two prime factors P*Q.');
 use constant i_start => 1;
 use constant characteristic_increasing => 1;
@@ -140,7 +141,7 @@ sub values_min {
 
 sub rewind {
   my ($self) = @_;
-  $self->{'i'} = 1;
+  $self->{'i'} = $self->i_start;
   $self->{'done'} = 1;
   $self->{'hi'} = 0;
   $self->{'pending'} = [];
@@ -341,7 +342,7 @@ sub pred {
     }
   }
   if ($value != 1) {
-    $seen_count++
+    $seen_count++;
   }
   ### final seen_count: $seen_count
   return ($seen_count == $factor_count);

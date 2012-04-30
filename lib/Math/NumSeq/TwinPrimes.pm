@@ -20,10 +20,11 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
+use Math::NumSeq;
 use Math::NumSeq::Primes;
-@ISA = ('Math::NumSeq::Primes');
+@ISA = ('Math::NumSeq');
 
 # uncomment this to run the ### lines
 #use Devel::Comments;
@@ -95,37 +96,42 @@ sub rewind {
   my ($self) = @_;
   ### TwinPrimes rewind() ...
 
-  $self->SUPER::rewind;
-  $self->{'twin_i'} = $self->i_start;
+  $self->{'i'} = $self->i_start;
+  my $primes_seq = $self->{'primes_seq'} = Math::NumSeq::Primes->new;
   $self->{'twin_both'} = 0;
-  (undef, $self->{'twin_prev'}) = $self->SUPER::next;
-  ### $self
+  (undef, $self->{'twin_prev'}) = $primes_seq->next;
 }
 
 sub next {
   my ($self) = @_;
-  ### TwinPrimes next(): "twin_i=$self->{'twin_i'} prev=$self->{'twin_prev'}"
+  ### TwinPrimes next(): "i=$self->{'i'} prev=$self->{'twin_prev'}"
+
   my $prev = $self->{'twin_prev'};
+  my $primes_seq = $self->{'primes_seq'};
 
   for (;;) {
-    (undef, my $prime) = $self->SUPER::next
+    (undef, my $prime) = $primes_seq->next
       or return;
 
     if ($prime == $prev + 2) {
       my $pairs = $self->{'pairs'};
       $self->{'twin_prev'} = $prime;
       $self->{'twin_both'} = ($pairs eq 'both');
-      return ($self->{'twin_i'}++, $prev + $pairs_add{$pairs})
+      return ($self->{'i'}++, $prev + $pairs_add{$pairs});
 
     } elsif ($self->{'twin_both'}) {
       $self->{'twin_prev'} = $prime;
       $self->{'twin_both'} = 0;
-      return ($self->{'twin_i'}++, $prev);
+      return ($self->{'i'}++, $prev);
     }
     $prev = $prime;
   }
 }
 
+
+# ENHANCE-ME: are_all_prime() to look for small divisors in both values
+# simultaneously, in case the reversal is even etc and easily excluded.
+#
 my %pairs_other = (first => 2,
                    average => 1,
                    second => 0);
@@ -135,9 +141,9 @@ my %pairs_mod = (first => 5,
 sub pred {
   my ($self, $value) = @_;
   if ((my $pairs = $self->{'pairs'}) eq 'both') {
-    return ($self->SUPER::pred ($value)
-            && ($self->SUPER::pred ($value + 2)
-                || $self->SUPER::pred ($value - 2)));
+    return ($self->Math::NumSeq::Primes::pred ($value)
+            && ($self->Math::NumSeq::Primes::pred ($value + 2)
+                || $self->Math::NumSeq::Primes::pred ($value - 2)));
   } else {
     # pairs are always 3n-1,3n+1 since otherwise one of them would be a 3n
     # and also both odd so 6n-1,6n+1
@@ -146,8 +152,8 @@ sub pred {
         return 0;
       }
     }
-    return ($self->SUPER::pred ($value - $pairs_add{$pairs})
-            && $self->SUPER::pred ($value + $pairs_other{$pairs}));
+    return ($self->Math::NumSeq::Primes::pred ($value - $pairs_add{$pairs})
+            && $self->Math::NumSeq::Primes::pred ($value + $pairs_other{$pairs}));
   }
 }
 
@@ -168,19 +174,33 @@ sub pred {
 #          li(x) = int 1/ln(x)
 #
 
-# C2 = product (1 - 1/(p-1)^2) for primes p>2
+# C2 = product (1 - 1/(p-1)^2) for all primes p>2
 #
-use constant _TWIN_PRIME_CONSTANT => 0.6601618158;
+use constant 1.02 _TWIN_PRIME_CONSTANT => 0.6601618158;
 
-# ENHANCE-ME: for BigInt $value maybe take a log2 and apply a factor, 
+use Math::NumSeq::Fibonacci;
+*_blog2_estimate = \&Math::NumSeq::Fibonacci::_blog2_estimate;
+
 sub value_to_i_estimate {
   my ($self, $value) = @_;
   ### value_to_i_estimate(): $value
 
   if ($value < 2) { return 0; }
 
-  ### log: log($value)
-  ### div: $value/log($value)
+  $value = int($value);
+  if (defined (my $blog2 = _blog2_estimate($value))) {
+    # est = v/(log(v)^2) * 2*tpc
+    # log2(v) = log(v)/log(2)
+    # est = v/((log2(v)^2 * log(2)^2)) * 2*tpc
+    #     = v/(log2(v)^2) * 2*tpc/(log(2)^2) 
+    #    ~= v/(log2(v)^2) * 11/4
+    # using 11/4 as an approximation to 2*tpc/(log(2)^2) to stay in BigInt
+    #
+    ### $blog2
+    ### num: $value*13
+    ### den: 9 * $blog2
+    return ($value * 11) / (4 * $blog2 * $blog2);
+  }
 
   my $log = log($value);
   return int($value / ($log*$log) * (2 * _TWIN_PRIME_CONSTANT));
@@ -231,7 +251,7 @@ __END__
 # }
 
 
-=for stopwords Ryde Math-NumSeq ie
+=for stopwords Ryde Math-NumSeq ie Brun Littlewood's
 
 =head1 NAME
 
@@ -276,8 +296,16 @@ a pair, ie. C<$value-2> is also a prime.
 
 =item C<$i = $seq-E<gt>value_to_i_estimate($value)>
 
-Return an estimate of the i value corresponding to C<$value>.  Currently
-this is-known 2*C*x/(log(x))^2.
+Return an estimate of the i corresponding to C<$value>.  Currently this is
+the asymptotic by Brun
+
+                     value
+    i ~= 2 * C * --------------
+                 (log(value))^2
+
+with Hardy and Littlewood's conjectured twin-prime constant C=0.66016.  In
+practice it's quite close, being too small by a factor between 0.75 and 0.85
+in the small to medium size integers this module might calculate.
 
 =back
 

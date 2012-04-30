@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -29,6 +29,7 @@ use Math::NumSeq 7; # v.7 for _is_infinite()
 #use Smart::Comments;
 
 
+# use constant name => Math::NumSeq::__('Repdigit Any Radix');
 use constant description => Math::NumSeq::__('Numbers which are a "repdigit" like 1111, 222, 999 etc of 3 or more digits in some number base.');
 use constant i_start => 1;
 use constant values_min => 0;
@@ -36,18 +37,18 @@ use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
 
 # cf A167783 - length >=2, 2 or more bases
-#    A053696 - length >=3, 1 or more base repunit
+#    A053696 - length >=3, 1 or more bases repunit
 #
 #    A158235 - square is a repdigit in some base < i
 #    A158236 - the radix for those squares
-#    A158237 - those squares
+#    A158237 - those squares, ie. squares which are repdigits some base
 #    A158245 - "primitives" in squares seq, meaning square-free
 #
 use constant oeis_anum => 'A167782'; # length >=3, 1 or more bases
 
 sub rewind {
   my ($self) = @_;
-  $self->{'i'} = 1;
+  $self->{'i'} = $self->i_start;
   $self->{'done'} = 0;
   $self->{'ones'}   = [ undef, undef, 7 ];
   $self->{'digits'} = [ undef, undef, 1 ];

@@ -26,16 +26,18 @@ use strict;
 use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
+use Math::NumSeq;
 use Math::NumSeq::Primes;
-@ISA = ('Math::NumSeq::Primes');
+@ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
 
+# use constant name => Math::NumSeq::__('Deletable Primes');
 use constant description => Math::NumSeq::__('Deletable primes, being primes where deleting a digit gives another prime from which in turn a digit can be deleted, etc.');
 use constant i_start => 1;
 use constant characteristic_increasing => 1;
@@ -75,16 +77,18 @@ sub oeis_anum {
 
 sub rewind {
   my ($self) = @_;
-  $self->SUPER::rewind;
-  $self->{'deletable_i'} = $self->i_start;
+  $self->{'i'} = $self->i_start;
+  my $primes_seq = $self->{'primes_seq'} = Math::NumSeq::Primes->new;
 }
 
 sub next {
   my ($self) = @_;
+  my $primes_seq = $self->{'primes_seq'};
   for (;;) {
-    my ($i, $value) = $self->SUPER::next;
-    if (_prime_is_deletable($self,$value)) {
-      return ($self->{'deletable_i'}++, $value);
+    (undef, my $prime) = $primes_seq->next
+      or return;
+    if (_prime_is_deletable($self,$prime)) {
+      return ($self->{'i'}++, $prime);
     }
   }
 }
@@ -92,7 +96,8 @@ sub next {
 sub pred {
   my ($self, $value) = @_;
   ### pred(): $value
-  return $self->SUPER::pred($value) && _prime_is_deletable($self,$value);
+  return ($self->Math::NumSeq::Primes::pred($value)
+          && _prime_is_deletable($self,$value));
 }
 
 sub _prime_is_deletable {
@@ -143,7 +148,7 @@ sub _prime_is_deletable {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq ie
+=for stopwords Ryde Math-NumSeq ie deletable Radix radix
 
 =head1 NAME
 

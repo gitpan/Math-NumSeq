@@ -27,20 +27,26 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
+*_bigint = \&Math::NumSeq::_bigint;
 
+use Math::NumSeq::Fibonacci;
+*_bits_high_to_low = \&Math::NumSeq::Fibonacci::_bits_high_to_low;
+*_blog2_estimate = \&Math::NumSeq::Fibonacci::_blog2_estimate;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
+
+# use constant name => Math::NumSeq::__('Fibbinary Numbers');
+use constant description => Math::NumSeq::__('Fibbinary numbers 0,1,2,4,5,8,9,etc, integers without adjacent 1 bits.');
+use constant i_start => 0;
 use constant values_min => 0;
 use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
-use constant description => Math::NumSeq::__('Fibbinary numbers 0,1,2,4,5,8,9,etc, integers without adjacent 1 bits.');
-use constant i_start => 0;
 
 # cf A000119 - number of fibonacci sums forms
 #    A003622 - n with odd Zeckendorf,  cf golden seq
@@ -54,6 +60,11 @@ sub rewind {
   my ($self) = @_;
   $self->{'i'} = $self->i_start;
   $self->{'value'} = 0;
+}
+sub _UNTESTED__seek_to_i {
+  my ($self, $i) = @_;
+  $self->{'i'} = $i;
+  $self->{'value'} = $self->ith($i-1);
 }
 
 sub next {
@@ -126,17 +137,156 @@ sub pred {
     return 0;
   }
 
-  # go to BigInt if floating point integer bigger than UV, since "&"
+  # go to BigInt if NV floating point integer bigger than UV, since "&"
   # operator will cast to a UV and lose bits
   if ($int > ~0 && ! ref $int) {
-    require Math::BigInt;
-    $int = Math::BigInt->new(sprintf('%.0f',$int));
+    $int = _bigint()->new(sprintf('%.0f',$int));
     ### use BigInt: $int
     ### str: sprintf('%.0f',$int)
   }
 
   ### and: ($int & ($int >> 1)).''
   return ! ($int & ($int >> 1));
+}
+
+sub value_to_i_floor {
+  my ($self, $value) = @_;
+  ### Fibbinary value_to_i_floor(): $value
+
+  if (_is_infinite($value)) {
+    return $value;
+  }
+  $value = int($value);
+  if ($value <= 0) {
+    return 0;
+  }
+
+  # ENHANCE-ME: _digit_split()
+  my @bits = _bits_high_to_low($value);
+  my @fibs;
+  {
+    my $f0 = ($value * 0);  # inherit bignum 0
+    my $f1 = $f0 + 1;       # inherit bignum 1
+    foreach (@bits) {
+      ($f1,$f0) = ($f1+$f0,$f1);
+      push @fibs, $f1;
+    }
+  }
+  ### @fibs
+
+  my $prev_bit = shift @bits; # high 1 bit
+  my $i = pop @fibs;
+
+  ### initial i: $i
+
+  foreach my $bit (@bits) {  # high to low
+    my $fib = pop @fibs;
+    ### $bit
+    ### $fib
+
+    if ($bit) {
+      if ($prev_bit) {
+        ### consecutive bits 11xxx, round down to 10xxx with xxx=1010 ...
+        while (@fibs) {
+          $i += pop @fibs;
+          pop @fibs;
+        }
+        return $i;
+      }
+      $i += $fib;
+      ### add i to: $i
+    }
+    $prev_bit = $bit;
+  }
+  return $i;
+}
+# *value_to_i_estimate = \&value_to_i_floor;
+
+use constant 1.02 _PHI => (1 + sqrt(5)) / 2;
+
+# (phi-beta) = phi+1/phi = 2phi-1
+#
+# value=2^k
+# log(value) = k*log(2)
+# k = log(value)/log(2)
+# i = F(k)
+#   = phi^(k+1) / (phi-beta)
+#   = phi^k * C where C=phi/(phi-beta) ~= 0.72
+# log(i/C) = k*log(phi)
+# k = log(i/C)/log(phi)
+#
+# log(i/C)/log(phi) = log(value)/log(2)
+# log(i/C) = log(value) * log(phi)/log(2)
+# i/C = e^ (log(value) * log(phi)/log(2))
+# i/C = (e^log(value)) ^ (log(phi)/log(2)))
+# i = C * value ^ (log(phi)/log(2)))
+#
+# log(phi)/log(2) ~= 0.694
+# 
+
+sub value_to_i_estimate {
+  my ($self, $value) = @_;
+
+  if ($value <= 0) {
+    return 0;
+  }
+
+  $value = int($value);
+  if (my $blog2 = Math::NumSeq::Fibonacci::_blog2_estimate($value)) {
+    my $shift = int ((1 - log(_PHI)/log(2))
+                     * Math::NumSeq::Fibonacci::_blog2_estimate($value));
+    return $value >> $shift;
+  }
+
+  return int ((((_PHI + 1/_PHI)/_PHI))
+              * $value ** (log(_PHI)/log(2)));
+}
+
+# Can get close taking bits low to high and tweaking for consecutive 1s.
+# But the high to low of the full value_to_i_floor() isn't very much extra
+# work.
+#
+# sub value_to_i_estimate {
+#   my ($self, $value) = @_;
+#   ### Fibbinary value_to_i_estimate(): $value
+# 
+#   if (_is_infinite($value)) {
+#     return $value;
+#   }
+# 
+#   my $f0 = my $f1 = ($value * 0)+1;  # inherit bignum 1
+#   my $i = 0;
+# 
+#   my $prev_bit = 0;
+#   while ($value) {
+#     my $bit = $value % 2;
+#     if ($bit) {
+#       if ($prev_bit) {
+#         $i += $f0;
+#       } else {
+#         $i += $f1;
+#       }
+#     }
+#     $prev_bit = $bit;
+#     ($f1,$f0) = ($f1+$f0,$f1);
+#     $value = int($value/2);
+#   }
+#   return $i;
+# }
+
+
+sub _UNTESTED__seek_to_value {
+  my ($self, $value) = @_;
+  $self->{'i'} = $self->value_to_i_ceil($value);
+}
+sub _UNTESTED__value_to_i_ceil {
+  my ($self, $value) = @_;
+  if ($value < 0) { return 0; }
+  my $i = $self->value_to_i_floor($value);
+  if ($self->ith($i) < $value) {
+    $i += 1;
+  }
+  return $i;
 }
 
 1;
@@ -191,7 +341,7 @@ __END__
 
 
 
-=for stopwords Ryde Math-NumSeq fibbinary Zeckendorf k's Ith i'th OR-ing incrementing Fibonaccis BigInt BigFloat BigRat eg ie
+=for stopwords Ryde Math-NumSeq fibbinary Zeckendorf k's Ith i'th OR-ing incrementing Fibonaccis BigInt bigint BigFloat BigRat eg ie
 
 =head1 NAME
 
@@ -205,55 +355,68 @@ Math::NumSeq::Fibbinary -- without consecutive 1 bits
 
 =head1 DESCRIPTION
 
-The fibbinary numbers 0, 1, 2, 4, 5, 8, 9, 10, etc, being integers which
-have no adjacent 1 bits in binary.
+The fibbinary numbers
 
-    i    fibbinary, and in binary
-   ---   ------------------------
-    0        0           0
-    1        1           1
-    2        2          10
-    3        4         100
-    4        5         101
-    5        8        1000
-    6        9        1001
-    7       10        1010
-    8       16       10000
-    9       17       10001
+     0, 1, 2, 4, 5, 8, 9, 10, ...
+
+being integers which have no adjacent 1 bits in binary, in ascending order.
+
+    i     fibbinary    fibbinary
+          (decimal)    (binary)
+   ---    ---------    --------
+    0         0            0
+    1         1            1
+    2         2           10
+    3         4          100
+    4         5          101
+    5         8         1000
+    6         9         1001
+    7        10         1010
+    8        16        10000
+    9        17        10001
 
 For example at i=4 fibbinary 5 the next fibbinary is not 6 or 7 because they
 have adjacent 1 bits (110 and 111), the next is 8 (100).
 
-Since the two highest bits must be "10...", skipping any high "11...",
-there's effectively a block of 2^k values (though not all of them used)
-followed by a gap of 2^k values, etc.
+Since the two highest bits must be "10..." and high "11..." is excluded,
+there's effectively a block of 2^k values (not all of them used) followed by
+a gap of 2^k values, etc.
+
+The least significant bit of each fibbinary is the Fibonacci word sequence,
+per L<Math::NumSeq::FibonacciWord>.
+
+All numbers without adjacent 1 bits can also be generated simply by taking
+the binary expansion and changing each "1" to "01", but this isn't in
+ascending order the way the fibbinary here is.
 
 =head2 Zeckendorf Base
 
 The bits of the fibbinary numbers encode Fibonacci numbers used to represent
-i in Zeckendorf style Fibonacci base.  In that system an integer i is a sum
+i in Zeckendorf style Fibonacci base.  In this system an integer i is a sum
 of Fibonacci numbers,
 
     i = F(k1) + F(k2) + ... F(kn)         k1 > k2 > ... > kn
 
 Each k is chosen as the highest Fibonacci less than the remainder at that
-point.  For example, taking F(0)=1, F(1)=2, etc,
+point.  For example, reckoning the Fibonaccis as F(0)=1, F(1)=2, etc,
 
     20 = 13+5+1 = F(5)+F(3)+F(0)
 
-The k's are then assembled as 1 bits in binary to encode the representation,
+The k's are then assembled as 1 bits in binary to encode this sum in an
+integer,
 
     fibbinary(20) = 2^5 + 2^3 + 2^0 = 41
 
-The spacing between Fibonacci numbers means that after subtracting F(k) the
-next cannot be F(k-1), only F(k-2) or less.  For that reason there's no
-adjacent 1 bits in the fibbinary numbers.
+The gaps between Fibonacci numbers means that after subtracting F(k) the
+next cannot be F(k-1), it must be F(k-2) or less.  For that reason there's
+no adjacent 1 bits in the fibbinary numbers.
 
 The connection between no adjacent 1s and the Fibonacci sequence can be seen
-from the values that have a high bit 2^k.  New values with that high bit not
-with high 2^(k-1) but only 2^(k-2), so effectively the new values are not
-the previous k-1 but the second previous k-2, the same way as the Fibonacci
-sequence adds not the previous term but the one before.
+by considering values with high bit 2^k.  The further bits in it cannot have
+2^(k-1) but only 2^(k-2), so effectively the number of new values are not
+from the previous k-1 but the second previous k-2, the same way as the
+Fibonacci sequence adds not the previous term (which would by double) but
+the one before instead.
 
 =head1 FUNCTIONS
 
@@ -274,18 +437,28 @@ Return the C<$i>'th fibbinary number.
 Return true if C<$value> is a fibbinary number, which means that in binary
 it doesn't have any consecutive 1 bits.
 
+=item C<$i = $seq-E<gt>value_to_i_floor($value)>
+
+Return the index i of C<$value> or of the next fibbinary number below
+C<$value>.
+
+=item C<$i = $seq-E<gt>value_to_i_estimate($value)>
+
+Return an estimate of the i corresponding to C<$value>.
+
 =back
 
 =head1 FORMULAS
 
 =head2 Next Value
 
-For a given fibbinary number, the next number is simply +1 if the lowest bit
-is 2^2=4 or more.  If the low bit is 2^1=2 or 2^0=1 then the run of low
+For a given fibbinary number, the next fibbinary is +1 if the lowest bit is
+2^2=4 or more.  If however the low bit is 2^1=2 or 2^0=1 then the run of low
 alternating ...101 or ...1010 must be cleared and the bit above set.  For
 example 1001010 becomes 1010000.  All cases can be handled quite easily with
 some bit twiddling
 
+    # value=fibbinary
     filled = (value >> 1) | value
     mask = ((filled+1) ^ filled) >> 1
     next value = (value | mask) + 1
@@ -297,21 +470,22 @@ For example
     mask   =    1111
     next   = 1010000
 
-"filled" means any ...01010 ending has the zeros filled in to ...01111, then
-those low ones can be extracted with +1 and XOR (the usual trick for getting
-low ones).  +1 means the bit above the filled part is included ...11111, but
-a shift drops back to "mask" of just 01111.  OR-ing and incrementing then
-clears those low bits and sets the next higher to make ...10000.
+"filled" means any trailing ...01010 has the zeros filled in to ...01111.
+Then those low ones can be extracted with +1 and XOR (the usual trick for
+getting low ones).  +1 means the bit above the filled part is included
+...11111 but a shift drops back to "mask" just 01111.  OR-ing and
+incrementing then clears those low bits and sets the next higher bit to make
+...10000.
 
-This works for any fibbinary value inputs, both "...10101" and "...1010"
-endings and also zeros "...0000" ending.  In the zeros case the result is
-just a +1 for "...0001", including input=0 giving next=1.
+This works for any fibbinary input, both "...10101" and "...1010" endings
+and also zeros "...0000" ending.  In the zeros case the result is just a +1
+for "...0001" and that includes input value=0 giving next=1.
 
 =head2 Ith Value
 
-The i'th fibbinary number can be calculated by the Zeckendorf breakdown
-described above.  Reckoning the Fibonacci numbers as F(0)=1, F(1)=2, F(2)=3,
-F(3)=5, etc,
+The i'th fibbinary number can be calculated as per L</Zeckendorf Base>
+above.  Reckoning the Fibonacci numbers as F(0)=1, F(1)=2, F(2)=3, F(3)=5,
+etc,
 
     find the biggest F(k) <= i
     subtract i -= F(k)
@@ -319,11 +493,11 @@ F(3)=5, etc,
     repeat until i=0
 
 To find each F(k)E<lt>=i either just work downwards through the Fibonacci
-numbers, or perhaps alternatively the Fibonaccis grow as (phi^k)/sqrt(5)
-with phi=(sqrt(5)+1)/2 the golden ratio, so an F(k) could be found by a log
-base phi of i.  Or taking log2 of i (the highest bit in i) might give 2 or 3
-candidates for k.  Log base phi is unlikely to be faster, but log 2 high bit
-might quickly go to a nearly-correct place in a table.
+numbers, or the Fibonaccis grow as (phi^k)/sqrt(5) with phi=(sqrt(5)+1)/2
+the golden ratio, so an F(k) could be found by a log base phi of i.  Or
+taking log2 of i (the highest bit in i) might give 2 or 3 candidates for k.
+Calculating log base phi is unlikely to be faster, but log 2 high bit might
+quickly go to a nearly-correct place in a table.
 
 =head2 Predicate
 
@@ -333,32 +507,67 @@ Testing for a fibbinary value can be done by a shift and AND,
 
 Any adjacent 1 bits overlap in the shift+AND and come through as non-zero.
 
-In Perl C<&> converts NV float to UV/IV integer.  If a value in an NV
-mantissa is an integer but bigger than a UV then bits will be lost in an
-C<&>.  Conversion to C<Math::BigInt> or similar is necessary to preserve the
-full value.  Floats which are integers but bigger than an UV/IV might be of
+In Perl C<&> converts NV float to UV integer.  If a value in an NV mantissa
+is an integer but bigger than a UV then bits will be lost to the C<&>.
+Conversion to C<Math::BigInt> or similar is necessary to preserve the full
+value.  Floats which are integers but bigger than an UV might be of
 interest, or it might be thought any float means rounded-off and therefore
 inaccurate and not of interest.  The current code has some experimental
-automatic BigInt conversion which works and which accepts BigFloat or BigRat
-integers too, but don't rely on this quite yet.  (A BigInt input directly is
-fine of course.)
+automatic BigInt conversion which works for floats and for BigFloat or
+BigRat integers too, but don't rely on this quite yet.  (A BigInt input
+directly is fine of course.)
 
-=head2 Value Below
+=head2 Value to i Floor
 
-If a number is not a fibbinary, eg. 11000110, then the next lower fibbinary
-can be had by finding the highest 11 pair and changing it and all the bits
-below to 101010...etc.  There's nothing in the code here doing this though.
+In a fibbinary value each bit becomes a Fibonacci F[i] to add to make i, as
+per L</Zeckendorf Base> above.
 
-Offending 11 pairs can be picked out by an AND per the predicate above.
-After a shift and AND the highest 1 bit is from the highest 11 pair and is
-the lower of the two bits in that pair.  That position should then become a
-0 etc, ie. "01010...".  The higher 1 in the highest 11 pair is unchanged.
+If a number is not a fibbinary then the next lower fibbinary can be had by
+finding the highest 11 pair and changing it and all the bits below to
+101010...etc.  For example 10011001 is not a fibbinary and must change down
+to 10010101, ie. the 11001 reduces to 10101, that being the biggest
+fibbinary no-adjacent-1s which is 10xxx.
+
+    bits 2^k from high to low
+      if bit set
+        if prev bit set too
+        then treat remainder as 010101...
+        else i += F[k]
+
+If working downwards adding F[k] values then it's easy enough to notice an
+adjacent 11 pair.  An alternative would be to find all 11 pairs per
+L</Predicate> above and the highest 1 bit (if any) is the place to mangle.
+
+=head2 Value to i Estimate
+
+In general i grows as a power of phi=1.618 and the values grow as a power
+of 2.  So an estimate can be had from
+
+    value = 2^k
+    i = F[k+1]
+      ~= phi^(k+1) / (phi+1/phi)
+      ~= C * phi^k
+    where C=phi/(phi+1/phi)
+
+    log(i/C)/log(phi) ~= log(value)/log(2)
+
+    i_estimate = C * value ^ (log(phi)/log(2))
+
+The power log(phi)/log(2)=0.694 reduces to give an i approximation.  That
+power can also be approximated by shifting off the least significant
+1-0.694=0.306 of the bits of the value.  This is fast and may be enough
+accuracy for a bigint.
+
+    highbitpos of value
+    i_estimate = value >> floor(highbitpos * 0.306)
 
 =head1 SEE ALSO
 
 L<Math::NumSeq>,
 L<Math::NumSeq::Fibonacci>,
-L<Math::NumSeq::FibonacciWord>
+L<Math::NumSeq::FibonacciWord>,
+L<Math::NumSeq::GolayRudinShapiro>,
+L<Math::NumSeq::BaumSweet>
 
 =head1 HOME PAGE
 

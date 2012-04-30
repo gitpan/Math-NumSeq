@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -38,6 +38,40 @@ use constant values_min => 0;
 use constant i_start => 0;
 use constant oeis_anum => 'A000073'; # tribonacci
 
+# The biggest f0 for which f0,f1,f2 all fit into a UV, but the sum f0+f1+f2
+# would overflow and so require BigInt.  Then back from there because the
+# code checks the f0 after the sum f0+f1+f2 is formed.
+#
+my $uv_limit = do {
+  my $max = ~0;
+
+  # f2+f1+f0 <= max
+  # f0 <= max-f1
+  # and f0+f1 <= max-f2
+  #
+  my $f0 = 0;
+  my $f1 = 0;
+  my $f2 = 1;
+  my $prev_prev_f0;
+  my $prev_f0;
+  while ($f0 <= $max - $f1
+         && $f0+$f1 <= $max - $f2) {
+    $prev_prev_f0 = $prev_f0;
+    $prev_f0 = $f0;
+    ($f0,$f1,$f2) = ($f1, $f2, $f2+$f1+$f0);
+  }
+
+  ### Tribonacci UV limit ...
+  ### $prev_prev_f0
+  ### $prev_f0
+  ### $f0
+  ### $f1
+  ### $f2
+  ### ~0 : ~0
+
+  $prev_prev_f0
+};
+
 sub rewind {
   my ($self) = @_;
   $self->{'i'} = $self->i_start;
@@ -47,7 +81,7 @@ sub rewind {
 }
 sub next {
   my ($self) = @_;
-  ### Tribonacci next(): "$self->{'f0'} $self->{'f1'} $self->{'f2'}"
+  ### Tribonacci next(): "i=$self->{'i'}  $self->{'f0'} $self->{'f1'} $self->{'f2'}"
   (my $ret,
    $self->{'f0'},
    $self->{'f1'},
@@ -56,6 +90,12 @@ sub next {
       $self->{'f1'},
       $self->{'f2'},
       $self->{'f0'}+$self->{'f1'}+$self->{'f2'});
+
+  if ($ret == $uv_limit) {
+    ### go to bigint f2 ...
+    $self->{'f2'} = Math::NumSeq::_bigint()->new("$self->{'f2'}");
+  }
+
   return ($self->{'i'}++, $ret);
 }
 
@@ -119,6 +159,10 @@ Return the C<$i>'th Tribonacci number.
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> is a Tribonacci number.
+
+=item C<$i = $seq-E<gt>value_to_i_estimate($value)>
+
+Return an estimate of the i corresponding to C<$value>.
 
 =back
 

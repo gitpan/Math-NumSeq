@@ -21,7 +21,7 @@ use strict;
 use List::Util 'min', 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -50,6 +50,15 @@ use constant parameter_info_array =>
      type    => 'enum',
      choices => ['all','odd','4k+1','4k+3',
                  'twin','SG','safe'],
+     choices_display => [Math::NumSeq::__('All'),
+                         Math::NumSeq::__('Odd'),
+                         # TRANSLATORS: "4k+1" meaning numbers 1,5,9,13 etc, probably no need to translate except into another script if Latin letter "k" won't be recognised
+                         Math::NumSeq::__('4k+1'),
+                         Math::NumSeq::__('4k+3'),
+                         Math::NumSeq::__('Twin'),
+                         Math::NumSeq::__('SG'),
+                         Math::NumSeq::__('Safe'),
+                        ],
      default => 'all',
      description => Math::NumSeq::__('The type of primes to count.
 twin=P where P+2 or P-2 also prime.
@@ -64,7 +73,7 @@ safe=P where (P-1)/2 also prime (the "other" of the SGs).'),
                          Math::NumSeq::__('Distinct'),
                         ],
      default => 'repeated',
-      description => Math::NumSeq::__('Whether to count repeated prime factors, or only distinct prime factors.'),
+     description => Math::NumSeq::__('Whether to count repeated prime factors, or only distinct prime factors.'),
    },
   ];
 
@@ -385,6 +394,8 @@ a prime factors are counted, or only distinct primes.  For example with
 "distinct" i=4=2*2 is just 1 prime factor.
 
 =head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 

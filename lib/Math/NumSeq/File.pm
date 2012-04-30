@@ -27,18 +27,21 @@ package Math::NumSeq::File;
 use 5.004;
 use strict;
 use Carp;
-use Fcntl;
+use POSIX ();
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
+
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
-
+*_bigint = \&Math::NumSeq::_bigint;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
+
 # use constant name => Math::NumSeq::__('File');
+use constant i_start => 0;
 use constant description => Math::NumSeq::__('Numbers from a file');
 use constant parameter_info_array =>
   [ { name    => 'filename',
@@ -48,13 +51,18 @@ use constant parameter_info_array =>
       default => '',
     } ];
 
+my $max_value = POSIX::FLT_RADIX() ** (POSIX::DBL_MANT_DIG()-5);
+if ((~0 >> 1) > $max_value) {
+  $max_value = (~0 >> 1);
+}
+my $min_value = -$max_value;
+
 sub rewind {
   my ($self) = @_;
   ### Values-File rewind()
 
   if ($self->{'fh'}) {
-    seek $self->{'fh'}, 0, Fcntl::SEEK_SET() # parens because autoloaded ...
-      or croak "Cannot rewind ",$self->{'filename'},": ",$!;
+    _seek ($self, 0);
   } else {
     my $filename = $self->{'filename'};
     if (defined $filename && $filename !~ /^\s*$/) {
@@ -66,7 +74,7 @@ sub rewind {
       $self->{'fh'} = $fh;
     }
   }
-  $self->{'i'} = -1;
+  $self->{'i'} = $self->i_start - 1;
 }
 
 sub next {
@@ -75,22 +83,41 @@ sub next {
   for (;;) {
     my $line = readline $fh;
     if (! defined $line) {
+      ### EOF ...
       return;
     }
+
     if ($line =~ /^\s*(-?\d+)(\s+(-?(\d+(\.\d*)?|\.\d+)))?/) {
+      my ($i, $value);
       if (defined $3) {
-        return ($self->{'i'} = $1, $3);
+        $i = $self->{'i'} = $1;
+        $value = $3;
       } else {
-        return (++$self->{'i'}, $1);
+        $i = ++$self->{'i'};
+        $value = $1;
       }
+
+      # large integer values returned as Math::BigInt
+      if (($value > $max_value || $value < $min_value)
+          && $value !~ /\./) {
+        $value = _bigint()->new("$value");
+      }
+
+      return ($i, $value);
     }
   }
+}
+
+sub _seek {
+  my ($self, $pos) = @_;
+  seek ($self->{'fh'}, $pos, 0)
+    or croak "Cannot seek $self->{'filename'}: $!";
 }
 
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq
+=for stopwords Ryde Math-NumSeq NumSeq
 
 =head1 NAME
 

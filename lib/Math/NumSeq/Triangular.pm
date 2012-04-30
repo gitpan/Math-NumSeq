@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -33,7 +33,7 @@ use Math::NumSeq::Base::IterateIth;
 use constant description => Math::NumSeq::__('The triangular numbers 0, 1, 3, 6, 10, 15, 21, 28, etc, i*(i+1)/2.');
 use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
-use constant i_start => 0;
+use constant default_i_start => 0;
 use constant values_min => 0;  # at i=0
 use constant oeis_anum => 'A000217'; # starting from i=0 value=0
 
@@ -56,23 +56,27 @@ sub pred {
   ### Triangular pred(): $value
 
   if ($value < 0) { return 0; }
-
   my $int = int($value);
   if ($value != $int) { return 0; }
 
-  my $i = int((sqrt(8*$int + 1) - 1)/2);
+  $int *= 2;
+  my $i = int((sqrt(4*$int + 1) - 1)/2);
 
   ### $int
   ### $i
   ### triangular: ($i+1)*$i/2
 
-  return ($int == ($i+1)*$i/2);
+  return ($int == ($i+1)*$i);
 }
 
-sub value_to_i_estimate {
+sub value_to_i_floor {
   my ($self, $value) = @_;
+  if ($value < 0) {
+    return 0;
+  }
   return int((sqrt(8*int($value) + 1) - 1)/2);
 }
+*value_to_i_estimate = \&value_to_i_floor;
 
 1;
 __END__
@@ -91,7 +95,9 @@ Math::NumSeq::Triangular -- triangular numbers
 
 =head1 DESCRIPTION
 
-The triangular numbers 0, 1, 3, 6, 10, 15, 21, 28, etc, i*(i+1)/2.
+The triangular numbers i*(i+1)/2,
+
+    0, 1, 3, 6, 10, 15, 21, 28, ...
 
 The numbers are how many points are in an equilateral triangle of side i,
 
@@ -128,14 +134,26 @@ Return C<$i*($i+1)/2>.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value> is a triangular number, ie. i*(i+1)/2 for some i.
+Return true if C<$value> is a triangular number, ie. i*(i+1)/2 for some
+integer i.
+
+=item C<$i = $seq-E<gt>value_to_i_floor($value)>
+
+Return the index i of C<$value> or the next triangular number below
+C<$value>.
+
+=item C<$i = $seq-E<gt>value_to_i_estimate($value)>
+
+Return an estimate of the i corresponding to C<$value>.  value=i*(i+1)/2 is
+inverted C<$i = int ((sqrt(8*$value + 1) - 1)/2)>.
 
 =back
 
 =head1 SEE ALSO
 
 L<Math::NumSeq>,
-L<Math::NumSeq::Pronic>
+L<Math::NumSeq::Pronic>,
+L<Math::NumSeq::Squares>
 
 =head1 HOME PAGE
 

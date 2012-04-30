@@ -31,7 +31,7 @@ use Math::NumSeq::SqrtEngel;
 #use Smart::Comments;
 
 
-my $test_count = (tests => 635)[1];
+my $test_count = (tests => 643)[1];
 plan tests => $test_count;
 
 use Math::BigInt;
@@ -55,7 +55,7 @@ use Math::BigInt;
 # VERSION
 
 {
-  my $want_version = 37;
+  my $want_version = 38;
   ok ($Math::NumSeq::SqrtEngel::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::SqrtEngel->VERSION,  $want_version,
@@ -77,6 +77,21 @@ use Math::BigInt;
 {
   my $seq = Math::NumSeq::SqrtEngel->new;
   ok ($seq->i_start, 1, 'i_start()');
+
+  ok ($seq->characteristic('digits'), undef, 'characteristic(digits)');
+  ok (! $seq->characteristic('smaller'), 1, 'characteristic(smaller)');
+  ok (! $seq->characteristic('count'), 1, 'characteristic(count)');
+  ok ($seq->characteristic('integer'), 1, 'characteristic(integer)');
+
+  ok (! $seq->characteristic('increasing'), 1,
+      'characteristic(increasing)');
+  ok ($seq->characteristic('non_decreasing'), 1,
+      'characteristic(non_decreasing)');
+
+  ok ($seq->characteristic('increasing_from_i'), undef,
+      'characteristic(increasing_from_i)');
+  ok ($seq->characteristic('non_decreasing_from_i'), $seq->i_start,
+      'characteristic(non_decreasing_from_i)');
 
   my @pnames = map {$_->{'name'}} $seq->parameter_info_list;
   ok (join(',',@pnames),

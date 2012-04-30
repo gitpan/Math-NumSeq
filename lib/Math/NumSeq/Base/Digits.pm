@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -30,6 +30,7 @@ sub characteristic_digits {
   return $self->{'radix'};
 }
 use constant characteristic_increasing => 0;
+# use constant characteristic_non_decreasing => 0;
 use constant characteristic_smaller => 1;
 use constant characteristic_integer => 1;
 use constant values_min => 0;

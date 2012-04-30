@@ -19,16 +19,19 @@ package Math::NumSeq::FractionDigits;
 use 5.004;
 use strict;
 use List::Util 'max';
+
 use Math::NumSeq;
+*_is_infinite = \&Math::NumSeq::_is_infinite;
+*_bigint = \&Math::NumSeq::_bigint;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
 
-
 # uncomment this to run the ### lines
-#use Devel::Comments;
+#use Smart::Comments;
+
 
 # use constant name => Math::NumSeq::__('Fraction Digits');
 use constant description => Math::NumSeq::__('A given fraction number written out in binary.');
@@ -81,8 +84,9 @@ $oeis_anum[10] =
    # OEIS-Catalogue: A007450 fraction=1/17
 
    # Math::NumSeq::OEIS::Catalogue::Plugin::FractionDigits has A021022
-   # through A021999, being 1/18 to 1/995.  1/996 missing apparently.
-
+   # through A021999, being 1/18 to 1/995.
+   # A022000 is not 1/996, that fraction missing apparently.
+   #
    # OEIS-Catalogue: A022001 fraction=1/997
    # OEIS-Catalogue: A022002 fraction=1/998
    # OEIS-Catalogue: A022003 fraction=1/999
@@ -127,8 +131,8 @@ sub oeis_anum {
 
 #------------------------------------------------------------------------------
 
-sub rewind {
-  my ($self) = @_;
+sub new {
+  my $self = shift->SUPER::new(@_);
 
   my $radix = $self->{'radix'};
   my $fraction = $self->{'fraction'};
@@ -157,8 +161,8 @@ sub rewind {
   }
 
   if (max(length($num),length($den)) >= length(int (~0 / $radix))) {
-    $num = Math::NumSeq::_bigint()->new("$num");
-    $den = Math::NumSeq::_bigint()->new("$den");
+    $num = _bigint()->new("$num");
+    $den = _bigint()->new("$den");
   }
 
   # increase den so first digit is 0 to radix-1
@@ -166,17 +170,15 @@ sub rewind {
     $den *= $radix;
   }
 
-  # while ($num && $num < $den) {
-  #   $num *= $radix;
-  # }
-
   ### create
   ### $num
   ### $den
   $self->{'fraction'} = $fraction;
-  $self->{'num'} = $num;
+  $self->{'initial_num'} = $num;
   $self->{'den'} = $den;
-  $self->{'i'} = $self->i_start;
+
+  $self->rewind;
+  return $self;
 }
 
 sub _to_int_and_decimals {
@@ -189,6 +191,12 @@ sub _to_int_and_decimals {
   }
 }
 
+sub rewind {
+  my ($self) = @_;
+  $self->{'i'} = $self->i_start;
+  $self->{'num'} = $self->{'initial_num'};
+}
+
 sub next {
   my ($self) = @_;
 
@@ -198,16 +206,87 @@ sub next {
   my $i = $self->{'i'};
   ### FractionDigits next(): "$i  $num/$den"
 
-  ### frac: "$num / $den"
   $num *= $radix;
   my $quot = int ($num / $den);
   $self->{'num'} = $num - $quot * $den;
+
   ### $quot
   ### rem: $self->{'num'}
+
   return ($self->{'i'}++, $quot);
 }
 
-# ENHANCE-ME: ith() by modulo powering
+sub ith {
+  my ($self, $i) = @_;
+
+  if ($i < 0 || _is_infinite($i)) {
+    return undef;
+  }
+
+  my $radix = $self->{'radix'};
+  my $den = $self->{'den'};
+  my $num = (($self->{'initial_num'} * _modpow ($self->{'radix'}, $i, $den))
+             % $den);
+  return int (($num * $radix) / $den);
+}
+
+use constant 1.02 _UV_MAX_SQRT => do {
+  my $uv_max = ~0;
+  my $bit = 1;
+  my $shift = 0;
+  for (;;) {
+    $shift++;
+    my $try_bit = $bit << 1;
+    if ($uv_max >> $shift < $try_bit) {
+      last;
+    }
+    $bit = $try_bit;
+  }
+  ### $bit
+
+  my $uv_max_sqrt = $bit;
+  for (;;) {
+    $bit >>= 1;
+    last if $bit == 0;
+    my $try_sqrt = $uv_max_sqrt + $bit;
+    if (int($uv_max / $try_sqrt) <= $try_sqrt) {
+      $uv_max_sqrt = $try_sqrt;
+    }
+  }
+
+  ### $uv_max_sqrt
+  ### uv_max_sqrt: sprintf '%#X', $uv_max_sqrt
+  ### squared: $uv_max_sqrt*$uv_max_sqrt
+  ### squared: sprintf '%#X', $uv_max_sqrt*$uv_max_sqrt
+
+  $uv_max_sqrt
+};
+
+sub _modpow {
+  my ($base, $exp, $mod) = @_;
+  ### _modpow(): "$base $exp $mod"
+
+  my $ret = 1;
+  if (ref $mod || $mod > _UV_MAX_SQRT) {
+    return _bigint()->new($base)->bmodpow($exp,$mod);
+  }
+
+  # only if base and mod have no common factor ...
+  # $exp %= $mod-1;
+
+  my $power = $base;
+  for (;;) {
+    ### $exp
+    if ($exp % 2) {
+      ### step: "power=$power"
+      $ret = ($ret * $power) % $mod;
+    }
+    $exp = int($exp/2) || last;
+    $power = ($power*$power) % $mod;
+  }
+  return $ret;
+}
+
 
 # ENHANCE-ME: only some digits occur, being the modulo den residue class
 # containing num.
@@ -222,7 +301,7 @@ sub next {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq radix-1 ie xx.yy
+=for stopwords Ryde Math-NumSeq radix-1 ie xx.yy num radix Ith bmodpow
 
 =head1 NAME
 
@@ -241,10 +320,13 @@ decimal, being 0.14285714...
 
     1, 4, 2, 8, 5, 7, 1, 4, etc
 
-The digits are always a repeating sequence of length no more than den-1.  In
-fact if you want to cook up a repeating sequence a,b,c,a,b,c,etc then the
-fraction is abc/999.  In a base other than decimal the "9" is radix-1,
-ie. the highest digit.
+After any integer part, the fraction digits are a repeating sequence.  If
+the fraction is num/den and is in least terms (num and den have no common
+factor) then the period is either den-1 or some divisor of den-1.
+
+If you want a particular a repeating sequence a,b,c,d,a,b,c,d,etc then
+fraction abcd/9999 cooks that up, with as many 9s as digits to repeat.  For
+a base other than decimal the "9" is radix-1.
 
 =head1 FUNCTIONS
 
@@ -269,7 +351,42 @@ can select another base.  (But the C<fraction> parameter is still decimal.)
 If the numerator or denominator of the fraction is bigger than fits Perl
 integer calculations then C<Math::BigInt> is used automatically.
 
+=item C<$value = $seq-E<gt>ith($i)>
+
+Return the C<$i>'th digit of the fraction.
+
 =back
+
+=head1 FORMULAS
+
+=head2 Next
+
+For a given num/den, with num < den, the next digit below the radix point is
+formed by
+
+    num *= radix               # now 0 <= num/den < radix
+    quot,rem = num divide den
+    digit = quot               # 0 <= digit < radix
+    new num = rem
+
+=head2 Ith
+
+For an arbitrary digit i, the repeated num*=radix can be applied by a
+modular powering
+
+    rpower = radix^i mod den
+    num = num * rpower mod den
+
+i here acts as a count of how many digits to skip.  For example if i=0 then
+rpower=1 and doesn't change the numerator at all.  With that big skip the
+digit is then the same as for "next" above,
+
+    num *= radix             # now 0 <= num/den < radix
+    digit = floor(num/den)   # 0 <= digit < radix
+
+The usual modular powering techniques can be applied to calculate radix^i
+mod den.  C<Math::BigInt> has a bmodpow which is used in the code if the
+inputs are big.
 
 =head1 SEE ALSO
 

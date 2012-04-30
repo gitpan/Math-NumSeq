@@ -38,10 +38,16 @@ use constant parameter_info_array =>
       display => Math::NumSeq::__('Pairs'),
       type    => 'enum',
       default => 'first',
-      choices => ['first','second','both'],  # ,'average'
+      choices => ['first',
+                  'second',
+                  'both',
+                  # ,'average'
+                 ],
       choices_display => [Math::NumSeq::__('First'),
                           Math::NumSeq::__('Second'),
-                          Math::NumSeq::__('Both'),],  # Math::NumSeq::__('Average')
+                          Math::NumSeq::__('Both'),
+                          # Math::NumSeq::__('Average'),
+                         ],
       description => Math::NumSeq::__('Which of a pair of values to show.'),
     } ];
 

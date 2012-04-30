@@ -21,6 +21,67 @@ require 5;
 use strict;
 use List::Util 'min','max';
 
+# uncomment this to run the ### lines
+#use Smart::Comments;
+
+{
+  # period vs 2*sqrt
+
+  require Math::NumSeq::SqrtContinuedPeriod;
+  my $seq = Math::NumSeq::SqrtContinuedPeriod->new;
+  foreach my $sqrt (2 .. 20000) {
+    my $period = $seq->ith($sqrt);
+    my $frac = $period/(2*$sqrt);
+    if ($frac > .1) {
+      print "$sqrt $period  $frac\n";
+    }
+  }
+  exit 0;
+}
+
+{
+  # repetitions under gcd
+
+  require Math::PlanePath::GcdRationals;
+  sub gcd {
+    my $g = shift;
+    while (@_) {
+      $g = Math::PlanePath::GcdRationals::_gcd($g,shift);
+    }
+    return $g;
+  }
+
+  my %v;
+  require Tie::IxHash;
+  tie %v, 'Tie::IxHash';
+
+  require Math::NumSeq::SqrtContinued;
+  foreach my $sqrt (2 .. 2000) {
+    my $seq = Math::NumSeq::SqrtContinued->new (sqrt => $sqrt);
+    $seq->next;
+    my @values = map{
+      my($i,$value)=$seq->next;
+      next if ! defined $value;
+      $value
+    } 1..50;
+    my $g = gcd(@values);
+    @values = map {$_/$g} @values;
+    my $key = join(',',@values);
+    ### $key
+    push @{$v{$key}}, $sqrt;
+  }
+  my $uniq = 0;
+  foreach my $aref (values %v) {
+    if (@$aref > 1) {
+      print "repeat: ",join(', ',@$aref),"\n";
+    } else {
+      $uniq++;
+    }
+  }
+  print "$uniq unique\n";
+  exit 0;
+}
+
 {
   require Math::NumSeq::SqrtContinuedPeriod;
   my $seq = Math::NumSeq::SqrtContinuedPeriod->new;
@@ -32,5 +93,3 @@ use List::Util 'min','max';
   print "max ",max(@periods),"\n";
   exit 0;
 }
-
-

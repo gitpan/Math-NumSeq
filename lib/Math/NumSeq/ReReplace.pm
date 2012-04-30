@@ -32,7 +32,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IterateIth;
@@ -43,11 +43,29 @@ use Math::NumSeq::Base::IterateIth;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-use constant description => Math::NumSeq::__('...');
+# use constant name => Math::NumSeq::__('Repeated Replacement');
+use constant description => Math::NumSeq::__('Sequence of repeated replacements.');
 use constant values_min => 1;
+sub values_max {
+  my ($self) = @_;
+  my $stage = $self->{'stage'};
+  return ($stage < 0 ? undef : $stage+1);
+}
 use constant i_start => 1;
 use constant characteristic_smaller => 1;
 use constant characteristic_integer => 1;
+
+use constant parameter_info_array =>
+  [
+   { name        => 'stage',
+     share_key   => 'stage_neg1',
+     type        => 'integer',
+     default     => '-1',
+     width       => 4,
+     minimum     => -1,
+     # description => Math::NumSeq::__('...'),
+   },
+  ];
 
 # 'A100002'
 # 0  1  2  3  4  5  6  7  8  9
@@ -56,8 +74,15 @@ use constant characteristic_integer => 1;
 
 # cf A100287 - first occurrence of n
 #    A101224
-#    
-use constant oeis_anum => 'A100002';
+#
+my @oeis_anum = ('A100002', # -1 all stages
+                 # 0 all-ones, but A000012 has OFFSET=0
+                 # 1 is 1,2 rep, but A040001 has OFFSET=0
+                );
+sub oeis_anum {
+  my ($self) = @_;
+  return $oeis_anum[$self->{'stage'}+1];
+}
 
 sub rewind {
   my ($self) = @_;
@@ -67,6 +92,12 @@ sub rewind {
 sub next {
   my ($self) = @_;
   ### ReReplace next(): $self->{'i'}
+
+  my $stage = $self->{'stage'};
+  if ($stage == 0) {
+    return ($self->{'i'}++,
+            1);
+  }
 
   my $count = $self->{'count'};
   ### $count
@@ -83,7 +114,8 @@ sub next {
     }
   }
 
-  if ($value >= $#$count-1) {
+  if ($value >= $#$count-1
+      && ($stage < 0 || $value < $stage)) {
     push @$count, [ @{$count->[-1]} ];  # array copy
     ### extended to: $count
   }
@@ -104,7 +136,7 @@ sub pred {
 1;
 __END__
 
-=for stopwords Ryde OEIS
+=for stopwords Ryde OEIS Madore N'th Math-NumSeq
 
 =head1 NAME
 
@@ -119,32 +151,37 @@ Math::NumSeq::ReReplace -- sequence of repeated replacements
 =head1 DESCRIPTION
 
 This is a sequence by David Madore formed by repeatedly replacing every N'th
-occurrance of a term with N.
+occurrence of a term with N.
 
     1, 2, 1, 2, 3, 3, 1, 2, 4, 4, 3, 4, ...
 
-=head2 Algorithm
+=head2 Stages
 
-The generating procedure sieve begins with all 1s,
+The optional C<stage =E<gt> $n> parameter limits the replacements to a given
+number of stages of the algorithm.  The default -1 means unlimited.
 
-    initial: 1,1,1,1,1,1,1,1,1,1,1,1,...
+The generating procedure begins with all 1s,
+
+    stage 0: 1,1,1,1,1,1,1,1,1,1,1,1,...
 
 Then every second 1 is changed to 2
 
-    replace[2]: 1,2,1,2,1,2,1,2,1,2,1,2,...
+    stage 1: 1,2,1,2,1,2,1,2,1,2,1,2,...
 
 Then every third 1 is changed to 3, and every third 2 changed to 3 also,
 
-    replace[3]: 1,2,1,2,3,3,1,2,1,2,3,3,...
+    stage 2: 1,2,1,2,3,3,1,2,1,2,3,3,...
 
 Then every fourth 1 becomes 4, fourth 2 becomes 4, fourth 3 becomes 4.
 
-    replace[4]: 1,2,1,2,3,3,1,2,4,4,3,4,...
+    stage 3: 1,2,1,2,3,3,1,2,4,4,3,4,...
 
 The replacement of every Nth with N is applied separately to the 1s, 2s, 3s
 etc remaining at each stage.
 
 =head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 

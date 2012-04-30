@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -42,11 +42,24 @@ sub rewind {
   my ($self) = @_;
   $self->{'i'} = ceil (sqrt (max(0,$self->{'lo'})));
 }
+sub seek_to_i {
+  my ($self, $i) = @_;
+  $self->{'i'} = $i;
+}
+sub seek_to_value {
+  my ($self, $value) = @_;
+  $self->seek_to_i($self->value_to_i_ceil($value));
+}
 sub next {
   my ($self) = @_;
   ### Squares next(): $self->{'i'}
   my $i = $self->{'i'}++;
   return ($i, $i*$i);
+}
+
+sub ith {
+  my ($self, $i) = @_;
+  return $i*$i;
 }
 sub pred {
   my ($self, $value) = @_;
@@ -60,10 +73,6 @@ sub pred {
   my $sqrt = int(sqrt($int));
   return ($int == $sqrt*$sqrt);
 }
-sub ith {
-  my ($self, $i) = @_;
-  return $i*$i;
-}
 
 sub value_to_i_floor {
   my ($self, $value) = @_;
@@ -71,6 +80,17 @@ sub value_to_i_floor {
   return int(sqrt(int($value)));
 }
 *value_to_i_estimate = \&value_to_i_floor;
+
+sub value_to_i_ceil {
+  my ($self, $value) = @_;
+  if ($value < 0) { return 0; }
+  my $i = $self->value_to_i_floor($value);
+  if ($i*$i < $value) {
+    $i += 1;
+  }
+  return $i;
+}
+
 
 1;
 __END__
@@ -89,7 +109,9 @@ Math::NumSeq::Squares -- perfect squares
 
 =head1 DESCRIPTION
 
-The sequence of squares, 0, 1, 4, 9, 16, 25, etc.
+The sequence of squares i**2,
+
+    0, 1, 4, 9, 16, 25, ...
 
 =head1 FUNCTIONS
 
@@ -101,6 +123,17 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 Create and return a new sequence object.
 
+=item C<$i = $seq-E<gt>seek_to_i($i)>
+
+Move the current sequence position to C<$i>.  The next call to C<next()>
+will return C<$i>.
+
+=item C<$i = $seq-E<gt>seek_to_value($value)>
+
+Move the current sequence position so that C<next()> will give C<$value> on
+the next call, or if C<$value> is not a square then the next square above
+C<$value>.
+
 =item C<$value = $seq-E<gt>ith($i)>
 
 Return C<$i * $i>.
@@ -109,11 +142,23 @@ Return C<$i * $i>.
 
 Return true if C<$value> is a square, ie. k*k for some integer k.
 
+=item C<$i = $seq-E<gt>value_to_i_ceil($value)>
+
+=item C<$i = $seq-E<gt>value_to_i_floor($value)>
+
+Return the square root of C<$value>, rounded up or down to the next integer.
+
+=item C<$i = $seq-E<gt>value_to_i_estimate($value)>
+
+Return an estimate of the i corresponding to C<$value>.
+
 =back
 
 =head1 SEE ALSO
 
 L<Math::NumSeq>,
+L<Math::NumSeq::Pronic>,
+L<Math::NumSeq::Triangular>,
 L<Math::NumSeq::Cubes>
 
 =head1 HOME PAGE

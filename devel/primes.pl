@@ -30,93 +30,84 @@ use Math::Trig 'pi';
 
 # use blib "$ENV{HOME}/perl/bit-vector/Bit-Vector-7.1/blib";
 
+
+
 {
-  # Lipschitz by seq
-  require Math::NumSeq::MathImageLipschitzClass;
-  my $seq = Math::NumSeq::MathImageLipschitzClass->new;
-  my @P;
-  my @I;
-  foreach (1 .. 1000) {
+  # value_to_i_estimate()
+  # require Math::NumSeq::Primes;
+  # my $seq = Math::NumSeq::Primes->new;
+
+  require Math::NumSeq::TwinPrimes;
+  my $seq = Math::NumSeq::TwinPrimes->new;
+
+  my $target = 2;
+  for (;;) {
     my ($i, $value) = $seq->next;
-    push @{$I[$value]}, $i;
-  }
-  $seq = Math::NumSeq::MathImageLipschitzClass->new (lipschitz_type => 'P');
-  foreach (1 .. 1000) {
-    my ($i, $value) = $seq->next;
-    if ($value) {
-      push @{$P[$value]}, $i;
+    if ($i >= $target) {
+      $target *= 1.1;
+
+      require Math::BigInt;
+      $value = Math::BigInt->new($value);
+
+      # require Math::BigRat;
+      # $value = Math::BigRat->new($value);
+
+      # require Math::BigFloat;
+      # $value = Math::BigFloat->new($value);
+
+      my $est_i = $seq->value_to_i_estimate($value);
+      my $factor = (ref $est_i ? $est_i->numify : $est_i) / $i;
+      printf "%d %d   %.10s  factor=%.3f\n",
+        $i, $est_i, $value, $factor;
     }
-  }
-
-  foreach my $i (1 .. 10) {
-    my $Pstr = join(',', @{$P[$i]//[]});
-    print "P$i: $Pstr\n";
-
-    my $Istr = join(',', @{$I[$i]//[]});
-    print "I$i: $Istr\n";
   }
   exit 0;
 }
 
+
 {
-  # The development of prime number theory: from Euclid to Hardy and Littlewood
-  #
-  # Lipschitz 1890 Bemerkung zu dem aufsatze: Untersuchungen der
-  # Eigenschaften einer Gattung von unendlichen Reihen J. Reine Agnew Math
-  # 106 27-29
-  # http://resolver.sub.uni-goettingen.de/purl?PPN243919689_0106/dmdlog6
-  # http://www.digizeitschriften.de/index.php?id=resolveppn&PPN=PPN243919689_0106&DMDID=dmdlog6
-  #
-  # require Math::NumSeq::MathImageLipschitzClass;
-  # my $seq = Math::NumSeq::MathImageLipschitzClass->new;
+  # twin primes count
+  use Math::NumSeq::TwinPrimes;
+  my $seq = Math::NumSeq::TwinPrimes->new;
 
-  my @P = (undef, { 2 => 1 });
-  my @I = (undef, { 2 => 1 });
-  my %I_left;
-  @I_left{3..1000} = (); # hash slice
+  # n	pi_2(n)
+  # 10^3	35
+  # 10^4	205
+  # 10^5	1224
+  # 10^6	8169
+  # 10^7	58980
+  # 10^8	440312
+  # 10^9	3424506
+  # 10^(10)	27412679
+  # 10^(11)	224376048
+  # 10^(12)	1870585220
+  # 10^(13)	15834664872
+  # 10^(14)	135780321665
+  # 10^(15)	1177209242304
+  # 10^(16)	10304195697298
 
-  foreach my $i (1 .. 10) {
-    my $Pstr = join(',',sort {$a<=>$b} keys %{$P[$i]});
-    print "P$i: $Pstr\n";
 
-    my $Istr = join(',',sort {$a<=>$b} keys %{$I[$i]});
-    print "I$i: $Istr\n";
-
-    foreach my $v (keys %{$I[$i]}) {
-      if (is_prime($v+1)) {
-        $P[$i+1]->{$v+1} = 1;
-      }
-    }
-
-    foreach my $v (keys %I_left) {
-      if (all_factor_in_Ps($i,$v)) {
-        $I[$i+1]->{$v} = 1;
-        delete $I_left{$v};
-      }
-    }
+  {
+    my $value = 5.4e15;
+    my $est_i = $seq->value_to_i_estimate($value);
+    print "$value  $est_i\n";
   }
 
-  sub all_factor_in_Ps {
-    my ($i, $v) = @_;
-    foreach my $factor (prime_factors($v)) {
-      if (! factor_in_Ps($i, $factor)) {
-        return 0;
-      }
-    }
-    return 1;
-  }
 
-  sub factor_in_Ps {
-    my ($i, $factor) = @_;
-    foreach my $j (1 .. $i) {
-      if ($P[$j]->{$factor}) {
-        return 1;
-      }
+  my $target = 2;
+  for (;;) {
+    my ($i, $value) = $seq->next;
+    if ($i >= $target) {
+      $target *= 2;
+      my $est_i = $seq->value_to_i_estimate($value);
+      my $factor = $est_i / $i;
+      printf "%d %d   %d  %.3f\n", $i, $est_i, $value, $factor;
     }
-    return 0;
   }
   exit 0;
 }
+
+
 
 {
   # dedekind psi cumulative estimate
@@ -156,37 +147,6 @@ use Math::Trig 'pi';
   exit 0;
 }
 
-{
-  # Math::NumSeq::MathImagePierpontPrimes;
-
-  # Erdos-Selfridge
-  # 1+ 2, 3, 5, 7, 11, 17, 23, 31, 47, 53, 71, 107, 127, 191, 383, 431, 647,
-  # 2+ 13, 19, 29, 41, 43, 59, 61, 67, 79, 83, 89, 97, 101, 109, 131, 137,
-  # 3+ 37, 103, 113, 151, 157, 163, 173, 181, 193, 227, 233, 257, 277, 311,
-  # 4+ 73, 313, 443, 617, 661, 673, 677, 691, 739, 757, 823, 887, 907, 941,
-  my @es_class = (undef, undef, 0, 0);
-  sub es_class {
-    my ($prime) = @_;
-    return ($es_class[$prime]
-            //= max (map { es_class($_)+1 } prime_factors($prime+1)));
-  }
-  
-  my @by_class;
-  my $seq = Math::NumSeq::Primes->new;
-  foreach (1 .. 50) {
-    my ($i, $value) = $seq->next;
-    my $es_class = es_class($value);
-    print "$value  $es_class\n";
-    push @{$by_class[$es_class]}, $value;
-  }
-
-  foreach my $i (keys @by_class) {
-    my $aref = $by_class[$i] || next;
-    print "$i  ",join(',',@$aref),"\n";
-  }
-
-  exit 0;
-}
 
 {
   # pierpont offsets
@@ -236,47 +196,6 @@ use Math::Trig 'pi';
   exit 0;
 }
 
-
-# n	pi_2(n)
-# 10^3	35
-# 10^4	205
-# 10^5	1224
-# 10^6	8169
-# 10^7	58980
-# 10^8	440312
-# 10^9	3424506
-# 10^(10)	27412679
-# 10^(11)	224376048
-# 10^(12)	1870585220
-# 10^(13)	15834664872
-# 10^(14)	135780321665
-# 10^(15)	1177209242304
-# 10^(16)	10304195697298
-
-{
-  # twin primes count
-  use Math::NumSeq::TwinPrimes;
-  my $seq = Math::NumSeq::TwinPrimes->new;
-
-  {
-    my $value = 5.4e15;
-    my $est_i = $seq->value_to_i_estimate($value);
-    print "$value  $est_i\n";
-  }
-
-
-  my $target = 2;
-  for (;;) {
-    my ($i, $value) = $seq->next;
-    if ($i >= $target) {
-      $target *= 2;
-      my $est_i = $seq->value_to_i_estimate($value);
-      my $factor = $est_i / $i;
-      printf "%d %d   %d  %.3f\n", $i, $est_i, $value, $factor;
-    }
-  }
-  exit 0;
-}
 
 {
   use Math::Prime::FastSieve;

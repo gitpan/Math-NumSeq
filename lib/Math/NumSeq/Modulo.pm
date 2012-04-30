@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 37;
+$VERSION = 38;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -30,8 +30,15 @@ use Math::NumSeq::Base::IterateIth;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-use constant name => Math::NumSeq::__('Modulo');
-use constant description => Math::NumSeq::__('Remainder to a given modulus.');
+# use constant name => Math::NumSeq::__('Modulo');
+sub description {
+  my ($self) = @_;
+  if (ref $self) {
+    return Math::NumSeq::__('Remainder modulo ') . $self->{'modulus'};
+  } else {
+    return Math::NumSeq::__('Remainder to a given modulus.');
+  }
+}
 use constant i_start => 0;
 use constant characteristic_smaller => 1;
 sub characteristic_integer {
