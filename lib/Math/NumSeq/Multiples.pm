@@ -21,7 +21,7 @@ use strict;
 use POSIX 'ceil';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 38;
+$VERSION = 39;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -169,6 +169,14 @@ sub value_to_i_estimate {
 use Math::NumSeq::All;
 *_floor = \&Math::NumSeq::All::_floor;
 
+sub value_to_i {
+  my ($self, $value) = @_;
+  my $i = $self->value_to_i_floor($value);
+  if ($value == $self->ith($i)) {
+    return $i;
+  }
+  return undef;
+}
 sub value_to_i_floor {
   my ($self, $value) = @_;
   return _floor($value/$self->{'multiples'});
@@ -182,7 +190,6 @@ sub _UNTESTED__value_to_i_ceil {
   }
   return $i;
 }
-
 
 
 1;

@@ -26,9 +26,11 @@ use Getopt::Long;
 use Data::Dumper;
 use ExtUtils::Manifest;
 use Module::Util;
+use Cwd;
+use File::Path;
 
 use vars '$VERSION';
-$VERSION = 38;
+$VERSION = 39;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -47,14 +49,20 @@ Getopt::Long::GetOptions
 if (@ARGV) {
   die "Unrecognised options ",join(' ',@ARGV);
 }
-my $outfilename = "lib/Math/NumSeq/OEIS/Catalogue/Plugin/$outmodule.pm";
+my $outdirname = "lib/Math/NumSeq/OEIS/Catalogue/Plugin/";
+my $outfilename = "$outdirname/$outmodule.pm";
 
 my %seen;
 my $exit_code = 0;
 
 my @info_arrayref;
-my $manifest_href = ExtUtils::Manifest::maniread();
-my @filenames = keys %$manifest_href;
+my @filenames;
+if (Cwd::getcwd() =~ /devel$/) {
+  @filenames = <lib/Math/NumSeq/*.pm>;
+} else {
+  my $manifest_href = ExtUtils::Manifest::maniread();
+  @filenames = keys %$manifest_href;
+}
 # files for Math::NumSeq::Foo, and not sub-parts
 @filenames = grep { m{^(lib/Math/NumSeq/[^/]*
                       |lib/App/MathImage/NumSeq/[^/]*)$}x
@@ -155,6 +163,7 @@ my $dump = Data::Dumper->new([\@info_arrayref])->Sortkeys(1)->Terse(1)->Indent(1
 $dump =~ s/'(\d+)'/$1/g;
 
 my $part='part';
+File::Path::make_path ($outdirname);
 open my $out, '>', $outfilename
   or die "Cannot create $outfilename: $!";
 print $out <<"HERE";

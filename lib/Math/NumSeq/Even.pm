@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 38;
+$VERSION = 39;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -64,6 +64,15 @@ sub pred {
           && ($value % 2) == 0);
 }
 
+sub value_to_i {
+  my ($self, $value) = @_;
+  my $int = int($value);
+  if ($value == $int
+      && ($int % 2) == 0) {
+    return $int/2;
+  }
+  return undef;
+}
 sub value_to_i_floor {
   my ($self, $value) = @_;
   if ($value < 0) {

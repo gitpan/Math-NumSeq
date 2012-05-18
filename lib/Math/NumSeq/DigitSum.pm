@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 38;
+$VERSION = 39;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -55,6 +55,9 @@ use constant parameter_info_array =>
 
 
 #------------------------------------------------------------------------------
+# cf A010888 repeat DigitSum until single digit, is (n mod 9)+1, so 1 to 9
+#
+
 my @oeis_anum;
 
 $oeis_anum[1]->[2] = 'A000120';  # 2 binary, count of 1 bits like DigitCount

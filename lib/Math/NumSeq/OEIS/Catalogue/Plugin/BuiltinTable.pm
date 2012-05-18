@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 38;
+$VERSION = 39;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 711 A-numbers in 100 modules
+# total 729 A-numbers in 102 modules
 
 use constant info_arrayref =>
 [
@@ -2486,6 +2486,164 @@ use constant info_arrayref =>
       'distinct',
       'prime_type',
       'SG'
+    ]
+  },
+  {
+    'anum' => 'A049076',
+    'class' => 'Math::NumSeq::PrimeIndexOrder',
+    'parameters' => [
+      'on_values',
+      'primes'
+    ]
+  },
+  {
+    'anum' => 'A006450',
+    'class' => 'Math::NumSeq::PrimeIndexPrimes'
+  },
+  {
+    'anum' => 'A038580',
+    'class' => 'Math::NumSeq::PrimeIndexPrimes',
+    'parameters' => [
+      'level',
+      3
+    ]
+  },
+  {
+    'anum' => 'A049090',
+    'class' => 'Math::NumSeq::PrimeIndexPrimes',
+    'parameters' => [
+      'level',
+      4
+    ]
+  },
+  {
+    'anum' => 'A049203',
+    'class' => 'Math::NumSeq::PrimeIndexPrimes',
+    'parameters' => [
+      'level',
+      5
+    ]
+  },
+  {
+    'anum' => 'A049202',
+    'class' => 'Math::NumSeq::PrimeIndexPrimes',
+    'parameters' => [
+      'level',
+      6
+    ]
+  },
+  {
+    'anum' => 'A057849',
+    'class' => 'Math::NumSeq::PrimeIndexPrimes',
+    'parameters' => [
+      'level',
+      7
+    ]
+  },
+  {
+    'anum' => 'A057850',
+    'class' => 'Math::NumSeq::PrimeIndexPrimes',
+    'parameters' => [
+      'level',
+      8
+    ]
+  },
+  {
+    'anum' => 'A057851',
+    'class' => 'Math::NumSeq::PrimeIndexPrimes',
+    'parameters' => [
+      'level',
+      9
+    ]
+  },
+  {
+    'anum' => 'A057847',
+    'class' => 'Math::NumSeq::PrimeIndexPrimes',
+    'parameters' => [
+      'level',
+      10
+    ]
+  },
+  {
+    'anum' => 'A058332',
+    'class' => 'Math::NumSeq::PrimeIndexPrimes',
+    'parameters' => [
+      'level',
+      11
+    ]
+  },
+  {
+    'anum' => 'A093047',
+    'class' => 'Math::NumSeq::PrimeIndexPrimes',
+    'parameters' => [
+      'level',
+      12
+    ]
+  },
+  {
+    'anum' => 'A093046',
+    'class' => 'Math::NumSeq::PrimeIndexPrimes',
+    'parameters' => [
+      'level',
+      13
+    ]
+  },
+  {
+    'anum' => 'A018252',
+    'class' => 'Math::NumSeq::PrimeIndexPrimes',
+    'parameters' => [
+      'level_type',
+      'exact',
+      'level',
+      0
+    ]
+  },
+  {
+    'anum' => 'A007821',
+    'class' => 'Math::NumSeq::PrimeIndexPrimes',
+    'parameters' => [
+      'level_type',
+      'exact',
+      'level',
+      1
+    ]
+  },
+  {
+    'anum' => 'A049078',
+    'class' => 'Math::NumSeq::PrimeIndexPrimes',
+    'parameters' => [
+      'level_type',
+      'exact'
+    ]
+  },
+  {
+    'anum' => 'A049079',
+    'class' => 'Math::NumSeq::PrimeIndexPrimes',
+    'parameters' => [
+      'level_type',
+      'exact',
+      'level',
+      3
+    ]
+  },
+  {
+    'anum' => 'A049080',
+    'class' => 'Math::NumSeq::PrimeIndexPrimes',
+    'parameters' => [
+      'level_type',
+      'exact',
+      'level',
+      4
+    ]
+  },
+  {
+    'anum' => 'A049081',
+    'class' => 'Math::NumSeq::PrimeIndexPrimes',
+    'parameters' => [
+      'level_type',
+      'exact',
+      'level',
+      5
     ]
   },
   {
@@ -5804,14 +5962,6 @@ use constant info_arrayref =>
       2,
       'including_repdigits',
       0
-    ]
-  },
-  {
-    'anum' => 'A033619',
-    'class' => 'Math::NumSeq::UndulatingNumbers',
-    'parameters' => [
-      'including_repdigits',
-      1
     ]
   },
   {

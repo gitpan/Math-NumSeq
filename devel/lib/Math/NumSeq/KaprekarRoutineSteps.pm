@@ -1,0 +1,113 @@
+# Copyright 2012 Kevin Ryde
+
+# This file is part of Math-NumSeq.
+#
+# Math-NumSeq is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by the
+# Free Software Foundation; either version 3, or (at your option) any later
+# version.
+#
+# Math-NumSeq is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
+
+package Math::NumSeq::KaprekarRoutineSteps;
+use 5.004;
+use strict;
+
+use vars '$VERSION', '@ISA';
+$VERSION = 39;
+use Math::NumSeq;
+use List::Util 'min';
+use Math::NumSeq::Base::IterateIth;
+@ISA = ('Math::NumSeq::Base::IterateIth',
+        'Math::NumSeq');
+*_is_infinite = \&Math::NumSeq::_is_infinite;
+
+# uncomment this to run the ### lines
+#use Smart::Comments;
+
+
+# use constant name => Math::NumSeq::__('...');
+use constant description => Math::NumSeq::__('Number of steps of the Kaprekar iteration digits ascending + digits descending until reaching a cycle.');
+use constant i_start => 1;
+use constant characteristic_count => 1;
+use constant characteristic_integer => 1;
+
+use Math::NumSeq::Base::Digits;   # radix
+*parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
+
+use constant values_min => 0;
+
+my @oeis_anum = ();
+sub oeis_anum {
+  my ($self) = @_;
+  return $oeis_anum[$self->{'radix'}];
+}
+
+sub ith {
+  my ($self, $i) = @_;
+  ### ith(): $i
+
+  if (_is_infinite($i)) {
+    return $i;  # don't loop forever if $i is +infinity
+  }
+
+  my $radix = $self->{'radix'};
+  my @digits = _digit_split($i, $radix);
+  my %seen = (join(',',@digits) => undef);
+  my $count = 0;
+  for (;;) {
+    ### at: "count=$count   ".join(', ', @digits)
+
+    @digits = sort {$a<=>$b} @digits;
+    ### sorted: join(', ', @digits)
+
+    my @diff;
+    my $borrow = 0;
+    foreach my $i (0 .. $#digits) {  # low to high
+      my $diff = $digits[$i] - $digits[-1-$i] - $borrow;
+      if ($borrow = ($diff < 0)) {
+        $diff += $radix;
+      }
+      $diff[$i] = $diff;
+    }
+    ### diff: join(', ', @diff)
+    ### assert: $borrow == 0
+
+    # while ($diff[-1] == 0) {
+    #   ### strip high zero ...
+    #   pop @diff;
+    #   if (! @diff) {
+    #     return $count;
+    #   }
+    # }
+
+    @digits = @diff;
+    my $key = join (',',@digits);
+    if (exists $seen{$key}) {
+      last;
+    }
+    $seen{$key} = undef;
+    $count++;
+  }
+  return $count;
+}
+
+sub _digit_split {
+  my ($n, $radix) = @_;
+  ### _digit_split(): $n
+  my @ret;
+  while ($n) {
+    push @ret, $n % $radix;
+    $n = int($n/$radix);
+  }
+  return @ret;   # low to high
+}
+
+1;
+__END__

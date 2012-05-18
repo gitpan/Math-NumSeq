@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 38;
+$VERSION = 39;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -126,7 +126,7 @@ sub value_to_i_estimate {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq Perrin recurrance
+=for stopwords Ryde Math-NumSeq Perrin
 
 =head1 NAME
 
@@ -144,15 +144,17 @@ The Perrin sequence,
 
     3, 0, 2, 3, 2, 5, 5, 7, 10, 12, 17, 22, 29, 39, 51, etc
 
-which is the recurrance
+which is the recurrence
 
     P(i) = P(i-2) + P(i-3)
 
 starting from 3,0,2.  So for example 29 is 12+17.
 
     12, 17, 22, 29
+
+     |   |       ^
      |   |       |
-     +---+-------+
+     +---+---add-+
 
 =head1 FUNCTIONS
 

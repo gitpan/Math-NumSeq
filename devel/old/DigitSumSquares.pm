@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
-package App::MathImage::NumSeq::DigitSumSquares;
+package Math::NumSeq::DigitSumSquares;
 use 5.004;
 use strict;
 

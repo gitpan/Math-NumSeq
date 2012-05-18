@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 38;
+$VERSION = 39;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -36,7 +36,17 @@ use constant i_start => 0;
 use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
 
-# cf A001147 double factorial 1*3*5*...*(2k+1) odd numbers
+# cf A006882 double a(n)=n*a(n-2), n*(n-2)*(n-4)*...*3*1 or *4*2
+#    A001147 double factorial 1*3*5*...*(2n-1) odd numbers, bisection
+#    A000165 double factorial 2*4*6*...*2n even numbers,    bisection
+#    
+#    A007661 triple a(n)=n*a(n-3)
+#    A007662 quadruple a(n)=n*a(n-4)
+#    A047053 quad 4^n*n! quad on on multiples of 4
+#    A007696 quad n=4k+1 products
+#    A001813 quad (2*n)!/n!
+#    A008545 quad n=4k+1 products
+#    A080500 squares n*(n-1)*(n-4)*(n-9)*(n-16)*(n-25)*...*1
 #
 use constant oeis_anum => 'A000142'; # factorials 1,1,2,6,24, including 0!==1
 
@@ -150,6 +160,26 @@ sub pred {
     if ($value <= 1) {
       return ($value == 1);
     }
+    if (($value % $i) == 0) {
+      $value /= $i;
+    } else {
+      return 0;
+    }
+  }
+}
+
+sub _UNTESTED__value_to_i {
+  my ($self, $value) = @_;
+
+  if (_is_infinite($value)) {
+    return undef;
+  }
+  my $i = 1;
+  for (;;) {
+    if ($value <= 1) {
+      return $i;
+    }
+    $i++;
     if (($value % $i) == 0) {
       $value /= $i;
     } else {

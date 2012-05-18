@@ -38,7 +38,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 38;
+$VERSION = 39;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -468,8 +468,11 @@ L<Math::NumSeq::PrimeFactorCount>,
 L<Math::NumSeq::DivisorCount>,
 L<Math::NumSeq::GoldbachCount>,
 L<Math::NumSeq::LemoineCount>,
-L<Math::NumSeq::ErdosSelfridgeClass>,
 L<Math::NumSeq::PythagoreanHypots>
+
+L<Math::NumSeq::ErdosSelfridgeClass>,
+L<Math::NumSeq::PrimeIndexOrder>,
+L<Math::NumSeq::PrimeIndexPrimes>
 
 L<Math::NumSeq::Totient>,
 L<Math::NumSeq::TotientCumulative>,

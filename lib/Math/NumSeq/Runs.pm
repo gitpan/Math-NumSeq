@@ -27,7 +27,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION','@ISA';
-$VERSION = 38;
+$VERSION = 39;
 
 use Math::NumSeq 21; # v.21 for oeis_anum field
 use Math::NumSeq::Base::IterateIth;
@@ -299,9 +299,11 @@ sub ith {
   my ($self, $i) = @_;
   ### Runs ith(): $i
 
-  if ($i < 0) {
+  my $i_start = $self->{'i_start'};
+  if ($i < $i_start) {
     return undef;
   }
+
   if ($self->{'runs_type'} eq 'Nto0' || $self->{'runs_type'} eq 'Nto1') {
     # d-(i-(d-1)*d/2)
     #   = d-i+(d-1)*d/2
@@ -377,7 +379,7 @@ sub ith {
     return $i - $f0 + 1;
 
   } else { # 0toN, 1toN
-    $i -= $self->{'i_start'};
+    $i -= $i_start;
     my $d = int((sqrt(8*$i+1) + 1) / 2);
 
     ### $d

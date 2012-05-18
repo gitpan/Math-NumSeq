@@ -23,7 +23,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 38;
+$VERSION = 39;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -34,7 +34,7 @@ use Math::NumSeq;
 
 # use constant name => Math::NumSeq::__('Undulating Numbers');
 use constant description => Math::NumSeq::__('Numbers like 37373 which are a pattern of digits ABAB...');
-use constant i_start => 0;
+use constant default_i_start => 0;
 use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
 use constant values_min => 0;
@@ -62,9 +62,10 @@ use constant parameter_info_array =>
 my @oeis_anum;
 
 $oeis_anum[1]->[2]  = 'A000975'; # binary A!=B no consecutive equal bits
-$oeis_anum[0]->[10] = 'A033619'; # decimal incl A=B, start i=0 value=0
 # OEIS-Catalogue: A000975 radix=2 including_repdigits=0
-# OEIS-Catalogue: A033619 including_repdigits=1
+
+# $oeis_anum[0]->[10] = 'A033619'; # decimal incl A=B, but OFFSET=1 value=0
+# # OEIS-Catalogue: A033619 including_repdigits=1
 
 sub oeis_anum {
   my ($self) = @_;

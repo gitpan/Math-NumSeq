@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010, 2011 Kevin Ryde
+# Copyright 2010, 2011, 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -28,9 +28,9 @@ use Smart::Comments;
 
 {
   require Math::NumSeq::RepdigitAny;
-  require App::MathImage::NumSeq::RepdigitRadix;
+  require Math::NumSeq::RepdigitRadix;
   my $rany = Math::NumSeq::RepdigitAny->new (hi => 9999);
-  my $rb = App::MathImage::NumSeq::RepdigitRadix->new (hi => 9999);
+  my $rb = Math::NumSeq::RepdigitRadix->new (hi => 9999);
   foreach (1 .. 20) {
     my ($i,$value) = $rany->next;
     $value = $i;

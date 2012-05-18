@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 38;
+$VERSION = 39;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -203,7 +203,7 @@ $oeis_anum{'first'}->[24]  =  'A051876'; # 24
 $oeis_anum{'second'}->[30] = 'A195028';
 # OEIS-Catalogue: A195028 polygonal=30 pairs=second   # 30 second
 
-$oeis_anum{'average'}->[6] = 'A001105'; # (k-2)/2==2 is 2*squares
+$oeis_anum{'average'}->[6] = 'A001105'; # (k-2)/2==2 is 2*n^2
 # OEIS-Catalogue: A001105 polygonal=6 pairs=average
 
 $oeis_anum{'average'}->[8] = 'A033428'; # (k-2)/2==3 is 3*squares

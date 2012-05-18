@@ -22,7 +22,7 @@ use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 use Math::NumSeq::Primes;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 38;
+$VERSION = 39;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -44,21 +44,21 @@ use constant values_min => 0;
 
 use constant parameter_info_array =>
   [
-   { name    => 'p_or_m',
-     display => Math::NumSeq::__('+/-'),
-     type    => 'enum',
-     default => '+',
-     choices => ['+','-'],
+   { name        => 'p_or_m',
+     display     => Math::NumSeq::__('+/-'),
+     type        => 'enum',
+     default     => '+',
+     choices     => ['+','-'],
      choices_display => [Math::NumSeq::__('+'),
                          Math::NumSeq::__('-')],
      description => Math::NumSeq::__('Class + or -, factorizing p+1 or p-1 respectively in the classification.'),
    },
-   { name    => 'on_values',
-    share_key   => 'on_values_primes',
-     display => Math::NumSeq::__('Using Values'),
-     type    => 'enum',
-     default => 'all',
-     choices => ['all','primes'],
+   { name        => 'on_values',
+     share_key   => 'on_values_primes',
+     display     => Math::NumSeq::__('On Values'),
+     type        => 'enum',
+     default     => 'all',
+     choices     => ['all','primes'],
      choices_display => [Math::NumSeq::__('All'),
                          Math::NumSeq::__('Primes')],
      description => Math::NumSeq::__('Values to classify, either all integers or just the primes.'),

@@ -25,7 +25,7 @@ use Math::NumSeq;
 *_bigint = \&Math::NumSeq::_bigint;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 38;
+$VERSION = 39;
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
 

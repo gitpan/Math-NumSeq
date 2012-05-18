@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 38;
+$VERSION = 39;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -75,6 +75,13 @@ sub pred {
   return ($value == int($value));
 }
 
+sub value_to_i {
+  my ($self, $value) = @_;
+  if ($value == int($value)) {
+    return $value;
+  }
+  return undef;
+}
 sub value_to_i_floor {
   my ($self, $value) = @_;
   return _floor($value);
@@ -186,9 +193,11 @@ Return true if C<$value> is an integer.
 
 =item C<$i = $seq-E<gt>value_to_i_ceil($value)>
 
+=item C<$i = $seq-E<gt>value_to_i_floor($value)>
+
 =item C<$i = $seq-E<gt>value_to_i_estimate($value)>
 
-Return floor($value).
+Return C<$value> rounded to the next higher or lower integer.
 
 =back
 

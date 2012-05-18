@@ -22,7 +22,7 @@ use POSIX ();
 use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 38;
+$VERSION = 39;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -42,6 +42,8 @@ use constant i_start => 1;
 #      A051006 characteristic as binary fraction, in decimal
 #      A051007 characteristic as binary fraction, continued fraction
 #    A000720 - pi(n) num primes <= n
+#    A018252 - the non-primes
+#    A002476 - primes 3k+1, also 6k+1
 #
 use constant oeis_anum => 'A000040'; # primes
 
@@ -213,7 +215,7 @@ Math::NumSeq::Primes -- prime numbers
 
 The prime numbers, not divisible by anything except themselves and 1.
 
-    2, 3, 5, 7, 11, 13, ...
+    2, 3, 5, 7, 11, 13, 17, 19, ...
 
 Currently this is implemented with C<Math::Prime::XS> generating blocks of
 primes with a sieve of Eratosthenes.  The result is reasonably progressive.

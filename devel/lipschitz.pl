@@ -25,6 +25,19 @@ use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 {
+  # distinct primes
+  foreach my $i (2 .. 20) {
+    my @primes = prime_factors($i);
+    @primes = List::MoreUtils::uniq(@primes);
+    my $dist = 1;
+    foreach (@primes) { $dist *= $_ }
+    print "$dist,";
+  }
+  print "\n";
+  exit 0;
+}
+
+{
   # The development of prime number theory: from Euclid to Hardy and Littlewood
   #
   # Lipschitz 1890 Bemerkung zu dem aufsatze: Untersuchungen der

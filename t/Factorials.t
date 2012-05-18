@@ -27,7 +27,7 @@ BEGIN { MyTestHelpers::nowarnings(); }
 
 use Math::NumSeq::Factorials;
 
-my $test_count = (tests => 23)[1];
+my $test_count = (tests => 40)[1];
 plan tests => $test_count;
 
 
@@ -35,7 +35,7 @@ plan tests => $test_count;
 # VERSION
 
 {
-  my $want_version = 38;
+  my $want_version = 39;
   ok ($Math::NumSeq::Factorials::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::Factorials->VERSION,  $want_version,
@@ -63,6 +63,36 @@ plan tests => $test_count;
   my @pnames = map {$_->{'name'}} $seq->parameter_info_list;
   ok (join(',',@pnames),
       '');
+}
+
+
+#------------------------------------------------------------------------------
+# pred()
+
+{
+  my $seq = Math::NumSeq::Factorials->new;
+
+  ok (! $seq->pred(0),   1);
+  ok (! $seq->pred(0.5), 1);
+  ok ($seq->pred(1), 1);
+  ok (! $seq->pred(1.5), 1);
+
+  ok ($seq->pred(2), 1);  # 1*2=6
+  ok ($seq->pred(3), 0);
+
+  ok ($seq->pred(5), 0);
+  ok ($seq->pred(6), 1);  # 1*2*3=6
+  ok ($seq->pred(7), 0);
+
+  ok ($seq->pred(23), 0);
+  ok ($seq->pred(24), 1);  # 1*2*3*4=24
+  ok ($seq->pred(24.5), 0);
+  ok ($seq->pred(25), 0);
+
+  ok ($seq->pred(119), 0);
+  ok ($seq->pred(120), 1);  # 1*2*3*4*5=120
+  ok ($seq->pred(120.25), 0);
+  ok ($seq->pred(121), 0);
 }
 
 

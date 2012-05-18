@@ -127,7 +127,7 @@ sub check_class {
 
   # skip all except ...
   #
-  # return unless $class =~ /Fibonacci$/;
+  # return unless $class =~ /PrimeIndex/;
   # return unless $class =~ /Golomb/;
   # return unless $class =~ /Twin/;
   # return unless $class =~ /FactorCount/;
@@ -140,7 +140,6 @@ sub check_class {
   # return unless $class =~ /SqrtD/;
   # return unless $class =~ /Power/;
   # return unless $class =~ /Repdigit/;
-  # return unless $class =~ /Hof/;
   # return unless $class =~ /Undul/;
   # return unless $class =~ /Concat/;
   # return unless $class =~ /Totient/;
@@ -218,6 +217,22 @@ sub check_class {
            || $anum eq 'A014574'
            || $anum eq 'A001097') {
     # twin primes shorten for now
+    @$want = grep {$_ < 1_000_000} @$want;
+
+  } elsif ($anum eq 'A000040'
+           || $anum eq 'A006450'
+           || $anum eq 'A049090'
+           || $anum eq 'A049203'
+           || $anum eq 'A049202'
+           || $anum eq 'A057849'
+           || $anum eq 'A057850'
+           || $anum eq 'A057851'
+           || $anum eq 'A057847'
+           || $anum eq 'A058332'
+           || $anum eq 'A093047'
+           || $anum eq 'A093046'
+          ) {
+    # PrimeIndexPrimes shorten
     @$want = grep {$_ < 1_000_000} @$want;
 
   } elsif ($anum eq 'A002858'

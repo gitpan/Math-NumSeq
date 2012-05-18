@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 38;
+$VERSION = 39;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -54,9 +54,11 @@ use constant parameter_info_array =>
    },
   ];
 
+#------------------------------------------------------------------------------
 # cf
 #    A075680 odd numbers only
 #    A008908 count of both halvings and triplings, with +1
+#    A006884 new record high count of steps
 #
 my %oeis_anum = (up   => 'A006667', # triplings
                  # OEIS-Catalogue: A006667 step_type=up
@@ -71,6 +73,9 @@ sub oeis_anum {
   my ($self) = @_;
   return $oeis_anum{$self->{'step_type'}};
 }
+
+#------------------------------------------------------------------------------
+
 
 use constant 1.02 _UV_LIMIT => do {  # version 1.02 for leading underscore
   my $limit = ~0;

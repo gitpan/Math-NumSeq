@@ -26,29 +26,35 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 38;
+$VERSION = 39;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
+# uncomment this to run the ### lines
+#use Smart::Comments;
+
 # use constant name => Math::NumSeq::__('Baum-Sweet');
 use constant description => Math::NumSeq::__('Baum-Sweet sequence, 1 if i contains no odd-length run of 0 bits, 0 if it does.');
 use constant values_min => 0;
 use constant values_max => 1;
-# use constant characteristic_smaller => 1; # undocumented
-# use constant characteristic_boolean => 1; # undocumented
 use constant i_start => 0;
 use constant characteristic_integer => 1;
+
+# cf A037011 "Baum Sweet cubic"
+#
 use constant oeis_anum => 'A086747'; # starting OFFSET=0 value 1
 
 sub ith {
   my ($self, $i) = @_;
+  ### BaumSweet ith(): $i
+
   if (_is_infinite($i)) {
     return $i;
   }
-  while ($i) {
+  while ($i >= 1) {
     if (($i % 2) == 0) {
       my $oddzeros = 0;
       do {
@@ -88,6 +94,7 @@ Math::NumSeq::BaumSweet -- Baum-Sweet sequence
 
 The Baum-Sweet sequence
 
+    starting i=0
     1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, ...
 
 where each value is 1 if the index i contains no odd-length run of 0 bits,

@@ -17,6 +17,9 @@ with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 39, May 2012
+    - new PrimeIndexOrder, PrimeIndexPrimes
+
 Version 38, April 2012
     - new ErdosSelfridgeClass, GolayRudinShapiro,
       GolayRudinShapiroCumulative, LuckyNumbers, MoranNumbers,

@@ -24,6 +24,22 @@ use POSIX;
 use List::Util 'max','min';
 
 {
+  require Math::NumSeq::Tribonacci;
+  my $seq = Math::NumSeq::Tribonacci->new (hi => 13);
+  my @next = ( $seq->next,
+               $seq->next,
+               $seq->next,
+               $seq->next,
+               $seq->next,
+               $seq->next );
+  ### @next
+  print $seq->pred(12),"\n";
+  ### $seq
+  exit 0;
+}
+
+
+{
   # cumulative
   require Math::NumSeq::Fibonacci;
   my $seq = Math::NumSeq::Fibonacci->new;

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 38;
+$VERSION = 39;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
@@ -77,7 +77,7 @@ sub pred {
     $sum += ($v % $radix);
     $v = int($v/$radix);
   }
-  return ! ($value % $sum);
+  return ($sum > 0 && ($value % $sum) == 0);
 }
 # sub ith {
 #   my ($self, $i) = @_;

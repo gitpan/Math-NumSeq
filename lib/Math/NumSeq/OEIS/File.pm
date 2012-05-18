@@ -30,14 +30,14 @@ use Symbol 'gensym';
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 38;
+$VERSION = 39;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_bigint = \&Math::NumSeq::_bigint;
 
 use vars '$VERSION';
-$VERSION = 38;
+$VERSION = 39;
 
 eval q{use Scalar::Util 'weaken'; 1}
   || eval q{sub weaken { $_[0] = undef }; 1 }
@@ -480,6 +480,8 @@ sub _read_internal {
       $description =~ s/&amp;/&/g;     # unentitize &
       $description =~ s/&#(\d+);/chr($1)/ge; # unentitize numeric ' and "
       _set_description ($self, $description, $filename);
+    } else {
+      ### description not matched ...
     }
 
     _set_characteristics ($self, $description,
@@ -546,12 +548,12 @@ sub _read_html {
 
     my $description;
     if ($contents =~
-        m{$anum\n.*?
-          <td[^>]*>\s*</td>   # blank <td ...></td>
-          <td[^>]*>           # <td ...>
+        m{$anum\n.*?             # target anum
+          <td[^>]*>\s*(?:</td>)? # <td ...></td> empty
+          <td[^>]*>              # <td ...>
           \s*
-          (.*?)               # text
-          <(br|/td)>          # to <br> or </td>
+          (.*?)                  # text through to ...
+          <(br|/td)>             # <br> or </td>
        }sx) {
       $description = $1;
       $description =~ s/\s+$//;       # trailing whitespace
@@ -562,6 +564,8 @@ sub _read_html {
       $description =~ s/&amp;/&/g;   # unentitize &
       $description =~ s/&#(\d+);/chr($1)/ge; # unentitize numeric ' and "
       _set_description ($self, $description, $filename);
+    } else {
+      ### description not matched ...
     }
 
     # fragile grep out of the html ...

@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 38;
+$VERSION = 39;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -36,6 +36,11 @@ use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
 use constant i_start => 0;
 use constant values_min => 0;
+
+# cf A001105 2*n^2
+#    A000037 non-squares
+#    A010052 characterisic 1/0 for squares
+#
 use constant oeis_anum => 'A000290'; # squares
 
 sub rewind {
@@ -70,10 +75,23 @@ sub pred {
   my $int = int($value);
   if ($value != $int) { return 0; }
 
-  my $sqrt = int(sqrt($int));
-  return ($int == $sqrt*$sqrt);
+  my $i = int(sqrt($int));
+  return ($int == $i*$i);
 }
 
+sub value_to_i {
+  my ($self, $value) = @_;
+  if ($value >= 0) {
+    my $int = int($value);
+    if ($value == $int) {
+      my $i = int(sqrt($int));
+      if ($int == $self->ith($i)) {
+        return $i;
+      }
+    }
+  }
+  return undef;
+}
 sub value_to_i_floor {
   my ($self, $value) = @_;
   if ($value < 0) { $value = 0; }

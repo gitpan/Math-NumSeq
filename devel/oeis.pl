@@ -25,6 +25,39 @@ use POSIX;
 use Smart::Comments;
 
 {
+  # all files get description
+
+  require Math::NumSeq::OEIS::File;
+  chdir "$ENV{HOME}/OEIS" or die;
+  foreach my $filename (<A*.html>) {
+    next if $filename =~ /internal/;
+    $filename =~ /(A\d+)/;
+    my $anum = $1;
+    my $seq = Math::NumSeq::OEIS::File->new(_dont_use_internal=>1,
+                                            anum=>$anum);
+    if (! $seq->{'description'}) {
+      print "$ENV{HOME}/OEIS/$filename:1:0: no description\n";
+    }
+  }
+  exit 0;
+}
+
+{
+  require Math::NumSeq::OEIS::File;
+  my $seq = Math::NumSeq::OEIS::File->new(
+                                          anum=>'A005589',
+                                          # anum=>'A000290',
+                                         );
+  ### $seq
+  ### description: $seq->description
+  ### characteristic(increasing): $seq->characteristic('increasing')
+  ### characteristic(smaller): $seq->characteristic('smaller')
+  ### values_min: $seq->values_min
+  ### values_max: $seq->values_max
+  exit 0;
+}
+
+{
   # how many i to be sure of increasing / non_decreasing
   # 100 in A179635 median of digits
 
@@ -92,17 +125,7 @@ use Smart::Comments;
   exit 0;
 }
 
-{
-  require Math::NumSeq::OEIS;
-  my $seq = Math::NumSeq::OEIS->new(anum=>'A009000');
-  # ### $seq
-  ### description: $seq->description
-  ### characteristic(increasing): $seq->characteristic('increasing')
-  ### characteristic(smaller): $seq->characteristic('smaller')
-  ### values_min: $seq->values_min
-  ### values_max: $seq->values_max
-  exit 0;
-}
+
 {
   require Math::NumSeq::OEIS::Catalogue;
   my $anum = 'A055508';

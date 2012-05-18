@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 4;
+plan tests => 6;
 
 use lib 't','xt';
 use MyTestHelpers;
@@ -46,6 +46,72 @@ sub numeq_array {
     $i++;
   }
   return (@$a1 == @$a2);
+}
+
+
+
+#------------------------------------------------------------------------------
+# A002808 - composites, excluding 1
+
+{
+  my $anum = 'A002808';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  if ($bvalues) {
+    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
+
+    my $seq  = Math::NumSeq::Primes->new;
+    my $upto = 2;
+  OUTER: for (;;) {
+      my ($i, $prime) = $seq->next;
+      while ($upto < $prime) {
+        push @got, $upto++;
+        last OUTER unless @got < @$bvalues
+      }
+      $upto++; # skip $prime
+    }
+    if (! numeq_array(\@got, $bvalues)) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  } else {
+    MyTestHelpers::diag ("$anum not available");
+  }
+  skip (! $bvalues,
+        numeq_array(\@got, $bvalues),
+        1, "$anum -- non-primes");
+}
+
+#------------------------------------------------------------------------------
+# A018252 - composites, including 1
+
+{
+  my $anum = 'A018252';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  if ($bvalues) {
+    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
+
+    my $seq  = Math::NumSeq::Primes->new;
+    my $upto = 1;
+  OUTER: for (;;) {
+      my ($i, $prime) = $seq->next;
+      while ($upto < $prime) {
+        push @got, $upto++;
+        last OUTER unless @got < @$bvalues
+      }
+      $upto++; # skip $prime
+    }
+    if (! numeq_array(\@got, $bvalues)) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  } else {
+    MyTestHelpers::diag ("$anum not available");
+  }
+  skip (! $bvalues,
+        numeq_array(\@got, $bvalues),
+        1, "$anum -- non-primes");
 }
 
 

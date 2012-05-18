@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 38;
+$VERSION = 39;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -73,6 +73,19 @@ sub pred {
   return ($value == $i*($i+1));
 }
 
+sub value_to_i {
+  my ($self, $value) = @_;
+  if ($value >= 0) {
+    my $int = int($value);
+    if ($value == $int) {
+      my $i = int((sqrt(4*$int + 1) - 1)/2);
+      if ($int == $self->ith($i)) {
+        return $i;
+      }
+    }
+  }
+  return undef;
+}
 sub value_to_i_floor {
   my ($self, $value) = @_;
   if ($value < 0) {

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 38;
+$VERSION = 39;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -44,10 +44,10 @@ use constant characteristic_integer => 1;
 #    A080076 - Proth primes
 #    A134876 - how many Proth primes for given n
 #
-#    A002253
-#    A002254
-#    A032353
-#    A002256
+#    A002253 3*2^n+1 is prime
+#    A002254 5*2^n+1
+#    A032353 7*2^n+1
+#    A002256 9*2^n+1
 #
 use constant oeis_anum => 'A080075';
 
@@ -197,6 +197,8 @@ S<k E<lt> 2^n>.
 
 The k E<lt> 2^n condition means the values in binary have low half 00..01
 and high half some value k,
+
+    binary 1xxx0000000...0001
 
     value    binary        k  n  2^n
       3       11           1  1   2

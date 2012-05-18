@@ -23,7 +23,7 @@ use POSIX 'floor','ceil';
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 38;
+$VERSION = 39;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -115,13 +115,25 @@ sub ith {
 #
 sub pred {
   my ($self, $value) = @_;
-  if (int($value) != $value) {
+  my $int = int($value);
+  if ($value != $int) {
     return 0;
   }
   my $i = _cbrt_floor ($value);
   return ($i*$i*$i == $value);
 }
 
+sub value_to_i {
+  my ($self, $value) = @_;
+  my $int = int($value);
+  if ($value == $int) {
+    my $i = _cbrt_floor ($int);
+    if ($int == $self->ith($i)) {
+      return $i;
+    }
+  }
+  return undef;
+}
 sub value_to_i_floor {
   my ($self, $value) = @_;
   return _cbrt_floor($value);

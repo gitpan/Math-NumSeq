@@ -24,7 +24,7 @@ use Math::Libm;
 use Module::Util;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 38;
+$VERSION = 39;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -106,7 +106,7 @@ my %oeis_anum;
 # some experimental A-number generators for easy expressions not with their
 # own module
 
-# A008865 starts from i=1
+# but A008865 starts from i=1
 # $oeis_anum{'i*i-2'} = 'A008865';
 # # OEIS-Catalogue: A008865 expression=i*i-2
 

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 38;
+$VERSION = 39;
 
 use Math::NumSeq;
 use Math::NumSeq::Primes;
@@ -66,6 +66,9 @@ sub values_min {
 #    A111046 - p^2 - q^2
 #    A167777 - even "isolated" numbers, 2 plus twin primes average
 #    A129297 - m s.t. m^2-1 no no divisors 1<d<m-1, twin average plus 0..3
+#
+#    A067774 - primes where p+2 not prime
+#    A063637 - primes where p+2 is a semiprime
 #
 my %oeis_anum = (
                  first  => 'A001359',
