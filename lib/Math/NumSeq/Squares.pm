@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 39;
+$VERSION = 40;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -37,11 +37,52 @@ use constant characteristic_integer => 1;
 use constant i_start => 0;
 use constant values_min => 0;
 
+#------------------------------------------------------------------------------
 # cf A001105 2*n^2
 #    A000037 non-squares
 #    A010052 characterisic 1/0 for squares
 #
 use constant oeis_anum => 'A000290'; # squares
+
+#------------------------------------------------------------------------------
+
+use constant 1.02 _UV_I_LIMIT => do {
+  # Float integers too when IV=32bits ?
+  # my $max = 1;
+  # for (1 .. 256) {
+  #   my $try = $max*2 + 1;
+  #   ### $try
+  #   if ($try == 2*$max || $try == 2*$max+2) {
+  #     last;
+  #   }
+  #   $max = $try;
+  # }
+  my $max = ~0;
+
+  my $bit = 4;
+  for (my $i = $max; $i != 0; $i=int($i/8)) {
+    $bit *= 2;
+  }
+  ### $bit
+
+  my $sqrt = 0;
+  for ( ; $bit != 0; $bit=int($bit/2)) {
+    my $try = $sqrt + $bit;
+    if ($try <= $max / $try) {
+      $sqrt = $try;
+    }
+  }
+
+  ### $max
+  ### limit sqrt: $sqrt
+  ### limit square: $sqrt*$sqrt
+  ### sqrt hex: sprintf '%X', $sqrt
+  ### square hex: sprintf '%X', $sqrt*$sqrt
+
+  ### assert: $sqrt <= $max/$sqrt
+
+  $sqrt
+};
 
 sub rewind {
   my ($self) = @_;
@@ -49,6 +90,9 @@ sub rewind {
 }
 sub seek_to_i {
   my ($self, $i) = @_;
+  if ($i >= _UV_I_LIMIT) {
+    $i = Math::NumSeq::_to_bigint($i);
+  }
   $self->{'i'} = $i;
 }
 sub seek_to_value {
@@ -59,6 +103,9 @@ sub next {
   my ($self) = @_;
   ### Squares next(): $self->{'i'}
   my $i = $self->{'i'}++;
+  if ($i == _UV_I_LIMIT) {
+    $self->{'i'} = Math::NumSeq::_to_bigint($self->{'i'});
+  }
   return ($i, $i*$i);
 }
 

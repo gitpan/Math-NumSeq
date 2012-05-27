@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 39;
+$VERSION = 40;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -114,8 +114,8 @@ sub rewind {
       $self->{'a'} = $root;
     } else {
       # start 0/1 a=0,b=1, so sb2=s*b^2=s
-      $self->{'a'} = Math::NumSeq::_bigint()->new(0);
-      $self->{'sb2'} = Math::NumSeq::_bigint()->new($sqrt);
+      $self->{'a'} = Math::NumSeq::_to_bigint(0);
+      $self->{'sb2'} = Math::NumSeq::_to_bigint($sqrt);
     }
   }
 }
@@ -180,6 +180,31 @@ sub next {
 #
 # 1/bv+1/bv(v-1)
 #   = 1/bv * (1 + 1/(v-1))
+#
+# 1/bv < t < 1/b(v-1)
+# 1/bv + 1/bvw < t < 1/bv + 1/bv(w-1)
+# 1/bvw < t-1/bv < 1/bv(w-1)
+#
+# sqrt(2) - (1 + 1/3 + 1/3*5) > 0
+# sqrt(2) - (1 + 1/3 + 1/3*6)
+#   = sqrt(2) - 25/18
+#
+# R = t - (a/b + 1/bv) > 0
+# bvR = bvt - (bva/b + bv/bv)
+#     = bvt - (va + 1) > 0
+# bvwR = tbvw - (avw + w)
+# bvt - (va + 1) > 0
+# bvt > (va + 1)
+
+# t - (a/b + 1/b(v-1)) < 0
+# bvt - (bva/b + bv/b(v-1)) < 0
+# bvt - (va + v/(v-1)) < 0
+# bvt < (va + v/(v-1))
+#
+# S = t - (a/b + 1/bv + 1/bvw) > 0
+# bvwS = tbvw - (bvwa/b + bvw/bv + bvw/bvw)
+#      = tbvw - (vwa + w + 1) > 0
+
 
 
 1;
@@ -199,12 +224,15 @@ Math::NumSeq::SqrtEngel -- Engel expansion of a square root
 
 =head1 DESCRIPTION
 
-This is terms in the Engel expansion of a square root.  It approaches the
-root by a series
+This is terms in the Engel expansion of a square root.  The Engel expansion
+approaches the root by a series
 
               1         1              1
    sqrt(S) = ---- + --------- + -------------- + ...
              a[1]   a[1]*a[2]   a[1]*a[2]*a[3]
+
+where each a[i] is chosen to make the term as big as possible without the
+total exceeding the target sqrt(S).
 
 The sequence values are each successive a[i].  For example sqrt(2)
 
@@ -214,15 +242,13 @@ The sequence values are each successive a[i].  For example sqrt(2)
 
 is
 
+    # starting i=1
     1, 3, 5, 5, 16, etc
-
-Each new 1/prod term is the biggest which keeps the total below sqrt(S),
-which means each a[i] is the smallest possible.
 
 For a perfect square the expansion is a finite 1s sequence adding up to the
 root.  This works, but is unlikely to be interesting.
 
-    1/1 + 1/1 + ... + 1/1 = sqrt(perfect square)
+    sqrt(perfect square) = 1/1 + 1/1 + ... + 1/1
 
 =head1 FUNCTIONS
 

@@ -25,7 +25,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 39;
+$VERSION = 40;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -103,9 +103,9 @@ sub ith {
   }
 
   my $radix = $self->{'radix'};
-  my $value = Math::NumSeq::_bigint()->new($radix) ** $i - 1;
+  my $value = Math::NumSeq::_to_bigint($radix) ** $i - 1;
   my $offset = $i-1;
-  my $power = Math::NumSeq::_bigint()->new(1);
+  my $power = Math::NumSeq::_to_bigint(1);
 
   foreach (1 .. $i) {
     my $next_power = $power * $radix;
@@ -122,7 +122,7 @@ sub ith {
 
 
   # my $one = ($i >= 30
-  #             ? Math::NumSeq::_bigint()->new(1)
+  #             ? Math::NumSeq::_to_bigint(1)
   #             : 1);
   # my $value = ($one << $i) - $i;
   # my $k = 1;

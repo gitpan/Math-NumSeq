@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010, 2011 Kevin Ryde
+# Copyright 2010, 2011, 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -51,7 +51,7 @@ MyTestHelpers::nowarnings();
 
 require Math::NumSeq;
 my $a = Math::BigInt->new(123);
-my $b = Math::NumSeq::_bigint()->new(123);
+my $b = Math::NumSeq::_to_bigint(123);
 ok ($a == $b, 1);
 
 exit 0;

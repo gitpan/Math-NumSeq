@@ -15,12 +15,20 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
+
+# on_values=>'even' is 2*i gives +1 for "both" and "down", no change to "up"
+# on_values=>'odd' is 2*i+1
+#   starts 3*(2i+1)+1 = 6i+4 -> 3i+2
+#
+# i=0 for odd same as Odd->ith() ?
+
+
 package Math::NumSeq::CollatzSteps;
 use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 39;
+$VERSION = 40;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -32,9 +40,21 @@ use Math::NumSeq::Base::IterateIth;
 #use Devel::Comments;
 
 # use constant name => Math::NumSeq::__('Collatz Steps');
-use constant description => Math::NumSeq::__('Number of steps to reach 1 in the Collatz "3n+1" problem.');
-use constant i_start => 1;
-use constant values_min => 0;
+use constant description =>
+  Math::NumSeq::__('Number of steps to reach 1 in the Collatz "3n+1" problem.');
+
+sub default_i_start {
+  my ($self) = @_;
+  return (($self->{'on_values'}||'') eq 'odd'
+          ? 0
+          : 1);
+}
+sub values_min {
+  my ($self) = @_;
+  return ($self->{'on_values'} eq 'even'
+          ? 1
+          : 0);
+}
 use constant characteristic_count => 1;
 use constant characteristic_increasing => 0;
 
@@ -52,30 +72,55 @@ use constant parameter_info_array =>
                         ],
      description => Math::NumSeq::__('Which steps to count, the 3*n+1 ups, the n/2 downs, or both.'),
    },
+   # { name      => 'on_values',
+   #   share_key => 'on_values_aoe',
+   #   display   => Math::NumSeq::__('On Values'),
+   #   type      => 'enum',
+   #   default   => 'all',
+   #   choices   => ['all','odd','even'],
+   #   choices_display => [Math::NumSeq::__('All'),
+   #                       Math::NumSeq::__('Odd'),
+   #                       Math::NumSeq::__('Even')],
+   #   description => Math::NumSeq::__('The values to act on, either all integers of just the odd integers.'),
+   # },
   ];
 
 #------------------------------------------------------------------------------
-# cf
-#    A075680 odd numbers only
-#    A008908 count of both halvings and triplings, with +1
-#    A006884 new record high count of steps
+# cf A075677 one reduction 3x+1/2^r on the odd numbers
+#    A014682 one step 3x+1 or x/2 on the integers
+#    A006884 new record for highest point reached in iteration
+#    A006885   that record high position
 #
-my %oeis_anum = (up   => 'A006667', # triplings
-                 # OEIS-Catalogue: A006667 step_type=up
+my %oeis_anum =
+  (all  => { up   => 'A006667', # triplings
+             # OEIS-Catalogue: A006667 step_type=up
 
-                 down => 'A006666', # halvings
-                 # OEIS-Catalogue: A006666 step_type=down
+             down => 'A006666', # halvings
+             # OEIS-Catalogue: A006666 step_type=down
 
-                 both => 'A006577', # both halvings and triplings
-                 # OEIS-Catalogue: A006577 step_type=both
-                );
+             both => 'A006577', # both halvings and triplings
+             # OEIS-Catalogue: A006577 step_type=both
+           },
+   even => { both => 'A008908', # +1 from "all"
+             # OEIS-Catalogue: A008908 on_values=even
+           },
+   # But A075680 is OFFSET=1 for odd=1, unlike Lemoine A046927 or Odd A005408
+   # odd => { up => 'A075680',  # n=1 for odd=1
+   #          # OEIS-Catalogue: A075680 on_values=odd step_type=up
+   #        },
+  );
 sub oeis_anum {
   my ($self) = @_;
-  return $oeis_anum{$self->{'step_type'}};
+  return $oeis_anum{$self->{'on_values'}}->{$self->{'step_type'}};
 }
 
 #------------------------------------------------------------------------------
 
+sub new {
+  my $self = shift->SUPER::new(@_);
+  $self->{'on_values'} ||= 'all';
+  return $self;
+}
 
 use constant 1.02 _UV_LIMIT => do {  # version 1.02 for leading underscore
   my $limit = ~0;
@@ -91,6 +136,13 @@ use constant 1.02 _UV_LIMIT => do {  # version 1.02 for leading underscore
 sub ith {
   my ($self, $i) = @_;
   ### CollatzSteps ith(): $i
+
+  if ($self->{'on_values'} eq 'odd') {
+    $i = 2*$i+1;  # i=1 is odd number 1
+  } elsif ($self->{'on_values'} eq 'even') {
+    $i *= 2;
+  }
+
   if ($i <= 1) {
     return 0;
   }
@@ -113,8 +165,7 @@ sub ith {
     }
 
     if ($i > _UV_LIMIT) {
-      # stringize to avoid UV to Math::BigInt::GMP bug in its version 1.37
-      $i = Math::NumSeq::_bigint()->new("$i");
+      $i = Math::NumSeq::_to_bigint($i);
 
       ### using bigint: "$i"
       for (;;) {
@@ -144,7 +195,7 @@ sub ith {
 sub pred {
   my ($self, $value) = @_;
   return ($value == int($value)
-          && $value >= 0);
+          && $value >= $self->values_min);
 }
 
 1;

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 39;
+$VERSION = 40;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -40,6 +40,8 @@ use constant values_min => 0;
 use Math::NumSeq::Base::Digits;
 *parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
 
+#------------------------------------------------------------------------------
+# cf A002275 - repunits
 my @oeis_anum = (
                  # OEIS-Catalogue array begin
                  undef,     # 0
@@ -65,6 +67,8 @@ sub oeis_anum {
   my ($self) = @_;
   return $oeis_anum[$self->{'radix'}];
 }
+
+#------------------------------------------------------------------------------
 
 sub rewind {
   my ($self) = @_;

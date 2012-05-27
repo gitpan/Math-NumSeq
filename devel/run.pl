@@ -33,7 +33,7 @@ $|=1;
 
 {
   my $pred_upto = 0;
-  
+
   my $values_class;
   # $values_class = $gen->values_class('Emirps');
   # $values_class = $gen->values_class('Repdigits');
@@ -50,7 +50,6 @@ $|=1;
   # $values_class = $gen->values_class('RadixWithoutDigit');
   # $values_class = $gen->values_class('Odd');
   # $values_class = $gen->values_class('Factorials');
-  # $values_class = $gen->values_class('SumTwoSquares');
   # $values_class = $gen->values_class('Palindromes');
   # # $values_class = $gen->values_class('MathSequence');
   # $values_class = $gen->values_class('DigitLength');
@@ -127,7 +126,6 @@ $|=1;
   $values_class = 'Math::NumSeq::ProthNumbers';
   $values_class = 'Math::NumSeq::BinaryUndulants';
   $values_class = 'Math::NumSeq::FractionDigits';
-  $values_class = 'Math::NumSeq::Fibonacci';
   $values_class = 'Math::NumSeq::LucasNumbers';
   $values_class = 'Math::NumSeq::LuckySieve';
   $values_class = 'Math::NumSeq::Tribonacci';
@@ -160,17 +158,37 @@ $|=1;
   $values_class = 'Math::NumSeq::PrimeIndexPrimes';
   $values_class = 'Math::NumSeq::AlphabeticalLengthSteps';
   $values_class = 'Math::NumSeq::AlphabeticalLength';
-  $values_class = 'Math::NumSeq::SpiroFibonacci';
   $values_class = 'Math::NumSeq::PlanePathCoord';
   $values_class = 'Math::NumSeq::PlanePathN';
   $values_class = 'Math::NumSeq::KaprekarSteps';
-  $values_class = 'Math::NumSeq::KaprekarNumbers';
   $values_class = 'Math::NumSeq::Padovan';
   $values_class = 'Math::NumSeq::StoehrSequence';
-  
+  $values_class = 'Math::NumSeq::PrimeFactorExtract';
+  $values_class = 'Math::NumSeq::PowerSieve';
+  $values_class = 'Math::NumSeq::DigitProductSteps';
+  $values_class = 'Math::NumSeq::Fibonacci';
+  $values_class = 'Math::NumSeq::KaprekarNumbers';
+  $values_class = 'Math::NumSeq::CollatzSteps';
+  $values_class = 'Math::NumSeq::LongFractionPrimes';
+  $values_class = 'Math::NumSeq::PrimitiveRoot';
+  $values_class = 'Math::NumSeq::Squares';
+  $values_class = 'Math::NumSeq::SpiroFibonacci';
+  $values_class = 'Math::NumSeq::AllPrimeFactors';
+  $values_class = 'Math::NumSeq::PrimesDigits';
+
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new
     (
+     multiplicity => 'distinct',
+     # order => 'descending',
+     # order => 'descending',
+     # initial_0 => 1,
+     # initial_1 => 0,
+     # radix => 4,
+     # step_type => 'both',
+     # on_values => 'even',
+     # i_start => 0,
+     # values_type => 'root',
      # recurrence_type => 'absdiff',
      # language => 'sv',
      # i_start => 0,
@@ -180,7 +198,7 @@ $|=1;
      # cbrt => 2,
      # sqrt => 104,
      # stage => 1,
-     
+
      # p_or_m => '-',
      # runs_type => '1to2N',
      # digit => 1,
@@ -189,7 +207,7 @@ $|=1;
      # concat_count => 3,
      # radix => 2,
      # sqrt => 120,
-     
+
      # order => 'forward',
      # fraction => '1/14',
      # to_radix => 100000,
@@ -198,7 +216,7 @@ $|=1;
      # fibonacci_word_type => 'dense',
      # including_self => 0,
      # offset => 3,
-     
+
      # planepath => 'GrayCode',
      # planepath => 'ImaginaryHalf',
      # line_type => 'X_neg',
@@ -220,17 +238,17 @@ $|=1;
      # planepath => 'CellularRule,rule=5',
      # coordinate_type => 'RSquared',
      # i_start => 1,
-     
+
      #anum  => 'A160722', # few
      # anum  => 'A196199', # bfile
      # anum  => 'A194831', # small bfile
      # anum  => 'A195467',
-     
+
      # start => 5,
      # including_repdigits => 1,
-     
+
      # i_start => 3,
-     
+
      # including_one => 1,
      # start => 1,
      #  radix => 4,
@@ -243,7 +261,7 @@ $|=1;
      # abundant_type => 'primitive',
      # multiples => 1,
      # digit => 1,
-     
+
      # order => 'forward',
      # including_self => 0,
      #
@@ -255,19 +273,18 @@ $|=1;
      # # expression => '9*i*i',
      #
      # factor_count => 8,
-     # multiplicity => 'distinct',
      #
      # round => 'lower',
      #
      # length => 2,
      # which => 'last',
-     
+
      # polygonal => 6,
      # pairs => 'average',
-     
+
      # i_start => 1,
      # endian => 'little',
-     
+
      # including_zero => 1,
      # # divisors_type => 'proper',
      # # algorithm_type => '1/2-3/2',
@@ -277,7 +294,7 @@ $|=1;
      # where => 'low',
     );
   my $hi = 50;
-  
+
   my $i_start = $seq->i_start;
   print "i_start $i_start\n";
   print "anum ",($seq->oeis_anum//'[undef]'),"\n";
@@ -291,14 +308,14 @@ $|=1;
   print "characteristic hash: ",join(', ',%{$seq->{'characteristic'}||{}}),"\n";
   print "parameters: ",join(', ',map{$_->{'name'}}$seq->parameter_info_list),"\n";
   print "\n";
-  
+
   my $values_min = $seq->values_min;
   my $values_max = $seq->values_max;
   my $saw_value_min;
   my $saw_value_max;
   my $prev_value;
   my $prev_i;
-  
+
   foreach my $rep (1 .. 2) {
     ### $seq
     if (my $radix = $seq->characteristic('digits')) {
@@ -306,18 +323,15 @@ $|=1;
     }
     print "by next(): ";
     my $show_i = 1;
-    
+
     my $check_pred_upto = ! $seq->characteristic('digits')
       && ! $seq->characteristic('count');
-    
+
     foreach my $want_i ($i_start .. $i_start + $hi) {
-      my ($i,$value) = $seq->next;
-      if (! defined $i) {
-        print "undef\n";
-        last;
-      }
-      if (! defined $i) {
-        print "undef\n";
+      my @ret = $seq->next;
+      my ($i,$value) = @ret;
+      if (@ret == 0) {
+        print "[end]\n";
         last;
       }
       if ($show_i) {
@@ -348,8 +362,8 @@ $|=1;
       if ($i != $want_i) {
         print " oops, i=$i expected i=$want_i\n";
       }
-      
-      
+
+
       if ($seq->can('pred')) {
         if (! $seq->pred($value)) {
           print " oops, pred($value) false\n";
@@ -415,7 +429,7 @@ $|=1;
       undef $prev_value;
     }
   }
-  
+
   if ($seq->can('ith')) {
     print "by ith():      ";
     foreach my $i ($seq->i_start .. $seq->i_start + $hi - 1) {
@@ -438,14 +452,14 @@ $|=1;
       if ($value > DBL_INT_MAX) {
         last;
       }
-      
+
       if ($seq->can('pred') && ! $seq->pred($value)) {
         print " oops, pred($value) false\n";
       }
     }
     print "\n";
   }
-  
+
   if ($seq->can('pred')
       && ! ($seq->characteristic('count'))) {
     print "by pred(): ";
@@ -460,14 +474,14 @@ $|=1;
     }
     print "\n";
   }
-  
+
   if ($seq->can('value_to_i_estimate')) {
     my $est_i = $seq->value_to_i_estimate($prev_value);
     my $f = $est_i/($prev_i||1);
     $f = sprintf '%.4f', $f;
     printf "value_to_i_estimate($prev_value) i=$prev_i est=$est_i  f=$f\n";
   }
-  
+
   foreach my $method ('ith','pred') {
     if ($seq->can($method)) {
       require Data::Float;

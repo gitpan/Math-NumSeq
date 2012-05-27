@@ -27,11 +27,11 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 39;
+$VERSION = 40;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
-*_bigint = \&Math::NumSeq::_bigint;
+*_to_bigint = \&Math::NumSeq::_to_bigint;
 
 use Math::NumSeq::Fibonacci;
 *_bits_high_to_low = \&Math::NumSeq::Fibonacci::_bits_high_to_low;
@@ -140,7 +140,7 @@ sub pred {
   # go to BigInt if NV floating point integer bigger than UV, since "&"
   # operator will cast to a UV and lose bits
   if ($int > ~0 && ! ref $int) {
-    $int = _bigint()->new(sprintf('%.0f',$int));
+    $int = _to_bigint(sprintf('%.0f',$int));
     ### use BigInt: $int
     ### str: sprintf('%.0f',$int)
   }

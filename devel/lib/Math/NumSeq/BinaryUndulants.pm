@@ -27,11 +27,11 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 39;
+$VERSION = 40;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
-*_bigint = \&Math::NumSeq::_bigint;
+*_to_bigint = \&Math::NumSeq::_to_bigint;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -122,7 +122,7 @@ sub rewind {
          return 0;
        });
 
-  $self->{'pow'} = _bigint()->new(2);
+  $self->{'pow'} = _to_bigint(2);
   $self->{'value'} = 1;
   $self->{'i'}     = 1;
 }
@@ -155,7 +155,7 @@ sub pred {
       || $self->{'radix_is_pow2'}) {
     return 0;
   }
-  return $self->{'bigint_check'}->(_bigint()->new(2)->bpow($value));
+  return $self->{'bigint_check'}->(_to_bigint(2)->bpow($value));
 }
 
 1;

@@ -22,10 +22,10 @@ use List::Util 'max';
 
 use Math::NumSeq;
 *_is_infinite = \&Math::NumSeq::_is_infinite;
-*_bigint = \&Math::NumSeq::_bigint;
+*_to_bigint = \&Math::NumSeq::_to_bigint;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 39;
+$VERSION = 40;
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
 
@@ -161,8 +161,8 @@ sub new {
   }
 
   if (max(length($num),length($den)) >= length(int (~0 / $radix))) {
-    $num = _bigint()->new("$num");
-    $den = _bigint()->new("$den");
+    $num = _to_bigint($num);
+    $den = _to_bigint($den);
   }
 
   # increase den so first digit is 0 to radix-1
@@ -268,7 +268,7 @@ sub _modpow {
 
   my $ret = 1;
   if (ref $mod || $mod > _UV_MAX_SQRT) {
-    return _bigint()->new($base)->bmodpow($exp,$mod);
+    return _to_bigint($base)->bmodpow($exp,$mod);
   }
 
   # only if base and mod have no common factor ...

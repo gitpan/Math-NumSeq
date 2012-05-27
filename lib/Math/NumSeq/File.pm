@@ -30,11 +30,11 @@ use Carp;
 use POSIX ();
 
 use vars '$VERSION', '@ISA';
-$VERSION = 39;
+$VERSION = 40;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
-*_bigint = \&Math::NumSeq::_bigint;
+*_to_bigint = \&Math::NumSeq::_to_bigint;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -100,7 +100,7 @@ sub next {
       # large integer values returned as Math::BigInt
       if (($value > $max_value || $value < $min_value)
           && $value !~ /\./) {
-        $value = _bigint()->new("$value");
+        $value = _to_bigint($value);
       }
 
       return ($i, $value);

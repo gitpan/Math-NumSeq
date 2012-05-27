@@ -21,7 +21,7 @@ use strict;
 use POSIX 'ceil';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 39;
+$VERSION = 40;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -125,7 +125,7 @@ sub rewind {
 sub _UNTESTED__seek_to_i {
   my ($self, $i) = @_;
   # if ($i >= $self->{'uv_i_limit'}) {
-  #   $i = Math::NumSeq::_bigint()->new("$i");
+  #   $i = Math::NumSeq::_to_bigint($i);
   # }
   $self->{'i'} = $i;
 }

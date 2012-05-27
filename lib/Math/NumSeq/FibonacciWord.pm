@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 39;
+$VERSION = 40;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -209,9 +209,13 @@ Math::NumSeq::FibonacciWord -- 0/1 related to Fibonacci numbers
 
 =head1 DESCRIPTION
 
-This is a sequence of 0s and 1s formed from the Fibonacci numbers.  The
-start is 0,1 then a Fibonacci number F(k) many values are copied from the
-start to extend, so
+This is a sequence of 0s and 1s formed from the Fibonacci numbers.
+
+    starting i=0
+    0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, ...
+
+The initial values are 0,1 then Fibonacci number F(k) many values are copied
+from the start to extend, so
 
     0,1                                         initial
     0,1,0                                       append 1 value
@@ -221,7 +225,7 @@ start to extend, so
     0,1,0,0,1,0,1,0,0,1,0,0,1,0,1,0,0,1,0,1,0   append 8 values
     etc
 
-The same sequence is had by starting 0 and then repeatedly expanding
+The same sequence is had by starting with 0 and then repeatedly expanding
 
     0 -> 0,1
     1 -> 0

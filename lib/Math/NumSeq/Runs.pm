@@ -27,7 +27,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION','@ISA';
-$VERSION = 39;
+$VERSION = 40;
 
 use Math::NumSeq 21; # v.21 for oeis_anum field
 use Math::NumSeq::Base::IterateIth;
@@ -83,7 +83,7 @@ use constant parameter_info_array =>
 # cf A049581 diagonals absdiff, abs(x-y) not plain runs
 #    A061579 descending NtoPrev, permutation of the integers
 #    A076478 0 to 2^k-1, each written out in k many bits
-#
+#    A000267 1,2,3,3,4,4,5,5,5,6,6,6, twice repeat each run length
 my %runs_type_data
   = ('0toN' => { i_start    => 0,
                  value      => -1, # initial

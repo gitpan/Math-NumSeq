@@ -26,10 +26,11 @@ use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 use vars '$VERSION';
-$VERSION = 39;
+$VERSION = 40;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
+
 
 sub _make_info {
   my ($anum) = @_;
@@ -100,16 +101,24 @@ sub _info_arrayref {
   }
   while (defined (my $basename = readdir DIR)) {
     ### $basename
+
+    unless (-e File::Spec->catfile($dir,$basename)) {
+      ### skip dangling symlink ...
+      next;
+    }
+
     # Case insensitive for MS-DOS.  But dunno what .internal or
     # .internal.html will be or should be on an 8.3 DOS filesystem.  Maybe
     # "A000000.int", maybe "A000000i.htm" until 7-digit A-numbers.
-    if ($basename =~ /^A(\d*)\.(html?|internal)
-                    |[ab](\d*)\.txt/ix) {
-      my $anum = 'A'.($1||$3);
-      unless ($seen{$anum}++) {
-        push @ret, _make_info($anum);
-      }
-    }
+    next unless $basename =~ m{^(
+                                 A(\d*)(\.internal)?(\.html?)?  # $2 num
+                               |[ab](\d*)\.txt                  # $5 num
+                               )$}ix;
+
+    my $anum = 'A'.($2||$5);
+    next if $seen{$anum}++;  # uniquify
+
+    push @ret, _make_info($anum);
   }
   closedir DIR or die "Error closing $dir: $!";
   return \@ret;

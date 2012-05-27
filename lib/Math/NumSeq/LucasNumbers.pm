@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 39;
+$VERSION = 40;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
 
@@ -56,7 +56,7 @@ sub rewind {
 #   my ($self, $i) = @_;
 #   $self->{'i'} = $i;
 #   if ($i >= $uv_i_limit) {
-#     $i = Math::NumSeq::_bigint()->new("$i");
+#     $i = Math::NumSeq::_to_bigint($i);
 #   }
 #   ($self->{'f0'}, $self->{'f1'}) = $self->ith_pair($i);
 # }
@@ -110,8 +110,8 @@ sub next {
   ### $ret
 
   if ($ret == $uv_limit) {
-    $self->{'f0'} = Math::NumSeq::_bigint()->new("$self->{'f0'}");
-    $self->{'f1'} = Math::NumSeq::_bigint()->new("$self->{'f1'}");
+    $self->{'f0'} = Math::NumSeq::_to_bigint($self->{'f0'});
+    $self->{'f1'} = Math::NumSeq::_to_bigint($self->{'f1'});
   }
 
   return ($self->{'i'}++, $ret);

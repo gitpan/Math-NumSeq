@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 39;
+$VERSION = 40;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -162,9 +162,10 @@ Math::NumSeq::MaxDigitCount -- maximum of given digit in any radix
 
 I<In progress ...>
 
-The maximum number of zeros which occur when i is written out in any radix,
-starting from i=1
+The default is the maximum number of zeros which occur when i is written out
+in any radix,
 
+    starting i=1
     0, 1, 1, 2, 1, 1, 1, 3, 2, 2, 1, 2, 1, 1, 1, 4, 3, 3, 2, 3, 2, ...
 
 Option C<values_type =E<gt> 'radix'> gives the radix where the maximum

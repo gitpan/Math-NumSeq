@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 39;
+$VERSION = 40;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -116,7 +116,7 @@ sub next {
   my $i = $self->{'i'}++;
   my $f = $self->{'f'};
   if ($i == _UV_I_LIMIT) {
-    $self->{'f'} = Math::NumSeq::_bigint()->new($f);
+    $self->{'f'} = Math::NumSeq::_to_bigint($f);
   }
   return ($i, $self->{'f'} *= ($i||1));
 }
@@ -131,7 +131,7 @@ sub ith {
 
   my $value;
   if (! ref $i && $i >= _UV_I_LIMIT) {
-    $value = Math::NumSeq::_bigint()->new(1);
+    $value = Math::NumSeq::_to_bigint(1);
   } else {
     $value = ($i*0) + 1;   # inherit bignum 1
   }
@@ -202,7 +202,7 @@ sub value_to_i_floor {
   # keep precision.
   #
   if (! ref $value && $value > _NV_LIMIT) {
-    $value = Math::NumSeq::_bigint()->new("$value");
+    $value = Math::NumSeq::_to_bigint($value);
   }
 
   my $i = 2;
@@ -308,7 +308,7 @@ __END__
 
 =head1 NAME
 
-Math::NumSeq::Factorials -- factorials 1*2*...*i
+Math::NumSeq::Factorials -- factorials i! = 1*2*...*i
 
 =head1 SYNOPSIS
 

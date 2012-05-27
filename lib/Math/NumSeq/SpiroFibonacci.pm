@@ -1,9 +1,3 @@
-# initial_f0 param name ...
-
-
-
-
-
 # Copyright 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
@@ -21,6 +15,7 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
+
 # math-image --values=SpiroFibonacci --output=numbers --size=78
 #
 # math-image --values=SpiroFibonacci,recurrence_type=absdiff --output=text --size=60x15
@@ -31,15 +26,10 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 39;
+$VERSION = 40;
 use Math::NumSeq;
-use Math::NumSeq::Base::IterateIth;
-@ISA = ('Math::NumSeq::Base::IterateIth',
-        'Math::NumSeq');
-# *_is_infinite = \&Math::NumSeq::_is_infinite;
-*_bigint = \&Math::NumSeq::_bigint;
-
-use Math::PlanePath::SquareSpiral;
+@ISA = ('Math::NumSeq');
+*_to_bigint = \&Math::NumSeq::_to_bigint;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -61,15 +51,15 @@ use constant parameter_info_array =>
      choices => ['additive','absdiff'],
      default => 'additive',
    },
-   { name    => 'initial_f0',
-     display => Math::NumSeq::__('Initial value f0'),
+   { name    => 'initial_0',
+     display => Math::NumSeq::__('Initial value 0'),
      type    => 'integer',
      default => 0,
      width   => 3,
      description => Math::NumSeq::__('Initial value ...'),
    },
-   { name    => 'initial_f1',
-     display => Math::NumSeq::__('Initial value f1'),
+   { name    => 'initial_1',
+     display => Math::NumSeq::__('Initial value 1'),
      type    => 'integer',
      default => 1,
      width   => 3,
@@ -79,8 +69,8 @@ use constant parameter_info_array =>
 
 sub characteristic_integer {
   my ($self) = @_;
-  return (_is_integer($self->{'initial_f0'})
-          && _is_integer($self->{'initial_f1'}));
+  return (_is_integer($self->{'initial_0'})
+          && _is_integer($self->{'initial_1'}));
 }
 sub _is_integer {
   my ($n) = @_;
@@ -90,45 +80,81 @@ sub _is_integer {
 # FIXME: absdiff range related to least common multiple, maybe
 sub values_min {
   my ($self) = @_;
-  return _min (0, $self->{'initial_f0'}, $self->{'initial_f1'});
+  if ($self->{'initial_0'} >= 0 && $self->{'initial_1'} >= 0) {
+    return _min (0, $self->{'initial_0'}, $self->{'initial_1'});
+  }
+  return undef;
 }
 sub values_max {
   my ($self) = @_;
   if ($self->{'recurrence_type'} eq 'absdiff') {
-    return _max (abs($self->{'initial_f0'}),
-                 abs($self->{'initial_f1'}));
+    return _max (abs($self->{'initial_0'}),
+                 abs($self->{'initial_1'}));
   } else {
-    return undef;
+    if ($self->{'initial_0'} <= 0 && $self->{'initial_1'} <= 0) {
+      return _max ($self->{'initial_0'},
+                   $self->{'initial_1'});
+    } else {
+      return undef;
+    }
   }
 }
+sub _min {
+  my $ret = shift;
+  while (@_) {
+    my $next = shift;
+    if ($ret > $next) {
+      $ret = $next;
+    }
+  }
+  return $ret;
+}
+sub _max {
+  my $ret = shift;
+  while (@_) {
+    my $next = shift;
+    if ($next > $ret) {
+      $ret = $next;
+    }
+  }
+  return $ret;
+}
+
 
 #------------------------------------------------------------------------------
 
 # cf A079422 cumulative absdiff up to n^2
-#    A094925 hexagonal 1,1  all six around a(n-1)
-#    A094926 hexagonal 0,1  all six around a(n-1)
+#    A094925 hexagonal 1,1  three around a(n-1)
+#    A094926 hexagonal 0,1  three around a(n-1)
 
-#
 my %oeis_anum = ('additive,0,1' => 'A078510',
                  # OEIS-Catalogue: A078510
 
                  'absdiff,0,1' => 'A079421',
                  # OEIS-Catalogue: A079421 recurrence_type=absdiff
+
+                 # all zeros if initial_0 == initial_1 == 0
+                 'additive,0,0' => 'A000004',
+                 'absdiff,0,0'  => 'A000004',
+                 # OEIS-Other: A000004 initial_1=0
+                 # OEIS-Other: A000004 initial_1=0 recurrence_type=absdiff
                 );
+
+
 sub oeis_anum {
   my ($self) = @_;
   return $oeis_anum{join(',',
-                         # hash slice
-                         @{$self}{
-                           # 'spiral_type',
+                         @{$self}{  # hash slice
                            'recurrence_type',
-                             'initial_f0','initial_f1'})};
+                             'initial_0',
+                               'initial_1'})};
 }
 
 
 #------------------------------------------------------------------------------
 
 use constant _UV_LIMIT => (~0 >> 1);
+use constant _IV_NEG_LIMIT => - (_UV_LIMIT >> 1);
 
 # my %spiral_type = (square => { num_sides   => 2,
 #                                side_longer => -1,
@@ -141,7 +167,7 @@ use constant _UV_LIMIT => (~0 >> 1);
 sub rewind {
   my ($self) = @_;
   $self->{'i'}     = $self->i_start;
-  $self->{'queue'} = [$self->{'initial_f0'}, $self->{'initial_f1'}];
+  $self->{'queue'} = [$self->{'initial_0'}, $self->{'initial_1'}];
   $self->{'num_sides'}  = 2;
   $self->{'side_len'}   = 1;
   $self->{'side'}  = $self->{'num_sides'};
@@ -165,8 +191,8 @@ sub next {
   } else {
     $value = $queue->[-1] + $queue->[0];
   }
-  if (! ref $value && $value >= _UV_LIMIT) {
-    $queue->[-1] = _bigint()->new("$queue->[-1]");
+  if (! ref $value && ($value >= _UV_LIMIT || $value <= _IV_NEG_LIMIT)) {
+    $queue->[-1] = _to_bigint($queue->[-1]);
   }
 
   push @$queue, $value;
@@ -192,10 +218,11 @@ sub next {
 # sub new {
 #   ### SpiroFibonacci new(): @_
 #   my $self = shift->SUPER::new(@_);
+#   require Math::PlanePath::SquareSpiral;
 #   $self->{'path'} = Math::PlanePath::SquareSpiral->new;
 #   $self->{'cache'} = [];
-#   $self->{'cache'}->[1] = $self->{'initial_f0'};
-#   $self->{'cache'}->[2] = $self->{'initial_f1'};
+#   $self->{'cache'}->[1] = $self->{'initial_0'};
+#   $self->{'cache'}->[2] = $self->{'initial_1'};
 #   return $self;
 # }
 #
@@ -260,27 +287,6 @@ sub next {
 #   return $total;
 # }
 
-sub _min {
-  my $ret = shift;
-  while (@_) {
-    my $next = shift;
-    if ($ret > $next) {
-      $ret = $next;
-    }
-  }
-  return $ret;
-}
-sub _max {
-  my $ret = shift;
-  while (@_) {
-    my $next = shift;
-    if ($next > $ret) {
-      $ret = $next;
-    }
-  }
-  return $ret;
-}
-
 1;
 __END__
 
@@ -297,8 +303,6 @@ Math::NumSeq::SpiroFibonacci -- recurrence around a square spiral
  my ($i, $value) = $seq->next;
 
 =head1 DESCRIPTION
-
-I<In progress ...>
 
 This is the spiro-Fibonacci numbers by Neil Fernandez.  The sequence is a
 recurrence
@@ -365,6 +369,13 @@ cellular automaton patterns which work on xor feedback.
      ** **  *   **              ** * * * * * *      * *  *
     ** ** ***    *              *  **  * ******     **** *
      *  *  * *****              *** ***        *    *   **
+
+=head2 Initial Values
+
+Optional C<initial_0> and C<initial_1> can give different initial i=0 and i=1
+values.  For example C<initial_0=E<gt>1, initial_1=E<gt>0> gives
+
+    1, 0, 1, 2, 3, 4, 5, 6, 6, 6, 6, 7, 8, 9, 11, 14, 17, 20, ...
 
 =head1 FUNCTIONS
 

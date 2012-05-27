@@ -21,7 +21,7 @@ use strict;
 use List::Util 'min', 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 39;
+$VERSION = 40;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -73,7 +73,7 @@ safe=P where (P-1)/2 also prime (the "other" of the SGs).'),
                          Math::NumSeq::__('Distinct'),
                         ],
      default => 'repeated',
-     description => Math::NumSeq::__('Whether to count repeated prime factors, or only distinct prime factors.'),
+     description => Math::NumSeq::__('Whether to include repeated prime factors, or only distinct prime factors.'),
    },
   ];
 

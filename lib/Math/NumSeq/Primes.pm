@@ -22,7 +22,7 @@ use POSIX ();
 use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 39;
+$VERSION = 40;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -38,15 +38,17 @@ use constant characteristic_integer => 1;
 use constant values_min => 2;
 use constant i_start => 1;
 
+#------------------------------------------------------------------------------
 # cf A010051 - characteristic boolean 0 or 1 according as N is prime
 #      A051006 characteristic as binary fraction, in decimal
 #      A051007 characteristic as binary fraction, continued fraction
 #    A000720 - pi(n) num primes <= n
 #    A018252 - the non-primes
-#    A002476 - primes 3k+1, also 6k+1
+#    A002476 - primes 3k+1, which is also 6k+1
 #
 use constant oeis_anum => 'A000040'; # primes
 
+#------------------------------------------------------------------------------
 
 use constant 1.02;  # for leading underscore
 use constant _MAX_PRIME_XS => do {

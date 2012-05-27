@@ -21,7 +21,7 @@ use strict;
 use Math::NumSeq;
 
 {
-  my $pow = Math::NumSeq::_bigint->new(1);
+  my $pow = Math::NumSeq::_to_bigint(1);
   for my $i (1 .. 100000) {
     $pow *= 2;
     if ($pow =~ /.*(010|101)/) {

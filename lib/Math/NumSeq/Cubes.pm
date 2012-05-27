@@ -23,7 +23,7 @@ use POSIX 'floor','ceil';
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 39;
+$VERSION = 40;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -84,7 +84,7 @@ sub rewind {
 sub seek_to_i {
   my ($self, $i) = @_;
   if ($i >= _UV_I_LIMIT) {
-    $i = Math::NumSeq::_bigint()->new("$i");
+    $i = Math::NumSeq::_to_bigint($i);
   }
   $self->{'i'} = $i;
 }
@@ -96,7 +96,7 @@ sub next {
   my ($self) = @_;
   my $i = $self->{'i'}++;
   if ($i == _UV_I_LIMIT) {
-    $self->{'i'} = Math::NumSeq::_bigint()->new($self->{'i'});
+    $self->{'i'} = Math::NumSeq::_to_bigint($self->{'i'});
   }
   return ($i, $i*$i*$i);
 }

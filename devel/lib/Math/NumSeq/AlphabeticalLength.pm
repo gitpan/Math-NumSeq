@@ -21,7 +21,7 @@ use strict;
 use List::Util 'min';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 39;
+$VERSION = 40;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -42,8 +42,8 @@ use constant characteristic_count => 1;
 use constant _HAVE_LINGUA_ANY_NUMBERS =>
   eval { require Lingua::Any::Numbers; 1 };
 
-sub parameter_info_array {
-  my ($class_or_self) = @_;
+use constant::defer parameter_info_array => sub {
+  require Lingua::Any::Numbers;
   my @choices;
   if (_HAVE_LINGUA_ANY_NUMBERS) {
     @choices = Lingua::Any::Numbers::available();
@@ -88,7 +88,7 @@ sub parameter_info_array {
           #  # description => Math::NumSeq::__('...'),
           # },
          ];
-}
+};
 
 sub values_min {
   my ($self) = @_;
@@ -98,6 +98,7 @@ sub values_min {
                  $i_start .. $i_start + 20));
 }
 
+#------------------------------------------------------------------------------
 my %oeis_anum = (cardinal => { en => 'A005589',
                                sv => 'A059124',
                                # OEIS-Catalogue: A005589 i_start=0
@@ -112,6 +113,8 @@ sub oeis_anum {
   ### oeis_anum: $self
   return $oeis_anum{$self->{'number_type'}}->{lc($self->{'language'})};
 }
+
+#------------------------------------------------------------------------------
 
 sub new {
   my $self = shift->SUPER::new(@_);

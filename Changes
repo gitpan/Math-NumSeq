@@ -17,6 +17,10 @@ with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 40, May 2012
+    - new SpiroFibonacci
+    - tests fix for Fibonacci
+
 Version 39, May 2012
     - new PrimeIndexOrder, PrimeIndexPrimes
 

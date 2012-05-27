@@ -38,7 +38,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 39;
+$VERSION = 40;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -203,6 +203,12 @@ use constant::defer _bigint => sub {
   }
   return 'Math::BigInt';
 };
+
+sub _to_bigint {
+  my ($n) = @_;
+  # stringize to avoid UV->BigInt bug in Math::BigInt::GMP version 1.37
+  return _bigint()->new("$n");
+}
 
 1;
 __END__
@@ -493,7 +499,8 @@ L<Math::NumSeq::Fibbinary>,
 L<Math::NumSeq::FibbinaryBitCount>,
 L<Math::NumSeq::Pell>,
 L<Math::NumSeq::Tribonacci>,
-L<Math::NumSeq::Perrin>
+L<Math::NumSeq::Perrin>,
+L<Math::NumSeq::SpiroFibonacci>
 
 L<Math::NumSeq::FractionDigits>,
 L<Math::NumSeq::SqrtDigits>,

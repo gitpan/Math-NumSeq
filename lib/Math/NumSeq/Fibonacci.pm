@@ -21,12 +21,13 @@ use strict;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 39;
+$VERSION = 40;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
 
 use Math::NumSeq;
 *_is_infinite = \&Math::NumSeq::_is_infinite;
+*_to_bigint = \&Math::NumSeq::_to_bigint;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -47,7 +48,9 @@ use constant oeis_anum => 'A000045'; # fibonacci starting at i=0 0,1,1,2,3
 # the biggest f0 for which both f0 and f1 fit into a UV, and which therefore
 # for the next step will require BigInt
 #
-my $uv_limit = do {
+my $uv_limit;
+my $uv_i_limit = 0;
+{
   # Float integers too in 32 bits ?
   # my $max = 1;
   # for (1 .. 256) {
@@ -71,6 +74,7 @@ my $uv_limit = do {
   while ($f0 <= $max - $f1) {
     $prev_f0 = $f0;
     ($f1,$f0) = ($f1+$f0,$f1);
+    $uv_i_limit++;
   }
 
   ### Fibonacci UV limit ...
@@ -79,8 +83,14 @@ my $uv_limit = do {
   ### $f1
   ### ~0 : ~0
 
-  $prev_f0
-};
+  $uv_limit = $prev_f0;
+
+  ### $uv_limit
+  ### $uv_i_limit
+
+  __PACKAGE__->ith($uv_i_limit) == $uv_limit
+    or die "Oops, wrong uv_i_limit";
+}
 
 sub rewind {
   my ($self) = @_;
@@ -93,7 +103,7 @@ sub rewind {
 #   my ($self, $i) = @_;
 #   $self->{'i'} = $i;
 #   if ($i >= $uv_i_limit) {
-#     $i = Math::NumSeq::_bigint()->new("$i");
+#     $i = _to_bigint($i);
 #   }
 #   ($self->{'f0'}, $self->{'f1'}) = $self->ith_pair($i);
 # }
@@ -110,7 +120,7 @@ sub next {
 
   if ($ret == $uv_limit) {
     ### go to bigint f1 ...
-    $self->{'f1'} = Math::NumSeq::_bigint()->new("$self->{'f1'}");
+    $self->{'f1'} = _to_bigint($self->{'f1'});
   }
 
   return ($self->{'i'}++, $ret);
@@ -133,6 +143,10 @@ sub ith {
   # k=1, Fk1=F[k-1]=0, Fk=F[k]=1
   shift @bits; # high 1
   my $Fk1 = ($i * 0);  # inherit bignum 0
+  if ($i > $uv_i_limit && ! ref $Fk1) {
+    # automatic BigInt if not another bignum class
+    $Fk1 = _to_bigint(0);
+  }
   my $Fk  = $Fk1 + 1;  # inherit bignum 1
 
   my $add = -2;
@@ -152,7 +166,7 @@ sub ith {
     $Fk1 += $Fk; # F[2k-1]
     my $F2k = $F2kplus1 - $Fk1;
 
-    if (shift @bits) {
+    if (shift @bits) {  # high to low
       $Fk1 = $F2k;     # F[2k]
       $Fk = $F2kplus1; # F[2k+1]
       $add = -2;

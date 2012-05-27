@@ -24,6 +24,7 @@ devel/exe-cbrt.c
 devel/exe-gen-bits.c
 devel/exe-ln2.c
 devel/exe-perrin.c
+devel/exe-sortadd.c
 devel/expression.pl
 devel/factorials.pl
 devel/fibbinary.pl
@@ -31,6 +32,7 @@ devel/fibonacci-word.pl
 devel/fibonacci.pl
 devel/fraction-digits.pl
 devel/gen-bits.pl
+devel/GNUmakefile
 devel/golay-rudin-shapiro.pl
 devel/golomb-sequence.pl
 devel/grep-oeis-non-ascii.pl
@@ -42,6 +44,7 @@ devel/klarner.pl
 devel/kolakoski.pl
 devel/language-expr.pl
 devel/lib/Math/NumSeq/AbsCubicDiff.pm
+devel/lib/Math/NumSeq/AllPrimeFactors.pm
 devel/lib/Math/NumSeq/AlphabeticalLength.pm
 devel/lib/Math/NumSeq/AlphabeticalLengthSteps.pm
 devel/lib/Math/NumSeq/Base/File.pm
@@ -54,6 +57,8 @@ devel/lib/Math/NumSeq/CunninghamLength.pm
 devel/lib/Math/NumSeq/CunninghamPrimes.pm
 devel/lib/Math/NumSeq/Derived/Cumulative.pm
 devel/lib/Math/NumSeq/DigitExtract.pm
+devel/lib/Math/NumSeq/DigitProductSteps-oeis.t
+devel/lib/Math/NumSeq/DigitProductSteps.pm
 devel/lib/Math/NumSeq/EratosthenesStage.pm
 devel/lib/Math/NumSeq/HypotCount.pm
 devel/lib/Math/NumSeq/KaprekarNumbers.pm
@@ -63,6 +68,7 @@ devel/lib/Math/NumSeq/LipschitzClass.pm
 devel/lib/Math/NumSeq/ln2.gz
 devel/lib/Math/NumSeq/Ln2Bits.pm
 devel/lib/Math/NumSeq/Loeschian.pm
+devel/lib/Math/NumSeq/LongFractionPrimes.pm
 devel/lib/Math/NumSeq/MaxDigitCount.pm
 devel/lib/Math/NumSeq/numseq-oeis.t
 devel/lib/Math/NumSeq/Padovan.pm
@@ -70,16 +76,18 @@ devel/lib/Math/NumSeq/pi.gz
 devel/lib/Math/NumSeq/PiBits.pm
 devel/lib/Math/NumSeq/PiDigits.pm
 devel/lib/Math/NumSeq/PierpontPrimes.pm
+devel/lib/Math/NumSeq/PowerSieve.pm
+devel/lib/Math/NumSeq/PrimeFactorExtract.pm
 devel/lib/Math/NumSeq/PrimeQuadraticEuler.pm
 devel/lib/Math/NumSeq/PrimeQuadraticHonaker.pm
 devel/lib/Math/NumSeq/PrimeQuadraticLegendre.pm
+devel/lib/Math/NumSeq/PrimesDigits.pm
+devel/lib/Math/NumSeq/PrimitiveRoot.pm
 devel/lib/Math/NumSeq/RadixConversion.pm
 devel/lib/Math/NumSeq/ReplicateDigits.pm
 devel/lib/Math/NumSeq/SlopingBinaryExcluded-oeis.t
 devel/lib/Math/NumSeq/SlopingExcluded.pm
 devel/lib/Math/NumSeq/Spectrum.pm
-devel/lib/Math/NumSeq/SpiroFibonacci-oeis.t
-devel/lib/Math/NumSeq/SpiroFibonacci.pm
 devel/lib/Math/NumSeq/StoehrSequence.pm
 devel/lib/Math/NumSeq/SumTwoSquares.pm
 devel/lib/Math/NumSeq/SumXsq3Ysq.pm
@@ -111,6 +119,7 @@ devel/old/ThueMorse.pm
 devel/old/ThueMorseEvil.pm
 devel/old/ThueMorseOdious.pm
 devel/perrin.pl
+devel/pi.pl
 devel/polygonal.pl
 devel/prime-index-primes.pl
 devel/primes.pl
@@ -224,6 +233,7 @@ lib/Math/NumSeq/ReverseAddSteps.pm
 lib/Math/NumSeq/Runs.pm
 lib/Math/NumSeq/SelfLengthCumulative.pm
 lib/Math/NumSeq/SophieGermainPrimes.pm
+lib/Math/NumSeq/SpiroFibonacci.pm
 lib/Math/NumSeq/SqrtContinued.pm
 lib/Math/NumSeq/SqrtContinuedPeriod.pm
 lib/Math/NumSeq/SqrtDigits.pm
@@ -262,6 +272,7 @@ t/Even.t
 t/Expression.t
 t/Factorials.t
 t/Fibbinary.t
+t/Fibonacci.t
 t/FibonacciWord.t
 t/File-1.txt
 t/File.t
@@ -313,12 +324,15 @@ xt/MyOEIS.pm
 xt/OEIS-File-ithreads.t
 xt/OEIS-File-weaken.t
 xt/oeis/Beastly-oeis.t
+xt/oeis/CollatzSteps-oeis.t
 xt/oeis/DeletablePrimes-oeis.t
 xt/oeis/DigitCount-oeis.t
+xt/oeis/DigitProduct-oeis.t
 xt/oeis/DigitSum-oeis.t
 xt/oeis/DivisorCount-oeis.t
 xt/oeis/ErdosSelfridgeClass-oeis.t
 xt/oeis/Fibbinary-oeis.t
+xt/oeis/FibbinaryBitCount-oeis.t
 xt/oeis/FibonacciWord-oeis.t
 xt/oeis/GolayRudinShapiro-oeis.t
 xt/oeis/GolayRudinShapiroCumulative-oeis.t
@@ -331,7 +345,9 @@ xt/oeis/Polygonal-oeis.t
 xt/oeis/PrimeIndexPrimes-oeis.t
 xt/oeis/Primes-oeis.t
 xt/oeis/ProthNumbers-oeis.t
+xt/oeis/SpiroFibonacci-oeis.t
 xt/oeis/SqrtDigits-oeis.t
+xt/oeis/Squares-oeis.t
 xt/oeis/SternDiatomic-oeis.t
 xt/oeis/Totient-oeis.t
 xt/oeis/Woodall-oeis.t

@@ -35,7 +35,7 @@ plan tests => $test_count;
 # VERSION
 
 {
-  my $want_version = 39;
+  my $want_version = 40;
   ok ($Math::NumSeq::ProthNumbers::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::ProthNumbers->VERSION,  $want_version,
@@ -82,7 +82,7 @@ plan tests => $test_count;
 
                     # binary 10010101011111111010
                     [ 612346, 0 ],
-                    [ Math::NumSeq::_bigint()->new(612346), 0 ],
+                    [ Math::NumSeq::_to_bigint(612346), 0 ],
 
                     # binary 1001010101
                     #        0000000001

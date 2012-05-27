@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 39;
+$VERSION = 40;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
@@ -47,7 +47,7 @@ use constant parameter_info_array =>
     choices     => ['all','odd'],
     choices_display => [Math::NumSeq::__('All'),
                         Math::NumSeq::__('Odd')],
-    # description => Math::NumSeq::__('...'),
+    description => Math::NumSeq::__('The values to act on, either all integers of just the odd integers.'),
    },
   ];
 
@@ -69,7 +69,7 @@ my %oeis_anum = (all => [ 'A046924',  # ways n, including 1 as a prime
                 );
 # OEIS-Catalogue: A046926
 # OEIS-Catalogue: A046924 one_as_prime=1
-# OEIS-Catalogue: A046927 on_values=odd
+# OEIS-Catalogue: A046927 on_values=odd    # starting n=0 for odd=1
 # OEIS-Catalogue: A046925 on_values=odd one_as_prime=1
 sub oeis_anum {
   my ($self) = @_;

@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 39;
+$VERSION = 40;
 
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IterateIth;
@@ -324,17 +324,18 @@ The sequence can also be constructed as a sieve.  Start with the integers,
 
     1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,...
 
-Delete every 2nd starting counting from the 2nd.  So starting at 2 keep
-that 2, drop 3, keep 4, drop 5, etc,
+Delete every 2nd, starting counting from the 2nd.  So at 2 keep that 2, drop
+value 3, keep value 4, drop value 5, etc, which leaves the even integers.
 
     1,2,4,6,8,10,12,14,16,18,20,22,24,26,28...
 
-Then delete every 3rd starting counting from the 3rd.  So starting at 4 keep
-4,6, drop 8, keep 10,12, drop 14, etc.
+Then delete every 3rd starting counting from the 3rd.  So starting at value
+4 keep 4,6, drop 8, keep 10,12, drop 14, etc.
 
     1,2,4,6,10,12,16,18,22,24,28,...
 
-Then delete every 4th starting counting from the 4th.  So starting at 6 keep 6,10,12, drop 16, keep 18,22,24, drop 28, etc.
+Then delete every 4th starting counting from the 4th.  So starting at 6 keep
+6,10,12, drop 16, keep 18,22,24, drop 28, etc.
 
     1,2,4,6,10,12,18,22,24,...
 
@@ -429,14 +430,14 @@ The rounding procedure can be reversed to test for a ReRound value.
     stop when value <= i
     is a ReRound if value==i, and i is its index
 
-For example to test 28, it's a multiple of 2, so ok for the final rounding.
-It's predecessor in the rounding steps was a multiple of 3, so round down to
-a multiple of 3 which is 27.  The predecessor of 27 was a multiple of 4 so
-round down to 24.  But at that point there's a contradiction because if 24
-was the value then it's already a multiple of 3 and so wouldn't have gone up
-to 27.  This case where a round-down gives a multiple of both i and i-1 is
-identified by the remainder value % i == i-1, since the value is already a
-multiple of i-1 and subtracting an i-1 would leave it still so.
+For example to test 28, it's a multiple of 2, so ok for the final rounding
+step.  It's predecessor in the rounding steps was a multiple of 3, so round
+down to a multiple of 3 which is 27.  The predecessor of 27 was a multiple
+of 4 so round down to 24.  But at that point there's a contradiction because
+if 24 was the value then it's already a multiple of 3 and so wouldn't have
+gone up to 27.  This case where a round-down gives a multiple of both i and
+i-1 is identified by the remainder = value % i == i-1.  If value is already
+a multiple of i-1 then subtracting an i-1 would leave it still so.
 
 =head2 Value to i Estimate
 
@@ -473,7 +474,7 @@ For m even it might be sqrt(pi)/2, 3/8*sqrt(pi), 5/16*sqrt(pi),
 What's the pattern?
 
 The current code uses the "large m" formula for any mE<gt>0, which is no
-more than about a factor roughly 1.25 too big.
+more than roughly a factor 1.25 too big.
 
 =head1 SEE ALSO
 

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 39;
+$VERSION = 40;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -109,8 +109,7 @@ sub ith {
     ### k: "$k"
 
     if ($k >= $uv_limit && ! ref $k) {
-      # stringize against Math::BigInt::GMP uv conversion
-      $k = Math::NumSeq::_bigint()->new("$k");
+      $k = Math::NumSeq::_to_bigint($k);
     }
 
     if (ref $k) {

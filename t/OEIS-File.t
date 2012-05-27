@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 54;
+plan tests => 64;
 
 use lib 't';
 use MyTestHelpers;
@@ -35,7 +35,7 @@ use Math::NumSeq::OEIS::File;
 # VERSION
 
 {
-  my $want_version = 39;
+  my $want_version = 40;
   ok ($Math::NumSeq::OEIS::File::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::OEIS::File->VERSION, $want_version,
@@ -95,7 +95,8 @@ foreach my $options ([],
                       _dont_use_bfile=>1,
                       _dont_use_html=>1],
                     ) {
-  foreach my $anum ('A000396',  # perfect numbers
+  foreach my $anum ('A002260',  # a002260.txt some text not numbers
+                    'A000396',  # perfect numbers
                     'A004540',  # sqrt(2) in base 3
                     'A000012',  # all 1s
                     'A003849',  # special case a003849.txt
@@ -105,6 +106,7 @@ foreach my $options ([],
                     'A001489',  # negative integers 0 downwards
                     'A067188',  # "full"
                     'A000796',  # pi in decimal
+                    'A005105',  # a005105.txt is code
                    ) {
     ### $anum
 

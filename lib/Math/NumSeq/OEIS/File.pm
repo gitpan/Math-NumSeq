@@ -30,14 +30,14 @@ use Symbol 'gensym';
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 39;
+$VERSION = 40;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
-*_bigint = \&Math::NumSeq::_bigint;
+*_to_bigint = \&Math::NumSeq::_to_bigint;
 
 use vars '$VERSION';
-$VERSION = 39;
+$VERSION = 40;
 
 eval q{use Scalar::Util 'weaken'; 1}
   || eval q{sub weaken { $_[0] = undef }; 1 }
@@ -179,7 +179,7 @@ sub new {
                    || _read_html($self, $anum));
 
   if (! $have_info && ! $self->{'fh'}) {
-    croak 'B-file, Internal or HTML not found for A-number "',$anum,'"';
+    croak 'OEIS file(s) not found for A-number "',$anum,'"';
   }
 
   weaken($instances{$self+0} = $self);
@@ -369,7 +369,7 @@ sub next {
     # initially $array has strings, make bigint objects when required
     if (! ref $value
         && ($value > $max_value || $value < $min_value)) {
-      $value = $array->[$pos] = _bigint()->new("$value");
+      $value = $array->[$pos] = _to_bigint($value);
     }
   }
   return ($self->{'i'}++, $value);
@@ -398,7 +398,7 @@ sub _readline {
                                      $/x)) {
       ### _readline: "$i  $value"
       if ($value > $max_value || $value < $min_value) {
-        $value = _bigint()->new("$value");
+        $value = _to_bigint($value);
       }
       return ($i, $value);
     }

@@ -55,7 +55,7 @@ use Math::BigInt;
 # VERSION
 
 {
-  my $want_version = 39;
+  my $want_version = 40;
   ok ($Math::NumSeq::SqrtEngel::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::SqrtEngel->VERSION,  $want_version,
@@ -106,8 +106,8 @@ use Math::BigInt;
   foreach my $sqrt (2 .. 20) {
     my $seq = Math::NumSeq::SqrtEngel->new (sqrt => $sqrt);
 
-    my $num = Math::NumSeq::_bigint()->new(0);
-    my $den = Math::NumSeq::_bigint()->new(1);
+    my $num = Math::NumSeq::_to_bigint(0);
+    my $den = Math::NumSeq::_to_bigint(1);
     my $want_i = 1;
     my $prev_value = 0;
 

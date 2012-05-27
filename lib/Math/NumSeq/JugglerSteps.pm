@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 39;
+$VERSION = 40;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -256,8 +256,7 @@ sub ith {
         ### 1/2 odd: $i
 
         if ($i > _UV_3_2_LIMIT) {
-          # stringize to avoid UV to Math::BigInt::GMP bug in its version 1.37
-          $i = Math::NumSeq::_bigint()->new("$i");
+          $i = Math::NumSeq::_to_bigint($i);
           ### using bigint: "$i"
           for (;;) {
             if ($pkey && $i < $cache_upto{$pkey}) {
@@ -308,8 +307,7 @@ sub ith {
 
   } else {
     ### general case: "$self->{'epow'}/$self->{'eroot'}-$self->{'opow'}/$self->{'oroot'}"
-    # stringize to avoid Math::BigInt::GMP::_new(UV) bug in its version 1.37
-    $i = Math::NumSeq::_bigint()->new("$i");
+    $i = Math::NumSeq::_to_bigint($i);
 
     unless (($self->{'opow'} % $self->{'oroot'})
             && ($self->{'epow'} % $self->{'eroot'})) {

@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 39;
+$VERSION = 40;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 729 A-numbers in 102 modules
+# total 732 A-numbers in 103 modules
 
 use constant info_arrayref =>
 [
@@ -520,6 +520,14 @@ use constant info_arrayref =>
     'parameters' => [
       'step_type',
       'both'
+    ]
+  },
+  {
+    'anum' => 'A008908',
+    'class' => 'Math::NumSeq::CollatzSteps',
+    'parameters' => [
+      'on_values',
+      'even'
     ]
   },
   {
@@ -3423,6 +3431,18 @@ use constant info_arrayref =>
   {
     'anum' => 'A005384',
     'class' => 'Math::NumSeq::SophieGermainPrimes'
+  },
+  {
+    'anum' => 'A078510',
+    'class' => 'Math::NumSeq::SpiroFibonacci'
+  },
+  {
+    'anum' => 'A079421',
+    'class' => 'Math::NumSeq::SpiroFibonacci',
+    'parameters' => [
+      'recurrence_type',
+      'absdiff'
+    ]
   },
   {
     'anum' => 'A040000',

@@ -22,7 +22,7 @@ use Carp;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 39;
+$VERSION = 40;
 
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
@@ -57,6 +57,7 @@ use constant parameter_info_array =>
 #   A011368 - 16^(1/9) decimal
 #
 #   A092855 - the bit positions of sqrt(2)-1 in binary
+#   A029683 - nth digit of cbrt(n)
 #
 my @oeis_anum;
 
@@ -338,12 +339,12 @@ sub _extend {
   my $root;
   my $halfdigits = int($calcdigits/2);
   if ($radix == 2) {
-    $root = Math::NumSeq::_bigint()->new(1);
+    $root = Math::NumSeq::_to_bigint(1);
     $root->blsft ($calcdigits);
   } else {
-    $power = Math::NumSeq::_bigint()->new($radix);
+    $power = Math::NumSeq::_to_bigint($radix);
     $power->bpow ($halfdigits);
-    $root = Math::NumSeq::_bigint()->new($power);
+    $root = Math::NumSeq::_to_bigint($power);
     $root->bmul ($root);
   }
   $root->bmul ($sqrt);

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 39;
+$VERSION = 40;
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
 
@@ -59,6 +59,7 @@ use constant parameter_info_array =>
 #    A030310 - positions of 1 in reverse
 #    A030305 - base 2 lengths of runs of 0s
 #    A030306 - base 2 lengths of runs of 1s
+#    A058935 - base 2 concats as bignums
 #
 #    A054637 - base 3 partial sums digits, start i=0 value=0
 #
@@ -68,8 +69,8 @@ use constant parameter_info_array =>
 #    A193431 - decimal 3 digits at a time
 #    A193492 - decimal 4 digits at a time
 #    A193493 - decimal 5 digits at a time
-#
-#    A033308 - concatenate primes digits
+#    A019519 - decimal concat odd nums as bignums
+#    A000422 - decimal reverse concats as bignums
 #
 my %oeis_anum;
 
@@ -255,13 +256,14 @@ Math::NumSeq::AllDigits -- digits of the integers
 
 This sequence is the digits of the integers 0, 1, 2, etc,
 
+    # starting i=0
     0,1,2,3,4,5,6,7,8,9,
     1,0, 1,1, 1,2, 1,3, 1,4, 1,5, 1,6,...
 
 The default is decimal, or the C<radix> parameter can select another base.
 
 The optional C<order> parameter (a string) can control the order of the
-digits within each integer,
+digits of each integer,
 
     "forward"      high to low, 3512 -> 3,5,1,2
     "reverse"      low to high, 3512 -> 2,1,5,3
@@ -305,7 +307,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2010, 2011, 2012 Kevin Ryde
+Copyright 2011, 2012 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

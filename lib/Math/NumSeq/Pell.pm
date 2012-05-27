@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 39;
+$VERSION = 40;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
 
@@ -108,7 +108,7 @@ sub next {
 
   if ($ret == $uv_limit) {
     ### go to bigint f1 ...
-    $self->{'f1'} = Math::NumSeq::_bigint()->new("$self->{'f1'}");
+    $self->{'f1'} = Math::NumSeq::_to_bigint($self->{'f1'});
   }
 
   return ($self->{'i'}++, $ret);

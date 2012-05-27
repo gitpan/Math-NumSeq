@@ -44,6 +44,7 @@ POSIX::setlocale(POSIX::LC_ALL(), 'C'); # no message translations
 # uncomment this to run the ### lines
 #use Smart::Comments '###';
 
+
 use constant DBL_INT_MAX => (POSIX::FLT_RADIX() ** POSIX::DBL_MANT_DIG());
 use constant MY_MAX => (POSIX::FLT_RADIX() ** (POSIX::DBL_MANT_DIG()-5));
 
@@ -127,9 +128,10 @@ sub check_class {
 
   # skip all except ...
   #
+  # return unless $class =~ /Collatz/;
   # return unless $class =~ /PrimeIndex/;
   # return unless $class =~ /Golomb/;
-  # return unless $class =~ /Twin/;
+  return unless $class =~ /Spiro/;
   # return unless $class =~ /FactorCount/;
   # return unless $class =~ /Cbrt/;
   # return unless $class =~ /Star/;
@@ -153,71 +155,55 @@ sub check_class {
                   $class,
                   map {defined $_ ? $_ : '[undef]'} @$parameters);
 
+  MyTestHelpers::diag ("$anum $name");
+
   my $max_value = undef;
+  my $max_count = undef;
   if ($class eq 'Math::NumSeq::Factorials'
       || $class eq 'Math::NumSeq::Primorials'
       || $class eq 'Math::NumSeq::Fibonacci'
       || $class eq 'Math::NumSeq::Pell'
       || $class eq 'Math::NumSeq::LucasNumbers'
       || $class eq 'Math::NumSeq::Perrin'
+      || $class eq 'Math::NumSeq::Squares'
       || $class eq 'Math::NumSeq::Cubes'
       || $class eq 'Math::NumSeq::Tribonacci'
       || $class eq 'Math::NumSeq::ProthNumbers'
       || $class eq 'Math::NumSeq::CullenNumbers'
       || $class eq 'Math::NumSeq::WoodallNumbers'
       || $class eq 'Math::NumSeq::ReverseAdd'
-      || $class eq 'Math::NumSeq::MathImageRadixConversion'
+      || $class eq 'Math::NumSeq::RadixConversion'
      ) {
     $max_value = 'unlimited';
-  }
 
-  my ($want, $want_i_start, $filename) = MyOEIS::read_values
-    ($anum, max_value => $max_value)
-      or do {
-        MyTestHelpers::diag("skip $anum $name, no file data");
-        return;
-      };
-  ### read_values len: scalar(@$want)
-  ### $want_i_start
+  } elsif ($anum eq 'A009003') { # Math::NumSeq::PythagoreanHypots slow
+    $max_count = 250;
 
-  if ($anum eq 'A009003') {
-    #  Math::NumSeq::MathImagePythagoreanHypots slow, only first 250 values for now ...
-    splice @$want, 250;
-  } elsif ($anum eq 'A003434') {
-    #  TotientSteps slow, only first 250 values for now ...
-    splice @$want, 250;
+  } elsif ($anum eq 'A003434') { # Math::NumSeq::TotientSteps slow
+    $max_count = 250;
+
   } elsif ($anum eq 'A007770') {
-    #  Happy bit slow, only first few values for now, not B-file 140,000 ...
-    splice @$want, 20000;
-  } elsif ($anum eq 'A030547') {
-    # sample values start from i=1 but OFFSET=0
-    if ($want->[9] == 2) {
-      unshift @$want, 1;
-    }
+    # Math::NumSeq::Happy bit slow, not B-file 140,000 ...
+    $max_count = 20000;
 
-  } elsif ($anum eq 'A002945'
+  } elsif ($anum eq 'A002945'   # CbrtContinued
            || $anum eq 'A002946'
            || $anum eq 'A010239') {
-    MyTestHelpers::diag ("  shorten CbrtContinued to 400 values");
-    if ($#$want > 400) {
-      $#$want = 400;
-    }
+    $max_count = 400;
 
-  } elsif ($anum eq 'A000959') {
-    MyTestHelpers::diag ("  shorten lucky numbers to < 20_000");
-    @$want = grep {$_ < 20_000} @$want;
+  } elsif ($anum eq 'A000959') { # LuckyNumbers
+    $max_value = 20_000;
 
   } elsif ($anum eq 'A082897') {
     # perfect totients
     # full B-file goes to 2^32 which is too much to sieve
-    @$want = grep {$_ < 200_000} @$want;
+    $max_value = 200_000;
 
-  } elsif ($anum eq 'A001359'
+  } elsif ($anum eq 'A001359'   # TwinPrimes
            || $anum eq 'A006512'
            || $anum eq 'A014574'
            || $anum eq 'A001097') {
-    # twin primes shorten for now
-    @$want = grep {$_ < 1_000_000} @$want;
+    $max_value = 1_000_000;
 
   } elsif ($anum eq 'A000040'
            || $anum eq 'A006450'
@@ -233,7 +219,7 @@ sub check_class {
            || $anum eq 'A093046'
           ) {
     # PrimeIndexPrimes shorten
-    @$want = grep {$_ < 1_000_000} @$want;
+    $max_value = 1_000_000;
 
   } elsif ($anum eq 'A002858'
            || $anum eq 'A002859'
@@ -243,36 +229,27 @@ sub check_class {
            || $anum eq 'A048951'
            || $anum eq 'A007300') {
     # UlamSequence shortened for now
-    if ($#$want > 1000) { $#$want = 1000; }
-
-  } elsif ($anum eq 'A080605') { # Golomb odd, typo extra 23
-    if ($want->[64] == 23) {
-      MyTestHelpers::diag ("$anum delete stray extra 23");
-      splice @$want,64,1;
-    }
+    $max_count = 1000;
 
   } elsif ($anum eq 'A000004') {
     # shorten anything all zeros
-    if ($#$want > 20) { $#$want = 20 }
+    $max_count = 20;
 
   } elsif ($anum eq 'A005384') {
     # sophie germain shorten for now
-    @$want = grep {$_ < 1_000_000} @$want;
+    $max_value = 1_000_000;
 
   } elsif ($class =~ /AlmostPrimes/) {
     # AlmostPrimes shorten for now
-    @$want = grep {$_ < 10_000_000} @$want;
-
-    # } elsif ($class =~ /PrimeFactorCount/) {
-    #   if ($#$want > 2000) { $#$want = 20000 }
+    $max_value = 10_000_000;
 
   } elsif ($class =~ /ReverseAdd/) {
     # shorten the biggest nums
-    @$want = grep {length($_) < 100} @$want;
+    # @$want = grep {length($_) < 100} @$want;
 
   } elsif ($anum eq 'A006567') {
     # emirps shorten for now
-    @$want = grep {$_ < 100_000} @$want;
+    $max_value = 100_000;
 
   } elsif ($anum eq 'A001694'    # Powerful all power=2
            || $anum eq 'A036966' # Powerful all power=3
@@ -281,7 +258,7 @@ sub check_class {
            || $anum eq 'A069493' # Powerful all power=6
           ) {
     # shorten for now
-    @$want = grep {$_ < 30_000} @$want;
+    $max_value = 30_000;
 
   } elsif (
            $anum eq 'A004558'
@@ -297,40 +274,61 @@ sub check_class {
            || $anum eq 'A004574'
            || $anum eq 'A004580'
            || $anum eq 'A004581'
+           || $anum eq 'A004542' # sqrt(2) in base 5
           ) {
-    splice @$want, -32;
     MyTestHelpers::diag ("trim doubtful end $anum $name");
+    $max_count = 50;
 
-  } elsif ($anum eq 'A004542') {  # sqrt(2) in base 5
-    # trim seeming bad end
-    splice @$want, -15;
-    MyTestHelpers::diag ("trim doubtful end $anum $name");
   } elsif ($anum eq 'A004582') {
     # last few of sample values sqrt(8) base 7 seem bad, trim
-    splice @$want, -27;
+    $max_count = 50;
     MyTestHelpers::diag ("trim doubtful end $anum $name");
   } elsif ($anum eq 'A004583') {
     # last digit of sample values octal sqrt(8) seems is 4 think should be 5,
     # trim it off for now
-    pop @$want;
+    $max_count = 50;
     MyTestHelpers::diag ("trim doubtful end $anum $name");
   } elsif ($anum eq 'A004584') {
     # last few of sample values sqrt(8) base 9 seem bad, trim
-    splice @$want, -4;
+    $max_count = 50;
     MyTestHelpers::diag ("trim doubtful end $anum $name");
   } elsif ($anum eq 'A004588') {
     # last 3,3,0,2,3,4,2,4,1,2,4,4,1 sample values sqrt(10) base 5 seem bad,
     # trim
-    splice @$want, -13;
+    $max_count = 50;
     MyTestHelpers::diag ("trim doubtful end $anum $name");
-  }
-  if ($class =~ /SqrtDigits/) {
-    unless (Math::BigInt::GMP->VERSION) {  # plain Calc sqrt a bit slow
-      if ($#$want > 1000) {
-        $#$want = 1000;
-      }
+  } elsif ($class =~ /SqrtDigits/) {
+    unless (Math::BigInt::GMP->VERSION) { # plain Calc sqrt a bit slow
+      $max_count = 1000;
     }
   }
+
+  my ($want, $want_i_start, $filename) = MyOEIS::read_values
+    ($anum,
+     max_value => $max_value,
+     max_count => $max_count)
+      or do {
+        MyTestHelpers::diag("skip $anum $name, no file data");
+        return;
+      };
+  ### read_values len: scalar(@$want)
+  ### $want_i_start
+
+
+  if ($anum eq 'A030547') {
+    if ($want->[9] == 2) {
+      MyTestHelpers::diag("$anum fixup samples start i=1 but OFFSET=0");
+      unshift @$want, 1;
+    }
+  } elsif ($anum eq 'A080605') { # Golomb odd, typo extra 23
+    if ($want->[64] == 23) {
+      MyTestHelpers::diag ("$anum delete stray extra 23");
+      splice @$want,64,1;
+    }
+  }
+
+
+
 
   # skip all except ...
   #
@@ -338,9 +336,6 @@ sub check_class {
 
 
   my $want_count = scalar(@$want);
-  MyTestHelpers::diag ("$anum $name  $want_count values to ",
-                       (@$want ? $want->[-1] : '[none]'));
-
   my $hi = 10;
   if (@$want) {
     $hi = $want->[-1];
@@ -456,18 +451,18 @@ sub check_class {
     my $i_start = $seq->i_start;
     my $i = $i_start;
     if (($max_value||'') eq 'unlimited') {
-      $i = Math::NumSeq::_bigint()->new($i);
+      $i = Math::NumSeq::_to_bigint($i);
     }
 
     my @got;
     while (@got < @$want) {
       my $value = $seq->ith($i++);
-      ### got: "$i $value, towards want size ".@$want
+      # ### got: "$i $value, towards want size ".@$want
       last if (! defined $value);
       push @got, $value;
     }
     my $got = \@got;
-    ### $got
+    # ### $got
 
     my $diff = diff_nums($got, $want);
     if (defined $diff) {

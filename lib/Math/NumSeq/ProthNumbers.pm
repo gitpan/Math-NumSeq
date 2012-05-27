@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 39;
+$VERSION = 40;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -87,9 +87,9 @@ sub next {
     ### bigger 2^n now ...
     if ($self->{'limit'} == $uv_limit) {
       ### go to BigInt
-      $self->{'value'} = Math::NumSeq::_bigint()->new($self->{'value'});
-      $self->{'inc'}   = Math::NumSeq::_bigint()->new($self->{'inc'});
-      $self->{'limit'} = Math::NumSeq::_bigint()->new("$self->{'limit'}");
+      $self->{'value'} = Math::NumSeq::_to_bigint($self->{'value'});
+      $self->{'inc'}   = Math::NumSeq::_to_bigint($self->{'inc'});
+      $self->{'limit'} = Math::NumSeq::_to_bigint($self->{'limit'});
     }
     $self->{'inc'} *= 2;
     $self->{'limit'} *= 4;

@@ -32,7 +32,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 39;
+$VERSION = 40;
 
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IterateIth;
@@ -176,7 +176,7 @@ Then every fourth 1 becomes 4, fourth 2 becomes 4, fourth 3 becomes 4.
 
     stage 3: 1,2,1,2,3,3,1,2,4,4,3,4,...
 
-The replacement of every Nth with N is applied separately to the 1s, 2s, 3s
+The replacement of N at every Nth is applied separately to the 1s, 2s, 3s
 etc remaining at each stage.
 
 =head1 FUNCTIONS

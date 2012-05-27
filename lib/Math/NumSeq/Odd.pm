@@ -20,21 +20,21 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 39;
+$VERSION = 40;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
+# uncomment this to run the ### lines
+#use Smart::Comments;
+
 
 # use constant name => Math::NumSeq::__('Odd Integers');
-use constant description => Math::NumSeq::__('The odd integers 1, 3, 5, 7, 9, etc.');
+use constant description => Math::NumSeq::__('The odd integers 1, 3, 5, 7, 9, etc, 2i+1.');
 use constant values_min => 1;
 use constant default_i_start => 0;
 use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
 use constant oeis_anum => 'A005408'; # odd 1,3,5,...
-
-# uncomment this to run the ### lines
-#use Smart::Comments;
 
 sub rewind {
   my ($self) = @_;

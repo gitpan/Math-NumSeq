@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 39;
+$VERSION = 40;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -29,7 +29,7 @@ use Math::NumSeq::Base::IterateIth;
         'Math::NumSeq');
 
 *_is_infinite = \&Math::NumSeq::_is_infinite;
-*_bigint = \&Math::NumSeq::_bigint;
+*_to_bigint = \&Math::NumSeq::_to_bigint;
 
 use Math::NumSeq::NumAronson 8; # new in v.8
 *_round_down_pow = \&Math::NumSeq::NumAronson::_round_down_pow;
@@ -64,6 +64,11 @@ use constant parameter_info_array =>
 #    A077298 - concat 5, step by 5
 #
 #    A098080 - digits making an increasing sequence
+#
+#    A058935 - binary concatenate successively, to make bignums
+#    A047778 - binary in decimal
+#    A001855 - binary number of digits
+#    A007908 - decimal concatenate successively, to make bignums
 #
 my @oeis_anum;
 
@@ -119,7 +124,7 @@ sub ith {
   if ($count > 0) {
     my $v = $value;
     if ($count > 1 && ! ref $i) {
-      $value = _bigint()->new($value);
+      $value = _to_bigint($value);
     }
 
     my ($pow) = _round_down_pow ($v, $radix);

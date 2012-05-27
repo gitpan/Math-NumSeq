@@ -21,7 +21,7 @@ use strict;
 use Math::Prime::XS;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 39;
+$VERSION = 40;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -73,7 +73,7 @@ sub next {
   if (my $i = $self->{'i'}++) {
     my $f = $self->{'f'};
     if ($f >= _UV_LIMIT && ! ref $f) {
-      $self->{'f'} = Math::NumSeq::_bigint()->new($f);
+      $self->{'f'} = Math::NumSeq::_to_bigint($f);
     }
     my $prime;
     do {
@@ -96,7 +96,7 @@ sub ith {
   my $prime = 1;
   while ($i-- > 0) {
     if ($f >= _UV_LIMIT && ! ref $f) {
-      $f = Math::NumSeq::_bigint()->new($f);
+      $f = Math::NumSeq::_to_bigint($f);
     }
     until (Math::Prime::XS::is_prime(++$prime)) {}
     $f *= $prime;

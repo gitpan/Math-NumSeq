@@ -20,12 +20,12 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 39;
+$VERSION = 40;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
-*_bigint = \&Math::NumSeq::_bigint;
+*_to_bigint = \&Math::NumSeq::_to_bigint;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -72,7 +72,7 @@ use constant parameter_info_array =>
 #    A099820 even numbers written in binary
 #    A099821 odd numbers written in binary
 #    A178569 binary to decimal expressed by recurrence
-#
+#    A031345 primes written in 10 interpret as base 13
 #    A005836 base 3 without 2, is binary in base 3, but starts OFFSET=1 value=0
 
 my @oeis_anum;
@@ -156,7 +156,7 @@ sub next {
   my $i = $self->{'i'}++;
   my $value = $self->ith($i);
   if ($value == $self->{'value_uv_limit'}) {
-    $self->{'i'} = _bigint()->new("$self->{'i'}");
+    $self->{'i'} = _to_bigint($self->{'i'});
   }
   return ($i, $value);
 }

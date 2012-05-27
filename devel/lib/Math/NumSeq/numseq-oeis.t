@@ -102,41 +102,66 @@ sub check_class {
   ### $class
   ### $parameters
 
-   return unless $class =~ /Sto/;
-  # return unless $class =~ /Repdigit/;
-  # return unless $class =~ /Engel/;
+  # return unless $class =~ /Sto/;
+  # return unless $class =~ /PrimeF/;
+  # return unless $class =~ /DigitP/;
   # return unless $class =~ /DigitCount/;
   # return unless $class =~ /Alpha/;
   # return unless $class =~ /Spiro/;
   # return unless $class =~ /Cbrt/;
   # return unless $class =~ /Slop/;
-  # return unless $class =~ /Pythag/;
+  # return unless $class =~ /Kap/;
   # return unless $class =~ /Sieve/;
   # return unless $class =~ /HypotC/;
   # return unless $class =~ /Loe/;
-  # return unless $class =~ /Radix/;
-  # return unless $class =~ /Gold/;
+  # return unless $class =~ /DigitP/;
+  # return unless $class =~ /Kap/;
   # return unless $class =~ /Pier/;
-  # return unless $class =~ /Lucky/;
+   return unless $class =~ /DigitE/;
   # return unless $class =~ /Erdos/;
-
+  #  return unless $anum eq 'A163540';
 
   eval "require $class" or die;
 
   my $name = join(',',
                   $class,
                   map {defined $_ ? $_ : '[undef]'} @$parameters);
+  MyTestHelpers::diag ("$anum $name");
 
   my $max_value = undef;
+  my $max_count = undef;
   if ($class eq 'Math::NumSeq::Factorials'
       || $class eq 'Math::NumSeq::Primorials'
       || $class eq 'Math::NumSeq::MathImageRadixConversion'
      ) {
     $max_value = 'unlimited';
+
+  } elsif ($anum eq 'A007700'
+           || $anum eq 'A023272'
+           || $anum eq 'A023302'
+           || $anum eq 'A023330') {
+    # Cunningham
+    $max_value = 100_000;
+
+  } elsif ($anum eq 'A005109') { # Pierpont
+    $max_value = 1_000_000;
+
+  } elsif ($anum eq 'A006886') {  # Kaprekar
+    $max_value = 100_000;
+
+  } elsif ($anum eq 'A016037') {
+    # alpha length steps doubtful length 10s from 43 on
+    $max_count = 42;
+
+  } elsif ($anum eq 'A005384') {
+    # Sophie Germain / Cunningham, shorten for now
+    $max_value = 1_000_000;
   }
 
   my ($want, $want_i_start, $filename) = MyOEIS::read_values
-    ($anum, max_value => $max_value)
+    ($anum,
+     max_value => $max_value,
+     max_count => $max_count)
       or do {
         MyTestHelpers::diag("skip $anum $name, no file data");
         return;
@@ -145,41 +170,9 @@ sub check_class {
   ### $want_i_start
 
 
-  if ($anum eq 'A007700'
-      || $anum eq 'A023272'
-      || $anum eq 'A023302'
-      || $anum eq 'A023330') {
-    # Cunningham shortened for now
-    @$want = grep {$_ < 100_000} @$want;
-
-  } elsif ($anum eq 'A005101'
-           || $anum eq 'A005100') {
-    # Abundant shortened
-    # if ($#$want > 1000) { $#$want = 1000; }
-    # if ($#$want > 1000) { $#$want = 1000; }
-
-  } elsif ($anum eq 'A091191') { # primitive abundants
-    #   if ($#$want > 1000) { $#$want = 1000; }
-
-  } elsif ($anum eq 'A005109') {
-    # Pierpont primes shorten
-    @$want = grep {$_ < 1_000_000} @$want;
-
-  } elsif ($anum eq 'A016037') {
-    # alpha length steps doubtful length 10s from 43 on
-    $#$want = 42;
-
-  } elsif ($anum eq 'A005384') {
-    # Sophie Germain / Cunningham, shorten for now
-    @$want = grep {$_ < 1_000_000} @$want;
-  }
-
-  #  return unless $anum eq 'A163540';
 
 
   my $want_count = scalar(@$want);
-  MyTestHelpers::diag ("$anum $name  ($want_count values to ",
-                       $want->[-1]//'[none]', ")");
   return unless @$want;
 
   my $hi = $want->[-1];
@@ -287,7 +280,7 @@ sub check_class {
 
     my $i = $seq->i_start;
     if (($max_value||'') eq 'unlimited') {
-      $i = Math::NumSeq::_bigint()->new($i);
+      $i = Math::NumSeq::_tobigint($i);
     }
 
     my @got;

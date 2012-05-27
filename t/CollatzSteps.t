@@ -37,7 +37,7 @@ plan tests => $test_count;
   # Math::NumSeq::CollatzSteps uses Math::BigInt binc() and bmul()
   #
   require Math::NumSeq;
-  my $n = Math::NumSeq::_bigint()->new(123);
+  my $n = Math::NumSeq::_to_bigint(123);
   if (! $n->can('binc')) {
     MyTestHelpers::diag ('skip due to Math::BigInt no binc() method');
     foreach (1 .. $test_count) {
@@ -51,7 +51,7 @@ plan tests => $test_count;
 # VERSION
 
 {
-  my $want_version = 39;
+  my $want_version = 40;
   ok ($Math::NumSeq::CollatzSteps::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::CollatzSteps->VERSION,  $want_version,

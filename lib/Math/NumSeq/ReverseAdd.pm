@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 39;
+$VERSION = 40;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -76,6 +76,7 @@ my %oeis_anum;
 
 # cf A058042 written out in binary
 #    ~/OEIS/a058042.txt  on reaching binary palindromes
+#    A033908 sort-add
 
 $oeis_anum{'2'}->{'1'} = 'A035522';
 $oeis_anum{'2'}->{'22'} = 'A061561';
@@ -171,7 +172,7 @@ sub next {
   my $ret = $self->{'value'};
   if (! ref $ret && $ret >= $self->{'uv_limit'}) {
     ### go to bigint ...
-    $self->{'value'} = Math::NumSeq::_bigint()->new("$ret");
+    $self->{'value'} = Math::NumSeq::_to_bigint($ret);
   }
   $self->{'value'} += _reverse_in_radix($ret, $self->{'radix'});
   return ($self->{'i'}++,
@@ -197,7 +198,7 @@ sub ith {
 }
 # if ($value >= $self->{'uv_limit'}) {
 #   ### go to bigint ...
-#   $value = Math::NumSeq::_bigint()->new("$value");
+#   $value = Math::NumSeq::_to_bigint($value);
 #   while ($i-- > 0) {
 #     $value += _reverse_in_radix($value, $radix);
 #   }
@@ -241,7 +242,7 @@ sub pred {
 
 # if ($value >= $self->{'uv_limit'}) {
 #   ### go to bigint ...
-#   $value = Math::NumSeq::_bigint()->new("$value");
+#   $value = Math::NumSeq::_to_bigint($value);
 #   while ($i-- > 0) {
 #     $value += _reverse_in_radix($value, $radix);
 #   }

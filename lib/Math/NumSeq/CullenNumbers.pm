@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 39;
+$VERSION = 40;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -76,7 +76,7 @@ sub _UNTESTED__seek_to_i {
   my ($self, $i) = @_;
   $self->{'i'} = $i;
   if ($i >= $uv_i_limit) {
-    $i = Math::NumSeq::_bigint()->new("$i");
+    $i = Math::NumSeq::_to_bigint($i);
   }
   $self->{'power'} = 2 ** $i;
 }
@@ -88,7 +88,7 @@ sub next {
   my ($self) = @_;
   my $i = $self->{'i'}++;
   if ($i == $uv_i_limit) {
-    $self->{'power'} = Math::NumSeq::_bigint()->new($self->{'power'});
+    $self->{'power'} = Math::NumSeq::_to_bigint($self->{'power'});
   }
   my $value = $self->{'power'}*$i + 1;
   $self->{'power'} *= 2;

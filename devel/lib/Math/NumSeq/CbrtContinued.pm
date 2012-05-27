@@ -1,3 +1,12 @@
+# expression => 'cbrt(2)'
+# rootof(x^3-2)
+# type => 'custom'
+# 
+
+
+
+
+
 # Copyright 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
@@ -20,7 +29,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 39;
+$VERSION = 40;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -65,7 +74,7 @@ my @oeis_anum = (
                  # OEIS-Catalogue array begin
                  undef,     # cbrt=0
                  undef,     # cbrt=1
-                 undef, # 'A002945', # cbrt=2
+                 undef, # 'A002945', # cbrt=2 but OFFSET=1
                  undef, # 'A002946', # cbrt=3
                  undef, # 'A002947', # cbrt=4
                  undef, # 'A002948', # cbrt=5
@@ -254,12 +263,12 @@ sub rewind {
   my ($self) = @_;
   $self->{'i'} = $self->i_start;
 
-  $self->{'a'} = $self->{'d'} = Math::NumSeq::_bigint()->new(1);
-  $self->{'b'} = $self->{'c'} = Math::NumSeq::_bigint()->new(0);
+  $self->{'a'} = $self->{'d'} = Math::NumSeq::_to_bigint(1);
+  $self->{'b'} = $self->{'c'} = Math::NumSeq::_to_bigint(0);
 
-  $self->{'p'} =Math::NumSeq::_bigint()->new(-1);
-  $self->{'q'} = $self->{'r'} = Math::NumSeq::_bigint()->new(0);
-  $self->{'s'} = Math::NumSeq::_bigint()->new($self->{'cbrt'});
+  $self->{'p'} =Math::NumSeq::_to_bigint(-1);
+  $self->{'q'} = $self->{'r'} = Math::NumSeq::_to_bigint(0);
+  $self->{'s'} = Math::NumSeq::_to_bigint($self->{'cbrt'});
 }
 
 sub next {
