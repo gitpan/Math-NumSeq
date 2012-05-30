@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 40;
+$VERSION = 41;
 use Math::NumSeq;
 use List::Util 'min';
 use Math::NumSeq::Base::IterateIth;
@@ -44,14 +44,18 @@ use Math::NumSeq::Base::Digits;   # radix
 use constant values_min => 0;
 
 #------------------------------------------------------------------------------
-# A164734 - number of 2-cycles
-# A164736 - number of 5-cycles
-# A164995 - ternary pre-periodic length
-# A164993 - ternary
-# A151949 - map
+# A151949 - decimal one step
+# A164734 - number of n-digit 2-cycles
+# A164735 - number of n-digit 3-cycles
+# A164736 - number of n-digit 5-cycles
+#
+# A164993 - base-3 one step
+# A164994 - base-3 one step / 2
+# A164995 - base-3 pre-periodic length
 
 my @oeis_anum;
-$oeis_anum[]
+# $oeis_anum[]
+
 sub oeis_anum {
   my ($self) = @_;
   return $oeis_anum[$self->{'radix'}];

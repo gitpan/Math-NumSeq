@@ -25,9 +25,9 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings(); }
 
-use Math::NumSeq::Tetrahedral;
+use Math::NumSeq::Repdigits;
 
-my $test_count = (tests => 35)[1];
+my $test_count = (tests => 1055)[1];
 plan tests => $test_count;
 
 
@@ -36,16 +36,16 @@ plan tests => $test_count;
 
 {
   my $want_version = 41;
-  ok ($Math::NumSeq::Tetrahedral::VERSION, $want_version,
+  ok ($Math::NumSeq::Repdigits::VERSION, $want_version,
       'VERSION variable');
-  ok (Math::NumSeq::Tetrahedral->VERSION,  $want_version,
+  ok (Math::NumSeq::Repdigits->VERSION,  $want_version,
       'VERSION class method');
 
-  ok (eval { Math::NumSeq::Tetrahedral->VERSION($want_version); 1 },
+  ok (eval { Math::NumSeq::Repdigits->VERSION($want_version); 1 },
       1,
       "VERSION class check $want_version");
   my $check_version = $want_version + 1000;
-  ok (! eval { Math::NumSeq::Tetrahedral->VERSION($check_version); 1 },
+  ok (! eval { Math::NumSeq::Repdigits->VERSION($check_version); 1 },
       1,
       "VERSION class check $check_version");
 }
@@ -55,63 +55,53 @@ plan tests => $test_count;
 # characteristic(), i_start(), parameters
 
 {
-  my $seq = Math::NumSeq::Tetrahedral->new;
+  my $seq = Math::NumSeq::Repdigits->new;
   ok ($seq->characteristic('increasing'), 1, 'characteristic(increasing)');
   ok ($seq->characteristic('integer'),    1, 'characteristic(integer)');
+  ok (! $seq->characteristic('smaller'),  1, 'characteristic(smaller)');
   ok ($seq->i_start, 0, 'i_start()');
 
   my @pnames = map {$_->{'name'}} $seq->parameter_info_list;
   ok (join(',',@pnames),
-      '');
+      'radix');
 }
 
 
 #------------------------------------------------------------------------------
-# value_to_i_floor()
+# value_to_i_floor(), value_to_i_ceil()
 
-{
-  my $seq = Math::NumSeq::Tetrahedral->new;
+foreach my $radix (2,3,4,5,10,16,37) {
+  my $seq = Math::NumSeq::Repdigits->new (radix => $radix);;
   ok ($seq->value_to_i_floor(0), 0);
   ok ($seq->value_to_i_floor(0.5), 0);
   ok ($seq->value_to_i_floor(1), 1);
   ok ($seq->value_to_i_floor(1.5), 1);
-  ok ($seq->value_to_i_floor(2), 1);
-  ok ($seq->value_to_i_floor(3.5), 1);
-  ok ($seq->value_to_i_floor(4), 2);
-  ok ($seq->value_to_i_floor(4.5), 2);
-  ok ($seq->value_to_i_floor(55.5), 5);
-  ok ($seq->value_to_i_floor(56.5), 6);
-  ok ($seq->value_to_i_floor(56.5), 6);
+  if ($radix > 2) {
+    ok ($seq->value_to_i_floor(2), 2, "radix=$radix");
+    ok ($seq->value_to_i_floor(2.5), 2, "radix=$radix");
+  }
 
-  # T(-1) = (-1)*0*1/6 = 0
-  # T(-2) = (-2)*(-1)*0/6 = 0
+  ok ($seq->value_to_i_ceil(0), 0);
+  ok ($seq->value_to_i_ceil(0.5), 1, "radix=$radix");
+  ok ($seq->value_to_i_ceil(1), 1);
+  ok ($seq->value_to_i_ceil(1.5), 2);
+  if ($radix > 2) {
+    ok ($seq->value_to_i_ceil(2), 2, "radix=$radix");
+    ok ($seq->value_to_i_ceil(2.5), 3, "radix=$radix");
+  }
 
-  ok ($seq->value_to_i_floor(-0.5), -3);
-  ok ($seq->value_to_i_floor(-1), -3);
-  # T(-3) = (-3)*(-2)*(-1)/6 = -1
+  foreach my $i ($radix .. 3*$radix) {
+    my $value = $seq->ith($i);
+    ok ($seq->value_to_i_floor($value), $i);
+    ok ($seq->value_to_i_floor($value+1), $i);
+    ok ($seq->value_to_i_floor($value-1), $i-1);
 
-  ok ($seq->value_to_i_floor(-1.5), -4);
-  ok ($seq->value_to_i_floor(-3.5), -4);
-  ok ($seq->value_to_i_floor(-4), -4);
-  # T(-4) = (-4)*(-3)*(-2)/6 = -4
-
-  ok ($seq->value_to_i_floor(-4.001), -5);
-  ok ($seq->value_to_i_floor(-4.5), -5);
-  ok ($seq->value_to_i_floor(-5), -5);
-  ok ($seq->value_to_i_floor(-9.5), -5);
-  ok ($seq->value_to_i_floor(-10), -5);
-  # T(-5) = (-5)*(-4)*(-3)/6 = -10
-
-  ok ($seq->value_to_i_floor(-10.5), -6);
-  ok ($seq->value_to_i_floor(-19), -6);
-  ok ($seq->value_to_i_floor(-20), -6);
-  # T(-6) = (-6)*(-5)*(-4)/6 = -20
-
-  ok ($seq->value_to_i_floor(-20.001), -7);
-  ok ($seq->value_to_i_floor(-20.5), -7);
-  ok ($seq->value_to_i_floor(-21), -7);
+    ok ($seq->value_to_i_ceil($value), $i);
+    ok ($seq->value_to_i_ceil($value+1), $i+1);
+    ok ($seq->value_to_i_ceil($value-1), $i);
+  }
 }
 
+
+#------------------------------------------------------------------------------
 exit 0;
-
-

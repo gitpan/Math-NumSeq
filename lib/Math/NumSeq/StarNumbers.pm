@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 40;
+$VERSION = 41;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -56,6 +56,11 @@ use constant characteristic_integer => 1;
 # A069128 , A069129 , A069130 , A069131 , A069132 , A069133
 #
 use constant oeis_anum => 'A003154'; # star numbers
+
+sub _UNTESTED__seek_to_value {
+  my ($self, $value) = @_;
+  $self->{'i'} = $self->value_to_i_ceil($value);
+}
 
 sub ith {
   my ($self, $i) = @_;

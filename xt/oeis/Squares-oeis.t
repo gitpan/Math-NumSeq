@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use Test;
-plan tests => 2;
+plan tests => 3;
 
 use lib 't','xt';
 use MyTestHelpers;

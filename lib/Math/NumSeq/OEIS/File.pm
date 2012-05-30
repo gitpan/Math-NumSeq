@@ -30,14 +30,14 @@ use Symbol 'gensym';
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 40;
+$VERSION = 41;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_to_bigint = \&Math::NumSeq::_to_bigint;
 
 use vars '$VERSION';
-$VERSION = 40;
+$VERSION = 41;
 
 eval q{use Scalar::Util 'weaken'; 1}
   || eval q{sub weaken { $_[0] = undef }; 1 }
@@ -511,9 +511,10 @@ sub _read_internal {
                             $offset);
     }
 
-    # %O "OFFSET" is subscript of first number, or for digit expansions it's
-    # the position of the decimal point
-    # http://oeis.org/eishelp2.html#RO
+    # %O "OFFSET" is subscript of first number.
+    # Or for digit expansions it's the number of terms before the decimal
+    # point, per http://oeis.org/eishelp2.html#RO
+    #
     unless ($self->{'characteristic'}->{'digits'}) {
       $self->{'i'} = $self->{'i_start'} = $offset;
     }

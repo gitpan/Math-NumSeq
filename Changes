@@ -17,6 +17,10 @@ with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 41, May 2012
+    - Repdigits new value_to_i_ceil(),value_to_i_floor(),value_to_i_estimate()
+    - fix Repdigits next() for radix=2
+
 Version 40, May 2012
     - new SpiroFibonacci
     - tests fix for Fibonacci

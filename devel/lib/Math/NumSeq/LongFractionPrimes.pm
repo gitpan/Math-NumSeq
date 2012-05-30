@@ -21,7 +21,7 @@ use strict;
 use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 40;
+$VERSION = 41;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -97,7 +97,8 @@ sub next {
   my $radix = $self->{'radix'};
   for (;;) {
     (undef, my $prime) = $self->{'primes'}->next;
-    if (_is_primitive_root ($self->{'radix'}, $prime)) {
+    # FIXME: 3 ?
+    if (_is_primitive_root ($self->{'radix'}, $prime) && $prime != 3) {
       return ($self->{'i'}++, $prime);
     }
     if ($self->{'perfect_square'} && $prime > $radix) {

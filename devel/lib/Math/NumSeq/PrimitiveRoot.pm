@@ -21,7 +21,7 @@ use strict;
 use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 40;
+$VERSION = 41;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
@@ -40,7 +40,15 @@ use constant default_i_start => 1;
 use constant characteristic_smaller => 1;
 use constant characteristic_integer => 1;
 use constant values_min => 0;
+
+#------------------------------------------------------------------------------
+# cf A001918 - least primitive root of prime
+#    A071894 - largest primitive root of prime
+#    A002199 - least negative primitive root of a prime, as a positive
+#    A060749 - list of primitive roots of each prime
+
 # use constant oeis_anum => '';
+
 
 #------------------------------------------------------------------------------
 

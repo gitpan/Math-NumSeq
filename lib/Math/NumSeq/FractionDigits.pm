@@ -25,7 +25,7 @@ use Math::NumSeq;
 *_to_bigint = \&Math::NumSeq::_to_bigint;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 40;
+$VERSION = 41;
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
 
@@ -324,9 +324,9 @@ After any integer part, the fraction digits are a repeating sequence.  If
 the fraction is num/den and is in least terms (num and den have no common
 factor) then the period is either den-1 or some divisor of den-1.
 
-If you want a particular a repeating sequence a,b,c,d,a,b,c,d,etc then
-fraction abcd/9999 cooks that up, with as many 9s as digits to repeat.  For
-a base other than decimal the "9" is radix-1.
+A particular a repeating sequence a,b,c,d,a,b,c,d,etc can be cooked up with
+fraction abcd/9999, the denominator being as many 9s as digits to repeat.
+For a base other than decimal the "9" is radix-1.
 
 =head1 FUNCTIONS
 

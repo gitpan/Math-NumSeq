@@ -131,7 +131,7 @@ sub check_class {
   # return unless $class =~ /Collatz/;
   # return unless $class =~ /PrimeIndex/;
   # return unless $class =~ /Golomb/;
-  return unless $class =~ /Spiro/;
+  # return unless $class =~ /Spiro/;
   # return unless $class =~ /FactorCount/;
   # return unless $class =~ /Cbrt/;
   # return unless $class =~ /Star/;
@@ -143,7 +143,7 @@ sub check_class {
   # return unless $class =~ /Power/;
   # return unless $class =~ /Repdigit/;
   # return unless $class =~ /Undul/;
-  # return unless $class =~ /Concat/;
+  # return unless $class =~ /Repd/;
   # return unless $class =~ /Totient/;
   # return unless $class =~ /Golay/;
   # return unless $class =~ /Trib/;
@@ -157,7 +157,10 @@ sub check_class {
 
   MyTestHelpers::diag ("$anum $name");
 
-  my $max_value = undef;
+  my $max_value = ~0 >> 8;   # avoid rounding
+  if ($max_value > 2**45) {
+    $max_value = (1 << 45) - 1;
+  }
   my $max_count = undef;
   if ($class eq 'Math::NumSeq::Factorials'
       || $class eq 'Math::NumSeq::Primorials'
@@ -173,6 +176,7 @@ sub check_class {
       || $class eq 'Math::NumSeq::WoodallNumbers'
       || $class eq 'Math::NumSeq::ReverseAdd'
       || $class eq 'Math::NumSeq::RadixConversion'
+      || $name eq 'Repdigiits,radix=2'
      ) {
     $max_value = 'unlimited';
 

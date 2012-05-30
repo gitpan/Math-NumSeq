@@ -32,7 +32,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 40;
+$VERSION = 41;
 
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IterateIth;
@@ -67,6 +67,7 @@ use constant parameter_info_array =>
    },
   ];
 
+#------------------------------------------------------------------------------
 # 'A100002'
 # 0  1  2  3  4  5  6  7  8  9
 # 1, 2, 1, 2, 3, 3, 1, 2, 4, 4, 3, 4, 1, 2, 5, 5, 3, 5, 1, 2, 4, 5, 3, 4,
@@ -83,6 +84,8 @@ sub oeis_anum {
   my ($self) = @_;
   return $oeis_anum[$self->{'stage'}+1];
 }
+
+#------------------------------------------------------------------------------
 
 sub rewind {
   my ($self) = @_;

@@ -20,11 +20,14 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 40;
+$VERSION = 41;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
+*_to_bigint = \&Math::NumSeq::_to_bigint;
 
+use Math::NumSeq::NumAronson 8; # new in v.8
+*_round_down_pow = \&Math::NumSeq::NumAronson::_round_down_pow;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -42,11 +45,12 @@ use Math::NumSeq::Base::Digits;
 
 #------------------------------------------------------------------------------
 # cf A002275 - repunits
+
 my @oeis_anum = (
                  # OEIS-Catalogue array begin
                  undef,     # 0
                  undef,     # 1
-                 undef,     # 2
+                 'A000225', # radix=2  # 2^i-1
                  'A048328', # radix=3
                  'A048329', # radix=4
                  undef,     # A048330 starts OFFSET=1 value=0
@@ -73,24 +77,56 @@ sub oeis_anum {
 sub rewind {
   my ($self) = @_;
   my $radix = $self->{'radix'};
-  if ($radix < 2) { $radix = $self->{'radix'} = 10; }
+  if ($radix < 2) {
+    $radix = $self->{'radix'} = 10;
+  }
 
   $self->{'i'} = $self->i_start;
+  $self->{'n'} = -1;
   if ($radix != 2) {
-    $self->{'n'} = -1;
     $self->{'inc'} = 1;
     $self->{'digit'} = -1;
   }
 }
+sub _UNTESTED__seek_to_i {
+  my ($self, $i) = @_;
+  $self->{'i'} = $i;
+  my $radix = $self->{'radix'};
+  if ($radix == 2) {
+    if ($i == 0) {
+      $self->{'n'} = -1;
+    } else {
+      $self->{'n'} = $self->ith($i-1);
+    }
+  } else {
+    my $digit = $self->{'digit'} = ($i % $radix) - 1;
+    my $exp = int($i/$radix);
+    $self->{'inc'} = $self->ith($i-$digit);
+    $self->{'n'} = $self->{'inc'} * $digit;
+  }
+}
+sub _UNTESTED__seek_to_value {
+  my ($self, $value) = @_;
+  $self->seek_to_i($self->value_to_i_ceil($value));
+}
+
 sub next {
   my ($self) = @_;
 
   my $i = $self->{'i'}++;
   my $radix = $self->{'radix'};
   if ($radix == 2) {
-    return (1 << $i) - 1;
+    if ($i == 31) {
+      $self->{'n'} = _to_bigint($self->{'n'});
+    }
+    if ($i) {
+      $self->{'n'} *= 2;
+    }
+    return ($i, $self->{'n'} += 1);
 
   } else {
+    # ENHANCE-ME: automatic promote to bigint
+
     my $n = ($self->{'n'} += $self->{'inc'});
     if (++$self->{'digit'} >= $radix) {
       $self->{'inc'} = $self->{'inc'} * $radix + 1;
@@ -113,7 +149,8 @@ sub ith {
   }
 
   if ($radix == 2) {
-    return (1 << $i) - 1;
+    my $one = ($i >= 31 ? _to_bigint(1) : 1);
+    return ($one << $i) - 1;
   }
 
   if (($i-=1) < 0) {
@@ -154,6 +191,136 @@ sub pred {
   return 1;
 }
 
+sub value_to_i_ceil {
+  my ($self, $value) = @_;
+  ### value_to_i_ceil(): $value
+
+  if (_is_infinite ($value)) {
+    return $value;
+  }
+  if ($value <= 0) {
+    return 0;
+  }
+  my $int = int($value);
+  if ($value != $int) {
+    $int += 1;
+  }
+  ### $int
+
+  my $radix = $self->{'radix'};
+  my @digits = _digit_split_lowtohigh($int, $radix)
+    or return 0;  # if $value==0
+
+  my $high_digit = pop @digits;
+  my $i = $high_digit + ($radix-1) * scalar(@digits);
+  ### $high_digit
+  ### $i
+
+  foreach my $digit (reverse @digits) { # high to low
+    if ($digit > $high_digit) {
+      return $i + 1;
+    }
+    if ($digit < $high_digit) {
+      last;
+    }
+  }
+  return $i;
+}
+sub value_to_i_floor {
+  my ($self, $value) = @_;
+
+  if ($value < 1) {
+    return 0;
+  }
+  if (_is_infinite ($value)) {
+    return $value;
+  }
+  $value = int($value);
+
+  my $radix = $self->{'radix'};
+  my @digits = _digit_split_lowtohigh($value, $radix)
+    or return 0;  # if $value==0
+
+  my $high_digit = pop @digits;
+  my $i = $high_digit + ($radix-1) * scalar(@digits);
+
+  foreach my $digit (reverse @digits) { # high to low
+    if ($digit < $high_digit) {
+      return $i - 1;
+    }
+  }
+  return $i;
+}
+
+# either floor or 1 too big
+sub value_to_i_estimate {
+  my ($self, $value) = @_;
+  ### value_to_i_estimate() ...
+
+  if ($value < 1) {
+    return 0;
+  }
+  if (_is_infinite ($value)) {
+    return $value;
+  }
+  my $radix = $self->{'radix'};
+  my ($power, $exp) = _round_down_pow ($value, $radix);
+  return int($value/$power)  # high digit
+    + ($radix-1) * $exp;
+}
+
+#------------------------------------------------------------------------------
+
+{
+  my %binary_to_base4 = ('00' => '0',
+                         '01' => '1',
+                         '10' => '2',
+                         '11' => '3');
+  my @radix_to_coderef;
+  $radix_to_coderef[2] = sub {
+    (my $str = $_[0]->as_bin) =~ s/^0b//;  # strip leading 0b
+    return reverse split //, $str;
+  };
+  $radix_to_coderef[4] = sub {
+    (my $str = $_[0]->as_bin) =~ s/^0b//; # strip leading 0b
+    if (length($str) & 1) {
+      $str = "0$str";
+    }
+    $str =~ s/(..)/$binary_to_base4{$1}/ge;
+    return reverse split //, $str;
+  };
+  $radix_to_coderef[8] = sub {
+    (my $str = $_[0]->as_oct) =~ s/^0//;  # strip leading 0
+    return reverse split //, $str;
+  };
+  $radix_to_coderef[10] = sub {
+    return reverse split //, $_[0]->bstr;
+  };
+  $radix_to_coderef[16] = sub {
+    (my $str = $_[0]->as_hex) =~ s/^0x//;  # strip leading 0x
+    return reverse map {hex} split //, $str;
+  };
+
+  sub _digit_split_lowtohigh {
+    my ($n, $radix) = @_;
+    ### _digit_split_lowtohigh(): $n
+
+    $n || return; # don't return '0' from BigInt stringize
+
+    if (ref $n
+        && $n->isa('Math::BigInt')
+        && (my $coderef = $radix_to_coderef[$radix])) {
+      return $coderef->($_[0]);
+    }
+
+    my @ret;
+    do {
+      push @ret, $n % $radix;
+    } while ($n = int($n/$radix));
+    return @ret;   # array[0] low digit
+  }
+}
+
 1;
 __END__
 
@@ -171,9 +338,13 @@ Math::NumSeq::Repdigits -- repdigits 11, 22, 33, etc
 
 =head1 DESCRIPTION
 
-The sequence of repdigit numbers, 1 ... 9, 11, 22, 33, ... 99, 111, 222,
-333, ..., 999, etc, comprising repetitions of a single digit.  The default
-is decimal or a C<radix> parameter can be given.
+The sequence of repdigit numbers,
+
+    starting i=0
+    0, 1 ... 9, 11, 22, 33, ... 99, 111, 222, 333, ..., 999, etc
+
+comprising repetitions of a single digit.  The default is decimal or a
+C<radix> parameter can be given.
 
 =head1 FUNCTIONS
 
@@ -194,6 +365,17 @@ Return the C<$i>'th repdigit.
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> is a repdigit in the given C<radix>.
+
+=item C<$i = $seq-E<gt>value_to_i_ceil($value)>
+
+=item C<$i = $seq-E<gt>value_to_i_floor($value)>
+
+Return the C<$i> index of C<$value>, rounding up or down if C<$value> is not
+a repdigit.
+
+=item C<$i = $seq-E<gt>value_to_i_estimate($value)>
+
+Return an estimate of the i corresponding to C<$value>.
 
 =back
 

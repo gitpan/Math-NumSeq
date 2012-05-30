@@ -117,7 +117,7 @@ sub check_class {
   # return unless $class =~ /DigitP/;
   # return unless $class =~ /Kap/;
   # return unless $class =~ /Pier/;
-   return unless $class =~ /DigitE/;
+   return unless $class =~ /LongF/;
   # return unless $class =~ /Erdos/;
   #  return unless $anum eq 'A163540';
 

@@ -98,6 +98,7 @@ devel/maybe-decprime.pl
 devel/maybe-ln.pl
 devel/numaronson.pl
 devel/oeis-find.pl
+devel/oeis-grep.pl
 devel/oeis.pl
 devel/OeisCatalogue-SqrtDigits.pm
 devel/old/Base4Without3.pm
@@ -296,6 +297,7 @@ t/Pronic.t
 t/ProthNumbers.t
 t/RepdigitAny.t
 t/RepdigitRadix.t
+t/Repdigits.t
 t/ReRound.t
 t/ReverseAdd.t
 t/Runs.t

@@ -22,7 +22,43 @@ use strict;
 use warnings;
 use Math::BigInt;
 use Math::BigRat;
+use Math::BigFloat;
 use Math::NumSeq::Factorials;
+
+{
+  # Newton e = sum 1/n!
+  print "  ";
+  my $num = Math::BigInt->new(-1);
+  my $den = Math::BigInt->new(1);
+  my $n = 1;
+  foreach (1 .. 15) {
+    $num *= $n;
+    $den *= $n;
+    $num += 1;
+    $n++;
+
+    if ($num >= $den) {
+      my $digit = int ($num / $den);
+      $num %= $den;
+      print "$digit";
+      $num *= 10;
+    }
+  }
+  foreach (1 .. 30) {
+    $num *= $n;
+    $den *= $n;
+    $num += 1;
+    $n++;
+
+    $num *= 10;
+    my $digit = int ($num / $den);
+    $num %= $den;
+    print "$digit";
+  }
+  print "\n";
+  print exp(1),"\n";
+  exit 0;
+}
 
 {
   # Newton e = sum 1/n!

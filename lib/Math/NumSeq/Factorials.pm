@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 40;
+$VERSION = 41;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -29,6 +29,10 @@ use Math::NumSeq;
 use Math::NumSeq::Fibonacci;
 *_blog2_estimate = \&Math::NumSeq::Fibonacci::_blog2_estimate;
 
+# uncomment this to run the ### lines
+#use Smart::Comments;
+
+
 # use constant name => Math::NumSeq::__('Factorials');
 use constant description => Math::NumSeq::__('The factorials 1, 2, 6, 24, 120, etc, 1*2*...*N.');
 use constant values_min => 1;
@@ -36,6 +40,7 @@ use constant i_start => 0;
 use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
 
+#------------------------------------------------------------------------------
 # cf A006882 double a(n)=n*a(n-2), n*(n-2)*(n-4)*...*3*1 or *4*2
 #    A001147 double factorial 1*3*5*...*(2n-1) odd numbers, bisection
 #    A000165 double factorial 2*4*6*...*2n even numbers,    bisection
@@ -50,8 +55,7 @@ use constant characteristic_integer => 1;
 #
 use constant oeis_anum => 'A000142'; # factorials 1,1,2,6,24, including 0!==1
 
-# uncomment this to run the ### lines
-#use Smart::Comments;
+#------------------------------------------------------------------------------
 
 
 use constant 1.02;  # for leading underscore

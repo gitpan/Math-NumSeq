@@ -27,6 +27,35 @@ use Smart::Comments;
 
 
 {
+  # value_to_i_estimate()
+
+  require Math::NumSeq::Repdigits;
+  foreach my $radix (2,3,4,5,10,16,37) {
+    my $seq = Math::NumSeq::Repdigits->new (radix => $radix);;
+
+    my $target = 2;
+    for (1 .. 100) {
+      my ($i, $value) = $seq->next;
+      if ($i >= $target) {
+        $target *= 1.1;
+
+        # require Math::BigRat;
+        # $value = Math::BigRat->new($value);
+
+        # require Math::BigFloat;
+        # $value = Math::BigFloat->new($value);
+
+        my $est_i = $seq->value_to_i_estimate($value);
+        my $factor = $est_i / $i;
+        printf "%d %d   %.10s  factor=%.3f\n",
+          $i, $est_i, $value, $factor;
+      }
+    }
+  }
+  exit 0;
+}
+
+{
   require Math::NumSeq::RepdigitAny;
   require Math::NumSeq::RepdigitRadix;
   my $rany = Math::NumSeq::RepdigitAny->new (hi => 9999);

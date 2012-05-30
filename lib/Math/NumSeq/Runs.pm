@@ -18,7 +18,7 @@
 
 
 # cf A010751 - runs incr then decr
-
+#    A055087 - runs 0toNtwice
 
 
 package Math::NumSeq::Runs;
@@ -27,7 +27,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION','@ISA';
-$VERSION = 40;
+$VERSION = 41;
 
 use Math::NumSeq 21; # v.21 for oeis_anum field
 use Math::NumSeq::Base::IterateIth;

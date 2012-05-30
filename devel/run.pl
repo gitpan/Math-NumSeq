@@ -36,7 +36,6 @@ $|=1;
 
   my $values_class;
   # $values_class = $gen->values_class('Emirps');
-  # $values_class = $gen->values_class('Repdigits');
   # $values_class = $gen->values_class('UndulatingNumbers');
   # $values_class = $gen->values_class('TernaryWithout2');
   # $values_class = $gen->values_class('PrimeQuadraticEuler');
@@ -65,7 +64,6 @@ $|=1;
   $values_class = 'Math::NumSeq::DigitProduct';
   $values_class = 'Math::NumSeq::Pell';
   $values_class = 'Math::NumSeq::KlarnerRado';
-  $values_class = 'Math::NumSeq::DigitCountLow';
   $values_class = 'Math::NumSeq::DivisorCount';
   $values_class = 'Math::NumSeq::DigitCount';
   $values_class = 'Math::NumSeq::JugglerSteps';
@@ -152,13 +150,11 @@ $|=1;
   $values_class = 'Math::NumSeq::SternDiatomic';
   $values_class = 'Math::NumSeq::CbrtContinued';
   $values_class = 'Math::NumSeq::SlopingExcluded';
-  $values_class = 'Math::NumSeq::PlanePathDelta';
   $values_class = 'Math::NumSeq::PlanePathTurn';
   $values_class = 'Math::NumSeq::PrimeIndexOrder';
   $values_class = 'Math::NumSeq::PrimeIndexPrimes';
   $values_class = 'Math::NumSeq::AlphabeticalLengthSteps';
   $values_class = 'Math::NumSeq::AlphabeticalLength';
-  $values_class = 'Math::NumSeq::PlanePathCoord';
   $values_class = 'Math::NumSeq::PlanePathN';
   $values_class = 'Math::NumSeq::KaprekarSteps';
   $values_class = 'Math::NumSeq::Padovan';
@@ -175,16 +171,23 @@ $|=1;
   $values_class = 'Math::NumSeq::SpiroFibonacci';
   $values_class = 'Math::NumSeq::AllPrimeFactors';
   $values_class = 'Math::NumSeq::PrimesDigits';
+  $values_class = 'Math::NumSeq::Aronson';
+  $values_class = 'Math::NumSeq::DigitCountLow';
+  $values_class = 'Math::NumSeq::Repdigits';
+  $values_class = 'Math::NumSeq::PlanePathCoord';
+  $values_class = 'Math::NumSeq::PlanePathDelta';
 
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new
     (
-     multiplicity => 'distinct',
+     # i_start => 1,
+     # radix => 2,
+     # letter => '',
+     # multiplicity => 'distinct',
      # order => 'descending',
      # order => 'descending',
      # initial_0 => 1,
      # initial_1 => 0,
-     # radix => 4,
      # step_type => 'both',
      # on_values => 'even',
      # i_start => 0,
@@ -217,14 +220,15 @@ $|=1;
      # including_self => 0,
      # offset => 3,
 
+      planepath => 'AlternatePaper',
+     # coordinate_type => 'DiffXY',
      # planepath => 'GrayCode',
      # planepath => 'ImaginaryHalf',
-     # line_type => 'X_neg',
+     # line_type => 'X_axis',
      # planepath => 'GosperSide',
-     # delta_type=>'TDir6',
+     delta_type=>'dSum',
      # turn_type => 'Right',
      # planepath => 'SquareSpiral',
-     # planepath => 'PixelRings',
      # planepath => 'ZOrderCurve,radix=10',
      # planepath => 'PythagoreanTree,coordinates=BA',
      # planepath => 'RationalsTree,tree_type=CW',
@@ -236,7 +240,6 @@ $|=1;
      # planepath => 'MultipleRings,step=1',
      # planepath => 'FibonacciWordFractal',
      # planepath => 'CellularRule,rule=5',
-     # coordinate_type => 'RSquared',
      # i_start => 1,
 
      #anum  => 'A160722', # few

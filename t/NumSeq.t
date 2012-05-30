@@ -25,7 +25,7 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
-my $test_count = (tests => 1545)[1];
+my $test_count = (tests => 1554)[1];
 plan tests => $test_count;
 
 # uncomment this to run the ### lines
@@ -134,6 +134,42 @@ foreach my $elem
    #   { cbrt => 3 },
    # ],
    
+   [ 'Math::NumSeq::Repdigits',
+     [ 0,
+       1,2,3,4,5,6,7,8,9,
+       11,22,33,44,55,66,77,88,99,
+       111,222,333,444,555,666,777,888,999,
+     ] ],
+   [ 'Math::NumSeq::Repdigits',
+     [ 0,
+       01,02,03,04,05,06,07,
+       011,022,033,044,055,066,077,
+       0111,0222,0333,0444,0555,0666,0777, ],
+     { radix => 8 },
+   ],
+   [ 'Math::NumSeq::Repdigits',
+     [ 0, 1,2,
+       4, # 11
+       8, # 22
+       13, # 111
+       26, # 222
+       40, # 1111
+       80, # 2222
+     ],
+     { radix => 3 },
+   ],
+   [ 'Math::NumSeq::Repdigits',
+     [ 0,
+       1,  # 1
+       3,  # 11
+       7,  # 111
+       15, # 1111
+       31, # 11111
+       63, # 111111
+     ],
+     { radix => 2 },
+   ],
+
    [ 'Math::NumSeq::SpiroFibonacci',
      [ 0,1,1,1,1,1,1,1,2,3,4,5 ],
    ],
@@ -1650,31 +1686,6 @@ foreach my $elem
    # [ 'Math::NumSeq::ThueMorseOdious', 4, [ 4, 7, ] ],
    # [ 'Math::NumSeq::ThueMorseOdious', 5, [ 7, ] ],
 
-   [ 'Math::NumSeq::Repdigits',
-     [ 0,
-       1,2,3,4,5,6,7,8,9,
-       11,22,33,44,55,66,77,88,99,
-       111,222,333,444,555,666,777,888,999,
-     ] ],
-   [ 'Math::NumSeq::Repdigits',
-     [ 0,
-       01,02,03,04,05,06,07,
-       011,022,033,044,055,066,077,
-       0111,0222,0333,0444,0555,0666,0777, ],
-     { radix => 8 },
-   ],
-   [ 'Math::NumSeq::Repdigits',
-     [ 0, 1,2,
-       4, # 11
-       8, # 22
-       13, # 111
-       26, # 222
-       40, # 1111
-       80, # 2222
-     ],
-     { radix => 3 },
-   ],
-
    [ 'Math::NumSeq::Beastly',
      [ 666,
        1666, 2666, 3666, 4666, 5666,
@@ -1735,6 +1746,7 @@ foreach my $elem
                    $class,
                    map {"$_=$values_options->{$_}"} keys %$values_options);
 
+  ### $class
   eval "require $class; 1" or die $@;
   my $seq = $class->new (%$values_options);
 
@@ -1790,10 +1802,11 @@ foreach my $elem
       MyTestHelpers::diag ("want ", substr ($want_str, 0, 256));
     }
 
+    ### rewind() ...
     $seq->rewind;
   }
 
-  # ith() values
+  ### ith() values ...
   {
     my $skip;
     my $got_str;
@@ -1817,7 +1830,7 @@ foreach my $elem
     skip ($skip, $got_str, $want_str, "$name by ith(), lo=$lo hi=$hi");
   }
 
-  # value_to_i()
+  ### value_to_i() ...
   # value_to_i_floor()
   {
     ### $want
@@ -2000,7 +2013,7 @@ foreach my $elem
 
   ### pred() infinities: $name
   if (! $seq->can('pred')) {
-     MyTestHelpers::diag ("$name -- no pred()");
+    # MyTestHelpers::diag ("$name -- no pred()");
   } else {
 
     if (defined $pos_infinity) {

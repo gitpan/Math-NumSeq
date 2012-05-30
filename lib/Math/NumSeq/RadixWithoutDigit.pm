@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 40;
+$VERSION = 41;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -84,7 +84,7 @@ $oeis_anum[5]->[4] = 'A023737'; # base 5 no 4    OFFSET=1
 # OEIS-Catalogue: A023733 radix=5 digit=3  # base 5 no 3
 # OEIS-Catalogue: A023737 radix=5 digit=4  # base 5 no 4
 
-# cf A037465 base 6 no 5, starting i=1
+# cf A037465 radix=6 digit=5 i_start=1 # base 6 no 5, starting i=1
 
 $oeis_anum[7]->[6] = 'A020657'; # "no 7-term arithmetic progression" OFFSET=1
 # OEIS-Catalogue: A020657 radix=7 digit=6

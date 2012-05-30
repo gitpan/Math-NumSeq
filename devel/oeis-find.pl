@@ -38,7 +38,7 @@ use Module::Load;
 </head>
 <body>
 HERE
-
+  
   my $count = 0;
   require App::MathImage::Generator;
   foreach my $module (App::MathImage::Generator->values_choices) {
@@ -46,36 +46,43 @@ HERE
     next if $module eq 'Expression';
     next if $module eq 'OEIS';
     next if $module =~ 'CunninghamPrimes'; # broken
-
+    next if $module =~ /KaprekarNumbers/; # bit slow yet
+    
     # restricted to ...
-    # next unless $module =~ /PathCoord/;
-     next unless $module =~ /PlanePath/;
-
+    # next unless $module =~ /Aron/;
+    # next unless $module =~ /PlanePath/;
+    
     my $class = App::MathImage::Generator->values_class($module);
     print "$class\n";
-
+    
     print OUT <<HERE or die;
 <p>
 $class
 HERE
-
+    
     my $parameters = parameter_info_list_to_parameters($class->parameter_info_list);
-
+    
   PARAMETERS: foreach my $p (@$parameters) {
       ### $p
       my $seq = $class->new (hi => 1000, @$p);
       next if $seq->oeis_anum;
-
+      
       my $values = '';
       my @values;
-      my (undef, $first_value) = $seq->next or next PARAMETERS;
+      my (undef, $first_value) = $seq->next
+        or next PARAMETERS;
       my $target_values_length = 120;
       if ($class =~ /BinaryUnd/) { $target_values_length = 20; }
       while (length($values) < 120) {
         my ($i, $value) = $seq->next
           or last;
-        defined $value or next PARAMETERS;
-        $value == int($value) or next PARAMETERS;
+        if ($module =~ /KaprekarNumbers/ && length($value) > 4) {
+          last;
+        }
+        if (! defined $value) {
+          die "Oops $module @$p returned value undef";
+        }
+        $value == int($value) or next PARAMETERS; # not an integer seq
         if ($values ne '') {
           $values .= ', ';
         }
@@ -83,7 +90,7 @@ HERE
         push @values, $value;
       }
       next if (@values < 5);
-
+      
       my $p_string = '';
       while (@$p) {
         $p_string .= shift(@$p) . "=" . shift(@$p);
@@ -91,21 +98,21 @@ HERE
           $p_string .= ",  ";
         }
       }
-
+      
       my $signed='';
       if (defined (List::Util::first {$_<0} @values)) {
         $signed = 'signed:';
       }
-
+      
       special_values($module, $p_string, $seq, \@values);
-
+      
       my $values_escaped = URI::Escape::uri_escape($values);
       print OUT "<br>\n$p_string\n" or die;
-
+      
       print OUT <<HERE or die;
 $first_value, <a href="http://oeis.org/search?q=$signed$values_escaped&sort=&language=english&go=Search">$values</a>
 HERE
-
+      
       if (my @unzeros = unzeros(@values)) {
         $first_value = shift @unzeros;
         $values = join(',',@unzeros);
@@ -114,10 +121,10 @@ HERE
 <br> &nbsp; unzeros: $first_value, <a href="http://oeis.org/search?q=$signed$values_escaped&sort=&language=english&go=Search">$values</a>
 HERE
       }
-
+      
       unless ($module =~ /FractionDigits|DigitLength/) {
         my $base_len = scalar(@values);
-
+        
         foreach (1 .. $base_len) {
           my ($i, $value) = $seq->next or last;
           push @values, $value;
@@ -132,7 +139,7 @@ HERE
 HERE
           }
         }
-
+        
         foreach (1 .. $base_len) {
           my ($i, $value) = $seq->next or last;
           push @values, $value;
@@ -147,7 +154,7 @@ HERE
 HERE
           }
         }
-
+        
         foreach (1 .. $base_len) {
           my ($i, $value) = $seq->next or last;
           push @values, $value;
@@ -221,6 +228,8 @@ sub special_values {
       # A000290 starts i=0
       print "$module $params: squares\n";
     }
+  } else {
+    grep_for_values("$module $params", join(',',@$values_aref));
   }
 }
 sub is_squares {
@@ -531,6 +540,8 @@ sub info_extend_parameters {
       || $info->{'name'} eq 'multiples') {
     my $min = $info->{'minimum'} // -5;
     my $max = $min + 10;
+    if (# $module =~ 'PrimeIndexPrimes' &&
+        $info->{'name'} eq 'level') { $max = 5; }
     if ($info->{'name'} eq 'rule') { $max = 255; }
     if ($info->{'name'} eq 'round_count') { $max = 20; }
     if ($info->{'name'} eq 'straight_spacing') { $max = 2; }
@@ -606,4 +617,12 @@ sub p_radix {
     }
   }
   return undef;
+}
+
+sub grep_for_values {
+  my ($name, $values) = @_;
+  unless (system 'fgrep', '-e', $values, "$ENV{HOME}/OEIS/oeis-grep.txt") {
+    print "  for $name\n";
+    print "  matching $values\n";
+  }
 }
