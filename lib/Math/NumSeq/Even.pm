@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 41;
+$VERSION = 42;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -34,6 +34,8 @@ use constant i_start => 0;
 use constant values_min => 0;
 use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
+
+# cf A007958 even with at least one odd digit
 use constant oeis_anum => 'A005843'; # even 0,2,4
 
 sub rewind {

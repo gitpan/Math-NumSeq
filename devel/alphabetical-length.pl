@@ -20,7 +20,7 @@
 use 5.010;
 use strict;
 use warnings;
-use Math::NumSeq::MathImageAlphabeticalLength;
+use Math::NumSeq::AlphabeticalLength;
 use Lingua::Any::Numbers;
 use Encode;
 use PerlIO::encoding;
@@ -86,13 +86,13 @@ use Smart::Comments;
 
 {
   # own length
-  require Math::NumSeq::MathImageAlphabeticalLengthSteps;
-  my $languages = Math::NumSeq::MathImageAlphabeticalLengthSteps->parameter_info_hash->{'language'}->{'choices'};
+  require Math::NumSeq::AlphabeticalLengthSteps;
+  my $languages = Math::NumSeq::AlphabeticalLengthSteps->parameter_info_hash->{'language'}->{'choices'};
 
   foreach my $language (@$languages) {
     foreach my $number_type ('cardinal','ordinal') {
       printf "%3s %8s  ", $language, $number_type;
-      my $seq = Math::NumSeq::MathImageAlphabeticalLength->new
+      my $seq = Math::NumSeq::AlphabeticalLength->new
         (number_type => $number_type,
          language => $language);
       foreach my $i ($seq->i_start .. 200) {
@@ -113,11 +113,11 @@ use Smart::Comments;
            3, 2, 2, 3, 3, 3, 2, 2, 3, 3, 3, 2, 2, 3, 3, 3, 2, 2, 3, 3, 3, 2, 3, 4,
            4, 5, 5, 5, 3, 5, 5);
 
-  require Math::NumSeq::MathImageAlphabeticalLengthSteps;
+  require Math::NumSeq::AlphabeticalLengthSteps;
   my $number_type = 'cardinal';
-  my $ll = Math::NumSeq::MathImageAlphabeticalLength->new
+  my $ll = Math::NumSeq::AlphabeticalLength->new
     (number_type => $number_type);
-  my $seq = Math::NumSeq::MathImageAlphabeticalLengthSteps->new
+  my $seq = Math::NumSeq::AlphabeticalLengthSteps->new
     (number_type => $number_type);
   foreach my $i (0 .. $#d) {
     my $calc = $seq->ith($i);

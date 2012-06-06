@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 1;
+plan tests => 2;
 
 use lib 't','xt';
 use MyTestHelpers;
@@ -65,6 +65,33 @@ sub diff_nums {
 }
 
 #------------------------------------------------------------------------------
+# A008330 - totient(p-1) for primes p
+
+{
+  my $anum = 'A008330';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  my $diff;
+  if ($bvalues) {
+    require Math::NumSeq::Primes;
+    my $primes  = Math::NumSeq::Primes->new;
+    my $totient  = Math::NumSeq::Totient->new;
+    while (@got < @$bvalues) {
+      my ($i, $prime) = $primes->next or last;
+      push @got, $totient->ith($prime-1);
+    }
+    $diff = diff_nums(\@got, $bvalues);
+    if ($diff) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..60]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..60]));
+    }
+  }
+  skip (! $bvalues,
+        $diff, undef,
+        "$anum");
+}
+
+#------------------------------------------------------------------------------
 # A007617 - non-totients
 
 {
@@ -73,8 +100,6 @@ sub diff_nums {
   my @got;
   my $diff;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
     my $seq  = Math::NumSeq::Totient->new;
     for (my $n = 1; @got < @$bvalues; $n++) {
       if (! $seq->pred($n)) {
@@ -86,8 +111,6 @@ sub diff_nums {
       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..60]));
       MyTestHelpers::diag ("got:     ",join(',',@got[0..60]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         $diff, undef,

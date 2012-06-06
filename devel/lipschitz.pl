@@ -46,8 +46,8 @@ use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
   # http://resolver.sub.uni-goettingen.de/purl?PPN243919689_0106/dmdlog6
   # http://www.digizeitschriften.de/index.php?id=resolveppn&PPN=PPN243919689_0106&DMDID=dmdlog6
   #
-  # require Math::NumSeq::MathImageLipschitzClass;
-  # my $seq = Math::NumSeq::MathImageLipschitzClass->new;
+  # require Math::NumSeq::LipschitzClass;
+  # my $seq = Math::NumSeq::LipschitzClass->new;
 
   my @P = (undef, { 2 => 1 });
   my @I = (undef, { 2 => 1 });
@@ -99,15 +99,15 @@ use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 {
   # Lipschitz by seq
-  require Math::NumSeq::MathImageLipschitzClass;
-  my $seq = Math::NumSeq::MathImageLipschitzClass->new;
+  require Math::NumSeq::LipschitzClass;
+  my $seq = Math::NumSeq::LipschitzClass->new;
   my @P;
   my @I;
   foreach (1 .. 1000) {
     my ($i, $value) = $seq->next;
     push @{$I[$value]}, $i;
   }
-  $seq = Math::NumSeq::MathImageLipschitzClass->new (lipschitz_type => 'P');
+  $seq = Math::NumSeq::LipschitzClass->new (lipschitz_type => 'P');
   foreach (1 .. 1000) {
     my ($i, $value) = $seq->next;
     if ($value) {
@@ -127,11 +127,11 @@ use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 {
   # Lipschitz cf ErdosSelfridge
-  require Math::NumSeq::MathImageLipschitzClass;
+  require Math::NumSeq::LipschitzClass;
   require Math::NumSeq::ErdosSelfridgeClass;
   require Math::NumSeq::Primes;
   my $primes = Math::NumSeq::Primes->new;
-  my $lips = Math::NumSeq::MathImageLipschitzClass->new(lipschitz_type=>'P');
+  my $lips = Math::NumSeq::LipschitzClass->new(lipschitz_type=>'P');
   my $erd = Math::NumSeq::ErdosSelfridgeClass->new (p_or_m=>'-');
 
   for (1 .. 20) {

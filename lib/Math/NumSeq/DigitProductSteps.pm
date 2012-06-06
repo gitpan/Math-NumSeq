@@ -17,7 +17,7 @@
 
 
 # http://www.inwap.com/pdp10/hbaker/hakmem/number.html#item56
-#
+# /so/hakmem/number.html
 
 
 package Math::NumSeq::DigitProductSteps;
@@ -25,13 +25,16 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 41;
+$VERSION = 42;
 use Math::NumSeq;
 use List::Util 'reduce';
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
+
+use Math::NumSeq::Repdigits;
+*_digit_split_lowtohigh = \&Math::NumSeq::Repdigits::_digit_split_lowtohigh;
 
 use Math::NumSeq::DigitProduct;
 
@@ -40,7 +43,7 @@ use Math::NumSeq::DigitProduct;
 
 
 # use constant name => Math::NumSeq::__('...');
-use constant description => Math::NumSeq::__('Number of steps of the digit product until reaching a single digit.');
+use constant description => Math::NumSeq::__('Number of steps of digit product until reaching a single digit.');
 use constant i_start => 0;
 use constant characteristic_count => 1;
 use constant characteristic_integer => 1;
@@ -87,9 +90,8 @@ use constant values_min => 0;
 my %oeis_anum;
 
 $oeis_anum{'count'}->[10] = 'A031346';
-# OEIS-Catalogue: A031346
-
 $oeis_anum{'root'}->[10] = 'A031347';
+# OEIS-Catalogue: A031346
 # OEIS-Catalogue: A031347 values_type=root
 
 sub oeis_anum {
@@ -110,7 +112,7 @@ sub ith {
   my $radix = $self->{'radix'};
   my $count = 0;
   for (;;) {
-    my @digits = _digit_split($i, $radix);
+    my @digits = _digit_split_lowtohigh($i, $radix);
     if (@digits <= 1) {
       if ($self->{'values_type'} eq 'count') {
         return $count;
@@ -123,15 +125,12 @@ sub ith {
   }
 }
 
-sub _digit_split {
-  my ($n, $radix) = @_;
-  ### _digit_split(): $n
-  my @ret;
-  while ($n) {
-    push @ret, $n % $radix;
-    $n = int($n/$radix);
-  }
-  return @ret;   # low to high
+sub pred {
+  my ($self, $value) = @_;
+  return ($value == int($value)
+          && $value >= 0
+          && ($self->{'values_type'} eq 'count'  # anything for count
+              || $value < $self->{'radix'}));    # 0 to R-1 for root
 }
 
 1;
@@ -141,49 +140,47 @@ __END__
 
 =head1 NAME
 
-Math::NumSeq::DigitProductSteps -- product of digits, multiplicative persistence and root
+Math::NumSeq::DigitProductSteps -- multiplicative persistence and digital root
 
 =head1 SYNOPSIS
 
  use Math::NumSeq::DigitProductSteps;
- my $seq = Math::NumSeq::DigitProductSteps->new ();
+ my $seq = Math::NumSeq::DigitProductSteps->new (values_type => 'count');
  my ($i, $value) = $seq->next;
 
 =head1 DESCRIPTION
 
-I<In progress ...>
-
-This is an iteration of taking the product of digits repeated until reaching
-a single digit value.  The default is the count of steps, which is also
-called the multiplicative persistence.
+This is an iteration taking the product of the digits of a number until
+reaching a single digit value.  The sequence values are the count of steps,
+also called the multiplicative persistence.
 
     starting i=0
     0,0,..0,0,1,1,..1,1,2,2,2,2,2,1,1,1,1,2,2,2,2,2,3,1,1,1,2,...
 
-For example i=39 goes 3*9=27, 2*7=14, 1*4=4 to reach a single digit, so
-value=3 iterations.
+For example i=39 goes 3*9=27 -E<gt> 2*7=14 -E<gt> 1*4=4 to reach a single
+digit, so value=3 iterations.
 
 The C<values_type =E<gt> 'root'> gives the final digit reached by the steps,
-which is also called the multiplicative root.
+which is called the multiplicative digital root.
 
     values_type => 'root'
     0,1,2,...,9,0,1,...,9,0,2,4,6,8,0,2,4,6,8,0,3,6,9,2,5,8,...
 
-i=0 through i=9 are already single digits so their count is 0 and root is it
-itself.  Then i=10 to i=19 all take just a single iteration to reach a
-single digit.  i=25 is the first to require 2 iterations.
+i=0 through i=9 are already single digits so their count is 0 and root is
+the value itself.  Then i=10 to i=19 all take just a single iteration to
+reach a single digit.  i=25 is the first to require 2 iterations.
 
-Any i with a 0 digit takes just one iteration and finishes with root 0.  Any
-any i like 119111 which is all 1s except for at most one non-1 takes just
-one iteration.
+Any i with a 0 digit takes just one iteration to get to root 0.  Any i like
+119111 which is all 1s except for at most a single non-1 takes just one
+iteration.  This includes the repunits 111..11.
 
 =head2 Radix
 
 An optional C<radix> parameter selects a base other than decimal.
 
 Binary C<radix=E<gt>2> is not very interesting since the digit product is
-always either 0 or 1 so for iE<gt>=2 always just 1 iteration and root 0
-except i=2^k-1 all 1s with root 1.
+always either 0 or 1.  iE<gt>=2 always takes just 1 iteration and has root 0
+except for i=2^k-1 all 1s with root 1.
 
 =head1 FUNCTIONS
 
@@ -197,9 +194,15 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 Create and return a new sequence object.
 
-=item C<$bool = $seq-E<gt>ith($value)>
+=item C<$value = $seq-E<gt>ith($i)>
 
-Return the iteration result, either count or final root value as selected.
+Return the sequence value, either count or final root value as selected.
+
+=item C<$bool = $seq-E<gt>pred($value)>
+
+Return true if C<$value> occurs in the sequence.  For the count of steps
+this means any integer C<$value E<gt>= 0>, or for a root any digit C<0
+E<lt>= $value < radix>.
 
 =back
 

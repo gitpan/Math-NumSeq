@@ -38,7 +38,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 41;
+$VERSION = 42;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -221,20 +221,25 @@ Math::NumSeq -- number sequences
 
 =head1 SYNOPSIS
 
- # only a base class, use one of the actual classes such as
+ # only a base class, use one of the actual classes, such as
  use Math::NumSeq::Squares;
  my $seq = Math::NumSeq::Squares->new;
  my ($i, $value) = $seq->next;
 
 =head1 DESCRIPTION
 
-This is a base class for number sequences.  Sequence objects can iterate
-through values and some sequences have random access and/or predicate test.
+This is a base class for some number sequences.  Sequence objects can
+iterate through values and some sequences have random access and/or
+predicate test.
 
 The idea is to generate things like squares or primes in a generic way.
 Some sequences, like squares, are so easy there's no need for this except
 for the genericness.  Other sequences are trickier and an iterator is a good
 way to go through the values.
+
+Sequence values have an integer index "i" starting either from i=0 or i=1 or
+similar as best suits the sequence.  The values themselves can be anything,
+positive, negative, fractional, etc.
 
 The intention is that all modules C<Math::NumSeq::Foo> are sequence classes,
 and that supporting things are deeper, such as under
@@ -245,8 +250,8 @@ C<Math::NumSeq::Something::Helper> or C<Math::NumSeq::Base::SharedStuff>.
 The various methods try to support C<Math::BigInt> and similar overloaded
 number types.  So for instance C<pred()> might be applied to test a big
 value, or C<ith()> on a bigint to preserve precision from some rapidly
-growing sequence.  Infinities and NaNs are meant to give nan or infinite
-returns of some kind (some unspecified kind as yet).
+growing sequence.  Infinities and NaNs give nan or infinite returns of some
+kind (some unspecified kind as yet).
 
 =head1 FUNCTIONS
 
@@ -304,11 +309,11 @@ C<undef> if unknown or infinity.
 
 Return something if the sequence has a C<$key> (a string) characteristic, or
 C<undef> if not.  This is intended as a loose set of features or properties
-a sequence might have.
+a sequence can have to describe itself.
 
     digits            integer or undef, the radix if seq is digits
     count             boolean, true if values are counts of something
-    smaller           boolean, true if v[i] < i, in general
+    smaller           boolean, true if v[i] < i generally
     integer           boolean, true if all values are integers
 
     increasing        boolean, true if v[i+1] > v[i] always
@@ -318,15 +323,15 @@ a sequence might have.
 
     value_is_radix      boolean, value is radix for i
 
-C<value_is_radix> means each value is a radix applying to the i of that
-value.  For example RepdigitRadix gives a value which is a radix where i is
-a repdigit.  Values from such a sequence might also be 0 or 1 or -1 or some
-such non-radix values to indicate no radix.
+C<value_is_radix> means each value is a radix applying to the i index.  For
+example RepdigitRadix gives a value which is a radix where i is a repdigit.
+Such values might also be 0 or 1 or -1 or some such non-radix to indicate no
+radix.
 
 =item C<$str = $seq-E<gt>oeis_anum()>
 
-Return the A-number (a string) for C<$seq> in Sloane's Online Encyclopedia
-of Integer Sequences, or return C<undef> if not in the OEIS or not known.
+Return the A-number (a string) for C<$seq> in Sloane's I<Online Encyclopedia
+of Integer Sequences>, or return C<undef> if not in the OEIS or not known.
 For example
 
     my $seq = Math::NumSeq::Squares->new;
@@ -339,7 +344,7 @@ The web page for that is then
 
 Sometimes the OEIS has duplicates, ie. two A-numbers which are the same
 sequence.  When that's accidental or historical C<$seq-E<gt>oeis_anum()> is
-generally whichever is reckoned the primary one.
+whichever is reckoned the primary one.
 
 =item C<$aref = Math::NumSeq::Foo-E<gt>parameter_info_array()>
 
@@ -407,9 +412,9 @@ with C<$seq-E<gt>can('ith')> etc before using.
 
 =item C<$i = $seq-E<gt>seek_to_value($value)>
 
-Move the current i so C<next()> returns the given C<$i> or C<$value> on the
-next call.  If C<$value> is not in the sequence then move so as to return
-the next higher value which is.
+Move the current i so C<next()> returns C<$i> or C<$value> on the next call.
+If C<$value> is not in the sequence then move so as to return the next
+higher value which is.
 
 =item C<$value = $seq-E<gt>ith($i)>
 
@@ -426,8 +431,8 @@ squares this returns true if C<$value> is a square or false if not.
 =item C<$i = $seq-E<gt>value_to_i_floor($value)>
 
 Return the index i of C<$value>, or if C<$value> is not in the sequence then
-the i of the next higher or lower value which is.  Usually these methods
-only exist for non-decreasing sequences.
+the i of the next higher or lower value which is.  These methods usually
+only make sense for non-decreasing sequences.
 
 =item C<$i = $seq-E<gt>value_to_i_estimate($value)>
 
@@ -470,11 +475,13 @@ L<Math::NumSeq::DeletablePrimes>,
 L<Math::NumSeq::Emirps>,
 L<Math::NumSeq::MobiusFunction>,
 L<Math::NumSeq::LiouvilleFunction>,
-L<Math::NumSeq::PrimeFactorCount>,
 L<Math::NumSeq::DivisorCount>,
 L<Math::NumSeq::GoldbachCount>,
 L<Math::NumSeq::LemoineCount>,
 L<Math::NumSeq::PythagoreanHypots>
+
+L<Math::NumSeq::PrimeFactorCount>,
+L<Math::NumSeq::AllPrimeFactors>
 
 L<Math::NumSeq::ErdosSelfridgeClass>,
 L<Math::NumSeq::PrimeIndexOrder>,
@@ -516,9 +523,11 @@ L<Math::NumSeq::DigitLength>,
 L<Math::NumSeq::DigitLengthCumulative>,
 L<Math::NumSeq::SelfLengthCumulative>,
 L<Math::NumSeq::DigitProduct>,
+L<Math::NumSeq::DigitProductSteps>,
 L<Math::NumSeq::DigitSum>,
 L<Math::NumSeq::DigitSumModulo>,
 L<Math::NumSeq::RadixWithoutDigit>
+L<Math::NumSeq::MaxDigitCount>
 
 L<Math::NumSeq::Palindromes>,
 L<Math::NumSeq::Beastly>,
@@ -574,7 +583,7 @@ L<Math::NumSeq::PlanePathTurn> (in the Math-PlanePath dist)
 L<Math::Sequence> and L<Math::Series>, for symbolic recursive sequence
 definitions
 
-L<math-image>
+L<math-image>, for displaying images with the NumSeq sequences
 
 =head1 HOME PAGE
 

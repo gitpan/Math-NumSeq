@@ -25,7 +25,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 41;
+$VERSION = 42;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -57,9 +57,11 @@ use constant parameter_info_array =>
     },
   ];
 
+#------------------------------------------------------------------------------
 # cf A175247 primes at non-composite, including 1 as non-composite
 #    A007097 a(n+1) = a(n)'th prime, growing recurrence
-#
+#    A058010 order of primeness diagonal
+
 my %oeis_anum
   = (minimum => [
                  'A000027',  # level=0  # integers 1 up
@@ -98,6 +100,8 @@ sub oeis_anum {
   my ($self) = @_;
   return $oeis_anum{$self->{'level_type'}}->[$self->{'level'}];
 }
+
+#------------------------------------------------------------------------------
 
 # First value of desired order is exactly that order, so same values_min()
 # for level_type "minimum" or "exact".

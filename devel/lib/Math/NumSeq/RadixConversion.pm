@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 41;
+$VERSION = 42;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -74,6 +74,9 @@ use constant parameter_info_array =>
 #    A178569 binary to decimal expressed by recurrence
 #    A031345 primes written in 10 interpret as base 13
 #    A005836 base 3 without 2, is binary in base 3, but starts OFFSET=1 value=0
+#    A055983 a(n+1) = a(n) base 10 converted to base 12, recurrence
+#    A032917 decimal digits 1,3 only
+#    A199341 decimal digits 1,3,4 only
 
 my @oeis_anum;
 $oeis_anum[10]->[2] = 'A007088';  # numbers written in base 2, starting n=0

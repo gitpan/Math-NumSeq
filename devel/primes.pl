@@ -166,8 +166,8 @@ use Math::Trig 'pi';
 
 {
   # pierpont
-  use Math::NumSeq::MathImagePierpontPrimes;
-  my $seq = Math::NumSeq::MathImagePierpontPrimes->new;
+  use Math::NumSeq::PierpontPrimes;
+  my $seq = Math::NumSeq::PierpontPrimes->new;
 
   foreach (1 .. 50) {
     my ($i, $value) = $seq->next;

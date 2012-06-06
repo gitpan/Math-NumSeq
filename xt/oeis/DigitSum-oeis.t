@@ -51,6 +51,96 @@ sub numeq_array {
 
 
 #------------------------------------------------------------------------------
+# A052018 - digit sum occurs in the number
+
+{
+  my $anum = 'A052018';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  if ($bvalues) {
+    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
+
+    my $seq = Math::NumSeq::DigitSum->new;
+    for (my $n = 0; @got < @$bvalues; $n++) {
+      my ($i, $value) = $sumseq->next;
+      if (index($i,$value) >= 0) {
+        push @got, $i;
+      }
+    }
+    if (! numeq_array(\@got, $bvalues)) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..5]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..5]));
+    }
+  } else {
+    MyTestHelpers::diag ("$anum not available");
+  }
+  skip (! $bvalues,
+        numeq_array(\@got, $bvalues),
+        1,
+        "$anum");
+}
+
+#------------------------------------------------------------------------------
+# A180160 - sum digits mod num digits
+
+{
+  my $anum = 'A179083';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  if ($bvalues) {
+    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
+
+    my $sumseq = Math::NumSeq::DigitSum->new;
+    my $lenseq = Math::NumSeq::DigitLength->new;
+    for (my $n = 0; @got < @$bvalues; $n++) {
+      my ($i, $sum) = $sumseq->next;
+      my $len = $lenseq->ith($i);
+      push @got, $sum % $len;
+    }
+    if (! numeq_array(\@got, $bvalues)) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..5]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..5]));
+    }
+  } else {
+    MyTestHelpers::diag ("$anum not available");
+  }
+  skip (! $bvalues,
+        numeq_array(\@got, $bvalues),
+        1,
+        "$anum");
+}
+
+#------------------------------------------------------------------------------
+# A179083 - even with an odd sum of digits
+
+{
+  my $anum = 'A179083';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  if ($bvalues) {
+    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
+
+    my $seq  = Math::NumSeq::DigitSum->new;
+    for (my $n = 0; @got < @$bvalues; $n++) {
+      my ($i, $value) = $seq->next;
+      next if $i & 1;
+      next unless $value & 1;
+      push @got, $i;
+    }
+    if (! numeq_array(\@got, $bvalues)) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..5]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..5]));
+    }
+  } else {
+    MyTestHelpers::diag ("$anum not available");
+  }
+  skip (! $bvalues,
+        numeq_array(\@got, $bvalues),
+        1,
+        "$anum");
+}
+
+#------------------------------------------------------------------------------
 # A137178 - hairy bit count sum
 # a(n) = sum_(1..n) [S2(n)mod 2 - floor(5*S2(n)/7)mod 2],
 # S2(n) = bit count = digit sum

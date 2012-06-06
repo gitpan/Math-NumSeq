@@ -25,7 +25,7 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
-my $test_count = (tests => 1554)[1];
+my $test_count = (tests => 1668)[1];
 plan tests => $test_count;
 
 # uncomment this to run the ### lines
@@ -134,6 +134,103 @@ foreach my $elem
    #   { cbrt => 3 },
    # ],
    
+   [ 'Math::NumSeq::DigitProductSteps',
+     [ 0,0,0,0,0, 0,0,0,0,0,   # i=0 to 9
+       1,1,1,1,1, 1,1,1,1,1,   # i=10 to 19
+       1,1,1,1,1, 2,2,2,2,2,   # i=20 to 29
+     ],
+   ],
+   [ 'Math::NumSeq::DigitProductSteps',
+     [ 0,1,2,3,4, 5,6,7,8,9,   # i=0 to 9
+       0,1,2,3,4, 5,6,7,8,9,   # i=10 to 19
+       0,2,4,6,8, 0,2,4,6,8,   # i=20 to 29
+       ],
+     { values_type => 'root' },
+   ],
+
+   [ 'Math::NumSeq::MaxDigitCount',
+     [ 0,   # i=1 no zeros ever
+       1,   #   2 = 10 binary
+       1,   #   3 = 10 ternary
+       2,   #   4 = 100 binary
+       1,   #   5 = 101 binary
+       1,   #   6 = 110 binary
+       1,   #   7 = 10 base7
+       3,   #   8 = 1000 binary
+       2,   #   9 = 1001 binary
+       2,   #  10 = 1010 binary
+     ],
+   ],
+   [ 'Math::NumSeq::MaxDigitCount',
+     [ 2,   # i=1 no zeros ever
+       2,   #   2 = 10 binary
+       3,   #   3 = 10 ternary
+       2,   #   4 = 100 binary
+       2,   #   5 = 101 binary
+       2,   #   6 = 110 binary
+       7,   #   7 = 10 base7
+       2,   #   8 = 1000 binary
+       2,   #   9 = 1001 binary
+       2,   #  10 = 1010 binary
+     ],
+     { values_type => 'radix' },
+   ],
+   
+   [ 'Math::NumSeq::MaxDigitCount',
+     [ 1,   # i=1 = 1 binary
+       1,   #   2 = 10 binary
+       2,   #   3 = 11 binary
+       2,   #   4 = 11 ternary
+       2,   #   5 = 101 binary
+       2,   #   6 = 110 binary
+       3,   #   7 = 111 binary
+       2,   #   8 = 11 base7 binary
+       2,   #   9 = 1001 binary
+       2,   #  10 = 1010 binary
+     ],
+     { digit => 1 },
+   ],
+   [ 'Math::NumSeq::MaxDigitCount',
+     [ 2,   # i=1 = 1 binary
+       2,   #   2 = 10 binary
+       2,   #   3 = 11 binary
+       3,   #   4 = 11 ternary
+       2,   #   5 = 101 binary
+       2,   #   6 = 110 binary
+       2,   #   7 = 10 base7
+       7,   #   8 = 1000 binary
+       2,   #   9 = 1001 binary
+       2,   #  10 = 1010 binary
+     ],
+     { digit => 1,
+       values_type => 'radix' },
+   ],
+   
+   [ 'Math::NumSeq::AllPrimeFactors',
+     [ 2, 3, 2,2, 5, 2,3, 7, 2,2,2, 3,3, 2,5, 11, ],
+   ],
+   [ 'Math::NumSeq::AllPrimeFactors',
+     [ 2, 3, 2,2, 5, 3,2, 7, 2,2,2, 3,3, 5,2, 11, ],
+     { order => 'descending' },
+   ],
+   [ 'Math::NumSeq::AllPrimeFactors',
+     [ 2, 3, 2, 5, 2, 3, 7, 2, 3, 2, 5, 11, ],
+     { multiplicity => 'distinct' },
+   ],
+   [ 'Math::NumSeq::AllPrimeFactors',
+     [ 3, 5, 7, 3,3, 11, 13, 3,5, 17,, ],
+     { on_values => 'odd' },
+   ],
+   [ 'Math::NumSeq::AllPrimeFactors',
+     [ 2, 2,2, 2,3, 2,2,2, 2,5, 2,2,3, 2,7, 2,2,2,2, 2,3,3, 2,2,5, 2,11, ],
+     { on_values => 'even' },
+   ],
+   [ 'Math::NumSeq::AllPrimeFactors',
+     [ 2, 2, 2,3, 2, 2,5, 2,3, 2,7, 2, 2,3, 2,5, 2,11, ],
+     { on_values => 'even',
+       multiplicity => 'distinct' },
+   ],
+   
    [ 'Math::NumSeq::Repdigits',
      [ 0,
        1,2,3,4,5,6,7,8,9,
@@ -169,11 +266,11 @@ foreach my $elem
      ],
      { radix => 2 },
    ],
-
+   
    [ 'Math::NumSeq::SpiroFibonacci',
      [ 0,1,1,1,1,1,1,1,2,3,4,5 ],
    ],
-
+   
    [ 'Math::NumSeq::PrimeIndexOrder',
      [ 0, 1, 2, 0, 3, 0, 1, 0, 0, 0, 4, 0, 1, 0, 0, 0, 2, ],
    ],
@@ -439,28 +536,28 @@ foreach my $elem
    # [ 'Math::NumSeq::Odd', 6,
    #   [ 7, 9, 11, 13 ] ],
    
-   # [ 'Math::NumSeq::MathImageSelfLengthCumulative',
-   #   [ 1,2,3,4,5,6,7,8,9,10,
-   #     12,14,16,18,20,22,24,26,
-   #   ],
-   # ],
-   # [ 'Math::NumSeq::MathImageSelfLengthCumulative',
-   #   [ 1,  # 1
-   #     2,  # 10
-   #     4,  # 100
-   #     7,  # 111
-   #     10, # 1010
-   #     14, # 1110
-   #     18, # 10010
-   #     23, # 10111
-   #     28, # 11100
-   #     33, # 100001
-   #     39, # 100111
-   #     45, # 101101
-   #     51,
-   #   ],
-   #   { radix => 2 },
-   # ],
+   [ 'Math::NumSeq::SelfLengthCumulative',
+     [ 1,2,3,4,5,6,7,8,9,10,
+       12,14,16,18,20,22,24,26,
+     ],
+   ],
+   [ 'Math::NumSeq::SelfLengthCumulative',
+     [ 1,  # 1
+       2,  # 10
+       4,  # 100
+       7,  # 111
+       10, # 1010
+       14, # 1110
+       18, # 10010
+       23, # 10111
+       28, # 11100
+       33, # 100001
+       39, # 100111
+       45, # 101101
+       51,
+     ],
+     { radix => 2 },
+   ],
    
    [ 'Math::NumSeq::GolayRudinShapiro',
      [ 1,   # 0

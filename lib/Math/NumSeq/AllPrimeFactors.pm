@@ -22,7 +22,7 @@ use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 41;
+$VERSION = 42;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -38,7 +38,7 @@ use Math::NumSeq::Primes;
 # use constant name => Math::NumSeq::__('All Prime Factors');
 use constant description => Math::NumSeq::__('Prime factors of the integers.');
 use constant default_i_start => 1;
-use constant characteristic_smaller => 2;
+use constant characteristic_smaller => 1;
 
 use constant parameter_info_array =>
   [
@@ -74,7 +74,7 @@ use constant parameter_info_array =>
                         Math::NumSeq::__('Composites'),
                         Math::NumSeq::__('Odd'),
                         Math::NumSeq::__('Even')],
-     description => Math::NumSeq::__('The values to take prime factors from, either all integers or just composites, odds or evens.'),
+     description => Math::NumSeq::__('The values to take prime factors from, either all integers or just composites or odds or evens.'),
    },
   ];
 
@@ -95,34 +95,32 @@ my %oeis_anum;
 
 sub oeis_anum {
   my ($self) = @_;
-  ### $self
-  return $oeis_anum{$self->{'multiplicity'}}->{$self->{'order'}};
+  return $oeis_anum{$self->{'on_values'}}
+    ->{$self->{'multiplicity'}}
+      ->{$self->{'order'}};
 }
 
 #------------------------------------------------------------------------------
 
-my %n_step = (all        => 1,
-              composites => 1,
-              odd        => 2,
-              even       => 2);
-my %n_start = (all        => 2-1,
-               composites => 2-1,
-               odd        => 3-2,
-               even       => 2-2);
+my %rewind = (all        => [ n => 2-1, n_step => 1 ],
+              composites => [ n => 2-1, n_step => 1 ],
+              odd        => [ n => 2-1, n_step => 2 ],
+              even       => [ n => 2-2, n_step => 2 ]);
 sub rewind {
   my ($self) = @_;
-  my $i_start = $self->i_start;
-  $self->{'n_step'} = $n_step{$self->{'on_values'}};
-  $self->{'n'} = $n_start{$self->{'on_values'}};
+  %$self = (%$self,
+            @{$rewind{$self->{'on_values'}}});
   $self->{'pending'} = [ ];
+  $self->{'i'} = $self->i_start;
 }
+
 sub next {
   my ($self) = @_;
   ### AllDigits next(): $self->{'i'}
 
   my $value;
-  unless (defined ($value = shift @{$self->{'pending'}})) {
-    my $pending = $self->{'pending'};
+  my $pending = $self->{'pending'};
+  unless (defined ($value = shift @$pending)) {
     my $n = ($self->{'n'} += $self->{'n_step'});
 
     if ($self->{'on_values'} eq 'composites') {
@@ -170,33 +168,61 @@ Math::NumSeq::AllPrimeFactors -- prime factors of the integers
 
 =head1 DESCRIPTION
 
-This is the prime factors of integers 2, 3, 4, etc
+This is a list of the prime factors of the integers 2, 3, 4, etc
 
     # starting i=1
     2, 3, 2, 2, 5, 2, 3, 7, 2, 2, 2, 3, 3, 2, 5, 11, ...
 
+          \--/     \--/     \-----/  \--/  \--/
+           4    5   6    7   8        9     10   11
+
 =head2 Order
 
 The optional C<order> parameter (a string) can control the order of the
-primes of each integer,
+primes within each integer,
 
     "ascending"     the default
     "descending"
 
 For example desending rearranges the values to
 
+    # order => "descending"
     2, 3, 2, 2, 5, 3, 2, 7, 2, 2, 2, 3, 3, 5, 2, 11, ...
 
-The first difference is at 5,3,2 instead of 5,2,3, those 2,3 being the prime
-factors of 6 either ascending or descending.
+          \--/     \--/     \-----/  \--/  \--/
+           4    5   6    7   8        9     10   11
+
+The first difference is 3,2 for 6.
 
 =head2 Multiplicity
 
 Option C<multiplicity =E<gt> "distinct"> can give just one copy of each
-prime factor.  For example with 9=3*3 gives just one value 3 in the sequence
-instead of two.
+prime factor.
 
+    # multiplicity => "distinct"
     2, 3, 2, 5, 2, 3, 7, 2, 3, 2, 5, 11, ...
+
+                \--/           \--/
+          4  5   6    7  8  9   10   11
+
+=head2 On Values
+
+Option C<on_values> can give the prime factors of just some integers,
+
+    "all"           the default
+    "composites"    the non-primes from 4 onwards
+    "odd"           odd integers 3 onwards
+    "even"          even integers 2 onwards
+
+"odd" is not simply a matter of filtering out 2s from the sequence, since it
+takes the other primes from the even integers too, such as the 3 from 6.
+
+    # on_values => "odd"
+    3, 5, 7, 3, 3, 11, 13, 3, 5, 17,
+
+             \--/          \--/
+              9             15
+    
 
 =head1 FUNCTIONS
 
@@ -204,16 +230,16 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 
-=item C<$seq = Math::NumSeq::Digit-E<gt>new ()>
+=item C<$seq = Math::NumSeq::AllPrimeFactors-E<gt>new ()>
 
-=item C<$seq = Math::NumSeq::Digit-E<gt>new (radix =E<gt> $r, order =E<gt> $o)>
+=item C<$seq = Math::NumSeq::AllPrimeFactors-E<gt>new (order =E<gt> $str, multiplicity =E<gt> $str, on_values =E<gt> $str)>
 
 Create and return a new sequence object.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value> occurs in the sequence, which means C<$value> is a
-prime, or for C<on_values=E<gt>'odd'> an odd prime.
+Return true if C<$value> occurs in the sequence.  This simply means
+C<$value> a prime, or for C<on_values=E<gt>'odd'> an odd prime.
 
 =back
 
@@ -221,8 +247,7 @@ prime, or for C<on_values=E<gt>'odd'> an odd prime.
 
 L<Math::NumSeq>,
 L<Math::NumSeq::PrimeFactorCount>,
-L<Math::NumSeq::AllDigits>,
-L<Math::NumSeq::SqrtPrimeFactors>
+L<Math::NumSeq::AllDigits>
 
 =head1 HOME PAGE
 

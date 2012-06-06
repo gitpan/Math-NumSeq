@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 41;
+$VERSION = 42;
 
 use Math::NumSeq;
 use Math::NumSeq::Primes;
@@ -69,6 +69,8 @@ sub values_min {
 #
 #    A067774 - primes where p+2 not prime
 #    A063637 - primes where p+2 is a semiprime
+#
+#    A048598 - cumulative total twin primes
 #
 my %oeis_anum = (
                  first  => 'A001359',

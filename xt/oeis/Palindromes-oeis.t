@@ -65,6 +65,151 @@ sub diff_nums {
 }
 
 
+#------------------------------------------------------------------------------
+# A029731 - palindromes in both decimal and hexadecimal
+
+{
+  my $anum = 'A029731';
+
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  my $diff;
+  if ($bvalues) {
+    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
+    # @$bvalues = grep {$_ < 0xFFFF_FFFF} @$bvalues;
+    # MyTestHelpers::diag ("  shorten to ",scalar(@$bvalues)," values");
+
+    my $dec = Math::NumSeq::Palindromes->new;
+    my $hex = Math::NumSeq::Palindromes->new (radix => 16);
+
+    while (@got < @$bvalues) {
+      my ($i, $value) = $dec->next;
+      if ($hex->pred($value)) {
+        push @got, $value;
+      }
+    }
+    $diff = diff_nums (\@got, $bvalues);
+    if ($diff) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  } else {
+    MyTestHelpers::diag ("$anum not available");
+  }
+  skip (! $bvalues,
+        $diff, undef,
+        "$anum");
+}
+
+#------------------------------------------------------------------------------
+# A029733 - squares are hex palindromes
+
+{
+  my $anum = 'A029733';
+
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  my $diff;
+  if ($bvalues) {
+    my $seq = Math::NumSeq::Palindromes->new (radix => 16);
+    for (my $n = 1; @got < @$bvalues; $n++) {
+      if ($seq->pred($n*$n)) {
+        push @got, $n;
+      }
+    }
+    $diff = diff_nums (\@got, $bvalues);
+    if ($diff) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        $diff, undef,
+        "$anum");
+}
+
+#------------------------------------------------------------------------------
+# A029734 - hex palindrome squares
+
+{
+  my $anum = 'A029734';
+
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  my $diff;
+  if ($bvalues) {
+    my $seq = Math::NumSeq::Palindromes->new (radix => 16);
+    for (my $n = 1; @got < @$bvalues; $n++) {
+      my $square = $n*$n;
+      if ($seq->pred($square)) {
+        push @got, $square;
+      }
+    }
+    $diff = diff_nums (\@got, $bvalues);
+    if ($diff) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        $diff, undef,
+        "$anum");
+}
+
+#------------------------------------------------------------------------------
+# A029735 - cubes are hex palindromes
+
+{
+  my $anum = 'A029735';
+
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  my $diff;
+  if ($bvalues) {
+    my $seq = Math::NumSeq::Palindromes->new (radix => 16);
+    for (my $n = 1; @got < @$bvalues; $n++) {
+      if ($seq->pred($n*$n*$n)) {
+        push @got, $n;
+      }
+    }
+    $diff = diff_nums (\@got, $bvalues);
+    if ($diff) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        $diff, undef,
+        "$anum");
+}
+
+#------------------------------------------------------------------------------
+# A029736 - hex palindrome cubes
+
+{
+  my $anum = 'A029736';
+
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  my $diff;
+  if ($bvalues) {
+    my $seq = Math::NumSeq::Palindromes->new (radix => 16);
+    for (my $n = 1; @got < @$bvalues; $n++) {
+      my $cube = $n*$n*$n;
+      if ($seq->pred($cube)) {
+        push @got, $cube;
+      }
+    }
+    $diff = diff_nums (\@got, $bvalues);
+    if ($diff) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        $diff, undef,
+        "$anum");
+}
 
 #------------------------------------------------------------------------------
 # A137180 count of palindromes 1 to n

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 41;
+$VERSION = 42;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -52,6 +52,10 @@ use constant parameter_info_array =>
   ];
 
 #------------------------------------------------------------------------------
+# cf A011531 - numbers with a 1 digit
+#    A011532 ... A011539 - numbers with a 2 to 9 digit
+#
+
 my @oeis_anum;
 
 # A000225 is 2^n-1 base 2 without 0, but starting from 2^0-1 = 0, whereas

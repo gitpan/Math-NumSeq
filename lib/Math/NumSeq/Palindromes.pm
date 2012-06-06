@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 41;
+$VERSION = 42;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -42,9 +42,12 @@ use Math::NumSeq::Base::Digits;
 
 
 #------------------------------------------------------------------------------
-# cf palindomric primes
-# 'A002385', # 10
-# 'A029732', # 16
+# cf A002385 - prime palindromes
+#    A029732 - prime palindromes in base 16, written in base 10
+#    A110784 - digits in ascending order
+#    A029731 - palindromes in both decimal and hexadecimal
+#    A029733 - n where n^2 hex palindrome
+#    A029734 - squares which are hex palindromes
 #
 my @oeis_anum = (
                  # OEIS-Catalogue array begin

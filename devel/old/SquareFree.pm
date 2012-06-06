@@ -1,4 +1,4 @@
-# Copyright 2011 Kevin Ryde
+# Copyright 2011, 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
-package Math::NumSeq::MathImageSquareFree;
+package Math::NumSeq::SquareFree;
 use 5.004;
 use strict;
 
@@ -168,12 +168,12 @@ __END__
 
 =head1 NAME
 
-Math::NumSeq::MathImageSquareFree -- square free integers
+Math::NumSeq::SquareFree -- square free integers
 
 =head1 SYNOPSIS
 
- use Math::NumSeq::MathImageSquareFree;
- my $seq = Math::NumSeq::MathImageSquareFree->new;
+ use Math::NumSeq::SquareFree;
+ my $seq = Math::NumSeq::SquareFree->new;
  my ($i, $value) = $seq->next;
 
 =head1 DESCRIPTION
@@ -184,7 +184,7 @@ The square-free integers ...
 
 =over 4
 
-=item C<$seq = Math::NumSeq::MathImageSquareFree-E<gt>new ()>
+=item C<$seq = Math::NumSeq::SquareFree-E<gt>new ()>
 
 Create and return a new sequence object.
 

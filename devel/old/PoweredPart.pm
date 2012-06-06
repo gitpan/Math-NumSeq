@@ -1,4 +1,4 @@
-# Copyright 2011 Kevin Ryde
+# Copyright 2011, 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
-package Math::NumSeq::MathImagePowerPart;
+package Math::NumSeq::PowerPart;
 use 5.004;
 use strict;
 
@@ -178,12 +178,12 @@ __END__
 
 =head1 NAME
 
-Math::NumSeq::MathImagePowerPart -- largest square etc divisor
+Math::NumSeq::PowerPart -- largest square etc divisor
 
 =head1 SYNOPSIS
 
- use Math::NumSeq::MathImagePowerPart;
- my $seq = Math::NumSeq::MathImagePowerPart->new (power => 2);
+ use Math::NumSeq::PowerPart;
+ my $seq = Math::NumSeq::PowerPart->new (power => 2);
  my ($i, $value) = $seq->next;
 
 =head1 DESCRIPTION
@@ -194,7 +194,7 @@ Math::NumSeq::MathImagePowerPart -- largest square etc divisor
 
 =over 4
 
-=item C<$seq = Math::NumSeq::MathImagePowerPart-E<gt>new ()>
+=item C<$seq = Math::NumSeq::PowerPart-E<gt>new ()>
 
 Create and return a new sequence object.
 

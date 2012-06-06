@@ -44,7 +44,6 @@ devel/klarner.pl
 devel/kolakoski.pl
 devel/language-expr.pl
 devel/lib/Math/NumSeq/AbsCubicDiff.pm
-devel/lib/Math/NumSeq/AllPrimeFactors.pm
 devel/lib/Math/NumSeq/AlphabeticalLength.pm
 devel/lib/Math/NumSeq/AlphabeticalLengthSteps.pm
 devel/lib/Math/NumSeq/Base/File.pm
@@ -57,19 +56,18 @@ devel/lib/Math/NumSeq/CunninghamLength.pm
 devel/lib/Math/NumSeq/CunninghamPrimes.pm
 devel/lib/Math/NumSeq/Derived/Cumulative.pm
 devel/lib/Math/NumSeq/DigitExtract.pm
-devel/lib/Math/NumSeq/DigitProductSteps-oeis.t
-devel/lib/Math/NumSeq/DigitProductSteps.pm
 devel/lib/Math/NumSeq/EratosthenesStage.pm
 devel/lib/Math/NumSeq/HypotCount.pm
 devel/lib/Math/NumSeq/KaprekarNumbers.pm
 devel/lib/Math/NumSeq/KaprekarRoutineSteps.pm
 devel/lib/Math/NumSeq/KolakoskiMajority.pm
+devel/lib/Math/NumSeq/LeastPrimitiveRoot-oeis.t
+devel/lib/Math/NumSeq/LeastPrimitiveRoot.pm
 devel/lib/Math/NumSeq/LipschitzClass.pm
 devel/lib/Math/NumSeq/ln2.gz
 devel/lib/Math/NumSeq/Ln2Bits.pm
 devel/lib/Math/NumSeq/Loeschian.pm
 devel/lib/Math/NumSeq/LongFractionPrimes.pm
-devel/lib/Math/NumSeq/MaxDigitCount.pm
 devel/lib/Math/NumSeq/numseq-oeis.t
 devel/lib/Math/NumSeq/Padovan.pm
 devel/lib/Math/NumSeq/pi.gz
@@ -82,7 +80,6 @@ devel/lib/Math/NumSeq/PrimeQuadraticEuler.pm
 devel/lib/Math/NumSeq/PrimeQuadraticHonaker.pm
 devel/lib/Math/NumSeq/PrimeQuadraticLegendre.pm
 devel/lib/Math/NumSeq/PrimesDigits.pm
-devel/lib/Math/NumSeq/PrimitiveRoot.pm
 devel/lib/Math/NumSeq/RadixConversion.pm
 devel/lib/Math/NumSeq/ReplicateDigits.pm
 devel/lib/Math/NumSeq/SlopingBinaryExcluded-oeis.t
@@ -124,6 +121,7 @@ devel/pi.pl
 devel/polygonal.pl
 devel/prime-index-primes.pl
 devel/primes.pl
+devel/primitive-root.pl
 devel/primorials.pl
 devel/proth.pl
 devel/repdigit-radix.pl
@@ -143,6 +141,7 @@ lib/Math/NumSeq.pm
 lib/Math/NumSeq/Abundant.pm
 lib/Math/NumSeq/All.pm
 lib/Math/NumSeq/AllDigits.pm
+lib/Math/NumSeq/AllPrimeFactors.pm
 lib/Math/NumSeq/AlmostPrimes.pm
 lib/Math/NumSeq/AsciiSelf.pm
 lib/Math/NumSeq/Base/Array.pm
@@ -165,6 +164,7 @@ lib/Math/NumSeq/DigitCountLow.pm
 lib/Math/NumSeq/DigitLength.pm
 lib/Math/NumSeq/DigitLengthCumulative.pm
 lib/Math/NumSeq/DigitProduct.pm
+lib/Math/NumSeq/DigitProductSteps.pm
 lib/Math/NumSeq/DigitSum.pm
 lib/Math/NumSeq/DigitSumModulo.pm
 lib/Math/NumSeq/DivisorCount.pm
@@ -194,6 +194,7 @@ lib/Math/NumSeq/LemoineCount.pm
 lib/Math/NumSeq/LiouvilleFunction.pm
 lib/Math/NumSeq/LucasNumbers.pm
 lib/Math/NumSeq/LuckyNumbers.pm
+lib/Math/NumSeq/MaxDigitCount.pm
 lib/Math/NumSeq/MephistoWaltz.pm
 lib/Math/NumSeq/MobiusFunction.pm
 lib/Math/NumSeq/Modulo.pm
@@ -330,6 +331,7 @@ xt/oeis/CollatzSteps-oeis.t
 xt/oeis/DeletablePrimes-oeis.t
 xt/oeis/DigitCount-oeis.t
 xt/oeis/DigitProduct-oeis.t
+xt/oeis/DigitProductSteps-oeis.t
 xt/oeis/DigitSum-oeis.t
 xt/oeis/DivisorCount-oeis.t
 xt/oeis/ErdosSelfridgeClass-oeis.t

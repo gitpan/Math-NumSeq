@@ -28,7 +28,7 @@ use MyTestHelpers;
 MyTestHelpers::nowarnings();
 use MyOEIS;
 
-use Math::NumSeq::MathImageSlopingExcluded;
+use Math::NumSeq::SlopingExcluded;
 
 # uncomment this to run the ### lines
 #use Smart::Comments '###';
@@ -73,7 +73,7 @@ sub diff_nums {
   } else {
     MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
 
-    my $seq = Math::NumSeq::MathImageSlopingExcluded->new (radix => 2);
+    my $seq = Math::NumSeq::SlopingExcluded->new (radix => 2);
     while (@got < @$bvalues) {
       my ($i, $value) = $seq->next;
       push @got, to_binary_str($value);

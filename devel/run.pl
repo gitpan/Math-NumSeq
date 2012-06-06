@@ -132,7 +132,6 @@ $|=1;
   $values_class = 'Math::NumSeq::ConcatNumbers';
   $values_class = 'Math::NumSeq::DigitLengthCumulative';
   $values_class = 'Math::NumSeq::Primorials';
-  $values_class = 'Math::NumSeq::MaxZeros';
   $values_class = 'Math::NumSeq::Factorials';
   $values_class = 'Math::NumSeq::MoranNumbers';
   $values_class = 'Math::NumSeq::RadixConversion';
@@ -166,20 +165,23 @@ $|=1;
   $values_class = 'Math::NumSeq::KaprekarNumbers';
   $values_class = 'Math::NumSeq::CollatzSteps';
   $values_class = 'Math::NumSeq::LongFractionPrimes';
-  $values_class = 'Math::NumSeq::PrimitiveRoot';
   $values_class = 'Math::NumSeq::Squares';
   $values_class = 'Math::NumSeq::SpiroFibonacci';
-  $values_class = 'Math::NumSeq::AllPrimeFactors';
   $values_class = 'Math::NumSeq::PrimesDigits';
   $values_class = 'Math::NumSeq::Aronson';
   $values_class = 'Math::NumSeq::DigitCountLow';
   $values_class = 'Math::NumSeq::Repdigits';
   $values_class = 'Math::NumSeq::PlanePathCoord';
   $values_class = 'Math::NumSeq::PlanePathDelta';
+  $values_class = 'Math::NumSeq::LeastPrimitiveRoot';
+  $values_class = 'Math::NumSeq::AllPrimeFactors';
+  $values_class = 'Math::NumSeq::MaxDigitCount';
 
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new
     (
+     digit => 1,
+     # root_type => 'negative',
      # i_start => 1,
      # radix => 2,
      # letter => '',
@@ -220,13 +222,13 @@ $|=1;
      # including_self => 0,
      # offset => 3,
 
-      planepath => 'AlternatePaper',
+     # planepath => 'AlternatePaper',
      # coordinate_type => 'DiffXY',
      # planepath => 'GrayCode',
      # planepath => 'ImaginaryHalf',
      # line_type => 'X_axis',
      # planepath => 'GosperSide',
-     delta_type=>'dSum',
+     # delta_type=>'dSum',
      # turn_type => 'Right',
      # planepath => 'SquareSpiral',
      # planepath => 'ZOrderCurve,radix=10',

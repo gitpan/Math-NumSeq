@@ -19,7 +19,7 @@
 
 require 5;
 use strict;
-use Math::NumSeq::MathImageSlopingExcluded;
+use Math::NumSeq::SlopingExcluded;
 use Math::BigInt;
 
 # uncomment this to run the ### lines
@@ -27,7 +27,7 @@ use Math::BigInt;
 
 
 {
-  my $seq = Math::NumSeq::MathImageSlopingExcluded->new (radix => 2);
+  my $seq = Math::NumSeq::SlopingExcluded->new (radix => 2);
   foreach (1 .. 30) {
     my ($i, $value) = $seq->next;
     # printf "%60s\n", $value;
@@ -168,7 +168,7 @@ use Math::BigInt;
 {
   # delta from 2^i
 
-  my $seq = Math::NumSeq::MathImageSlopingExcluded->new;
+  my $seq = Math::NumSeq::SlopingExcluded->new;
   foreach (1 .. 50) {
     my ($i, $value) = $seq->next;
     $value = Math::BigInt->new(2)**$i - $value;

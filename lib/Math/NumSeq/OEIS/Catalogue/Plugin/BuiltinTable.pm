@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 41;
+$VERSION = 42;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 733 A-numbers in 103 modules
+# total 737 A-numbers in 106 modules
 
 use constant info_arrayref =>
 [
@@ -813,6 +813,18 @@ use constant info_arrayref =>
     ]
   },
   {
+    'anum' => 'A031346',
+    'class' => 'Math::NumSeq::DigitProductSteps'
+  },
+  {
+    'anum' => 'A031347',
+    'class' => 'Math::NumSeq::DigitProductSteps',
+    'parameters' => [
+      'values_type',
+      'root'
+    ]
+  },
+  {
     'anum' => 'A053735',
     'class' => 'Math::NumSeq::DigitSum',
     'parameters' => [
@@ -1521,6 +1533,18 @@ use constant info_arrayref =>
   {
     'anum' => 'A000959',
     'class' => 'Math::NumSeq::LuckyNumbers'
+  },
+  {
+    'anum' => 'A062842',
+    'class' => 'Math::NumSeq::MaxDigitCount'
+  },
+  {
+    'anum' => 'A062843',
+    'class' => 'Math::NumSeq::MaxDigitCount',
+    'parameters' => [
+      'digit',
+      1
+    ]
   },
   {
     'anum' => 'A064990',

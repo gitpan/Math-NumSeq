@@ -32,7 +32,7 @@ use strict;
 use List::Util qw(min max sum reduce);
 
 use vars '$VERSION', '@ISA';
-$VERSION = 41;
+$VERSION = 42;
 
 use Math::NumSeq::Base::IterateIth;
 use Math::NumSeq::Base::Digits;
@@ -117,7 +117,12 @@ my @oeis_anum;
 # cf A134777 minimum alphabetical english names of digits
 #    A134778 minimum alphabetical english names of digits
 #    A061383 arithmetic mean is an integer
+#    A180157 arithmetic mean is not an integer
+#    A175688 arithmetic mean is an integer and one of the digits
+#    A180160 sum digits mod num digits
 #    A037897 base 3 maxdigit-mindigit
+#    A060420 minimum digit of the primes
+#    A077648 high digit of the primes
 
 $oeis_anum[0]->{'low'}->{'unrounded'}->[10] = 'A010879';  # 0 to 9 rep
 # OEIS-Catalogue: A010879 extract_type=low

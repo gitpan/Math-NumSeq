@@ -1,4 +1,4 @@
-# Copyright 2011 Kevin Ryde
+# Copyright 2011, 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
-package Math::NumSeq::MathImageSquareFreeKernel;
+package Math::NumSeq::SquareFreeKernel;
 use 5.004;
 use strict;
 
@@ -205,12 +205,12 @@ __END__
 
 =head1 NAME
 
-Math::NumSeq::MathImageSquareFreeKernel -- divide out any square factor
+Math::NumSeq::SquareFreeKernel -- divide out any square factor
 
 =head1 SYNOPSIS
 
- use Math::NumSeq::MathImageSquareFreeKernel;
- my $seq = Math::NumSeq::MathImageSquareFreeKernel->new;
+ use Math::NumSeq::SquareFreeKernel;
+ my $seq = Math::NumSeq::SquareFreeKernel->new;
  my ($i, $value) = $seq->next;
 
 =head1 DESCRIPTION
@@ -225,7 +225,7 @@ For example at i=12 the value is 3 because the square 4 is divided out.
 
 =over 4
 
-=item C<$seq = Math::NumSeq::MathImageSquareFreeKernel-E<gt>new ()>
+=item C<$seq = Math::NumSeq::SquareFreeKernel-E<gt>new ()>
 
 Create and return a new sequence object.
 

@@ -29,8 +29,8 @@ use strict;
   require Math::PlanePath::SquareSpiral;
   my $path = Math::PlanePath::SquareSpiral->new;
 
-  require Math::NumSeq::MathImageSpiroFibonacci;
-  my $seq = Math::NumSeq::MathImageSpiroFibonacci->new;
+  require Math::NumSeq::SpiroFibonacci;
+  my $seq = Math::NumSeq::SpiroFibonacci->new;
   $seq->next;
   $seq->next;
 

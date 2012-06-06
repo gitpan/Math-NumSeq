@@ -143,7 +143,7 @@ sub check_class {
   # return unless $class =~ /Power/;
   # return unless $class =~ /Repdigit/;
   # return unless $class =~ /Undul/;
-  # return unless $class =~ /Repd/;
+  return unless $class =~ /DigitProductSteps/;
   # return unless $class =~ /Totient/;
   # return unless $class =~ /Golay/;
   # return unless $class =~ /Trib/;

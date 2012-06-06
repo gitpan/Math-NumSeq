@@ -35,7 +35,7 @@ use Math::NumSeq::UndulatingNumbers;
 # VERSION
 
 {
-  my $want_version = 41;
+  my $want_version = 42;
   ok ($Math::NumSeq::UndulatingNumbers::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::UndulatingNumbers->VERSION,  $want_version,

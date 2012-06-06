@@ -15,13 +15,13 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
-package Math::NumSeq::PrimitiveRoot;
+package Math::NumSeq::LeastPrimitiveRoot;
 use 5.004;
 use strict;
 use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 41;
+$VERSION = 42;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
@@ -36,16 +36,56 @@ use Math::NumSeq::Squares;
 
 # use constant name => Math::NumSeq::__('...');
 use constant description => Math::NumSeq::__('The first primitive root modulo i.');
-use constant default_i_start => 1;
+use constant default_i_start => 3;
 use constant characteristic_smaller => 1;
 use constant characteristic_integer => 1;
-use constant values_min => 0;
+
+use constant parameter_info_array =>
+  [ { name        => 'root_type',
+      type        => 'enum',
+      display     => Math::NumSeq::__('Negative'),
+      default     => 'positive',
+      choices     => ['positive','negative'],
+      description => Math::NumSeq::__('Which primitive root to return, the least positive or the least negative.'),
+    },
+  ];
+
+
+my %values_min = (positive => 2);
+sub values_min {
+  my ($self) = @_;
+  return $values_min{$self->{'root_type'}};
+}
+my %values_max = (negative => -1);
+sub values_max {
+  my ($self) = @_;
+  return $values_max{$self->{'root_type'}};
+}
+
 
 #------------------------------------------------------------------------------
 # cf A001918 - least primitive root of prime
-#    A071894 - largest primitive root of prime
 #    A002199 - least negative primitive root of a prime, as a positive
+#    A071894 - largest primitive root of prime
+#
+#    A002230 - primes with new record least primitive root
+#    A114885 - prime index of those primes
+#    A002231 - the record root
+#
+#    A002233 - least primitive root of prime which is also a prime
+#    A122028 - similar
+#
+#    A001122 - primes with 2 as primitive root
+#    A001913 - primes with 10 as primitive root
+#    A019374 - primes with 50 as primitive root
 #    A060749 - list of primitive roots of each prime
+#
+#    A002371 - period of repeating part of 1/prime(n), 0 for 2,5
+#    A048595 - period of repeating part of 1/prime(n), 1 for 2,5
+#    A060283 - repeating part of 1/prime(n)
+#    A060251 - repeating part of n/prime(n)
+#    A006559 - primes 1/p has 0 < period < p-1, so not max length
+#    A001914 - cyclic 10 is a quad residue mod p and mantissa class 2
 
 # use constant oeis_anum => '';
 
@@ -54,23 +94,32 @@ use constant values_min => 0;
 
 sub ith {
   my ($self, $i) = @_;
-  ### PrimitiveRoot ith() ...
+  ### LeastPrimitiveRoot ith(): $i
 
   if (_is_infinite($i)) {
     return undef;
   }
 
-  for (my $root = 2; $root < $i; $root++) {
-    if (_is_primitive_root ($root, $i)) {
-      return $root;
+  if ($self->{'root_type'} eq 'positive') {
+    for (my $root = 2; $root < $i; $root++) {
+      if (_is_primitive_root ($root, $i)) {
+        return $root;
+      }
+    }
+  } else {
+    for (my $root = -1; $root > -$i; $root--) {
+      ### try: $root
+      if (_is_primitive_root ($root, $i)) {
+        return $root;
+      }
     }
   }
-  return 0;
+  return 1;
 }
 
 # sub pred {
 #   my ($self, $value) = @_;
-#   ### PrimitiveRoot pred(): "$value"
+#   ### LeastPrimitiveRoot pred(): "$value"
 #   return (Math::NumSeq::Primes->pred($value)
 #           && _is_primitive_root ($self->{'radix'}, $value));
 # }
@@ -120,7 +169,7 @@ sub _powmod {
   my @exponent = _bits_high_to_low($exponent)
     or return 1;
 
-  my $power = $base;
+  my $power = $base % $modulus;
   shift @exponent; # high 1 bit
 
   while (defined (my $bit = shift @exponent)) {  # high to low
@@ -160,12 +209,12 @@ __END__
 
 =head1 NAME
 
-Math::NumSeq::PrimitiveRoot -- smallest primitive root
+Math::NumSeq::LeastPrimitiveRoot -- smallest primitive root
 
 =head1 SYNOPSIS
 
- use Math::NumSeq::PrimitiveRoot;
- my $seq = Math::NumSeq::PrimitiveRoot->new;
+ use Math::NumSeq::LeastPrimitiveRoot;
+ my $seq = Math::NumSeq::LeastPrimitiveRoot->new;
  my ($i, $value) = $seq->next;
 
 =head1 DESCRIPTION
@@ -183,7 +232,7 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 
-=item C<$seq = Math::NumSeq::PrimitiveRoot-E<gt>new ()>
+=item C<$seq = Math::NumSeq::LeastPrimitiveRoot-E<gt>new ()>
 
 Create and return a new sequence object.
 
