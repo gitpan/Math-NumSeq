@@ -22,7 +22,7 @@ use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 42;
+$VERSION = 43;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -65,6 +65,8 @@ sub ith {
   if (_is_infinite($i) || $i > 0xFFFF_FFFF) {
     return undef;
   }
+  $i = "$i"; # numize Math::BigInt for speed
+
   if ($i < 3) {
     return ($i == 2 ? 1 : 0);
   }

@@ -22,7 +22,7 @@ use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 42;
+$VERSION = 43;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -91,7 +91,9 @@ sub values_min {
 # cf A033308 - concatenate primes digits
 
 my %oeis_anum;
-# $oeis_anum{'repeated'}->{'ascending'} = 'A';
+$oeis_anum{'all'}       ->{'repeated'}->{'ascending'} = 'A027746';
+$oeis_anum{'composites'}->{'repeated'}->{'ascending'} = 'A109709';
+$oeis_anum{'all'}       ->{'distinct'}->{'ascending'} = 'A027748';
 
 sub oeis_anum {
   my ($self) = @_;

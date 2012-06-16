@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 42;
+$VERSION = 43;
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
 
@@ -116,7 +116,7 @@ $oeis_anum{'reverse'}->[1]->[9] = 'A031087'; # base 9 LE start i=1 value=1
 
 $oeis_anum{'forward'}->[1]->[10] = 'A007376'; # base 10, start i=1 value=1
 # OEIS-Catalogue: A007376 i_start=1
-$oeis_anum{'reverse'}->[1]->[10] = 'A031298'; # base 9 LE start i=1 value=1
+$oeis_anum{'reverse'}->[1]->[10] = 'A031298'; # base 10 LE start i=1 value=1
 # OEIS-Catalogue: A031298 radix=10 order=reverse i_start=1
 #
 # A033307 is the digits starting from 1 the same as A007376, but with
@@ -295,7 +295,8 @@ to radix-1.
 =head1 SEE ALSO
 
 L<Math::NumSeq>,
-L<Math::NumSeq::All>,
+L<Math::NumSeq::All>
+
 L<Math::NumSeq::SqrtDigits>,
 L<Math::NumSeq::DigitLength>,
 L<Math::NumSeq::Runs>,

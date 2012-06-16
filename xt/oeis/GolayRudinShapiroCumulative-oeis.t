@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use Test;
-plan tests => 4;
+plan tests => 5;
 
 use lib 't','xt';
 use MyTestHelpers;
@@ -75,17 +75,71 @@ sub diff_nums {
 
 
 #------------------------------------------------------------------------------
+# A212591 - position of first occurance of n
+
+{
+  my $anum = 'A212591';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum,
+                                                      max_count => 1000);
+  my @got;
+  if ($bvalues) {
+    my $seq = Math::NumSeq::GolayRudinShapiroCumulative->new;
+    my $target = 1;
+    while (@got < @$bvalues) {
+      my ($i, $value) = $seq->next;
+      if ($value == $target) {
+        push @got, $i;
+        $target++;
+      }
+    }
+
+    if (! numeq_array(\@got, $bvalues)) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        numeq_array(\@got, $bvalues),
+        1, "$anum");
+}
+
+#------------------------------------------------------------------------------
+# A020991 - position of last occurrence of k in the partial sums
+
+{
+  my $anum = 'A020991';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  if ($bvalues) {
+    my $seq = Math::NumSeq::GolayRudinShapiroCumulative->new;
+    my @count;
+    for (my $n = 1; @got < @$bvalues; ) {
+      my ($i, $value) = $seq->next;
+      $count[$value]++;
+      if ($value == $n && $count[$value] >= $n) {  # last
+        push @got, $i;
+        $n++;
+      }
+    }
+
+    if (! numeq_array(\@got, $bvalues)) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        numeq_array(\@got, $bvalues),
+        1, "$anum");
+}
+
+#------------------------------------------------------------------------------
 # A051032 - GRS cumulative of 2^n
 
 {
   my $anum = 'A051032';
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
-  if (! $bvalues) {
-    MyTestHelpers::diag ("$anum not available");
-  } else {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
+  if ($bvalues) {
     require Math::BigInt;
     my $seq = Math::NumSeq::GolayRudinShapiroCumulative->new;
     for (my $n = Math::BigInt->new(1); @got < @$bvalues; $n *= 2) {
@@ -109,11 +163,7 @@ sub diff_nums {
   my $anum = 'A022156';
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
-  if (! $bvalues) {
-    MyTestHelpers::diag ("$anum not available");
-  } else {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
+  if ($bvalues) {
     my $seq = Math::NumSeq::GolayRudinShapiroCumulative->new;
     my @count;
     my $prev = 0;
@@ -140,52 +190,13 @@ sub diff_nums {
 }
 
 #------------------------------------------------------------------------------
-# A020991 - highest occurrence of n in cumulative
-
-{
-  my $anum = 'A020991';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my @got;
-  if (! $bvalues) {
-    MyTestHelpers::diag ("$anum not available");
-  } else {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
-    my $seq = Math::NumSeq::GolayRudinShapiroCumulative->new;
-    my @count;
-    for (my $n = 1; @got < @$bvalues; ) {
-      my ($i, $value) = $seq->next;
-      $count[$value]++;
-      if ($value == $n && $count[$value] >= $n) {
-        push @got, $i;
-        $n++;
-      }
-    }
-
-    if (! numeq_array(\@got, $bvalues)) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        numeq_array(\@got, $bvalues),
-        1, "$anum - highest occurrence of n as cumulative");
-}
-
-
-
-#------------------------------------------------------------------------------
 # A093573 - triangle of n as cumulative
 
 {
   my $anum = 'A093573';
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
-  if (! $bvalues) {
-    MyTestHelpers::diag ("$anum not available");
-  } else {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
+  if ($bvalues) {
     my $seq = Math::NumSeq::GolayRudinShapiroCumulative->new;
     my @triangle;
     for (my $n = 1; @got < @$bvalues; ) {

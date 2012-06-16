@@ -19,6 +19,13 @@
 
 # Maybe: using_values => 'primes'
 #
+# http://mathworld.wolfram.com/SilvermansSequence.html
+#
+# Y.-F. S. Petermann, J.-L. Remy and I. Vardi, Discrete derivatives of
+# sequences, Adv. in Appl. Math. 27 (2001), 562-84.
+#   http://www.lix.polytechnique.fr/Labo/Ilan.Vardi/publications.html
+#   http://www.lix.polytechnique.fr/Labo/Ilan.Vardi/discrete_derivatives.ps
+#
 
 
 package Math::NumSeq::GolombSequence;
@@ -27,7 +34,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 42;
+$VERSION = 43;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -49,12 +56,14 @@ use constant parameter_info_array =>
      display => Math::NumSeq::__('Using Values'),
      type    => 'enum',
      default => 'all',
-     choices => ['all','odd','even','3k'],
+     choices => ['all','odd','even','3k','squares','primes'],
      choices_display => [Math::NumSeq::__('All'),
                          Math::NumSeq::__('Odd'),
                          Math::NumSeq::__('Even'),
                          # TRANSLATORS: "3k" meaning triples 3,6,9,12,15, probably no need to translate except into another script if Latin letter "k" won't be recognised
                          Math::NumSeq::__('3k'),
+                         Math::NumSeq::__('Squares'),
+                         Math::NumSeq::__('Primes'),
                         ],
      description => Math::NumSeq::__('Which values to use in the sequence.  Default "all" means all integers.'),
    },
@@ -113,7 +122,18 @@ sub rewind {
   $self->{'upto_func'} = $self->can("_upto_$using_values")
     || croak "Unrecognised using_values \"$using_values\"";
 
-  if ($using_values eq 'odd') {
+  # ENHANCE-ME: a hash table for these initializations, but would have to
+  # clone the arrays
+  if ($using_values eq 'all') {
+    $self->{'small'} = [ 1, 2, 2 ];
+    $self->{'counts'} = [ 2 ];
+    $self->{'values'} = [ 3 ];
+    $self->{'upto'}   = [ 3 ];
+    $self->{'extend_count'} = 2;
+    $self->{'extend_value'} = 3;
+    $self->{'extend_upto'}  = 3;
+
+  } elsif ($using_values eq 'odd') {
     $self->{'counts'} = [ 1, 3 ];
     $self->{'upto'}   = [ 1, 2 ];
     $self->{'values'} = [ 1, 3 ];
@@ -156,14 +176,8 @@ sub rewind {
     $self->{'extend_upto'}  = 2;
     $self->{'primes'} = [ 2, 3, 5 ];
 
-  } else { # all
-    $self->{'small'} = [ 1, 2, 2 ];
-    $self->{'counts'} = [ 2 ];
-    $self->{'values'} = [ 3 ];
-    $self->{'upto'}   = [ 3 ];
-    $self->{'extend_count'} = 2;
-    $self->{'extend_value'} = 3;
-    $self->{'extend_upto'}  = 3;
+  } else {
+    croak "Unrecognised using_values: ",$using_values;
   }
 }
 
@@ -343,7 +357,3 @@ You should have received a copy of the GNU General Public License along with
 Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 =cut
-
-# Local variables:
-# compile-command: "math-image --values=GolombSequence"
-# End:

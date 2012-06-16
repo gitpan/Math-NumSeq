@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 42;
+$VERSION = 43;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -130,6 +130,8 @@ sub ith {
   if ($i < 0 || $i > 0xFFFF_FFFF) {
     return undef;
   }
+  $i = "$i"; # numize Math::BigInt for speed
+
   my $ret = 0;
 
   if (($i % 2) == 0) {

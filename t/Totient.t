@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 15;
+plan tests => 16;
 
 use lib 't';
 use MyTestHelpers;
@@ -35,7 +35,7 @@ use Math::NumSeq::Totient;
 # VERSION
 
 {
-  my $want_version = 42;
+  my $want_version = 43;
   ok ($Math::NumSeq::Totient::VERSION, $want_version, 'VERSION variable');
   ok (Math::NumSeq::Totient->VERSION,  $want_version, 'VERSION class method');
 
@@ -97,6 +97,17 @@ use Math::NumSeq::Totient;
     my $got = Math::NumSeq::Totient::_totient_by_sieve($seq,$i);
     ok ($got, $want, "_totient_by_sieve() i=$i got $got want $want");
   }
+}
+
+#------------------------------------------------------------------------------
+# pred() on BigInt
+
+{
+  my $seq = Math::NumSeq::Totient->new;
+  my $small = 120;
+  require Math::BigInt;
+  my $big = Math::BigInt->new(120);
+  ok ($seq->pred($big), $seq->pred($small));
 }
 
 exit 0;

@@ -25,27 +25,9 @@ use POSIX;
 use Smart::Comments;
 
 {
-  # all files get description
-
-  require Math::NumSeq::OEIS::File;
-  chdir "$ENV{HOME}/OEIS" or die;
-  foreach my $filename (<A*.html>) {
-    next if $filename =~ /internal/;
-    $filename =~ /(A\d+)/;
-    my $anum = $1;
-    my $seq = Math::NumSeq::OEIS::File->new(_dont_use_internal=>1,
-                                            anum=>$anum);
-    if (! $seq->{'description'}) {
-      print "$ENV{HOME}/OEIS/$filename:1:0: no description\n";
-    }
-  }
-  exit 0;
-}
-
-{
   require Math::NumSeq::OEIS::File;
   my $seq = Math::NumSeq::OEIS::File->new(
-                                          anum=>'A005589',
+                                          anum=>'A000002',
                                           # anum=>'A000290',
                                          );
   ### $seq

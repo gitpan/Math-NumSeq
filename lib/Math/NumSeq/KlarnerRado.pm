@@ -25,7 +25,7 @@ use strict;
 use List::Util;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 42;
+$VERSION = 43;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
@@ -240,7 +240,3 @@ You should have received a copy of the GNU General Public License along with
 Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 =cut
-
-# Local variables:
-# compile-command: "math-image --values=KlarnerRado"
-# End:

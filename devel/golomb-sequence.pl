@@ -25,6 +25,103 @@ use Math::NumSeq::GolombSequence;
 #use Smart::Comments;
 
 {
+  # asymptotic ratio
+  # squares a(n)/n oscillates up and down a bit
+  my $seq;
+  $seq = Math::NumSeq::GolombSequence->new (using_values => 'odd');
+  $seq = Math::NumSeq::GolombSequence->new (using_values => 'all');
+  $seq = Math::NumSeq::GolombSequence->new (using_values => 'even');
+  $seq = Math::NumSeq::GolombSequence->new (using_values => '3k');
+  $seq = Math::NumSeq::GolombSequence->new (using_values => 'squares');
+  my $target = 1;
+  my $prev;
+  my $prev_frac = 0;
+  for (;;) {
+    my ($i,$value) = $seq->next or last;
+    if ($prev != $value) {
+      $prev = $value;
+      my $frac = ($value / $i) / sqrt(2);
+      if ($frac < $prev_frac) {
+        printf "%6d  %d  %.10f %.10f\n", $i, $value, $prev_frac, $frac;
+      } else {
+        print "*\n";
+      }
+      $prev_frac = $frac;
+    }
+    # if ($i >= $target) {
+    #   # $target = ($target+1)*1.1;
+    #   $target++;
+    #   my $frac = ($value / $i) / sqrt(2);
+    #   my $flag = '';
+    #   printf "%6d  %d  %.6f %s\n", $i, $value, $frac, $flag;
+    # }
+  }
+  exit 0;
+}
+
+{
+  # asymptotics, ith_estimate() and difference
+
+  use constant PHI => (1 + sqrt(5)) / 2;
+  my $seq;
+  $seq = Math::NumSeq::GolombSequence->new (using_values => 'odd');
+  $seq = Math::NumSeq::GolombSequence->new (using_values => 'all');
+  $seq = Math::NumSeq::GolombSequence->new (using_values => 'even');
+  $seq = Math::NumSeq::GolombSequence->new (using_values => '3k');
+  $seq = Math::NumSeq::GolombSequence->new (using_values => 'squares');
+  my $target = 1;
+  for (;;) {
+    my ($i,$value) = $seq->next or last;
+    if ($i >= $target) {
+      $target = ($target+1)*1.1;
+      # $target++;
+      my $est = ith_estimate($seq,$i);
+      my $diff = $est - $value;
+      my $frac = $est / $value;
+      my $flag = ($diff > 2 || $diff < -2 ? '  ***' : '');
+      # my $flag = ($diff >= 0.6 || $diff < -0.4 ? '  ***' : '');
+      printf "%6d  %d %.2f  %.2f %.4f %s\n", $i, $value, $est, $diff, $frac, $flag;
+      if ($diff > 3 || $diff < -3) {
+      }
+    }
+  }
+
+  # Vardi
+  sub ith_estimate {
+    my ($self, $i) = @_;
+    if ($self->{'using_values'} eq 'all') {
+      # 279949172  199757 199713.87  -43.13  ***
+      return PHI**(2 - PHI) * $i**(PHI-1);  # plus O( n^(phi-1) / log(n) )
+    }
+    if ($self->{'using_values'} eq 'odd') {
+      # A080605(n)=tau^(2-tau)*(2n)^(tau-1)+O(1)
+      # Vardy method gives  O(n^(tau-1)/log(n)) instead of O(1).
+      # 130598349  190615 191336.70  721.70  ***
+      # 143658185  202185 202945.94  760.94  ***
+      # 279949172  305449 306517.30  1068.30  ***
+      return PHI**(2 - PHI) * (2*$i)**(PHI-1);  # plus O(n^(PHI-1)/log(n))
+    }
+    if ($self->{'using_values'} eq 'even') {
+      # a(n) is asymptotic to tau^(2-tau)*(2n)^(tau-1)
+      return PHI**(2 - PHI) * (2*$i)**(PHI-1);
+
+      #  a(n)=round(tau^(2-tau)*(2n)^(tau-1))
+      #  +(-1, +0 or +1)
+    }
+    if ($self->{'using_values'} eq '3k') {
+      # a(n) is asymptotic to tau^(2-tau)*(3n)^(tau-1)
+      return PHI**(2 - PHI) * (3*$i)**(PHI-1);
+    }
+    if ($self->{'using_values'} eq 'squares') {
+      # a(n)/n -> sqrt(2)
+      return $i*sqrt(2);
+    }
+    return 0;
+  }
+  exit 0;
+}
+
+{
   require Math::NumSeq::OEIS::File;
   my $hi = 30;
   my $seqstr;

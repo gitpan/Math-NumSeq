@@ -50,8 +50,8 @@ HERE
     
     # restricted to ...
     # next unless $module =~ /Aron/;
-    # next unless $module =~ /PlanePath/;
-     next unless $module =~ /AllPr/;
+    next unless $module =~ /PlanePath/;
+    # next unless $module =~ /AllPr/;
     
     my $class = App::MathImage::Generator->values_class($module);
     print "$class\n";

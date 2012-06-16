@@ -75,6 +75,7 @@ devel/lib/Math/NumSeq/PiBits.pm
 devel/lib/Math/NumSeq/PiDigits.pm
 devel/lib/Math/NumSeq/PierpontPrimes.pm
 devel/lib/Math/NumSeq/PowerSieve.pm
+devel/lib/Math/NumSeq/PrimeExponentFlip.pm
 devel/lib/Math/NumSeq/PrimeFactorExtract.pm
 devel/lib/Math/NumSeq/PrimeQuadraticEuler.pm
 devel/lib/Math/NumSeq/PrimeQuadraticHonaker.pm
@@ -281,6 +282,7 @@ t/File.t
 t/FractionDigits-Catalogue.t
 t/FractionDigits.t
 t/GolayRudinShapiroCumulative.t
+t/GolombSequence.t
 t/HofstadterFigure.t
 t/LuckyNumbers.t
 t/MephistoWaltz.t
@@ -338,6 +340,7 @@ xt/oeis/ErdosSelfridgeClass-oeis.t
 xt/oeis/Fibbinary-oeis.t
 xt/oeis/FibbinaryBitCount-oeis.t
 xt/oeis/FibonacciWord-oeis.t
+xt/oeis/File-oeis.t
 xt/oeis/GolayRudinShapiro-oeis.t
 xt/oeis/GolayRudinShapiroCumulative-oeis.t
 xt/oeis/GolombSequence-oeis.t
@@ -354,6 +357,7 @@ xt/oeis/SqrtDigits-oeis.t
 xt/oeis/Squares-oeis.t
 xt/oeis/SternDiatomic-oeis.t
 xt/oeis/Totient-oeis.t
+xt/oeis/TwinPrimes-oeis.t
 xt/oeis/Woodall-oeis.t
 xt/pod_lists.t
 xtools/my-check-copyright-years.sh

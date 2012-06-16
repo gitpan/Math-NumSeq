@@ -143,8 +143,7 @@ sub check_class {
   # return unless $class =~ /Power/;
   # return unless $class =~ /Repdigit/;
   # return unless $class =~ /Undul/;
-  return unless $class =~ /DigitProductSteps/;
-  # return unless $class =~ /Totient/;
+   return unless $class =~ /PrimesD/;
   # return unless $class =~ /Golay/;
   # return unless $class =~ /Trib/;
   # return unless $anum eq 'A137164';
@@ -323,11 +322,6 @@ sub check_class {
     if ($want->[9] == 2) {
       MyTestHelpers::diag("$anum fixup samples start i=1 but OFFSET=0");
       unshift @$want, 1;
-    }
-  } elsif ($anum eq 'A080605') { # Golomb odd, typo extra 23
-    if ($want->[64] == 23) {
-      MyTestHelpers::diag ("$anum delete stray extra 23");
-      splice @$want,64,1;
     }
   }
 

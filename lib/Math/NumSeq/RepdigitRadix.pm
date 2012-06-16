@@ -25,7 +25,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 42;
+$VERSION = 43;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -164,6 +164,7 @@ sub ith {
     return $i; # nan
   }
 
+  $i = "$i"; # numize any Math::BigInt for factors()
   my @factors = reverse (1, factors($i));
   ### @factors
 
@@ -426,7 +427,3 @@ You should have received a copy of the GNU General Public License along with
 Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 =cut
-
-# Local variables:
-# compile-command: "math-image --values=RepdigitRadix"
-# End:

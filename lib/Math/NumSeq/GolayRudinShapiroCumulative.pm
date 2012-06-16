@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 42;
+$VERSION = 43;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -32,18 +32,24 @@ use Math::NumSeq::GolayRudinShapiro;
 #use Smart::Comments;
 
 
-# cf A020986 - cumulative 1,-1, always positive
-#    A020990 - cumulative GRS(2n+1), flips sign at odd i
-#    A020991 - highest occurrence of N in the partial sums
-#    A051032 - GRS cumulative of 2^n
-#
 # use constant name => Math::NumSeq::__('Golay-Rudin-Shapiro Cumulative');
 use constant description => Math::NumSeq::__('Cumulative Golay/Rudin/Shapiro sequence.');
 use constant values_min => 1;
 use constant characteristic_integer => 1;
 use constant characteristic_smaller => 1;
 use constant i_start => Math::NumSeq::GolayRudinShapiro->default_i_start;
+
+#------------------------------------------------------------------------------
+# cf A020986 - cumulative 1,-1, always positive
+#    A020990 - cumulative GRS(2n+1), flips sign at odd i
+#    A051032 - GRS cumulative of 2^n
+#    A212591 - index of first occurrence of k in the partial sums
+#    A020991 - index of last occurrence of k in the partial sums
+#    A093573 - indexes of all positions where k occurs
+
 use constant oeis_anum => 'A020986';  # GRS +/-1 cumulative
+
+#------------------------------------------------------------------------------
 
 sub rewind {
   my ($self) = @_;
@@ -167,13 +173,21 @@ Math::NumSeq::GolayRudinShapiroCumulative -- cumulative Golay/RudinShapiro seque
 =head1 DESCRIPTION
 
 This is the Golay/Rudin/Shapiro sequence values accumulated as
-GRS(0)+...+GRS(i), starting from i=0 (value GRS(0)).
+GRS(0)+...+GRS(i),
+
+    starting from i=0 with value=GRS(0) alone
 
     1, 2, 3, 2, 3, 4, 3, 4, 5, 6, 7, 6, 5, 4, 5, 4, ...
 
 The total is always positive, and in fact a given cumulative total k occurs
 precisely k times.  For example the three occurrences of 3 shown above are
 all the places 3 occurs.
+
+This GRS cumulative arises as in the alternate paper folding curve as the
+coordinate sum X+Y.  The way k occurs k many times has a geometric
+interpretation as the points on the diagonal X+Y=k of the curve being
+visited a total of k many times.  See
+L<Math::PlanePath::AlternatePaper/dSum>.
 
 =head1 FUNCTIONS
 

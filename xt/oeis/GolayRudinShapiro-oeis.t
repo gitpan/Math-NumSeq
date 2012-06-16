@@ -73,6 +73,36 @@ sub diff_nums {
   return undef;
 }
 
+#------------------------------------------------------------------------------
+# A203531 GRS run lengths
+{
+  my $anum = 'A203531';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  if ($bvalues) {
+    my $seq = Math::NumSeq::GolayRudinShapiro->new;
+    (undef, my $prev) = $seq->next;
+    my $count = 1;
+    while (@got < @$bvalues) {
+      my ($i, $value) = $seq->next;
+      if ($value == $prev) {
+        $count++;
+      } else {
+        push @got, $count;
+        $prev = $value;
+        $count = 1;
+      }
+    }
+
+    if (! numeq_array(\@got, $bvalues)) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        numeq_array(\@got, $bvalues),
+        1, "$anum");
+}
 
 #------------------------------------------------------------------------------
 # A022156 - first differences of A020991 highest occurrence of n in cumulative
@@ -81,15 +111,11 @@ sub diff_nums {
   my $anum = 'A022156';
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
-  if (! $bvalues) {
-    MyTestHelpers::diag ("$anum not available");
-  } else {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
+  if ($bvalues) {
     my $seq = Math::NumSeq::GolayRudinShapiro->new;
     my $cumulative = 0;
     my @count;
-    my $prev = 0;
+    my $prev = 1;
     for (my $n = 1; @got < @$bvalues; ) {
       my ($i, $value) = $seq->next;
       $cumulative += $value;
@@ -121,11 +147,7 @@ sub diff_nums {
   my $anum = 'A020987';
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
-  if (! $bvalues) {
-    MyTestHelpers::diag ("$anum not available");
-  } else {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
+  if ($bvalues) {
     my $seq = Math::NumSeq::GolayRudinShapiro->new;
     while (@got < @$bvalues) {
       my ($i, $value) = $seq->next;
@@ -148,15 +170,36 @@ sub diff_nums {
   my $anum = 'A022155';
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
-  if (! $bvalues) {
-    MyTestHelpers::diag ("$anum not available");
-  } else {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
+  if ($bvalues) {
     my $seq = Math::NumSeq::GolayRudinShapiro->new;
     while (@got < @$bvalues) {
       my ($i, $value) = $seq->next;
       if ($value == -1) {
+        push @got, $i;
+      }
+    }
+    if (! numeq_array(\@got, $bvalues)) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        numeq_array(\@got, $bvalues),
+        1, "$anum - positions of -1");
+}
+
+#------------------------------------------------------------------------------
+# A203463 - positions of 1
+
+{
+  my $anum = 'A203463';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  if ($bvalues) {
+    my $seq = Math::NumSeq::GolayRudinShapiro->new;
+    while (@got < @$bvalues) {
+      my ($i, $value) = $seq->next;
+      if ($value == 1) {
         push @got, $i;
       }
     }
@@ -178,11 +221,7 @@ sub diff_nums {
   my $anum = 'A020986';
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
-  if (! $bvalues) {
-    MyTestHelpers::diag ("$anum not available");
-  } else {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
+  if ($bvalues) {
     my $seq = Math::NumSeq::GolayRudinShapiro->new;
     my $cumulative = 0;
     while (@got < @$bvalues) {
@@ -208,12 +247,6 @@ sub diff_nums {
 {
   my $anum = 'A020990';
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-  } else {
-    MyTestHelpers::diag ("$anum not available");
-  }
-
   {
     my @got;
     if ($bvalues) {
@@ -269,11 +302,7 @@ sub diff_nums {
   my $anum = 'A020991';
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
-  if (! $bvalues) {
-    MyTestHelpers::diag ("$anum not available");
-  } else {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
+  if ($bvalues) {
     my $seq = Math::NumSeq::GolayRudinShapiro->new;
     my $cumulative = 0;
     my @count;
@@ -306,11 +335,7 @@ sub diff_nums {
   my $anum = 'A093573';
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
-  if (! $bvalues) {
-    MyTestHelpers::diag ("$anum not available");
-  } else {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
+  if ($bvalues) {
     my $seq = Math::NumSeq::GolayRudinShapiro->new;
     my $cumulative = 0;
     my @triangle;

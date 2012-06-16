@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 3;
+plan tests => 8;
 
 use lib 't','xt';
 use MyTestHelpers;
@@ -66,19 +66,77 @@ sub diff_nums {
 
 
 #------------------------------------------------------------------------------
+# A029735 - cubes are hex palindromes
+
+{
+  my $anum = 'A029735';
+
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum,
+                                                      max_value => 10000);
+  my @got;
+  my $diff;
+  if ($bvalues) {
+    require Math::NumSeq::Cubes;
+    my $cubeseq = Math::NumSeq::Cubes->new;
+    my $palseq = Math::NumSeq::Palindromes->new (radix => 16);
+    while (@got < @$bvalues) {
+      my ($i, $value) = $cubeseq->next;
+      if ($palseq->pred($value)) {
+        push @got, $i;
+      }
+    }
+    $diff = diff_nums (\@got, $bvalues);
+    if ($diff) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        $diff, undef,
+        "$anum");
+}
+
+#------------------------------------------------------------------------------
+# A029736 - hex palindrome cubes
+
+{
+  my $anum = 'A029736';
+
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum,
+                                                      max_value => 10000**3);
+  my @got;
+  my $diff;
+  if ($bvalues) {
+    require Math::NumSeq::Cubes;
+    my $cubeseq = Math::NumSeq::Cubes->new;
+    my $palseq = Math::NumSeq::Palindromes->new (radix => 16);
+    while (@got < @$bvalues) {
+      my ($i, $value) = $cubeseq->next;
+      if ($palseq->pred($value)) {
+        push @got, $value;
+      }
+    }
+    $diff = diff_nums (\@got, $bvalues);
+    if ($diff) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        $diff, undef,
+        "$anum");
+}
+
+#------------------------------------------------------------------------------
 # A029731 - palindromes in both decimal and hexadecimal
 
 {
   my $anum = 'A029731';
 
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values ($anum);
   my @got;
   my $diff;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-    # @$bvalues = grep {$_ < 0xFFFF_FFFF} @$bvalues;
-    # MyTestHelpers::diag ("  shorten to ",scalar(@$bvalues)," values");
-
     my $dec = Math::NumSeq::Palindromes->new;
     my $hex = Math::NumSeq::Palindromes->new (radix => 16);
 
@@ -93,8 +151,6 @@ sub diff_nums {
       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
       MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         $diff, undef,
@@ -112,7 +168,7 @@ sub diff_nums {
   my $diff;
   if ($bvalues) {
     my $seq = Math::NumSeq::Palindromes->new (radix => 16);
-    for (my $n = 1; @got < @$bvalues; $n++) {
+    for (my $n = 0; @got < @$bvalues; $n++) {
       if ($seq->pred($n*$n)) {
         push @got, $n;
       }
@@ -139,65 +195,10 @@ sub diff_nums {
   my $diff;
   if ($bvalues) {
     my $seq = Math::NumSeq::Palindromes->new (radix => 16);
-    for (my $n = 1; @got < @$bvalues; $n++) {
+    for (my $n = 0; @got < @$bvalues; $n++) {
       my $square = $n*$n;
       if ($seq->pred($square)) {
         push @got, $square;
-      }
-    }
-    $diff = diff_nums (\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum");
-}
-
-#------------------------------------------------------------------------------
-# A029735 - cubes are hex palindromes
-
-{
-  my $anum = 'A029735';
-
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my @got;
-  my $diff;
-  if ($bvalues) {
-    my $seq = Math::NumSeq::Palindromes->new (radix => 16);
-    for (my $n = 1; @got < @$bvalues; $n++) {
-      if ($seq->pred($n*$n*$n)) {
-        push @got, $n;
-      }
-    }
-    $diff = diff_nums (\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum");
-}
-
-#------------------------------------------------------------------------------
-# A029736 - hex palindrome cubes
-
-{
-  my $anum = 'A029736';
-
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my @got;
-  my $diff;
-  if ($bvalues) {
-    my $seq = Math::NumSeq::Palindromes->new (radix => 16);
-    for (my $n = 1; @got < @$bvalues; $n++) {
-      my $cube = $n*$n*$n;
-      if ($seq->pred($cube)) {
-        push @got, $cube;
       }
     }
     $diff = diff_nums (\@got, $bvalues);
@@ -221,8 +222,6 @@ sub diff_nums {
   my @got;
   my $diff;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
     my $palindromes = Math::NumSeq::Palindromes->new;
     my $count = 0;
     push @got, 0;  # starting n=0 not considered a palindrome
@@ -235,8 +234,6 @@ sub diff_nums {
       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
       MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         $diff, undef,
@@ -250,14 +247,12 @@ sub diff_nums {
 {
   my $anum = 'A002385';
 
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values
+    ($anum,
+     max_value => 0xFFFF_FFFF);
   my @got;
   my $diff;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-    @$bvalues = grep {$_ < 0xFFFF_FFFF} @$bvalues;
-    MyTestHelpers::diag ("  shorten to ",scalar(@$bvalues)," values");
-
     my $palindromes = Math::NumSeq::Palindromes->new;
     require Math::NumSeq::Primes;
     my $primes  = Math::NumSeq::Primes->new;
@@ -280,8 +275,6 @@ sub diff_nums {
       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
       MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         $diff, undef,
@@ -294,14 +287,12 @@ sub diff_nums {
 {
   my $anum = 'A029732';
 
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values
+    ($anum,
+     max_value => 0xFFFF_FFFF);
   my @got;
   my $diff;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-    # @$bvalues = grep {$_ < 0xFFFF_FFFF} @$bvalues;
-    # MyTestHelpers::diag ("  shorten to ",scalar(@$bvalues)," values");
-
     my $palindromes = Math::NumSeq::Palindromes->new (radix => 16);
     require Math::NumSeq::Primes;
     my $primes  = Math::NumSeq::Primes->new;
@@ -324,8 +315,6 @@ sub diff_nums {
       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
       MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         $diff, undef,

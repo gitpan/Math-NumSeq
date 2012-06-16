@@ -22,7 +22,7 @@ use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 use Math::NumSeq::Primes;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 42;
+$VERSION = 43;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -98,6 +98,7 @@ use constant parameter_info_array =>
 #    A129472 4+ with largest factor of p+1 not in 3+
 #
 my %oeis_anum = ('+' => { 'primes' => 'A126433', # class+ of primes
+                          'all'    => 'A078442',
                         },
                  '-' => { 'primes' => 'A126805', # class- of primes
                         });

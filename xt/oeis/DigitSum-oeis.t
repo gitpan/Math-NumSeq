@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 2;
+plan tests => 5;
 
 
 use lib 't','xt';
@@ -58,11 +58,9 @@ sub numeq_array {
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
     my $seq = Math::NumSeq::DigitSum->new;
     for (my $n = 0; @got < @$bvalues; $n++) {
-      my ($i, $value) = $sumseq->next;
+      my ($i, $value) = $seq->next;
       if (index($i,$value) >= 0) {
         push @got, $i;
       }
@@ -71,8 +69,6 @@ sub numeq_array {
       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..5]));
       MyTestHelpers::diag ("got:     ",join(',',@got[0..5]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         numeq_array(\@got, $bvalues),
@@ -84,12 +80,11 @@ sub numeq_array {
 # A180160 - sum digits mod num digits
 
 {
-  my $anum = 'A179083';
+  my $anum = 'A180160';
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
+    require Math::NumSeq::DigitLength;
     my $sumseq = Math::NumSeq::DigitSum->new;
     my $lenseq = Math::NumSeq::DigitLength->new;
     for (my $n = 0; @got < @$bvalues; $n++) {
@@ -101,8 +96,6 @@ sub numeq_array {
       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..5]));
       MyTestHelpers::diag ("got:     ",join(',',@got[0..5]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         numeq_array(\@got, $bvalues),
@@ -118,8 +111,6 @@ sub numeq_array {
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
     my $seq  = Math::NumSeq::DigitSum->new;
     for (my $n = 0; @got < @$bvalues; $n++) {
       my ($i, $value) = $seq->next;
@@ -131,8 +122,6 @@ sub numeq_array {
       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..5]));
       MyTestHelpers::diag ("got:     ",join(',',@got[0..5]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         numeq_array(\@got, $bvalues),
@@ -150,8 +139,6 @@ sub numeq_array {
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
     my $seq  = Math::NumSeq::DigitSum->new (radix => 2);
     for (my $n = 0; @got < @$bvalues; $n++) {
       my $total = 0;
@@ -165,8 +152,6 @@ sub numeq_array {
       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..5]));
       MyTestHelpers::diag ("got:     ",join(',',@got[0..5]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         numeq_array(\@got, $bvalues),
@@ -179,12 +164,11 @@ sub numeq_array {
 
 {
   my $anum = 'A167403';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum,
+                                                      # shorten searching
+                                                      max_count => 5);
   my @got;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-    $#$bvalues = 5; # shorten
-
     my $seq  = Math::NumSeq::DigitSum->new (radix => 10);
     for (my $exp = 1; @got < @$bvalues; $exp++) {
       my $count = 0;
@@ -199,8 +183,6 @@ sub numeq_array {
       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..5]));
       MyTestHelpers::diag ("got:     ",join(',',@got[0..5]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         numeq_array(\@got, $bvalues),

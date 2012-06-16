@@ -55,6 +55,8 @@ WriteMakefile
      { homepage => 'http://user42.tuxfamily.org/math-numseq/index.html',
        license  => 'http://www.gnu.org/licenses/gpl.html',
      },
+     no_index => { directory=>['devel'] },
+
      recommends =>
      { 'Math::Prime::XS' => '0.26', # v.26 for faster is_prime()
      },

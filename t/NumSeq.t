@@ -134,6 +134,19 @@ foreach my $elem
    #   { cbrt => 3 },
    # ],
    
+   # [ 'Math::NumSeq::PrimesDigits',
+   #   [ 2, 3, 5, 7, 1, 1, 1, 3, 1, 7, 1, 9, 2, 3, 2, 9, ],
+   # ],
+   # [ 'Math::NumSeq::PrimesDigits',
+   #   [ 2, 3, 5, 7, 1, 1, 3, 1, 7, 1, 9, 1, 3, 2, 9, 2, ],
+   #   { order => 'reverse' },
+   # ],
+   # [ 'Math::NumSeq::PrimesDigits',
+   #   [ 2, 3, 5, 7, 1, 1, 1, 3, 1, 7, 1, 9, 2, 3, 2, 9,
+   #     1, 3, 3, 7, 1, 4, 3, 4, 4, 7, 3, 5, ],
+   #   { order => 'sorted' },
+   # ],
+   
    [ 'Math::NumSeq::DigitProductSteps',
      [ 0,0,0,0,0, 0,0,0,0,0,   # i=0 to 9
        1,1,1,1,1, 1,1,1,1,1,   # i=10 to 19
@@ -144,10 +157,10 @@ foreach my $elem
      [ 0,1,2,3,4, 5,6,7,8,9,   # i=0 to 9
        0,1,2,3,4, 5,6,7,8,9,   # i=10 to 19
        0,2,4,6,8, 0,2,4,6,8,   # i=20 to 29
-       ],
+     ],
      { values_type => 'root' },
    ],
-
+   
    [ 'Math::NumSeq::MaxDigitCount',
      [ 0,   # i=1 no zeros ever
        1,   #   2 = 10 binary

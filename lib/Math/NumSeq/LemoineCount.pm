@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 42;
+$VERSION = 43;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
@@ -164,6 +164,7 @@ sub ith {
   unless ($i >= 0 && $i <= 0xFF_FFFF) {
     return undef;
   }
+  $i = "$i"; # numize any Math::BigInt for speed
 
   my $count = 0;
   my @primes = (($self->{'one_as_prime'} ? (1) : ()),

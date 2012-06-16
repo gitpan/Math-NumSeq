@@ -18,12 +18,16 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
+
+# ENHANCE-ME: check the factorization, or a least a few smallish 4n+3 primes
+
+
 package Math::NumSeq::SumTwoSquares;
 use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 42;
+$VERSION = 43;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -71,6 +75,7 @@ sub values_min {
   }
 }
 
+#------------------------------------------------------------------------------
 # cf A024507 x,y>0, x==y
 #    A024509 x^2+y^2 with repetitions for different ways each can occur
 #    A025284 x^2+y^2 occurring in exactly one way
@@ -97,6 +102,8 @@ sub oeis_anum {
     }
   }
 }
+
+#------------------------------------------------------------------------------
 
 sub rewind {
   my ($self) = @_;
@@ -168,7 +175,6 @@ sub next {
   return ($self->{'i'}++, $found_hypot);
 }
 
-# ENHANCE-ME: check the factorization, or a least a few smallish 4n+3 primes
 sub pred {
   my ($self, $value) = @_;
   if (_is_infinite($value) || $value != int($value)) {
@@ -196,7 +202,3 @@ sub pred {
 
 1;
 __END__
-
-# Local variables:
-# compile-command: "math-image --values=SumTwoSquares"
-# End:

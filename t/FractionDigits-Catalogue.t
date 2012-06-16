@@ -35,7 +35,7 @@ use Math::NumSeq::OEIS::Catalogue::Plugin::FractionDigits;
 # VERSION
 
 {
-  my $want_version = 42;
+  my $want_version = 43;
   ok ($Math::NumSeq::OEIS::Catalogue::Plugin::FractionDigits::VERSION,
       $want_version,
       'VERSION variable');

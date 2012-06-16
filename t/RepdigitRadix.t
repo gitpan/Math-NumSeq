@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 1514;
+plan tests => 1515;
 
 use lib 't';
 use MyTestHelpers;
@@ -36,7 +36,7 @@ use Math::NumSeq::RepdigitRadix;
 # VERSION
 
 {
-  my $want_version = 42;
+  my $want_version = 43;
   ok ($Math::NumSeq::RepdigitRadix::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::RepdigitRadix->VERSION,  $want_version,
@@ -112,6 +112,17 @@ sub is_a_repdigit {
     my $ith_radix = $seq->ith($i);
     ok ($radix, $ith_radix, "ith($i) value");
   }
+}
+
+#------------------------------------------------------------------------------
+# ith() on BigInt
+
+{
+  my $seq = Math::NumSeq::RepdigitRadix->new;
+  my $small = 123;
+  require Math::BigInt;
+  my $big = Math::BigInt->new(123);
+  ok ($seq->ith($big), $seq->ith($small));
 }
 
 exit 0;

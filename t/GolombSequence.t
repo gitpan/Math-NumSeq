@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,13 +20,13 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 33;
+plan tests => 16;
 
 use lib 't';
 use MyTestHelpers;
 MyTestHelpers::nowarnings();
 
-use Math::NumSeq::DigitProduct;
+use Math::NumSeq::GolombSequence;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -36,16 +36,16 @@ use Math::NumSeq::DigitProduct;
 
 {
   my $want_version = 43;
-  ok ($Math::NumSeq::DigitProduct::VERSION, $want_version,
+  ok ($Math::NumSeq::GolombSequence::VERSION, $want_version,
       'VERSION variable');
-  ok (Math::NumSeq::DigitProduct->VERSION,  $want_version,
+  ok (Math::NumSeq::GolombSequence->VERSION,  $want_version,
       'VERSION class method');
 
-  ok (eval { Math::NumSeq::DigitProduct->VERSION($want_version); 1 },
+  ok (eval { Math::NumSeq::GolombSequence->VERSION($want_version); 1 },
       1,
       "VERSION class check $want_version");
   my $check_version = $want_version + 1000;
-  ok (! eval { Math::NumSeq::DigitProduct->VERSION($check_version); 1 },
+  ok (! eval { Math::NumSeq::GolombSequence->VERSION($check_version); 1 },
       1,
       "VERSION class check $check_version");
 }
@@ -55,58 +55,50 @@ use Math::NumSeq::DigitProduct;
 # characteristic()
 
 {
-  my $seq = Math::NumSeq::DigitProduct->new;
+  my $seq = Math::NumSeq::GolombSequence->new;
   ok ($seq->characteristic('smaller'), 1, 'characteristic(smaller)');
   ok ($seq->characteristic('integer'), 1, 'characteristic(integer)');
 
   ok (! $seq->characteristic('increasing'), 1,
-      'characteristic(increasing)');
-  ok (! $seq->characteristic('non_decreasing'), 1,
-      'characteristic(non_decreasing)');
+      'characteristic(increasing) -- no');
+  ok ($seq->characteristic('non_decreasing'), 1,
+      'characteristic(non_decreasing) -- yes');
   ok ($seq->characteristic('increasing_from_i'), undef,
       'characteristic(increasing_from_i)');
-  ok ($seq->characteristic('non_decreasing_from_i'), undef,
+  ok ($seq->characteristic('non_decreasing_from_i'), $seq->i_start,
       'characteristic(non_decreasing_from_i)');
 }
 
 
 #------------------------------------------------------------------------------
-# pred()
+# run lengths is seq
 
 {
-  foreach my $elem ([2, -1,  0],
-                    [2, 0,  1],
-                    [2, 1,  1],
-                    [2, 2,  0],
-
-                    [3, -1,  0],
-                    [3, 0,  1],
-                    [3, 1,  1],
-                    [3, 2,  1],
-                    [3, 3,  0],
-                    [3, 4,  1],
-                    [3, 5,  0],
-                    [3, 6,  0],
-                    [3, 7,  0],
-                    [3, 8,  1],
-
-                    [10, -1,  0],
-                    [10, 0,  1],
-                    [10, 1,  1],
-                    [10, 2,  1],
-                    [10, 9,  1],
-                    [10, 10,  1],
-                    [10, 11,  0],
-                    [10, 12,  1],
-                    [10, 4*9, 1],
-                   ) {
-    my ($radix, $value, $want) = @$elem;
-    my $seq = Math::NumSeq::DigitProduct->new (radix => $radix);
-    my $got = $seq->pred($value) ? 1 : 0;
-    ok ($got, $want, "pred() radix=$radix value=$value got $got want $want");
+  my $choices = Math::NumSeq::GolombSequence
+    ->parameter_info_hash->{'using_values'}->{'choices'};
+  foreach my $using_values (@$choices) {
+    my $seq = Math::NumSeq::GolombSequence->new (using_values => $using_values);
+    my $run = Math::NumSeq::GolombSequence->new (using_values => $using_values);
+    my ($i,$prev) = $seq->next;
+    my $count = 1;
+    foreach (1 .. 1000) {
+      ($i,my $value) = $seq->next;
+      if ($value == $prev) {
+        $count++;
+      } else {
+        ($i, my $want_count) = $run->next;
+        if ($count != $want_count) {
+          die "$using_values got count=$count want=$want_count";
+        }
+        $prev = $value;
+        $count = 1;
+      }
+    }
+    ok (1);
   }
 }
 
+#------------------------------------------------------------------------------
 
 exit 0;
 

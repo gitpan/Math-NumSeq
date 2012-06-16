@@ -25,7 +25,7 @@ use strict;
 use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 42;
+$VERSION = 43;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
@@ -56,13 +56,14 @@ use constant parameter_info_array =>
    },
   ];
 
-# cf A014092 - not P+Q, ie. count=0, starting from value=1
-#    A014091 - some P+Q, ie. count!=0
-#    A067187 - one way P+Q, ie. count=1
-#    A067188 - two ways, count=2
-#    A067189 - three ways
-#    A067190 - four ways
-#    A067191 - five ways
+#------------------------------------------------------------------------------
+# cf A014092 - n not P+Q, ie. count=0, starting from value=1
+#    A014091 - n some P+Q, ie. count!=0
+#    A067187 - n one way P+Q, ie. count=1
+#    A067188 - n two ways, count=2
+#    A067189 - n three ways
+#    A067190 - n four ways
+#    A067191 - n five ways
 #    A073610 - num primes n-p where p prime, so counting two ways
 #    A045917 - 2n, ordered sum
 #    A185297 - sum of the p's p+q=2n
@@ -83,6 +84,8 @@ sub oeis_anum {
   my ($self) = @_;
   return $oeis_anum{$self->{'on_values'}};
 }
+
+#------------------------------------------------------------------------------
 
 sub rewind {
   my ($self) = @_;
@@ -159,6 +162,8 @@ sub ith {
   unless ($i >= 0 && $i <= 0xFF_FFFF) {
     return undef;
   }
+  $i = "$i"; # numize any Math::BigInt for speed
+
   if ($i & 1) {
     ### odd, check prime: $i-2
     return (is_prime($i-2) ? 1 : 0);  # odd only i=2+Q for prime Q

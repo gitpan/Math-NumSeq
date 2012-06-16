@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use Test;
-plan tests => 1;
+plan tests => 2;
 
 use lib 't','xt';
 use MyTestHelpers;
@@ -61,11 +61,37 @@ sub diff_nums {
 }
 
 #------------------------------------------------------------------------------
+# A095111 - fibbinary bit count parity, flipped 0 <-> 1
+
+{
+  my $anum = 'A095111';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my $diff;
+  if ($bvalues) {
+    my $seq = Math::NumSeq::FibbinaryBitCount->new;
+    my @got;
+    while (@got < @$bvalues) {
+      my ($i, $value) = $seq->next;
+      push @got, ($value % 2) ^ 1;
+    }
+    $diff = diff_nums(\@got, $bvalues);
+    if ($diff) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        $diff, undef,
+        "$anum - fibbinary bit count parity");
+}
+
+#------------------------------------------------------------------------------
 # A027941 - new high bit count, being Fibonacci(2i+1)-1
 
 {
   my $anum = 'A027941';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum,
+                                                      max_value => 100000);
   my $diff;
   if ($bvalues) {
     my $seq = Math::NumSeq::FibbinaryBitCount->new;
@@ -86,7 +112,7 @@ sub diff_nums {
   }
   skip (! $bvalues,
         $diff, undef,
-        "$anum - trajectory of 679");
+        "$anum - new high bit count");
 }
 
 #------------------------------------------------------------------------------

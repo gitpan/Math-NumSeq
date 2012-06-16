@@ -18,11 +18,10 @@
 package Math::NumSeq::PrimesDigits;
 use 5.004;
 use strict;
-use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 42;
+$VERSION = 43;
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
 
@@ -58,13 +57,14 @@ use constant parameter_info_array =>
 
 #------------------------------------------------------------------------------
 
-my %oeis_anum;
-$oeis_anum{'forward'}->[10] = 'A033308';
-# OEIS-Catalogue: A033308
-
+my %oeis_anum = (
+                 # but A033308 starts OFFSET=0 as decimal of a constant
+                 # 'forward,10' => 'A033308'
+                 # # OEIS-Catalogue: A033308
+                );
 sub oeis_anum {
   my ($self) = @_;
-  return $oeis_anum{$self->{'order'}}->[$self->{'radix'}];
+  return $oeis_anum{"$self->{order},$self->{radix}"};
 }
 
 #------------------------------------------------------------------------------
@@ -119,20 +119,36 @@ Math::NumSeq::PrimesDigits -- digits of the primes
 
 This is the digits of the primes,
 
-    # starting i=1
-    ...
+    # starting i=1 (for prime=2)
+    2, 3, 5, 7, 1, 1, 1, 3, 1, 7, 1, 9, 2, 3, 2, 9, ...
+
+                \--/  \--/  \--/  \--/  \--/  \--/
+                 11    13    17    19    23    29
 
 =head2 Order
 
 The optional C<order> parameter (a string) can control the order of the
 primes of each integer,
 
-    "forward"     the default
-    "reverse"
+    order => "forward"     the default
+    order => "reverse"
+    order => "sorted"
 
-For example reverse rearranges the values to
+"reverse" rearranges the values to reverse the digits within each prime, so
+going from least significant digit.  For example 13 appears as 3,1.
 
-    2, 3, 2, 2, 5, 3, 2, 7, 2, 2, 2, 3, 3, 5, 2, 11, ...
+    2, 3, 5, 7, 1, 1, 3, 1, 7, 1, 9, 1, 3, 2, 9, 2, ...
+
+                \--/  \--/  \--/  \--/  \--/  \--/
+                 11    13    17    19    23    29
+
+"sorted" rearranges the values to sort the digits within each prime into
+ascending order.
+
+    2, ... 2, 9, 1, 3, 3, 7, 1, 4, 3, 4, 4, 7, 3, 5, ...
+
+           \--/  \--/  \--/  \--/  \--/  \--/  \--/
+            29    31    37    41    43    47    53
 
 =head1 FUNCTIONS
 
@@ -156,6 +172,7 @@ to radix-1.
 =head1 SEE ALSO
 
 L<Math::NumSeq>,
+L<Math::NumSeq::Primes>,
 L<Math::NumSeq::AllDigits>
 
 =head1 HOME PAGE

@@ -22,7 +22,7 @@ use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 use Math::NumSeq::Primes;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 42;
+$VERSION = 43;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');

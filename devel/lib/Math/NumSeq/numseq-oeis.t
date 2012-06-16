@@ -106,6 +106,7 @@ sub check_class {
   # return unless $class =~ /PrimeF/;
   # return unless $class =~ /DigitP/;
   # return unless $class =~ /DigitCount/;
+   return unless $class =~ /PrimeExp/;
   # return unless $class =~ /Alpha/;
   # return unless $class =~ /Spiro/;
   # return unless $class =~ /Cbrt/;
@@ -117,7 +118,7 @@ sub check_class {
   # return unless $class =~ /DigitP/;
   # return unless $class =~ /Kap/;
   # return unless $class =~ /Pier/;
-   return unless $class =~ /LongF/;
+  # return unless $class =~ /LongF/;
   # return unless $class =~ /Erdos/;
   #  return unless $anum eq 'A163540';
 
@@ -148,10 +149,6 @@ sub check_class {
 
   } elsif ($anum eq 'A006886') {  # Kaprekar
     $max_value = 100_000;
-
-  } elsif ($anum eq 'A016037') {
-    # alpha length steps doubtful length 10s from 43 on
-    $max_count = 42;
 
   } elsif ($anum eq 'A005384') {
     # Sophie Germain / Cunningham, shorten for now

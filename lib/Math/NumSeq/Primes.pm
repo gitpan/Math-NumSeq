@@ -22,7 +22,7 @@ use POSIX ();
 use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 42;
+$VERSION = 43;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -243,14 +243,20 @@ checked, in the interests of not going into a near-infinite loop.
 
 =item C<$i = $seq-E<gt>value_to_i_estimate($value)>
 
-Return an estimate of the i corresponding to C<$value>.  Currently this is
-the well-known asymptotic
-
-    i ~= value/log(value)
-
-C<$value> can be any size, it's not limited as in C<pred()>.
+Return an estimate of the i corresponding to C<$value>.  C<$value> can be
+any size, it's not limited as in C<pred()>.  See L</Value to i Estimate>
+below.
 
 =back
+
+=head1 FORMULAS
+
+=head2 Value to i Estimate
+
+In the current code the number of count of primes up to value is estimated
+by the well-known asymptotic
+
+    i ~= value/log(value)
 
 =head1 SEE ALSO
 

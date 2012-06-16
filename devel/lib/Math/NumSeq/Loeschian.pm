@@ -23,14 +23,13 @@
 package Math::NumSeq::Loeschian;
 use 5.004;
 use strict;
+use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 42;
+$VERSION = 43;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
-
-use Math::Factor::XS 'prime_factors';
 
 # uncomment this to run the ### lines
 #use Smart::Comments;

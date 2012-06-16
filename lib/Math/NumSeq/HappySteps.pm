@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 42;
+$VERSION = 43;
 
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IterateIth;
@@ -184,7 +184,3 @@ You should have received a copy of the GNU General Public License along with
 Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 =cut
-
-# Local variables:
-# compile-command: "math-image --values=HappySteps"
-# End:

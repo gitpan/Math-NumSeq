@@ -32,7 +32,7 @@ use strict;
 use List::Util qw(min max sum reduce);
 
 use vars '$VERSION', '@ISA';
-$VERSION = 42;
+$VERSION = 43;
 
 use Math::NumSeq::Base::IterateIth;
 use Math::NumSeq::Base::Digits;
@@ -123,6 +123,7 @@ my @oeis_anum;
 #    A037897 base 3 maxdigit-mindigit
 #    A060420 minimum digit of the primes
 #    A077648 high digit of the primes
+#    A044959 numbers with a distinct mode, ie. unique most populous
 
 $oeis_anum[0]->{'low'}->{'unrounded'}->[10] = 'A010879';  # 0 to 9 rep
 # OEIS-Catalogue: A010879 extract_type=low

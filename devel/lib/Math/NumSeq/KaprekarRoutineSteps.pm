@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 42;
+$VERSION = 43;
 use Math::NumSeq;
 use List::Util 'min';
 use Math::NumSeq::Base::IterateIth;
@@ -52,6 +52,11 @@ use constant values_min => 0;
 # A164993 - base-3 one step
 # A164994 - base-3 one step / 2
 # A164995 - base-3 pre-periodic length
+#
+# A164727 - cycles 5
+# A164731 - number of cycles
+# A164732 - cycles
+# A164727 - cycles 5
 
 my @oeis_anum;
 # $oeis_anum[]

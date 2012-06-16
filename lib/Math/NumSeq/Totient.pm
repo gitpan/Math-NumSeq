@@ -24,7 +24,7 @@ use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 use Math::Factor::XS 0.39 'factors', 'prime_factors';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 42;
+$VERSION = 43;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -149,6 +149,7 @@ sub pred {
   unless ($value <= 0xFFFF_FFFF) {
     return undef;
   }
+  $value = "$value"; # numize any Math::BigInt for factors()
   if (_pred_f($value,$value)) {
     return 1;
   }

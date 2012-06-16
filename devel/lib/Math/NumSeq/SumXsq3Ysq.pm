@@ -15,6 +15,10 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
+
+# FIXME: These are values with at least one prime factor 3k+1 or some such.
+
+
 package Math::NumSeq::SumXsq3Ysq;
 use 5.004;
 use strict;
@@ -23,7 +27,7 @@ use List::Util 'max';
 use List::MoreUtils;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 42;
+$VERSION = 43;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -36,16 +40,42 @@ use constant description => Math::NumSeq::__('Loeschian numbers x^2+3*y^2 for al
 use constant characteristic_increasing => 2;
 use constant i_start => 1;
 
+#------------------------------------------------------------------------------
 # cf A003136 - Loeschian x^2+3*y^2 with x>=0,y>=0 and opposite odd/even
 #    A158937 - all x^2+3*y^2 with repetitions x>=0,y>=0
 #    A092573 - number of solutions to x^2+3*y^2==n
 #    A092575 - number of solutions to x^2+3*y^2==n with gcd(x,y)=1
+#
+#    A034017 loeschian primatives x^2+xy+y^2, primes 3k+1 and a factor of 3
+#    A088534 - count x^2+xy+y^2 with 0<=x<=y
+#         0 <= (Y-X)/2
+#         0 <= Y-X
+#         X <= Y
+#         (Y-X)/2 <= (X+Y)/2
+#         Y-X <= X+Y
+#         -X <= X
+#         0 <= 2X
+#         X >= 0
+#         so 0 <= X <= Y octant
+#
+#    A092572 values x^2+3*y^2 for all integer x,y
+#    A092573 count occurrances of x^2+3*y^2
+#    A158937 values x^2+3*y^2 with repetitions
+#
+#    A092574 values x^2+3*y^2 with gcd(x,y)=1
+#    A092575 count occurrances of x^2+3*y^2 with gcd(x,y)=1
+#
+#    A020669 values x^2+5*y^2 for all integer x,y
+#    A091727 norms of ideals in sqrt(-5)
+#    A091728 num prime ideals of norm n in sqrt(-5)
 #
 use constant oeis_anum => 'A092572'; # all x^2+3*y^2 x>=1,y>=1
 
 #          4, 7,    12, 13, 16, 19, 21, 28,         31, 36, 37, 39, 43, 48, 49, 52, 57, 61,     
 # 0, 1, 3, 4, 7, 9, 12, 13, 16, 19, 21, 25, 27, 28, 31, 36, 37, 39, 43,     
 
+
+#------------------------------------------------------------------------------
 sub rewind {
   my ($self) = @_;
   ### SumXsq3Ysq rewind()

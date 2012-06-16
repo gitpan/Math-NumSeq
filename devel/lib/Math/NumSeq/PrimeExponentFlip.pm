@@ -1,0 +1,215 @@
+# Copyright 2012 Kevin Ryde
+
+# This file is part of Math-NumSeq.
+#
+# Math-NumSeq is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by the
+# Free Software Foundation; either version 3, or (at your option) any later
+# version.
+#
+# Math-NumSeq is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
+
+package Math::NumSeq::PrimeExponentFlip;
+use 5.004;
+use strict;
+use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
+
+use vars '$VERSION', '@ISA';
+$VERSION = 43;
+
+use Math::NumSeq;
+use Math::NumSeq::Base::IterateIth;
+@ISA = ('Math::NumSeq::Base::IterateIth',
+        'Math::NumSeq');
+*_is_infinite = \&Math::NumSeq::_is_infinite;
+*_to_bigint = \&Math::NumSeq::_to_bigint;
+
+# uncomment this to run the ### lines
+#use Smart::Comments;
+
+use constant name => Math::NumSeq::__('Prime Exponent Flip');
+use constant description => Math::NumSeq::__('Flip each prime and its exponent, so for example 3^8 -> 8^3');
+use constant default_i_start => 1;
+use constant characteristic_increasing => 0;
+use constant characteristic_non_decreasing => 0;
+use constant characteristic_integer => 1;
+use constant characteristic_smaller => 1;
+use constant values_min => 1; # at i=1
+
+#------------------------------------------------------------------------------
+# A005117 squarefrees have all exponents 1 so value=1
+# A013929 non-squarefrees have some exponent>1 so value>1
+#
+use constant oeis_anum => 'A008477';
+
+#------------------------------------------------------------------------------
+
+use constant _UV_LIMIT => 31**2; # is value=2**31
+
+sub ith {
+  my ($self, $i) = @_;
+  ### PrimeExponentFlip ith(): $i
+
+  if (_is_infinite($i)) {
+    return $i;
+  }
+  if ($i > 0xFFFF_FFFF) {
+    ### too big ...
+    return undef;
+  }
+
+  my @primes = prime_factors($i)
+    or return $i;  # 0,1 unchanged
+
+  my $value = 1;
+  my $log = 0;
+
+  for (;;) {
+    my $p = shift @primes || last;
+    my $count = 1;
+    while (@primes && $primes[0] == $p) {
+      shift @primes;
+      $count++;
+    }
+    $log += $p*log($count);
+    if ($log > 31) {
+      $count = _to_bigint($count);
+    }
+    $value *= $count ** $p;
+  }
+  return $value;
+}
+
+sub pred {
+  my ($self, $value) = @_;
+  ### PrimeExponentFlip pred(): $value
+
+  # ! is_square_free()
+
+  unless ($value >= 0 && $value <= 0xFFFF_FFFF) {
+    return undef;
+  }
+  if ($value != int($value)) {
+    return 0;
+  }
+  $value = "$value"; # numize Math::BigInt for speed
+
+  if ($value < 2) {
+    return 1;
+  }
+
+  my $limit = sqrt($value) + 1;
+
+  for (my $p = 2; $p <= $limit; $p += 2-($p==2)) {
+    next if ($value % $p);
+    ### prime factor: $p
+    $value /= $p;
+
+    if (($value % $p) == 0) {
+      # found a square factor
+      return 1;
+    }
+
+    my $limit = sqrt($value) + 1;
+    ### divided out: "$p, new limit $limit"
+  }
+
+  ### final: $value
+  # $value now either 1 or a prime, no square factor found
+
+  return 0;
+}
+
+1;
+__END__
+
+=for stopwords Ryde Math-NumSeq
+
+=head1 NAME
+
+Math::NumSeq::PrimeExponentFlip -- prime exponent flip
+
+=head1 SYNOPSIS
+
+ use Math::NumSeq::PrimeExponentFlip;
+ my $seq = Math::NumSeq::PrimeExponentFlip->new;
+ my ($i, $value) = $seq->next;
+
+=head1 DESCRIPTION
+
+This is the prime factorization of i with primes and exponents flipped,
+
+    i     = p^e * q^f * ...
+    value = e^p * f^q * ...
+
+which gives
+
+    starting i=1
+    1, 1, 1, 4, 1, 1, 1, 9, 8, 1, 1, 4, 1, 1, 1, 16, 1, 8, 1, 4, ...
+
+For example i=1000=2^3*5^3 becomes value=3^2*3^5=3^7=2187.
+
+Prime i has value=1 since i=p^1 becomes value=1^p=1.  Value=1 occurs
+precisely when i=p*q*r with no repeated prime factor, ie. when i is
+square-free.
+
+The values which occur are also related to square factors.  Since value=e^p
+has prime pE<gt>=2 every e,f,g etc powered up is a square or higher power.
+So the sequence values have a square factor (sometimes called squareful).
+
+=head1 FUNCTIONS
+
+See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
+
+=over 4
+
+=item C<$seq = Math::NumSeq::PrimeExponentFlip-E<gt>new ()>
+
+=item C<$seq = Math::NumSeq::PrimeExponentFlip-E<gt>new (radix =E<gt> $r, to_radix =E<gt> $t)>
+
+Create and return a new sequence object.
+
+=item C<$value = $seq-E<gt>ith($i)>
+
+Return C<$i> as digits of base C<radix> encoded in C<to_radix>.
+
+=item C<$bool = $seq-E<gt>pred($value)>
+
+Return true if C<$value> occurs in the sequence.  As noted above this means
+integer C<$value> with at least one squared prime factor.
+
+=back
+
+=head1 SEE ALSO
+
+L<Math::NumSeq>,
+L<Math::NumSeq::PrimeFactorCount>
+
+=head1 HOME PAGE
+
+http://user42.tuxfamily.org/math-numseq/index.html
+
+=head1 LICENSE
+
+Copyright 2012 Kevin Ryde
+
+Math-NumSeq is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+Math-NumSeq is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+more details.
+
+You should have received a copy of the GNU General Public License along with
+Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
+
+=cut

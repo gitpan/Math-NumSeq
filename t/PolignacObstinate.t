@@ -19,7 +19,8 @@
 
 use 5.004;
 use strict;
-use Test::More tests => 7;
+use Test;
+plan tests => 7;
 
 use lib 't';
 use MyTestHelpers;
@@ -34,16 +35,18 @@ use Math::NumSeq::PolignacObstinate;
 # VERSION
 
 {
-  my $want_version = 42;
-  is ($Math::NumSeq::PolignacObstinate::VERSION, $want_version,
+  my $want_version = 43;
+  ok ($Math::NumSeq::PolignacObstinate::VERSION, $want_version,
       'VERSION variable');
-  is (Math::NumSeq::PolignacObstinate->VERSION,  $want_version,
+  ok (Math::NumSeq::PolignacObstinate->VERSION,  $want_version,
       'VERSION class method');
 
   ok (eval { Math::NumSeq::PolignacObstinate->VERSION($want_version); 1 },
+      1,
       "VERSION class check $want_version");
   my $check_version = $want_version + 1000;
   ok (! eval { Math::NumSeq::PolignacObstinate->VERSION($check_version); 1 },
+      1,
       "VERSION class check $check_version");
 }
 
@@ -65,12 +68,12 @@ foreach my $rep (1 .. 3) {
     my $pred = ($seq->pred($value)?1:0);
     my $next = $next[$value] || 0;
     if ($pred != $next) {
-      diag "rep=$rep: value=$value wrong pred=$pred next=$next";
+      MyTestHelpers::diag("rep=$rep: value=$value wrong pred=$pred next=$next");
       $good = 0;
       last;
     }
   }
-  ok ($good, "rep=$rep good");
+  ok ($good, 1, "rep=$rep good");
 }
 
 exit 0;

@@ -24,7 +24,7 @@ use Math::NumSeq;
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 42;
+$VERSION = 43;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');

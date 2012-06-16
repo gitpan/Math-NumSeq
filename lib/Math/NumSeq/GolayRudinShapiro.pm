@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 42;
+$VERSION = 43;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -32,21 +32,27 @@ use Math::NumSeq::Base::IterateIth;
 #use Smart::Comments;
 
 
-# cf A020985 - 1 and -1
-#    A020987 - 0 and 1
-#    A022155 - positions of -1
-#    A014081 - count of 11 bit pairs
-#    A020986 - cumulative 1,-1, always positive
-#    A020990 - cumulative GRS(2n+1), flips sign at odd i
-#    A020991 - highest occurrence of N in the partial sums
-#
 # use constant name => Math::NumSeq::__('Golay-Rudin-Shapiro');
 use constant description => Math::NumSeq::__('Golay/Rudin/Shapiro (-1)^(count adjacent 11 bit pairs), so +1 if even count -1 if odd.');
 use constant values_min => -1;
 use constant values_max => 1;
 use constant characteristic_integer => 1;
 use constant default_i_start => 0;
+
+#------------------------------------------------------------------------------
+# cf A020985 - 1 and -1
+#    A020987 - 0 and 1
+#    A022155 - positions of -1
+#    A203463 - positions of +1
+#    A014081 - count of 11 bit pairs
+#    A020986 - cumulative 1,-1, always positive
+#    A020990 - cumulative GRS(2n+1), flips sign at odd i
+#    A020991 - position of last occurrence of n in the partial sums
+#    A005943 - number of subwords length n
+#
 use constant oeis_anum => 'A020985';  # 1,-1
+
+#------------------------------------------------------------------------------
 
 # ENHANCE-ME: use as_bin() on BigInt when available
 #
@@ -107,24 +113,25 @@ Math::NumSeq::GolayRudinShapiro -- parity of adjacent 11 bit pairs
 =head1 DESCRIPTION
 
 This is the Golay/Rudin/Shapiro sequence of +1 or -1 according to there
-being an even or odd number of adjacent 11 bit pairs in i, starting from i=0
-
-    1, 1, 1, -1, 1, 1, -1, 1, 1, 1, 1, -1, ...
+being an even or odd number of adjacent 11 bit pairs in i.
 
     GRS(i) = (-1) ^ (count 11 bit pairs)
 
+    starting from i=0
+    1, 1, 1, -1, 1, 1, -1, 1, 1, 1, 1, -1, ...
+
 The first -1 is at i=3 which is binary 11 with a single 11 bit pair, then
-i=6 binary 110 likewise -1.  Or for example i=14 is binary 1110 which has
-two adjacent 11 pairs (overlaps count), so value=1.
+i=6 binary 110 likewise -1.  Or later for example i=14 is binary 1110 which
+has two adjacent 11 pairs (overlaps count), so value=1.
 
 The value is also the parity of the number of even-length runs of 1 bits
-in i.  An even length run has an odd number of 11 pairs, so each is a -1 in
-the calculation.  An odd-length run of 1 bits is an even number of 11 pairs
-and so is +1 and has no effect on the result.
+in i.  An even length run has an odd number of 11 pairs, so each of them is
+a -1 in the product.  An odd-length run of 1 bits is an even number of 11
+pairs and so is +1 and has no effect on the result.
 
 Such a parity of even-length 1-bit runs and hence the GRS sequence arises as
 the "dX,dY" change for each segment of the alternate paper folding curve.
-See L<Math::PlanePath::AlternatePaper/X,Y change>.
+See L<Math::PlanePath::AlternatePaper/dX,dY>.
 
 =head1 FUNCTIONS
 

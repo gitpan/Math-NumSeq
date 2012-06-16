@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 42;
+$VERSION = 43;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -44,11 +44,12 @@ use Math::NumSeq::Base::Digits;
 #------------------------------------------------------------------------------
 # cf A002385 - prime palindromes
 #    A029732 - prime palindromes in base 16, written in base 10
-#    A110784 - digits in ascending order
+#    A110784 - palindrom and digits in ascending order
 #    A029731 - palindromes in both decimal and hexadecimal
 #    A029733 - n where n^2 hex palindrome
 #    A029734 - squares which are hex palindromes
-#
+#    A016038 - not palindrome in any base, up to n-2
+
 my @oeis_anum = (
                  # OEIS-Catalogue array begin
                  undef,     # 0
@@ -209,9 +210,12 @@ Math::NumSeq::Palindromes -- palindrome numbers like 15351
 
 =head1 DESCRIPTION
 
-The sequence of palindrome numbers 0 .. 9, 11, 22, ..., 99, 101, 111, 121,
-... 191, 202, etc, which read the same backwards and forwards.  The default
-is decimal or the C<radix> parameter can select another base.
+The palindrome numbers which read the same backwards and forwards.
+
+    0 .. 9, 11, 22, ..., 99, 101, 111, 121, ... 191, 202, ...
+
+The default is decimal or the
+C<radix> parameter can select another base.
 
 =head1 FUNCTIONS
 

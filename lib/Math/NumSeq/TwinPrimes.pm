@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 42;
+$VERSION = 43;
 
 use Math::NumSeq;
 use Math::NumSeq::Primes;
@@ -71,6 +71,8 @@ sub values_min {
 #    A063637 - primes where p+2 is a semiprime
 #
 #    A048598 - cumulative total twin primes
+#    A100923 - characteristic 0,1 according to 6n+/-1 both primes
+#              ie. twin prime 6n-1,6n+1
 #
 my %oeis_anum = (
                  first  => 'A001359',

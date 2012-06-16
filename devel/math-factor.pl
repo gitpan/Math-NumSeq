@@ -28,6 +28,16 @@ use Math::Factor::XS 'factors','matches','prime_factors';
 use Smart::Comments;
 
 {
+  # factors() on Math::BigInt
+  require Math::BigInt;
+  my $small = 123;
+  my $big = Math::BigInt->new(123);
+  print factors($small),"\n";
+  print factors($big),"\n";
+  exit 0;
+}
+
+{
   # 1       1      1  +2
   # 3
   # 5       5

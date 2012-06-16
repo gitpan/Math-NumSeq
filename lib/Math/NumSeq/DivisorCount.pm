@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 42;
+$VERSION = 43;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -57,6 +57,7 @@ sub values_min {
   return 1;       # $values_min{$self->{'divisor_type'}};
 }
 
+#------------------------------------------------------------------------------
 # cf A032741 - 1 <= d < n starting n=0
 #    A147588 - 1 < d < n starting n=1
 #
@@ -69,6 +70,10 @@ sub values_min {
 #    A070824 - proper divisors starting n=2
 #    A002182 - number with new highest number of divisors
 #    A002183 -    that count of divisors
+#
+#    A028422 - count of ways to factorize
+#    A033834 - n with new high count factorizations
+#    A033833 - highly factorable
 #
 sub oeis_anum {
   my ($self) = @_;
@@ -146,6 +151,7 @@ sub ith {
   unless ($i <= 0xFFFF_FFFF) {
     return undef;
   }
+  $i = "$i"; # numize Math::BigInt for speed
 
   my $ret = 1;
   unless ($i % 2) {

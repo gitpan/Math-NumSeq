@@ -50,6 +50,36 @@ sub numeq_array {
 }
 
 
+# No, counts factorizations.
+# #------------------------------------------------------------------------------
+# # A033833 - new high count of divisors
+# 
+# {
+#   my $anum = 'A033833';
+#   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum,
+# max_value => 1000);
+#   my @got;
+#   if ($bvalues) {
+#     my $seq  = Math::NumSeq::DivisorCount->new;
+#     my $max_value = 0;
+#     for (my $i = 1; @got < @$bvalues; $i++) {
+#       my $value = $seq->ith($i);
+#       if ($value > $max_value) {
+#         push @got, $i;
+#         $max_value = $value;
+#       }
+#     }
+#     if (! numeq_array(\@got, $bvalues)) {
+#       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..5]));
+#       MyTestHelpers::diag ("got:     ",join(',',@got[0..5]));
+#     }
+#   }
+#   skip (! $bvalues,
+#         numeq_array(\@got, $bvalues),
+#         1,
+#         "$anum");
+# }
+
 #------------------------------------------------------------------------------
 # A137179 - smallest m with divcount(m)+divcount(m+1) == n
 
@@ -58,9 +88,7 @@ sub numeq_array {
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
-    my $seq  = Math::NumSeq::DivisorCount->new (radix => 2);
+    my $seq  = Math::NumSeq::DivisorCount->new;
   OUTER: for (my $n = 3; @got < @$bvalues; $n++) {
       foreach my $m (1 .. 100000) {
         my $d1 = $seq->ith($m);
@@ -76,8 +104,6 @@ sub numeq_array {
       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..5]));
       MyTestHelpers::diag ("got:     ",join(',',@got[0..5]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         numeq_array(\@got, $bvalues),
@@ -93,9 +119,7 @@ sub numeq_array {
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
-    my $seq  = Math::NumSeq::DivisorCount->new (radix => 2);
+    my $seq  = Math::NumSeq::DivisorCount->new;
     for (my $n = 1; @got < @$bvalues; $n++) {
       push @got, $seq->ith($n) + $seq->ith($n+1);
     }
@@ -103,8 +127,6 @@ sub numeq_array {
       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..5]));
       MyTestHelpers::diag ("got:     ",join(',',@got[0..5]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         numeq_array(\@got, $bvalues),

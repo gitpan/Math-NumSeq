@@ -38,7 +38,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 42;
+$VERSION = 43;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;

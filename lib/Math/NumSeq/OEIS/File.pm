@@ -30,14 +30,14 @@ use Symbol 'gensym';
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 42;
+$VERSION = 43;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_to_bigint = \&Math::NumSeq::_to_bigint;
 
 use vars '$VERSION';
-$VERSION = 42;
+$VERSION = 43;
 
 eval q{use Scalar::Util 'weaken'; 1}
   || eval q{sub weaken { $_[0] = undef }; 1 }
@@ -54,8 +54,10 @@ use Math::NumSeq::OEIS;
 sub description {
   my ($class_or_self) = @_;
   if (ref $class_or_self && defined $class_or_self->{'description'}) {
+    # instance
     return $class_or_self->{'description'};
   } else {
+    # class
     return Math::NumSeq::__('OEIS sequence from file.');
   }
 }
@@ -463,29 +465,21 @@ sub _read_internal {
     $self->{'characteristic'} = \%characteristic;
 
     my $offset;
-    if ($contents =~ /(^|<tt>)%O\s+(\d+)/m) {
+    if ($contents =~ /(^|<tt>)%O\s+(\d+)/im) {
       $offset = $2;
       ### %O line: $offset
     } else {
       $offset = 0;
     }
 
-    my $description;
-    if ($contents =~ m{(^|<tt>)%N (.*?)(<tt>|$)}m) {
-      $description = $2;
-      $description =~ s/\s+/ /g;
-      $description =~ s/<[^>]*?>//sg;  # <foo ...> tags
-      $description =~ s/&lt;/</g;      # unentitize <
-      $description =~ s/&gt;/>/g;      # unentitize >
-      $description =~ s/&amp;/&/g;     # unentitize &
-      $description =~ s/&#(\d+);/chr($1)/ge; # unentitize numeric ' and "
-      _set_description ($self, $description, $filename);
+    if ($contents =~ m{(^|<tt>)%N (.*?)(<tt>|$)}im) {
+      _set_description ($self, $2, $filename);
     } else {
       ### description not matched ...
     }
 
-    _set_characteristics ($self, $description,
-                          $contents =~ /(^|<tt>)%K (.*?)(<tt>|$)/m
+    _set_characteristics ($self,
+                          $contents =~ /(^|<tt>)%K (.*?)(<tt>|$)/im
                           && $2);
 
     # the eishelp1.html says
@@ -495,11 +489,12 @@ sub _read_internal {
     #
     if (! $self->{'array'}) {
       my @samples;
-      while ($contents =~ m{(^|<tt>)%[VWX] (.*?)(</tt>|$)}mg) {
+      # capital %STU etc, but any case <tt>
+      while ($contents =~ m{(^|<[tT][tT]>)%[VWX] (.*?)(</[tT][tT]>|$)}mg) {
         push @samples, $2;
       }
       unless (@samples) {
-        while ($contents =~ m{(^|<tt>)%[STU] (.*?)(</tt>|$)}mg) {
+        while ($contents =~ m{(^|<[tT][tT]>)%[STU] (.*?)(</[tT][tT]>|$)}mg) {
           push @samples, $2;
         }
         unless (@samples) {
@@ -527,6 +522,9 @@ sub _read_internal {
   return 0; # file not found
 }
 
+# various fragile greps of the html ...
+# return 1 if .html or .htm file exists, 0 if not
+#
 sub _read_html {
   my ($self, $anum) = @_;
   ### _read_html(): $anum
@@ -547,47 +545,37 @@ sub _read_html {
 
     $contents = _decode_html_charset($contents);
 
-    my $description;
     if ($contents =~
-        m{$anum\n.*?             # target anum
+        m{$anum[ \t]*\n.*?       # target anum
           <td[^>]*>\s*(?:</td>)? # <td ...></td> empty
           <td[^>]*>              # <td ...>
           \s*
           (.*?)                  # text through to ...
           <(br|/td)>             # <br> or </td>
-       }sx) {
-      $description = $1;
-      $description =~ s/\s+$//;       # trailing whitespace
-      $description =~ s/\s+/ /g;      # collapse whitespace
-      $description =~ s/<[^>]*?>//sg; # tags <foo ...>
-      $description =~ s/&lt;/</g;    # unentitize <
-      $description =~ s/&gt;/>/g;    # unentitize >
-      $description =~ s/&amp;/&/g;   # unentitize &
-      $description =~ s/&#(\d+);/chr($1)/ge; # unentitize numeric ' and "
-      _set_description ($self, $description, $filename);
+       }isx) {
+      _set_description ($self, $1, $filename);
     } else {
       ### description not matched ...
     }
 
-    # fragile grep out of the html ...
-    my $offset = ($contents =~ /OFFSET.*?<tt>(\d+)/s
+    my $offset = ($contents =~ /OFFSET.*?<[tT][tT]>(\d+)/s
                   && $1);
     ### $offset
 
     # fragile grep out of the html ...
     my $keywords;
-    if ($contents =~ m{KEYWORD.*?<tt[^>]*>(.*?)</tt>}s) {
+    if ($contents =~ m{KEYWORD.*?<[tT][tT][^>]*>(.*?)</[tT][tT]>}s) {
       ### html keywords match: $1
       $keywords = $1;
     } else {
       # die "Oops, KEYWORD not matched: $anum";
     }
-    _set_characteristics ($self, $description, $keywords);
+    _set_characteristics ($self, $keywords);
 
     if (! $self->{'array'}) {
       # fragile grep out of the html ...
       $contents =~ s{>graph</a>.*}{};
-      $contents =~ m{.*<tt>([^<]+)</tt>};
+      $contents =~ m{.*<tt>([^<]+)</tt>}i;
       my $list = $1;
       _split_sample_values ($self, $filename, $list, $offset);
     }
@@ -610,6 +598,14 @@ sub _set_description {
   my ($self, $description, $few_filename) = @_;
   ### _set_description(): $description
 
+  $description =~ s/\s+$//;       # trailing whitespace
+  $description =~ s/\s+/ /g;      # collapse whitespace
+  $description =~ s/<[^>]*?>//sg; # tags <foo ...>
+  $description =~ s/&lt;/</ig;    # unentitize <
+  $description =~ s/&gt;/>/ig;    # unentitize >
+  $description =~ s/&amp;/&/ig;   # unentitize &
+  $description =~ s/&#(\d+);/chr($1)/ge; # unentitize numeric ' and "
+
   # ENHANCE-ME: maybe __x() if made available, or an sprintf "... %s" would
   # be enough ...
   $description .= "\n";
@@ -624,9 +620,8 @@ sub _set_description {
 }
 
 sub _set_characteristics {
-  my ($self, $description, $keywords) = @_;
+  my ($self, $keywords) = @_;
   ### _set_characteristics()
-  ### $description
   ### $keywords
 
   if (! defined $keywords) {
@@ -656,7 +651,7 @@ sub _set_characteristics {
     $self->{'characteristic'}->{'digits'} = 10;
   }
 
-  if (defined $description) {
+  if (defined (my $description = $self->{'description'})) {
     if ($description =~ /expansion of .* in base (\d+)/i) {
       $self->{'values_min'} = 0;
       $self->{'values_max'} = $1 - 1;
@@ -670,8 +665,10 @@ sub _set_characteristics {
 
 sub _split_sample_values {
   my ($self, $filename, $str, $offset) = @_;
-  unless ($str =~ m{^([0-9,-]|\s)+$}) {
-    croak "Oops unrecognised list of values not found in ",$filename,"\n",$str;
+  ### _split_sample_values(): $str
+  unless (defined $str && $str =~ m{^([0-9,-]|\s)+$}) {
+    croak "Oops list of sample values not recognised in ",$filename,"\n",
+      (defined $str ? $str : ());
   }
   $self->{'array'} = [ split /[, \t\r\n]+/, $str ];
 }

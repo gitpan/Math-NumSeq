@@ -19,7 +19,8 @@
 
 # cf A010751 - runs incr then decr
 #    A055087 - runs 0toNtwice
-
+#    A055086 - n repeat floor(n/2)+1 times, DiagonalsOctant X+Y
+#    A082375 - k to 0 by 2s
 
 package Math::NumSeq::Runs;
 use 5.004;
@@ -27,7 +28,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION','@ISA';
-$VERSION = 42;
+$VERSION = 43;
 
 use Math::NumSeq 21; # v.21 for oeis_anum field
 use Math::NumSeq::Base::IterateIth;
