@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,13 +20,13 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 6;
+plan tests => 8;
 
 use lib 't';
 use MyTestHelpers;
-BEGIN { MyTestHelpers::nowarnings(); }
+MyTestHelpers::nowarnings();
 
-use Math::NumSeq::SafePrimes;
+use Math::NumSeq::PowerFlip;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -36,41 +36,46 @@ use Math::NumSeq::SafePrimes;
 
 {
   my $want_version = 44;
-  ok ($Math::NumSeq::SafePrimes::VERSION, $want_version,
-      'VERSION variable');
-  ok (Math::NumSeq::SafePrimes->VERSION,  $want_version,
-      'VERSION class method');
+  ok ($Math::NumSeq::PowerFlip::VERSION, $want_version, 'VERSION variable');
+  ok (Math::NumSeq::PowerFlip->VERSION,  $want_version, 'VERSION class method');
 
-  ok (eval { Math::NumSeq::SafePrimes->VERSION($want_version); 1 },
+  ok (eval { Math::NumSeq::PowerFlip->VERSION($want_version); 1 },
       1,
       "VERSION class check $want_version");
   my $check_version = $want_version + 1000;
-  ok (! eval { Math::NumSeq::SafePrimes->VERSION($check_version); 1 },
+  ok (! eval { Math::NumSeq::PowerFlip->VERSION($check_version); 1 },
       1,
       "VERSION class check $check_version");
 }
 
 
 #------------------------------------------------------------------------------
-# next()
+# characteristic()
 
-sub collect {
-  my ($seq, $count) = @_;
-  my @i;
-  my @values;
-  foreach (1 .. ($count||5)) {
-    my ($i, $value) = $seq->next
-      or last;
-    push @i, $i;
-    push @values, $value;
-  }
-  return join(',',@i) . ' -- ' . join(',',@values);
-}
-    
 {
-  my $seq = Math::NumSeq::SafePrimes->new;
-  ok ($seq->oeis_anum, 'A005385');
-  ok (collect($seq), '1,2,3,4,5 -- 5,7,11,23,47');
+  my $seq = Math::NumSeq::PowerFlip->new;
+  ok ($seq->characteristic('count'), undef, 'characteristic(count)');
+  ok ($seq->characteristic('integer'), 1, 'characteristic(integer)');
+  ok ($seq->characteristic('smaller'), 1, 'characteristic(smaller)');
+}
+
+
+#------------------------------------------------------------------------------
+# values are all Powerful some,2
+
+{
+  require Math::NumSeq::Powerful;
+  my $powerful = Math::NumSeq::Powerful->new (powerful_type => 'all',
+                                              power => 2);
+  my $seq = Math::NumSeq::PowerFlip->new;
+  foreach (1 .. 1000) {
+    my ($i, $value) = $seq->next;
+    $powerful->pred($value)
+      or die "Oops, $value not Powerful all,2";
+  }
+  ok (1);
 }
 
 exit 0;
+
+

@@ -20,88 +20,82 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 15;
+plan tests => 16;
 
 use lib 't';
 use MyTestHelpers;
 MyTestHelpers::nowarnings();
 
-use Math::NumSeq::LuckyNumbers;
+use Math::NumSeq::Powerful;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
-
 
 #------------------------------------------------------------------------------
 # VERSION
 
 {
   my $want_version = 44;
-  ok ($Math::NumSeq::LuckyNumbers::VERSION, $want_version,
-      'VERSION variable');
-  ok (Math::NumSeq::LuckyNumbers->VERSION,  $want_version,
-      'VERSION class method');
+  ok ($Math::NumSeq::Powerful::VERSION, $want_version, 'VERSION variable');
+  ok (Math::NumSeq::Powerful->VERSION,  $want_version, 'VERSION class method');
 
-  ok (eval { Math::NumSeq::LuckyNumbers->VERSION($want_version); 1 },
+  ok (eval { Math::NumSeq::Powerful->VERSION($want_version); 1 },
       1,
       "VERSION class check $want_version");
   my $check_version = $want_version + 1000;
-  ok (! eval { Math::NumSeq::LuckyNumbers->VERSION($check_version); 1 },
+  ok (! eval { Math::NumSeq::Powerful->VERSION($check_version); 1 },
       1,
       "VERSION class check $check_version");
 }
 
 
 #------------------------------------------------------------------------------
-# characteristic(), i_start(), parameters
+# characteristic()
 
 {
-  my $seq = Math::NumSeq::LuckyNumbers->new;
-  ok ($seq->characteristic('digits'), undef, 'characteristic(digits)');
-  ok (! $seq->characteristic('smaller'), 1, 'characteristic(smaller)');
-  ok (! $seq->characteristic('count'), 1, 'characteristic(count)');
-  ok ($seq->characteristic('integer'), 1, 'characteristic(integer)');
-
-  ok ($seq->characteristic('increasing'), 1,
-      'characteristic(increasing)');
-  ok ($seq->characteristic('non_decreasing'), 1,
-      'characteristic(non_decreasing)');
-
-  ok ($seq->characteristic('increasing_from_i'), $seq->i_start,
-      'characteristic(increasing_from_i)');
-  ok ($seq->characteristic('non_decreasing_from_i'), $seq->i_start,
-      'characteristic(non_decreasing_from_i)');
-
+  my $seq = Math::NumSeq::Powerful->new;
   ok ($seq->i_start, 1, 'i_start()');
+
+  ok (! $seq->characteristic('count'), 1, 'characteristic(count)');
+  ok ($seq->characteristic('digits'), undef, 'characteristic(digits)');
+  ok ($seq->characteristic('integer'), 1, 'characteristic(integer)');
+  ok (! $seq->characteristic('smaller'), 1, 'characteristic(smaller)');
+
+  ok ($seq->characteristic('increasing'), 1, 'characteristic(increasing)');
+  ok ($seq->characteristic('non_decreasing'), 1, 'characteristic(non_decreasing)');
+  ok ($seq->characteristic('increasing_from_i'), $seq->i_start);
+  ok ($seq->characteristic('non_decreasing_from_i'), $seq->i_start);
 
   my @pnames = map {$_->{'name'}} $seq->parameter_info_list;
   ok (join(',',@pnames),
-      '');
+      'powerful_type,power');
+}
+
+
+#------------------------------------------------------------------------------
+# pred() on BigInt
+
+{
+  require Math::BigInt;
+  my $seq = Math::NumSeq::Powerful->new (powerful_type => 'all');
+  {
+    my $big = Math::BigInt->new(1);
+    foreach (1 .. 43) { $big *= 2; }
+    $big *= 9;
+    ok (!! $seq->pred($big),
+        1,
+        'pred() big 9*2**43 is powerful_type=all');
+  }
+  {
+    my $big = Math::BigInt->new(1);
+    foreach (1 .. 67) { $big *= 2; }
+    ok (!! $seq->pred($big),
+        1,
+        'pred() big 2**67 is powerful_type=all');
+  }
 }
 
 #------------------------------------------------------------------------------
-# by actual sieve
-
-{
-  my @sieve = (map { 2*$_+1} 0 .. 500); # odd 1,3,5,7 etc
-  for (my $upto = 1; $upto <= $#sieve; $upto++) {
-    my $step = $sieve[$upto];
-    ### $step
-    for (my $i = $step-1; $i <= $#sieve; $i += $step-1) {
-      splice @sieve, $i, 1;
-    }
-  }
-
-  my @got;
-  my $seq = Math::NumSeq::LuckyNumbers->new;
-  while (@got < @sieve) {
-    my ($i, $value) = $seq->next;
-    push @got, $value;
-  }
-
-  my $got = join(',', @got);
-  my $sieve = join(',', @sieve);
-  ok ($got, $sieve);
-}
-
 exit 0;
+
+

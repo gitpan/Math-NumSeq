@@ -27,7 +27,7 @@ use List::Util 'max';
 use POSIX 'ceil';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 43;
+$VERSION = 44;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -52,7 +52,9 @@ use constant parameter_info_array =>
     },
   ];
 
+#------------------------------------------------------------------------------
 # cf A178482 Golden Patterns Phi-antipalindromic 
+#    A007067 nearest(i*PHI)
 #
 sub oeis_anum {
   my ($self) = @_;
@@ -69,6 +71,9 @@ sub oeis_anum {
   }
   return undef;
 }
+
+#------------------------------------------------------------------------------
+
 
 # integer part of sqrt(5*i*i) so as not to depend on multiplying up the
 # float sqrt(5)

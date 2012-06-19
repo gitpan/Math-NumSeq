@@ -18,9 +18,10 @@
 package Math::NumSeq::Powerful;
 use 5.004;
 use strict;
+use List::Util 'min';
 
 use vars '$VERSION','@ISA';
-$VERSION = 43;
+$VERSION = 44;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IteratePred;
 @ISA = ('Math::NumSeq::Base::IteratePred',
@@ -167,19 +168,23 @@ sub pred {
   ### SquareFree pred(): $value
 
   $value = abs($value);
-  unless ($value >= 0 && $value <= 0xFFFF_FFFF) {
-    return undef;
+  unless ($value >= 0) {
+    return 0;
   }
-  $value = "$value"; # numize Math::BigInt for speed
+  if ($value <= 0xFFFF_FFFF) {
+    $value = "$value"; # numize Math::BigInt for speed
+  }
 
   if ($value < 1 || $value != int($value)) {
     return 0;
   }
 
   my $power = $self->{'power'};
-  my $limit = $value ** (1/$power) + 1;
+  my $limit = "$value" ** (1/$power) + 3;
+  my $reduced_limit = min($limit,65535);
 
-  for (my $p = 2; $p <= $limit; $p += 2-($p==2)) {
+  my $p = 2;
+  for ( ; $p <= $reduced_limit; $p += 2-($p==2)) {
     next if ($value % $p);
     ### prime factor: $p
 
@@ -188,22 +193,33 @@ sub pred {
     while (($value % $p) == 0) {
       ++$count;
       if ($count >= $power && $self->{'powerful_type'} eq 'some') {
+        ### found some factor of desired power ...
         return 1;
       }
       $value /= $p;
     }
     if ($count < $power && $self->{'powerful_type'} ne 'some') {
-      # all or all_prim
+      ### all/all_prim prime without desired power ...
       return 0;
     }
 
-    $limit = $value ** (1/$power) + 1;
-    ### divided out: "$p, new limit $limit"
+    $limit = "$value" ** (1/$power) + 3;
+    $reduced_limit = min($limit,65535);
+    ### divided out: "$p, now value=$value, new limit $limit reduced $reduced_limit"
   }
+  ### final value: $value
 
-  ### final: $value
-  return ($self->{'powerful_type'} ne 'some'
-          && $value == 1);
+  if ($p < $limit) {
+    ### value too big to check ...
+    return undef;
+  }
+  if ($self->{'powerful_type'} eq 'some') {
+    ### some, no suitable power found ...
+    return 0;
+  } else {
+    ### all, ok if reduced to value==1 ...
+    return ($value == 1);
+  }
 }
 
 1;
@@ -219,12 +235,12 @@ Math::NumSeq::Powerful -- numbers with certain prime powers
 
  use Math::NumSeq::Powerful;
  my $seq = Math::NumSeq::Powerful->new (powerful_type => 'some',
-                                                 power => 2);
+                                        power => 2);
  my ($i, $value) = $seq->next;
 
 =head1 DESCRIPTION
 
-This is integers with minimum prime powers.  The C<powerful_type> option (a
+This is integers with a minimum prime power.  The C<powerful_type> option (a
 string) can be
 
     "some"       some exp >= power
@@ -233,20 +249,22 @@ string) can be
 The default is "some" and power=2, which means there must be some prime
 factor which is a square or higher,
 
+    default powerful_type="some" power=2
     4, 8, 9, 12, 16, 18, 20, ...
 
-These are the non-squarefrees, the squarefrees have no square factor, and
-these non-squarefrees have at least one square factor.  Sometimes this is
+These are the non-squarefrees.  The squarefrees have no square factor, and
+these non-squarefrees have at least one square factor.  (Sometimes this is
 called "squareful" but this can be confused with the "all" style where all
-primes must be a square of better.
+primes must be a square of better.)
 
 The "all" option with power=2 demands that all primes are square or higher.
 
+    powerful_type="all" power=2
     1, 4, 8, 9, 16, 25, 27, 32, 36, ...
 
-Notice for example 12 is excluded because its prime factor 3 is not squared
-or better.  1 is included on the basis that it has no prime factors and
-doesn't contradict "all powers E<gt>=2". 
+Notice for example 12=2*2*3 is excluded because its prime factor 3 is not
+squared or better.  1 is included on the basis that it has no prime factors
+to check the power of.
 
 =head1 FUNCTIONS
 
@@ -268,7 +286,8 @@ Return true if C<$value> has prime powers of the given type.
 
 L<Math::NumSeq>,
 L<Math::NumSeq::Squares>,
-L<Math::NumSeq::Cubes>
+L<Math::NumSeq::Cubes>,
+L<Math::NumSeq::PowerPart>
 
 =head1 HOME PAGE
 

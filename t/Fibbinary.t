@@ -36,7 +36,7 @@ use Math::NumSeq::Fibbinary;
 # VERSION
 
 {
-  my $want_version = 43;
+  my $want_version = 44;
   ok ($Math::NumSeq::Fibbinary::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::Fibbinary->VERSION,  $want_version,
@@ -71,7 +71,19 @@ use Math::NumSeq::Fibbinary;
   ok ($seq->pred(4), 1);
 
   ok ($seq->pred(17), 1);
-  ok ($seq->pred(17 * 2**256), 1);
+
+  {
+    my $nv = 17 * 2**256;
+    ok ($seq->pred($nv), 1,
+        '17*2**256 float -> bigint');
+    MyTestHelpers::diag ("nv is ",$nv);
+    MyTestHelpers::diag ("~0 is ",~0);
+    my $str = sprintf('%.0f',$nv);
+    MyTestHelpers::diag ("sprintf is ",$str);
+    my $big = Math::NumSeq::_to_bigint($str);
+    MyTestHelpers::diag ("_to_bigint(nv) is ",$big);
+    MyTestHelpers::diag ("big & (big>>1) is ",$big & ($big>>1));
+  }
 }
 
 #------------------------------------------------------------------------------

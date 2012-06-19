@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 6;
+plan tests => 10;
 
 use lib 't','xt';
 use MyTestHelpers;
@@ -48,7 +48,143 @@ sub numeq_array {
   return (@$a1 == @$a2);
 }
 
+sub diff_nums {
+  my ($gotaref, $wantaref) = @_;
+  for (my $i = 0; $i < @$gotaref; $i++) {
+    if ($i > @$wantaref) {
+      return "want ends prematurely pos=$i";
+    }
+    my $got = $gotaref->[$i];
+    my $want = $wantaref->[$i];
+    if (! defined $got && ! defined $want) {
+      next;
+    }
+    if (! defined $got || ! defined $want) {
+      return "different pos=$i got=".(defined $got ? $got : '[undef]')
+        ." want=".(defined $want ? $want : '[undef]');
+    }
+    $got =~ /^[0-9.-]+$/
+      or return "not a number pos=$i got='$got'";
+    $want =~ /^[0-9.-]+$/
+      or return "not a number pos=$i want='$want'";
+    if ($got != $want) {
+      return "different pos=$i numbers got=$got want=$want";
+    }
+  }
+  return undef;
+}
 
+
+
+#------------------------------------------------------------------------------
+# A111333 - count odd numbers up to n'th prime
+
+{
+  my $anum = 'A111333';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  if ($bvalues) {
+    my $seq  = Math::NumSeq::Primes->new;
+    my ($i, $prime) = $seq->next;
+    my $count = 0;
+    for (my $odd = 1; @got < @$bvalues; $odd += 2) {
+      if ($odd > $prime) {
+        push @got, $count;
+        ($i, $prime) = $seq->next;
+      }
+      $count++;
+    }
+    if (! numeq_array(\@got, $bvalues)) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        numeq_array(\@got, $bvalues),
+        1);
+}
+
+#------------------------------------------------------------------------------
+# A035103 - count 0 bits in primes
+
+{
+  my $anum = 'A035103';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  if ($bvalues) {
+    require Math::NumSeq::DigitCount;
+    my $count = Math::NumSeq::DigitCount->new (radix=>2,digit=>0);
+    my $seq  = Math::NumSeq::Primes->new;
+    while (@got < @$bvalues) {
+      my ($i, $prime) = $seq->next;
+      push @got, $count->ith($prime);
+    }
+    if (! numeq_array(\@got, $bvalues)) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        numeq_array(\@got, $bvalues),
+        1);
+}
+
+#------------------------------------------------------------------------------
+# A147849 - next triangular > each prime
+
+{
+  my $anum = 'A147849';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  if ($bvalues) {
+    require Math::NumSeq::Triangular;
+    my $triangular = Math::NumSeq::Triangular->new;
+    my $seq  = Math::NumSeq::Primes->new;
+    while (@got < @$bvalues) {
+      my ($i, $prime) = $seq->next;
+      my $ti = $triangular->value_to_i_floor($prime) + 1; # strictly greater
+      push @got, $triangular->ith($ti);
+    }
+    if (! numeq_array(\@got, $bvalues)) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        numeq_array(\@got, $bvalues),
+        1);
+}
+
+#------------------------------------------------------------------------------
+# A097050 - next prime > each triangular
+
+{
+  my $anum = 'A097050';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my $diff;
+  if ($bvalues) {
+    my @got;
+    require Math::NumSeq::Triangular;
+    my $triangular = Math::NumSeq::Triangular->new;
+    my $seq  = Math::NumSeq::Primes->new;
+    (undef, my $target) = $triangular->next;
+    while (@got < @$bvalues) {
+      (undef, my $prime) = $seq->next;
+      while ($prime > $target) {   # same prime 2 after triangular 0 and 1
+        push @got, $prime;
+        (undef, $target) = $triangular->next;
+      }
+    }
+    $diff = diff_nums(\@got, $bvalues);
+    if ($diff) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        $diff, undef,
+        "$anum");
+}
 
 #------------------------------------------------------------------------------
 # A002808 - composites, excluding 1
@@ -58,8 +194,6 @@ sub numeq_array {
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
     my $seq  = Math::NumSeq::Primes->new;
     my $upto = 2;
   OUTER: for (;;) {
@@ -74,8 +208,6 @@ sub numeq_array {
       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
       MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         numeq_array(\@got, $bvalues),
@@ -90,8 +222,6 @@ sub numeq_array {
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
     my $seq  = Math::NumSeq::Primes->new;
     my $upto = 1;
   OUTER: for (;;) {
@@ -106,8 +236,6 @@ sub numeq_array {
       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
       MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         numeq_array(\@got, $bvalues),
@@ -123,8 +251,6 @@ sub numeq_array {
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
     my $seq  = Math::NumSeq::Primes->new;
     for (my $n = 0; @got < @$bvalues; $n++) {
       for (my $k = 1; $k < $n && @got < @$bvalues; $k++) {
@@ -135,8 +261,6 @@ sub numeq_array {
       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
       MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         numeq_array(\@got, $bvalues),
@@ -152,8 +276,6 @@ sub numeq_array {
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
     my $seq  = Math::NumSeq::Primes->new;
     for (my $i = 1; @got < @$bvalues; $i++) {
       push @got, $seq->pred($i) ? 1 : 0;
@@ -162,8 +284,6 @@ sub numeq_array {
       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
       MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         numeq_array(\@got, $bvalues),
@@ -178,8 +298,6 @@ sub numeq_array {
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
     my $seq  = Math::NumSeq::Primes->new;
     my $count = 0;
     for (my $i = 1; @got < @$bvalues; $i++) {
@@ -190,8 +308,6 @@ sub numeq_array {
       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
       MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         numeq_array(\@got, $bvalues),
@@ -206,8 +322,6 @@ sub numeq_array {
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
     my $seq  = Math::NumSeq::Primes->new;
     my $count = 1;
     push @got, $count;
@@ -219,8 +333,6 @@ sub numeq_array {
       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
       MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         numeq_array(\@got, $bvalues),

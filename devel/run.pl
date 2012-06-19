@@ -100,7 +100,6 @@ $|=1;
   $values_class = 'Math::NumSeq::SieveMultiples';
   $values_class = 'Math::NumSeq::ReverseAdd';
   $values_class = 'Math::NumSeq::PythagoreanHypots';
-  $values_class = 'Math::NumSeq::PowerPart';
   $values_class = 'Math::NumSeq::PrimeFactorCount';
   $values_class = 'Math::NumSeq::AbsCubicDiff';
   $values_class = 'Math::NumSeq::RepdigitAny';
@@ -177,6 +176,7 @@ $|=1;
   $values_class = 'Math::NumSeq::PlanePathCoord';
   $values_class = 'Math::NumSeq::PrimeExponentFlip';
   $values_class = 'Math::NumSeq::PrimesDigits';
+  $values_class = 'Math::NumSeq::PowerPart';
 
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new
@@ -264,7 +264,7 @@ $|=1;
      # round_count => 2,
      # pairs => 'both',
      # powerful_type => 'all',
-     # power => 3,
+     power => 3,
      # abundant_type => 'primitive',
      # multiples => 1,
      # digit => 1,

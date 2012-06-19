@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use Test;
-plan tests => 2;
+plan tests => 3;
 
 use lib 't','xt';
 use MyTestHelpers;
@@ -58,6 +58,32 @@ sub diff_nums {
     }
   }
   return undef;
+}
+
+#------------------------------------------------------------------------------
+# A025500 - 8^k fib bit count
+
+{
+  my $anum = 'A025500';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my $diff;
+  if ($bvalues) {
+    my $seq = Math::NumSeq::FibbinaryBitCount->new;
+    my @got;
+    my $i = Math::NumSeq::_to_bigint(1);
+    while (@got < @$bvalues) {
+      push @got, $seq->ith($i);
+      $i *= 8;
+    }
+    $diff = diff_nums(\@got, $bvalues);
+    if ($diff) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        $diff, undef,
+        "$anum");
 }
 
 #------------------------------------------------------------------------------

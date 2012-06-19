@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 3;
+plan tests => 8;
 
 use lib 't','xt';
 use MyTestHelpers;
@@ -50,6 +50,175 @@ sub numeq_array {
 
 
 #------------------------------------------------------------------------------
+# A022342 - Zeckendorf even, i where value is even
+#           floor(n*phi)-1
+
+{
+  my $anum = 'A022342';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  if ($bvalues) {
+    require Math::NumSeq::Fibonacci;
+    my $seq  = Math::NumSeq::Fibbinary->new;
+    for (my $n = 0; @got < @$bvalues; $n++) {
+      my ($i, $value) = $seq->next;
+      if (($value % 2) == 0) {
+        push @got, $i;
+      }
+    }
+    if (! numeq_array(\@got, $bvalues)) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        numeq_array(\@got, $bvalues),
+        1, "$anum");
+}
+
+#------------------------------------------------------------------------------
+# A035514 - Zeckendorf fibonnacis concatenated as decimal digits, high to low
+
+{
+  my $anum = 'A035514';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  if ($bvalues) {
+    require Math::NumSeq::Fibonacci;
+    my $seq  = Math::NumSeq::Fibbinary->new;
+    my $fibonacci  = Math::NumSeq::Fibonacci->new;
+    for (my $n = 0; @got < @$bvalues; $n++) {
+      my ($i, $value) = $seq->next;
+      my $concat = '';
+      my $pos = 0;
+      while ($value) {
+        if ($value & 1) {
+          $concat = $fibonacci->ith($pos+2) . $concat;
+        }
+        $value >>= 1;
+        $pos++;
+      }
+      push @got, $concat || 0;
+    }
+    if (! numeq_array(\@got, $bvalues)) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        numeq_array(\@got, $bvalues),
+        1, "$anum");
+}
+
+#------------------------------------------------------------------------------
+# A035515 - Zeckendorf fibonnacis concatenated as decimal digits, low to high
+
+{
+  my $anum = 'A035515';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  if ($bvalues) {
+    require Math::NumSeq::Fibonacci;
+    my $seq  = Math::NumSeq::Fibbinary->new;
+    my $fibonacci  = Math::NumSeq::Fibonacci->new;
+    for (my $n = 0; @got < @$bvalues; $n++) {
+      my ($i, $value) = $seq->next;
+      my $concat = '';
+      my $pos = 0;
+      while ($value) {
+        if ($value & 1) {
+          $concat .= $fibonacci->ith($pos+2);
+        }
+        $value >>= 1;
+        $pos++;
+      }
+      push @got, $concat || 0;
+    }
+    if (! numeq_array(\@got, $bvalues)) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        numeq_array(\@got, $bvalues),
+        1, "$anum");
+}
+
+#------------------------------------------------------------------------------
+# A035516 - Zeckendorf fibonnacis of each n, high to low
+#           with single 0 for n=0
+
+{
+  my $anum = 'A035516';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  if ($bvalues) {
+    require Math::NumSeq::Fibonacci;
+    my $fibonacci  = Math::NumSeq::Fibonacci->new;
+    require Math::NumSeq::Repdigits;
+    my $seq  = Math::NumSeq::Fibbinary->new;
+  OUTER: for (;;) {
+      my ($i, $value) = $seq->next;
+      if ($value) {
+        my @bits = Math::NumSeq::Repdigits::_digit_split_lowtohigh($value,2);
+        foreach my $pos (reverse 0 .. $#bits) {
+          if ($bits[$pos]) {
+            push @got, $fibonacci->ith($pos+2);
+            last OUTER if @got >= @$bvalues;
+          }
+        }
+      } else {
+        push @got, 0;
+      }
+    }
+    if (! numeq_array(\@got, $bvalues)) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        numeq_array(\@got, $bvalues),
+        1, "$anum");
+}
+
+#------------------------------------------------------------------------------
+# A035517 - Zeckendorf fibonnacis of each n, low to high
+#           with single 0 for n=0
+
+{
+  my $anum = 'A035517';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  if ($bvalues) {
+    require Math::NumSeq::Fibonacci;
+    my $fibonacci  = Math::NumSeq::Fibonacci->new;
+    require Math::NumSeq::Repdigits;
+    my $seq  = Math::NumSeq::Fibbinary->new;
+  OUTER: for (;;) {
+      my ($i, $value) = $seq->next;
+      if ($value) {
+        my @bits = Math::NumSeq::Repdigits::_digit_split_lowtohigh($value,2);
+        foreach my $pos (0 .. $#bits) {
+          if ($bits[$pos]) {
+            push @got, $fibonacci->ith($pos+2);
+            last OUTER if @got >= @$bvalues;
+          }
+        }
+      } else {
+        push @got, 0;
+      }
+    }
+    if (! numeq_array(\@got, $bvalues)) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        numeq_array(\@got, $bvalues),
+        1, "$anum");
+}
+
+#------------------------------------------------------------------------------
 # A048678 - binary expand 1->01, so no adjacent 1 bits
 # is a permutation of the fibbinary numbers
 
@@ -58,8 +227,6 @@ sub numeq_array {
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
     for (my $n = 0; @got < @$bvalues; $n++) {
       push @got, expand_1_to_01($n);
     }
@@ -67,8 +234,6 @@ sub numeq_array {
       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
       MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         numeq_array(\@got, $bvalues),
@@ -119,8 +284,6 @@ sub digit_join {
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
     my $seq  = Math::NumSeq::Fibbinary->new;
     while (@got < @$bvalues) {
       my ($i, $value) = $seq->next;
@@ -130,8 +293,6 @@ sub digit_join {
       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
       MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         numeq_array(\@got, $bvalues),
@@ -168,8 +329,6 @@ sub compress_01_to_1 {
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
     my $seq  = Math::NumSeq::Fibbinary->new;
     for (my $n = 0; @got < @$bvalues; $n++) {
       my $expand = expand_1_to_01($n);
@@ -180,8 +339,6 @@ sub compress_01_to_1 {
       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
       MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         numeq_array(\@got, $bvalues),

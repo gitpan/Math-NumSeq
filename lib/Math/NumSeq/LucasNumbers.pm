@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 43;
+$VERSION = 44;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
 
@@ -42,8 +42,18 @@ use constant description => Math::NumSeq::__('Lucas numbers 1, 3, 4, 7, 11, 18, 
 use constant values_min => 1;
 use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
-use constant oeis_anum => 'A000204'; # lucas starting at 1,3,...
 use constant i_start => 1;
+
+#------------------------------------------------------------------------------
+# cf A000285 starting 1,4
+#    A022086 starting 0,3
+#    A022087 starting 0,4
+#    A022095 starting 1,5
+#    A022130 starting 4,9
+#    
+use constant oeis_anum => 'A000204'; # lucas starting at 1,3,...
+
+#------------------------------------------------------------------------------
 
 sub rewind {
   my ($self) = @_;

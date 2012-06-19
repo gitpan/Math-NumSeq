@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Math-NumSeq
-version:            43
+version:            44
 abstract:           Number sequences.
 author:
     - Kevin Ryde <user42@zip.com.au>

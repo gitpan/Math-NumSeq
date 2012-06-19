@@ -28,12 +28,62 @@ use Math::Factor::XS 'factors','matches','prime_factors';
 use Smart::Comments;
 
 {
+  # factors() is slower, maybe due to arg checking overhead
+  require Devel::TimeThis;
+  require Math::NumSeq::DivisorCount;
+  my $seq = Math::NumSeq::DivisorCount->new;
+
+  my $num = 50000;
+  {
+    my $t = Devel::TimeThis->new('ith');
+    foreach (1 .. $num) {
+      $seq->ith($_);
+    }
+  }
+  {
+    my $t = Devel::TimeThis->new('factors');
+    foreach (1 .. $num) {
+      factors($_);
+    }
+  }
+  {
+    my $t = Devel::TimeThis->new('xs_factors');
+    foreach (1 .. $num) {
+      Math::Factor::XS::xs_factors($_);
+    }
+  }
+  exit 0;
+}
+
+{
   # factors() on Math::BigInt
   require Math::BigInt;
   my $small = 123;
   my $big = Math::BigInt->new(123);
   print factors($small),"\n";
   print factors($big),"\n";
+  exit 0;
+}
+
+{
+  require Devel::TimeThis;
+  require Math::NumSeq::PrimeFactorCount;
+  my $seq = Math::NumSeq::PrimeFactorCount->new;
+
+  my $num = 50000;
+  {
+    my $t = Devel::TimeThis->new('ith');
+    foreach (1 .. $num) {
+      $seq->ith($_);
+    }
+  }
+  {
+    my $t = Devel::TimeThis->new('prime_factors');
+    foreach (1 .. $num) {
+      my @f = prime_factors($_);
+      scalar(@f);
+    }
+  }
   exit 0;
 }
 
@@ -80,55 +130,7 @@ use Smart::Comments;
   exit 0;
 }
 
-{
-  require Devel::TimeThis;
-  require Math::NumSeq::PrimeFactorCount;
-  my $seq = Math::NumSeq::PrimeFactorCount->new;
 
-  my $num = 50000;
-  {
-    my $t = Devel::TimeThis->new('ith');
-    foreach (1 .. $num) {
-      $seq->ith($_);
-    }
-  }
-  {
-    my $t = Devel::TimeThis->new('prime_factors');
-    foreach (1 .. $num) {
-      my @f = prime_factors($_);
-      scalar(@f);
-    }
-  }
-  exit 0;
-}
-
-{
-  # factors() is slower, maybe due to arg checking overhead
-  require Devel::TimeThis;
-  require Math::NumSeq::DivisorCount;
-  my $seq = Math::NumSeq::DivisorCount->new;
-
-  my $num = 50000;
-  {
-    my $t = Devel::TimeThis->new('ith');
-    foreach (1 .. $num) {
-      $seq->ith($_);
-    }
-  }
-  {
-    my $t = Devel::TimeThis->new('factors');
-    foreach (1 .. $num) {
-      factors($_);
-    }
-  }
-  {
-    my $t = Devel::TimeThis->new('xs_factors');
-    foreach (1 .. $num) {
-      Math::Factor::XS::xs_factors($_);
-    }
-  }
-  exit 0;
-}
 
 {
   require Math::NumSeq::DivisorCount;

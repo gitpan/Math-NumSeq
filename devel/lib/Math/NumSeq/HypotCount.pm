@@ -30,7 +30,7 @@ use POSIX 'ceil';
 use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 43;
+$VERSION = 44;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -46,11 +46,15 @@ use constant characteristic_count => 1;
 use constant characteristic_increasing => 0;
 use constant values_min => 0;
 
+
+#------------------------------------------------------------------------------
 # cf A002654 num ways nonzero squares with ordered a,b
 #    A000161 num ways squares with zeros without distingishing order
 #    A001481 numbers which have at least one rep
 #
 use constant oeis_anum => 'A000161'; # with zeros without order
+
+#------------------------------------------------------------------------------
 
 # sub new {
 #   my ($class, %options) = @_;

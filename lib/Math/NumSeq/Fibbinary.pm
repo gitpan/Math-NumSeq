@@ -27,7 +27,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 43;
+$VERSION = 44;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -48,6 +48,7 @@ use constant values_min => 0;
 use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
 
+#------------------------------------------------------------------------------
 # cf A000119 - number of fibonacci sums forms
 #    A003622 - n with odd Zeckendorf,  cf golden seq
 #    A037011 - baum-sweet cubic, might be 1 iff i is in the fibbinary seq
@@ -55,6 +56,7 @@ use constant characteristic_integer => 1;
 #
 use constant oeis_anum => 'A003714';  # Fibbinary, OFFSET=0 start value=0
 
+#------------------------------------------------------------------------------
 
 sub rewind {
   my ($self) = @_;

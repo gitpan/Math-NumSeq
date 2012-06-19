@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 43;
+$VERSION = 44;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -45,6 +45,7 @@ use Math::NumSeq::Base::Digits;
 
 #------------------------------------------------------------------------------
 # cf A002275 - repunits
+#    A108850 - repunits count of 1 bits
 
 my @oeis_anum = (
                  # OEIS-Catalogue array begin

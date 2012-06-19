@@ -15,13 +15,13 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
-package Math::NumSeq::PrimeExponentFlip;
+package Math::NumSeq::PowerFlip;
 use 5.004;
 use strict;
 use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 43;
+$VERSION = 44;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -54,7 +54,7 @@ use constant _UV_LIMIT => 31**2; # is value=2**31
 
 sub ith {
   my ($self, $i) = @_;
-  ### PrimeExponentFlip ith(): $i
+  ### PowerFlip ith(): $i
 
   if (_is_infinite($i)) {
     return $i;
@@ -88,7 +88,7 @@ sub ith {
 
 sub pred {
   my ($self, $value) = @_;
-  ### PrimeExponentFlip pred(): $value
+  ### PowerFlip pred(): $value
 
   # ! is_square_free()
 
@@ -133,19 +133,21 @@ __END__
 
 =head1 NAME
 
-Math::NumSeq::PrimeExponentFlip -- prime exponent flip
+Math::NumSeq::PowerFlip -- prime exponent flip
 
 =head1 SYNOPSIS
 
- use Math::NumSeq::PrimeExponentFlip;
- my $seq = Math::NumSeq::PrimeExponentFlip->new;
+ use Math::NumSeq::PowerFlip;
+ my $seq = Math::NumSeq::PowerFlip->new;
  my ($i, $value) = $seq->next;
 
 =head1 DESCRIPTION
 
-This is the prime factorization of i with primes and exponents flipped,
+This sequence is i with primes and exponents flipped in the prime
+factorization.
 
     i     = p^e * q^f * ...
+    becomes
     value = e^p * f^q * ...
 
 which gives
@@ -155,13 +157,14 @@ which gives
 
 For example i=1000=2^3*5^3 becomes value=3^2*3^5=3^7=2187.
 
-Prime i has value=1 since i=p^1 becomes value=1^p=1.  Value=1 occurs
-precisely when i=p*q*r with no repeated prime factor, ie. when i is
+Any i=prime has value=1 since i=p^1 becomes value=1^p=1.  Value=1 occurs
+precisely when i=p*q*r*etc with no repeated prime factor, ie. when i is
 square-free.
 
-The values which occur are also related to square factors.  Since value=e^p
-has prime pE<gt>=2 every e,f,g etc powered up is a square or higher power.
-So the sequence values have a square factor (sometimes called squareful).
+The possible values which occur in the sequence are related to square
+factors.  Since value=e^p has prime pE<gt>=2, every e,f,g etc powered up in
+the value is a square or higher power.  So sequence values are a product of
+squares and higher, the same as 
 
 =head1 FUNCTIONS
 
@@ -169,9 +172,9 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 
-=item C<$seq = Math::NumSeq::PrimeExponentFlip-E<gt>new ()>
+=item C<$seq = Math::NumSeq::PowerFlip-E<gt>new ()>
 
-=item C<$seq = Math::NumSeq::PrimeExponentFlip-E<gt>new (radix =E<gt> $r, to_radix =E<gt> $t)>
+=item C<$seq = Math::NumSeq::PowerFlip-E<gt>new (radix =E<gt> $r, to_radix =E<gt> $t)>
 
 Create and return a new sequence object.
 

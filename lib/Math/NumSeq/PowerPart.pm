@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 43;
+$VERSION = 44;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -248,13 +248,14 @@ Math::NumSeq::PowerPart -- largest square root etc divisor
 
 =head1 DESCRIPTION
 
-The largest integer whose square is a divisor of i,
+This sequence is the largest integer whose square is a divisor of i,
 
+    starting i=1
     1, 1, 1, 2, 1, 1, 1, 2, 3, ...
 
 For example at i=27 the value is 3 since 3^2=9 is the largest square which
 is a divisor of 27.  Notice the sequence value is the root, ie. 3, of the
-divisor, not the square as such.
+divisor, not the square 9 etc.
 
 When i has no square divisor, ie. is square-free, the value is 1.  Compare
 the MobiusFunction where value 1 or -1 means square-free.  And conversely
@@ -265,8 +266,13 @@ is S<E<gt> 1> in that case.
 
 The C<power> parameter selects what power divisor to seek.  For example
 C<power=E<gt>3> finds the largest cube dividing i and the sequence values
-are the cube roots.  At i=24 the value is 2, since 2^3=8 is the largest cube
-which divides 24.
+are the cube roots.
+
+    power=>3
+    1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, ...
+
+For example i=24 the value is 2, since 2^3=8 is the largest cube which
+divides 24.
 
 =head1 FUNCTIONS
 
@@ -290,14 +296,15 @@ placed on C<$i> in the interests of not going into a near-infinite loop.
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> occurs in the sequence, which is simply any integer
-C<$value> E<gt>= 1.
+C<$value E<gt>= 1>.
 
 =back
 
 =head1 SEE ALSO
 
 L<Math::NumSeq>,
-L<Math::NumSeq::MobiusFunction>
+L<Math::NumSeq::MobiusFunction>,
+L<Math::NumSeq::Powerful>
 
 =head1 HOME PAGE
 

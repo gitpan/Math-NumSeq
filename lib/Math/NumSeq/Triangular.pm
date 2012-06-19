@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 43;
+$VERSION = 44;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -91,6 +91,20 @@ sub value_to_i_floor {
 }
 *value_to_i_estimate = \&value_to_i_floor;
 
+sub value_to_i_ceil {
+  my ($self, $value) = @_;
+  ### value_to_i_ceil(): $value
+  if ($value <= 0) {
+    return 0;
+  }
+  my $i = $self->value_to_i_floor($value);
+  if ($self->ith($i) < $value) {
+    return $i+1;
+  } else {
+    return $i;
+  }
+}
+
 1;
 __END__
 
@@ -110,6 +124,7 @@ Math::NumSeq::Triangular -- triangular numbers
 
 The triangular numbers i*(i+1)/2,
 
+    # starting i=0
     0, 1, 3, 6, 10, 15, 21, 28, ...
 
 The numbers are how many points are in an equilateral triangle of side i,
@@ -150,15 +165,19 @@ Return C<$i*($i+1)/2>.
 Return true if C<$value> is a triangular number, ie. i*(i+1)/2 for some
 integer i.
 
+=item C<$i = $seq-E<gt>value_to_i_ceil($value)>
+
 =item C<$i = $seq-E<gt>value_to_i_floor($value)>
 
-Return the index i of C<$value> or the next triangular number below
-C<$value>.
+Return the index i of C<$value>, or if C<$value> is not a triangular number
+then the next higher for C<ceil> or lower for C<floor>.
 
 =item C<$i = $seq-E<gt>value_to_i_estimate($value)>
 
-Return an estimate of the i corresponding to C<$value>.  value=i*(i+1)/2 is
-inverted C<$i = int ((sqrt(8*$value + 1) - 1)/2)>.
+Return an estimate of the i corresponding to C<$value>.  This is
+value=i*(i+1)/2 is inverted to
+
+    $i = int ((sqrt(8*$value + 1) - 1)/2)
 
 =back
 

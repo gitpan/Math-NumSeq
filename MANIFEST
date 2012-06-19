@@ -74,8 +74,9 @@ devel/lib/Math/NumSeq/pi.gz
 devel/lib/Math/NumSeq/PiBits.pm
 devel/lib/Math/NumSeq/PiDigits.pm
 devel/lib/Math/NumSeq/PierpontPrimes.pm
+devel/lib/Math/NumSeq/PowerFlip.pm
+devel/lib/Math/NumSeq/PowerFlip.t
 devel/lib/Math/NumSeq/PowerSieve.pm
-devel/lib/Math/NumSeq/PrimeExponentFlip.pm
 devel/lib/Math/NumSeq/PrimeFactorExtract.pm
 devel/lib/Math/NumSeq/PrimeQuadraticEuler.pm
 devel/lib/Math/NumSeq/PrimeQuadraticHonaker.pm
@@ -294,6 +295,7 @@ t/Odd.t
 t/OEIS-File.t
 t/Perrin.t
 t/PolignacObstinate.t
+t/Powerful.t
 t/PrimeFactorsCount.t
 t/Primes.t
 t/Pronic.t
@@ -312,6 +314,7 @@ t/Squares.t
 t/Tetraheral.t
 t/Totient.t
 t/TotientCumulative.t
+t/Triangular.t
 t/Tribonacci.t
 t/TwinPrimes.t
 t/UndulatingNumbers.t
@@ -339,6 +342,7 @@ xt/oeis/DivisorCount-oeis.t
 xt/oeis/ErdosSelfridgeClass-oeis.t
 xt/oeis/Fibbinary-oeis.t
 xt/oeis/FibbinaryBitCount-oeis.t
+xt/oeis/Fibonacci-oeis.t
 xt/oeis/FibonacciWord-oeis.t
 xt/oeis/File-oeis.t
 xt/oeis/GolayRudinShapiro-oeis.t

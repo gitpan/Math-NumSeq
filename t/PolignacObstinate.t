@@ -35,7 +35,7 @@ use Math::NumSeq::PolignacObstinate;
 # VERSION
 
 {
-  my $want_version = 43;
+  my $want_version = 44;
   ok ($Math::NumSeq::PolignacObstinate::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::PolignacObstinate->VERSION,  $want_version,

@@ -32,7 +32,7 @@ use strict;
 use List::Util qw(min max sum reduce);
 
 use vars '$VERSION', '@ISA';
-$VERSION = 43;
+$VERSION = 44;
 
 use Math::NumSeq::Base::IterateIth;
 use Math::NumSeq::Base::Digits;

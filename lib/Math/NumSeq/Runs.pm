@@ -28,7 +28,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION','@ISA';
-$VERSION = 43;
+$VERSION = 44;
 
 use Math::NumSeq 21; # v.21 for oeis_anum field
 use Math::NumSeq::Base::IterateIth;
@@ -85,6 +85,8 @@ use constant parameter_info_array =>
 #    A061579 descending NtoPrev, permutation of the integers
 #    A076478 0 to 2^k-1, each written out in k many bits
 #    A000267 1,2,3,3,4,4,5,5,5,6,6,6, twice repeat each run length
+#    A122196 down by 2s
+#
 my %runs_type_data
   = ('0toN' => { i_start    => 0,
                  value      => -1, # initial
@@ -227,7 +229,8 @@ my @rep_oeis_anum = (undef, # 0rep, nothing
                      'A001477',  # 1rep, integers 0 upwards
                      # OEIS-Other: A001477 runs_type=1rep
 
-                     'A004526', # 2rep, N appears 2 times
+                     # cf A008619 2rep starting from 1
+                     'A004526', # 2rep, N appears 2 times, starting from 0
                      # OEIS-Catalogue: A004526 runs_type=2rep
 
                      'A002264', # 3rep, N appears 3 times
