@@ -36,6 +36,7 @@ use constant MY_MAX => (POSIX::FLT_RADIX() ** (POSIX::DBL_MANT_DIG()-5));
 
 sub diff_nums {
   my ($gotaref, $wantaref) = @_;
+  my $diff;
   for (my $i = 0; $i < @$gotaref; $i++) {
     if ($i > @$wantaref) {
       return "want ends prematurely pos=$i";
@@ -54,10 +55,11 @@ sub diff_nums {
     $want =~ /^[0-9.-]+$/
       or return "not a number pos=$i want='$want'";
     if ($got != $want) {
-      return "different pos=$i numbers got=$got want=$want";
+      MyTestHelpers::diag ("different pos=$i numbers got=$got want=$want");
+      $diff ||= "different pos=$i numbers got=$got want=$want";
     }
   }
-  return undef;
+  return $diff;
 }
 
 sub _delete_duplicates {
@@ -106,8 +108,8 @@ sub check_class {
   # return unless $class =~ /PrimeF/;
   # return unless $class =~ /DigitP/;
   # return unless $class =~ /DigitCount/;
-   return unless $class =~ /PrimeExp/;
-  # return unless $class =~ /Alpha/;
+  # return unless $class =~ /Plain/;
+  return unless $class =~ /Alpha/;
   # return unless $class =~ /Spiro/;
   # return unless $class =~ /Cbrt/;
   # return unless $class =~ /Slop/;
@@ -423,11 +425,13 @@ system("cd devel && perl ../tools/make-oeis-catalogue.pl --module=TempDevel --ot
   or die;
 require 'devel/lib/Math/NumSeq/OEIS/Catalogue/Plugin/TempDevel.pm';
 unlink  'devel/lib/Math/NumSeq/OEIS/Catalogue/Plugin/TempDevel.pm' or die;
-rmdir  'devel/lib/Math/NumSeq/OEIS/Catalogue/Plugin' or die;
-rmdir  'devel/lib/Math/NumSeq/OEIS/Catalogue' or die;
-rmdir  'devel/lib/Math/NumSeq/OEIS' or die;
+# rmdir  'devel/lib/Math/NumSeq/OEIS/Catalogue/Plugin' or die;
+# rmdir  'devel/lib/Math/NumSeq/OEIS/Catalogue' or die;
+# rmdir  'devel/lib/Math/NumSeq/OEIS' or die;
 
 my $aref = Math::NumSeq::OEIS::Catalogue::Plugin::TempDevel::info_arrayref();
+require Math::NumSeq::OEIS::Catalogue::Plugin::Alpha;
+$aref = Math::NumSeq::OEIS::Catalogue::Plugin::Alpha::info_arrayref();
 foreach my $info (@$aref) {
   ### $info
   check_class ($info->{'anum'},

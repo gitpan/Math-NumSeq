@@ -21,7 +21,7 @@ use strict;
 use List::Util 'min';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 44;
+$VERSION = 45;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -92,6 +92,7 @@ use constant::defer parameter_info_array => sub {
 
 sub values_min {
   my ($self) = @_;
+  ### values_min(): $self
   my $i_start = $self->i_start;
   return ($self->{'values_min'}
           = min (map {$self->ith($_)||0}
@@ -99,19 +100,66 @@ sub values_min {
 }
 
 #------------------------------------------------------------------------------
-my %oeis_anum = (cardinal => { en => 'A005589',
-                               sv => 'A059124',
-                               # OEIS-Catalogue: A005589 i_start=0
-                               # OEIS-Catalogue: A059124 i_start=0 language=sv
-                             },
-                 ordinal  => { en => 'A006944',
-                               # OEIS-Catalogue: A006944 number_type=ordinal
-                             },
-                );
+# cf A052360 en cardinal including spaces and hyphens
+#    A052363 new longest alpha
+#    A134629 first requiring n letters
+#
+# A003078 (Danish)
+# A001050 (Finnish)
+# A001368 (Irish Gaelic)
+# A006968 or A092196 (Roman numerals)
+# A006994 (Russian)
+# A051785 (Catalan)
+# A056597 (Serbian or Croatian)
+# A132984 (Latin)
+# A140395 (Hindi),
+# A053306 (Galego)
+# A057853 (Esperanto)
+# A140396 (Welsh)
+# A140438 (Tamil)
+# A014656 (Bokmal), A028292 (Nynorsk)
+# Lingua::NO::Num2Word
+# Lingua::PT::Nums2Words
+# A057696 (Brazilian Portuguese)
+
+# catalogued in Alpha.pm
+my %oeis_anum
+  = ('en,cardinal,0' => 'A005589',
+     'en,ordinal,1'  => 'A006944',
+
+     # Lingua::CS::Num2Word doubtful ...
+     'cs,cardinal,1' => 'A010038', # Czech, Lingua::CS::Num2Word
+
+     # Lingua::DE::Num2Word doubtful ...
+     # 'de,cardinal,1' => 'A007208', # German, Lingua::DE::Num2Word
+
+     'es,cardinal,0' => 'A011762', # Spanish, Lingua::ES::Numeros
+
+     'fr,ordinal,1' => 'A006969', # French, Lingua::FR::Numbers
+     'fr,cardinal,0,incspaces' => 'A007005',
+
+     'hu,cardinal,1' => 'A007292', # Hungarian, Lingua::HU::Numbers
+
+     # centottanta in A026858 vs centoottanta in Lingua
+     # 'it,cardinal,0' => 'A026858', # Italian, Lingua::IT::Numbers
+
+     'ja,cardinal,0' => 'A030166', # Japanese Kanji, Lingua::JA::Numbers
+
+     'nl,cardinal,1' => 'A090589', # Dutch, Lingua::NL::Numbers
+     # A007485 ij as one letter
+
+     'pl,cardinal,0' => 'A008962', # Polish, Lingua::PL::Numbers
+
+     'sv,cardinal,0' => 'A059124', # Swedish, Lingua::SV::Numbers
+
+     'tr,cardinal,1' => 'A057435', # Turkish, Lingua::TR::Numbers
+    );
 sub oeis_anum {
   my ($self) = @_;
   ### oeis_anum: $self
-  return $oeis_anum{$self->{'number_type'}}->{lc($self->{'language'})};
+  ### key: "\L$self->{language}\E,$self->{number_type},".$self->i_start
+  return $oeis_anum
+    {"\L$self->{language}\E,$self->{number_type},".$self->i_start};
 }
 
 #------------------------------------------------------------------------------
@@ -124,6 +172,7 @@ sub new {
     ### $str
     if (length($str) == 4) {
       # Lingua::SV::Numbers gives utf-8 bytes, mangle it down to chars
+      ### decode_chars mangle out utf8 ...
       $self->{'decode_chars'} = sub {
         $_[0] =~ s/\303./X/g;
       };

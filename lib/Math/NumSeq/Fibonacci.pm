@@ -21,8 +21,8 @@ use strict;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 44;
-use Math::NumSeq::Base::Sparse;
+$VERSION = 45;
+use Math::NumSeq::Base::Sparse;  # FIXME: implement pred() directly ...
 @ISA = ('Math::NumSeq::Base::Sparse');
 
 use Math::NumSeq;
@@ -285,11 +285,10 @@ Math::NumSeq::Fibonacci -- Fibonacci numbers
 
 =head1 DESCRIPTION
 
-The Fibonacci sequence
+The Fibonacci numbers F(i) = F(i-1) + F(i-2) starting from 0,1,
 
-     0, 1, 1, 2, 3, 5, 8, 13, 21, ...
-
-The start is i=0 values 0,1 and from there F(i) = F(i-1) + F(i-2).
+     starting i=0
+     0, 1, 1, 2, 3, 5, 8, 13, 21, 34, ...
 
 =head1 FUNCTIONS
 

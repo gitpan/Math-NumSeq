@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 10;
+plan tests => 11;
 
 
 use lib 't','xt';
@@ -49,6 +49,32 @@ sub numeq_array {
   return (@$a1 == @$a2);
 }
 
+
+#------------------------------------------------------------------------------
+# A052382 numbers without 0 digit
+
+{
+  my $anum = 'A052382';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  if ($bvalues) {
+    my $seq  = Math::NumSeq::DigitCount->new (radix => 10, digit => 0);
+    $seq->next; # skip i=0
+    while (@got < @$bvalues) {
+      my ($i, $value) = $seq->next;
+      if ($value == 0) {
+        push @got, $i;
+      }
+    }
+    if (! numeq_array(\@got, $bvalues)) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        numeq_array(\@got, $bvalues),
+        1, "$anum");
+}
 
 #------------------------------------------------------------------------------
 # A071858 count 1 bits, mod 3

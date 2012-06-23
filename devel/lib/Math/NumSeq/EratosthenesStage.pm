@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 44;
+$VERSION = 45;
 use Math::NumSeq;
 use List::Util 'max';
 @ISA = ('Math::NumSeq');
@@ -50,10 +50,12 @@ use constant parameter_info_array =>
 
 use constant values_min => 2;
 
+#------------------------------------------------------------------------------
 # cf A179546 first a(n) numbers killed
 #    A179545 sum jump
 #    A066680 sieve up to p^2 only
-#
+#    A083140 diagonals of stages
+
 my @oeis_anum = (undef,      # 0, all integers 2 upwards
                  'A004280',  # 1
                  'A038179',  # 2
@@ -62,6 +64,8 @@ sub oeis_anum {
   my ($self) = @_;
   return $oeis_anum[$self->{'stage'}];
 }
+
+#------------------------------------------------------------------------------
 
 sub new {
   my $self = shift->SUPER::new(@_);

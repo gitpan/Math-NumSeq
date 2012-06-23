@@ -27,7 +27,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 44;
+$VERSION = 45;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -53,7 +53,8 @@ use constant characteristic_integer => 1;
 #    A003622 - n with odd Zeckendorf,  cf golden seq
 #    A037011 - baum-sweet cubic, might be 1 iff i is in the fibbinary seq
 #    A014417 - n in fibonacci base, the fibbinaries written out in binary
-#
+#    A139764 - smallest Zeckendorf term
+
 use constant oeis_anum => 'A003714';  # Fibbinary, OFFSET=0 start value=0
 
 #------------------------------------------------------------------------------

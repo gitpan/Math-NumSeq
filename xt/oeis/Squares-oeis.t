@@ -61,6 +61,31 @@ sub diff_nums {
 }
 
 #------------------------------------------------------------------------------
+# A010390 - squares mod 8
+
+{
+  my $anum = 'A010390';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my $diff;
+  if ($bvalues) {
+    my $seq = Math::NumSeq::Squares->new;
+    my @got;
+    for (my $i = 0; @got < @$bvalues; $i++) {
+      my ($i, $value) = $seq->next;
+      push @got, $value % 8;
+    }
+    $diff = diff_nums(\@got, $bvalues);
+    if ($diff) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        $diff, undef,
+        "$anum");
+}
+
+#------------------------------------------------------------------------------
 # A000037 - non-squares
 
 {

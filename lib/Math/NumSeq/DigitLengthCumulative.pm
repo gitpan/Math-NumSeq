@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 44;
+$VERSION = 45;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -28,15 +28,15 @@ use Math::NumSeq;
 use Math::NumSeq::Fibonacci;
 *_blog2_estimate = \&Math::NumSeq::Fibonacci::_blog2_estimate;
 
-use Math::NumSeq::Base::Digits;
-*parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
+use Math::NumSeq::Base::Digits
+  'parameter_info_array';   # radix parameter
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
 
 use vars '$VERSION';
-$VERSION = 44;
+$VERSION = 45;
 
 # use constant name => Math::NumSeq::__('Digit Length Cumulative');
 use constant description => Math::NumSeq::__('Cumulative length of numbers 0,1,2,3,etc written out in the given radix.  For example binary 1,2,4,6,9,12,15,18,22,etc, 2 steps by 2, then 4 steps by 3, then 8 steps by 4, then 16 steps by 5, etc.');
@@ -45,6 +45,7 @@ use constant values_min => 1;
 use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
 
+#------------------------------------------------------------------------------
 # cf A117804 - natural position of n in 012345678910111213
 #
 my @oeis_anum;
@@ -55,6 +56,8 @@ sub oeis_anum {
   my ($self) = @_;
   return $oeis_anum[$self->{'radix'}];
 }
+
+#------------------------------------------------------------------------------
 
 sub rewind {
   my ($self) = @_;

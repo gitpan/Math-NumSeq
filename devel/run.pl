@@ -122,7 +122,6 @@ $|=1;
   $values_class = 'Math::NumSeq::ProthNumbers';
   $values_class = 'Math::NumSeq::BinaryUndulants';
   $values_class = 'Math::NumSeq::FractionDigits';
-  $values_class = 'Math::NumSeq::LucasNumbers';
   $values_class = 'Math::NumSeq::LuckySieve';
   $values_class = 'Math::NumSeq::Tribonacci';
   $values_class = 'Math::NumSeq::SelfLengthCumulative';
@@ -177,16 +176,21 @@ $|=1;
   $values_class = 'Math::NumSeq::PrimeExponentFlip';
   $values_class = 'Math::NumSeq::PrimesDigits';
   $values_class = 'Math::NumSeq::PowerPart';
+  $values_class = 'Math::NumSeq::Plaindromes';
+  $values_class = 'Math::NumSeq::SevenSegments';
+  $values_class = 'Math::NumSeq::LucasNumbers';
+  $values_class = 'Math::NumSeq::Xenodromes';
 
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new
     (
+     # radix => 10,
+
      # order => 'sorted',
      # order => 'descending',
      # digit => 1,
      # root_type => 'negative',
      # i_start => 1,
-     # radix => 2,
      # letter => '',
      # multiplicity => 'distinct',
      # order => 'descending',

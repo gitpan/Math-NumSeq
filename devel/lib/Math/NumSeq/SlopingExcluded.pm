@@ -25,7 +25,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 44;
+$VERSION = 45;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -42,8 +42,8 @@ use constant characteristic_increasing => 1;
 use constant default_i_start => 1;
 
 # "radix" parameter
-use Math::NumSeq::Base::Digits;
-*parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
+use Math::NumSeq::Base::Digits
+  'parameter_info_array';
 
 sub values_min {
   my ($self) = @_;

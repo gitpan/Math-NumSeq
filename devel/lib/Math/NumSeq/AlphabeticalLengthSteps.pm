@@ -21,7 +21,7 @@ use strict;
 use List::Util 'min';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 44;
+$VERSION = 45;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -41,7 +41,8 @@ use constant characteristic_smaller => 1;
 use constant characteristic_integer => 1;
 use constant characteristic_count => 1;
 
-*parameter_info_array = \&Math::NumSeq::AlphabeticalLength::parameter_info_array;
+*parameter_info_array
+  = \&Math::NumSeq::AlphabeticalLength::parameter_info_array;
 
 sub values_min {
   my ($self) = @_;

@@ -81,6 +81,34 @@ sub numeq_array {
 # }
 
 #------------------------------------------------------------------------------
+# A005179 - smallest number with n divisors
+
+{
+  my $anum = 'A005179';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  if ($bvalues) {
+    my $seq  = Math::NumSeq::DivisorCount->new;
+    my $target = 1;
+    while (@got < @$bvalues) {
+      my ($i, $value) = $seq->next;
+      if ($value == $target) {
+        push @got, $i;
+        $target++;
+      }
+    }
+    if (! numeq_array(\@got, $bvalues)) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..5]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..5]));
+    }
+  }
+  skip (! $bvalues,
+        numeq_array(\@got, $bvalues),
+        1,
+        "$anum");
+}
+
+#------------------------------------------------------------------------------
 # A137179 - smallest m with divcount(m)+divcount(m+1) == n
 
 {

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 44;
+$VERSION = 45;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -38,8 +38,8 @@ use constant i_start => 0;
 use constant characteristic_count => 1;
 use constant characteristic_increasing => 1;
 
-use Math::NumSeq::Base::Digits;
-*parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
+use Math::NumSeq::Base::Digits
+  'parameter_info_array';   # radix parameter
 
 #------------------------------------------------------------------------------
 # cf A000523 - floor(log2(n))

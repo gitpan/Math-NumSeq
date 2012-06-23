@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 44;
+$VERSION = 45;
 use Math::NumSeq;
 use Math::NumSeq::Primes;
 @ISA = ('Math::NumSeq');
@@ -33,12 +33,22 @@ use Math::NumSeq::Primes;
 # use constant name => Math::NumSeq::__('Emirps');
 use constant description => Math::NumSeq::__('Numbers which are primes forwards and backwards, eg. 157 because both 157 and 751 are primes.  Palindromes like 131 are excluded.  Default is decimal, or select a radix.');
 
-use Math::NumSeq::Base::Digits;
-*parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
+use Math::NumSeq::Base::Digits
+  'parameter_info_array';   # radix parameter
 
 use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
 
+# FIXME: find the first value in the sequence ... maybe save it
+my @values_min;
+$values_min[2]  = 11; # binary 1011 reverse 1101 is decimal 13
+$values_min[10] = 13; # reverse to 31
+sub values_min {
+  my ($self) = @_;
+  return $values_min[$self->{'radix'}];
+}
+
+#------------------------------------------------------------------------------
 # A006567 - decimal reversal is a prime and different
 # A007500 - decimal reversal is a prime, so palindromes which are primes too
 #
@@ -51,16 +61,6 @@ sub oeis_anum {
   my ($self) = @_;
   return $oeis_anum[$self->{'radix'}];
 }
-
-# FIXME: find the first value in the sequence ... maybe save it
-my @values_min;
-$values_min[2]  = 11; # binary 1011 reverse 1101 is decimal 13
-$values_min[10] = 13; # reverse to 31
-sub values_min {
-  my ($self) = @_;
-  return $values_min[$self->{'radix'}];
-}
-
 
 #------------------------------------------------------------------------------
 

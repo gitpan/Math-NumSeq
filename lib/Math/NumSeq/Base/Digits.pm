@@ -19,11 +19,13 @@ package Math::NumSeq::Base::Digits;
 use 5.004;
 use strict;
 
-use vars '$VERSION', '@ISA';
-$VERSION = 44;
+use vars '$VERSION', '@ISA', '@EXPORT_OK';
+$VERSION = 45;
 
+use Exporter;
 use Math::NumSeq;
-@ISA = ('Math::NumSeq');
+@ISA = ('Math::NumSeq', 'Exporter');
+@EXPORT_OK = ('parameter_info_array');
 
 sub characteristic_digits {
   my ($self) = @_;

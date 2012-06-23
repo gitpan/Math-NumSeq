@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 44;
+$VERSION = 45;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
@@ -37,14 +37,12 @@ use constant values_min => 1;
 use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
 
-use Math::NumSeq::Base::Digits;
-*parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
-
+use Math::NumSeq::Base::Digits
+  'parameter_info_array';   # radix parameter
 
 #------------------------------------------------------------------------------
 
 my @oeis_anum;
-
 $oeis_anum[2]  = 'A049445';  # binary 1s divide N  OFFSET=1
 $oeis_anum[3]  = 'A064150';  # base 3              OFFSET=0
 $oeis_anum[4]  = 'A064438';  # base 4              OFFSET=1
@@ -60,7 +58,6 @@ sub oeis_anum {
   my ($self) = @_;
   return $oeis_anum[$self->{'radix'}];
 }
-
 
 #------------------------------------------------------------------------------
 

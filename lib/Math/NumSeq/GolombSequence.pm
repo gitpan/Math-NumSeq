@@ -34,7 +34,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 44;
+$VERSION = 45;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -72,10 +72,10 @@ use constant parameter_info_array =>
 #------------------------------------------------------------------------------
 
 # cf A001463 golomb seq partial sums
-#    A088517 golomb first diffs
+#    A088517 golomb first diffs, is 0/1 characteristic of partial sums
 #    A163563 a(n)+1 reps
 #    A113722 a(n) reps of 2n+1
-#    A113724 a(n) reps of 2n+2
+#    A113724 a(n) reps of 2n+2 evens
 #    A103320 condensed 1,22,33,444,555,6666 etc
 #    A104236 n*golomb(n)
 #    A143125 n*golomb(n) cumulative

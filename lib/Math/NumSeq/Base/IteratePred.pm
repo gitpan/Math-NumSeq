@@ -20,12 +20,12 @@ use 5.004;
 use strict;
 
 use vars '$VERSION';
-$VERSION = 44;
+$VERSION = 45;
 
 sub rewind {
   my ($self) = @_;
   $self->{'i'} = $self->i_start;
-  $self->{'value'} = 0;
+  $self->{'value'} = $self->values_min - 1;
 }
 sub next {
   my ($self) = @_;

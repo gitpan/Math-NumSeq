@@ -50,6 +50,32 @@ sub numeq_array {
 
 
 #------------------------------------------------------------------------------
+# A003622 - odd Zeckendorfs
+
+{
+  my $anum = 'A003622';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  if ($bvalues) {
+    require Math::NumSeq::Fibonacci;
+    my $seq  = Math::NumSeq::Fibbinary->new;
+    for (my $n = 0; @got < @$bvalues; $n++) {
+      my ($i, $value) = $seq->next;
+      if ($value % 2) {
+        push @got, $i;
+      }
+    }
+    if (! numeq_array(\@got, $bvalues)) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        numeq_array(\@got, $bvalues),
+        1, "$anum");
+}
+
+#------------------------------------------------------------------------------
 # A022342 - Zeckendorf even, i where value is even
 #           floor(n*phi)-1
 

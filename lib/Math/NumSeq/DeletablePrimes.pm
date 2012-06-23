@@ -26,7 +26,7 @@ use strict;
 use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 44;
+$VERSION = 45;
 
 use Math::NumSeq;
 use Math::NumSeq::Primes;
@@ -43,8 +43,8 @@ use constant i_start => 1;
 use constant characteristic_increasing => 1;
 use constant values_min => 2;
 
-use Math::NumSeq::Base::Digits; # "radix" parameter
-*parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
+use Math::NumSeq::Base::Digits
+  'parameter_info_array';   # radix parameter
 
 
 #------------------------------------------------------------------------------

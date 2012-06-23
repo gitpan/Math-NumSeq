@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 44;
+$VERSION = 45;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
@@ -38,9 +38,10 @@ use constant values_min => 1;
 use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
 
-use Math::NumSeq::Base::Digits;
-*parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
+use Math::NumSeq::Base::Digits
+  'parameter_info_array';   # radix parameter
 
+#------------------------------------------------------------------------------
 # cf A035497 happy primes, happy numbers which are prime
 #    A003621 how many steps to reach 1 or 4
 #    A090425 how many steps for just the happy numbers
@@ -70,6 +71,8 @@ sub oeis_anum {
   my ($self) = @_;
   return $oeis_anum[$self->{'radix'}];
 }
+
+#------------------------------------------------------------------------------
 
 sub pred {
   my ($self, $value) = @_;

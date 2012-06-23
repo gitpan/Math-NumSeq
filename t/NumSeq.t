@@ -25,7 +25,7 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
-my $test_count = (tests => 1668)[1];
+my $test_count = (tests => 1676)[1];
 plan tests => $test_count;
 
 # uncomment this to run the ### lines
@@ -147,6 +147,18 @@ foreach my $elem
    #   { order => 'sorted' },
    # ],
    
+   [ 'Math::NumSeq::PowerFlip',
+     [ 1,  # 1
+       1,  # 2^1 -> 1^2
+       1,  # 3^1 -> 1^3
+       4,  # 2^2 -> 2^2
+       1,  # 5^1 -> 1^5
+       1,  # 2^1*3^1 -> 1^2*1^3
+       1,  # 7^1 -> 1^7
+       9,  # 2^3 -> 3^2
+     ],
+   ],
+
    [ 'Math::NumSeq::DigitProductSteps',
      [ 0,0,0,0,0, 0,0,0,0,0,   # i=0 to 9
        1,1,1,1,1, 1,1,1,1,1,   # i=10 to 19

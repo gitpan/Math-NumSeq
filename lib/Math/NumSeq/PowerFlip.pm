@@ -21,7 +21,7 @@ use strict;
 use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 44;
+$VERSION = 45;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -63,6 +63,7 @@ sub ith {
     ### too big ...
     return undef;
   }
+  $i = abs($i);
 
   my @primes = prime_factors($i)
     or return $i;  # 0,1 unchanged
@@ -174,18 +175,16 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =item C<$seq = Math::NumSeq::PowerFlip-E<gt>new ()>
 
-=item C<$seq = Math::NumSeq::PowerFlip-E<gt>new (radix =E<gt> $r, to_radix =E<gt> $t)>
-
 Create and return a new sequence object.
 
 =item C<$value = $seq-E<gt>ith($i)>
 
-Return C<$i> as digits of base C<radix> encoded in C<to_radix>.
+Return C<$i> with the prime powers and exponents flipped.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> occurs in the sequence.  As noted above this means
-integer C<$value> with at least one squared prime factor.
+an integer C<$value> with at least one squared prime factor.
 
 =back
 

@@ -44,6 +44,7 @@ devel/klarner.pl
 devel/kolakoski.pl
 devel/language-expr.pl
 devel/lib/Math/NumSeq/AbsCubicDiff.pm
+devel/lib/Math/NumSeq/AlphabeticalLength-oeis.t
 devel/lib/Math/NumSeq/AlphabeticalLength.pm
 devel/lib/Math/NumSeq/AlphabeticalLengthSteps.pm
 devel/lib/Math/NumSeq/Base/File.pm
@@ -69,13 +70,13 @@ devel/lib/Math/NumSeq/Ln2Bits.pm
 devel/lib/Math/NumSeq/Loeschian.pm
 devel/lib/Math/NumSeq/LongFractionPrimes.pm
 devel/lib/Math/NumSeq/numseq-oeis.t
+devel/lib/Math/NumSeq/OEIS/Catalogue/Plugin/Alpha.pm
 devel/lib/Math/NumSeq/Padovan.pm
 devel/lib/Math/NumSeq/pi.gz
 devel/lib/Math/NumSeq/PiBits.pm
 devel/lib/Math/NumSeq/PiDigits.pm
 devel/lib/Math/NumSeq/PierpontPrimes.pm
-devel/lib/Math/NumSeq/PowerFlip.pm
-devel/lib/Math/NumSeq/PowerFlip.t
+devel/lib/Math/NumSeq/Plaindromes.pm
 devel/lib/Math/NumSeq/PowerSieve.pm
 devel/lib/Math/NumSeq/PrimeFactorExtract.pm
 devel/lib/Math/NumSeq/PrimeQuadraticEuler.pm
@@ -84,12 +85,16 @@ devel/lib/Math/NumSeq/PrimeQuadraticLegendre.pm
 devel/lib/Math/NumSeq/PrimesDigits.pm
 devel/lib/Math/NumSeq/RadixConversion.pm
 devel/lib/Math/NumSeq/ReplicateDigits.pm
+devel/lib/Math/NumSeq/SevenSegments.pm
 devel/lib/Math/NumSeq/SlopingBinaryExcluded-oeis.t
 devel/lib/Math/NumSeq/SlopingExcluded.pm
 devel/lib/Math/NumSeq/Spectrum.pm
 devel/lib/Math/NumSeq/StoehrSequence.pm
 devel/lib/Math/NumSeq/SumTwoSquares.pm
 devel/lib/Math/NumSeq/SumXsq3Ysq.pm
+devel/lib/Math/NumSeq/Xenodromes-slow.t
+devel/lib/Math/NumSeq/xenodromes.pl
+devel/lib/Math/NumSeq/Xenodromes.pm
 devel/lipschitz.pl
 devel/lucky.pl
 devel/math-factor.pl
@@ -216,6 +221,7 @@ lib/Math/NumSeq/Pell.pm
 lib/Math/NumSeq/Perrin.pm
 lib/Math/NumSeq/PolignacObstinate.pm
 lib/Math/NumSeq/Polygonal.pm
+lib/Math/NumSeq/PowerFlip.pm
 lib/Math/NumSeq/Powerful.pm
 lib/Math/NumSeq/PowerPart.pm
 lib/Math/NumSeq/PrimeFactorCount.pm
@@ -295,6 +301,7 @@ t/Odd.t
 t/OEIS-File.t
 t/Perrin.t
 t/PolignacObstinate.t
+t/PowerFlip.t
 t/Powerful.t
 t/PrimeFactorsCount.t
 t/Primes.t
@@ -335,6 +342,7 @@ xt/oeis/Beastly-oeis.t
 xt/oeis/CollatzSteps-oeis.t
 xt/oeis/DeletablePrimes-oeis.t
 xt/oeis/DigitCount-oeis.t
+xt/oeis/DigitCountLow-oeis.t
 xt/oeis/DigitProduct-oeis.t
 xt/oeis/DigitProductSteps-oeis.t
 xt/oeis/DigitSum-oeis.t
@@ -353,6 +361,7 @@ xt/oeis/LuckyNumbers-oeis.t
 xt/oeis/NumSeq-oeis.t
 xt/oeis/Palindromes-oeis.t
 xt/oeis/Polygonal-oeis.t
+xt/oeis/PowerFlip-oeis.t
 xt/oeis/PrimeIndexPrimes-oeis.t
 xt/oeis/Primes-oeis.t
 xt/oeis/ProthNumbers-oeis.t

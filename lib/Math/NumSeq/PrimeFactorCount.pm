@@ -21,7 +21,7 @@ use strict;
 use List::Util 'min', 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 44;
+$VERSION = 45;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -447,7 +447,8 @@ L<Math::NumSeq::Primes>,
 L<Math::NumSeq::TwinPrimes>,
 L<Math::NumSeq::SophieGermainPrimes>,
 L<Math::NumSeq::LiouvilleFunction>,
-L<Math::NumSeq::MobiusFunction>
+L<Math::NumSeq::MobiusFunction>,
+L<Math::NumSeq::PowerFlip>
 
 =head1 HOME PAGE
 

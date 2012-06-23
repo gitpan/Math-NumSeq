@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 44;
+$VERSION = 45;
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
 
@@ -50,8 +50,8 @@ use constant i_start => 1;
 #                  'A004604',  # 5
 #                  'A004605',  # 6
 #                  'A004606',  # 7
-#                  'A004607',  # 8
-#                  'A004608',  # 9
+#                  'A006941',  # 8
+#                  'A004608',  # 9 
 #                  'A000796',  # 10
 #                  'A068436',  # 11
 #                  'A068437',  # 12

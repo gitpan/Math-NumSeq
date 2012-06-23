@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 44;
+$VERSION = 45;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 737 A-numbers in 106 modules
+# total 740 A-numbers in 107 modules
 
 use constant info_arrayref =>
 [
@@ -1145,11 +1145,35 @@ use constant info_arrayref =>
     ]
   },
   {
+    'anum' => 'A000079',
+    'class' => 'Math::NumSeq::Expression',
+    'parameters' => [
+      'expression',
+      '2**i'
+    ]
+  },
+  {
+    'anum' => 'A000244',
+    'class' => 'Math::NumSeq::Expression',
+    'parameters' => [
+      'expression',
+      '3**i'
+    ]
+  },
+  {
     'anum' => 'A000302',
     'class' => 'Math::NumSeq::Expression',
     'parameters' => [
       'expression',
       '4**i'
+    ]
+  },
+  {
+    'anum' => 'A011557',
+    'class' => 'Math::NumSeq::Expression',
+    'parameters' => [
+      'expression',
+      '10**i'
     ]
   },
   {
@@ -1274,14 +1298,6 @@ use constant info_arrayref =>
     'parameters' => [
       'fraction',
       '1/999'
-    ]
-  },
-  {
-    'anum' => 'A172051',
-    'class' => 'Math::NumSeq::FractionDigits',
-    'parameters' => [
-      'fraction',
-      '1/999999'
     ]
   },
   {
@@ -2355,6 +2371,10 @@ use constant info_arrayref =>
       'pairs',
       'average'
     ]
+  },
+  {
+    'anum' => 'A008477',
+    'class' => 'Math::NumSeq::PowerFlip'
   },
   {
     'anum' => 'A000188',

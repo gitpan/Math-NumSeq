@@ -1,4 +1,4 @@
-# Copyright 2010, 2011 Kevin Ryde
+# Copyright 2010, 2011, 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -33,8 +33,8 @@ $VERSION = 38;
 
 use constant description => Math::NumSeq::__('Sum of the digits in the given radix, modulo that radix.  Eg. for binary this is the bitwise parity.');
 
-use Math::NumSeq::Base::Digits;
-*parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
+use Math::NumSeq::Base::Digits
+  'parameter_info_array';   # radix parameter
 
 # use constant parameter_info_array => [{ name    => 'parity',
 #                                   display => Math::NumSeq::__('Parity'),

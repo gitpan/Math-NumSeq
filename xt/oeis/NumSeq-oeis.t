@@ -142,8 +142,8 @@ sub check_class {
   # return unless $class =~ /SqrtD/;
   # return unless $class =~ /Power/;
   # return unless $class =~ /Repdigit/;
-  # return unless $class =~ /Undul/;
-   return unless $class =~ /PrimesD/;
+  # return unless $class =~ /PowerF/;
+  # return unless $class =~ /PrimesD/;
   # return unless $class =~ /Golay/;
   # return unless $class =~ /Trib/;
   # return unless $anum eq 'A137164';

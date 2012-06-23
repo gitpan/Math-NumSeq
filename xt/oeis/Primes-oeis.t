@@ -19,8 +19,9 @@
 
 use 5.004;
 use strict;
+use POSIX 'ceil';
 use Test;
-plan tests => 10;
+plan tests => 12;
 
 use lib 't','xt';
 use MyTestHelpers;
@@ -75,6 +76,123 @@ sub diff_nums {
 }
 
 
+
+#------------------------------------------------------------------------------
+# A104103 - ceil(sqrt(prime))
+# cf A177357 squares <= prime(n)-3
+#
+#                                                                             21      22                                                                                 39       40                              48        
+# 2, 2, 3, 3,  4,  4,  5,  5,  5,  6,  6,  7,  7,  7,  7,  8,  8,  8,  9,  9,  9,     10, 10, 10,  11,  11,  11,  11,  11,  12,  12,  12,  12,  13,  13,  13,  13,  13,  13,  14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 18, 18, 18, 18, 18, 19, 19, 19, 19, 19, 19, 19
+# 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193,
+
+
+{
+  my $anum = 'A104103';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+
+  if ($bvalues->[21] == 10) { splice @$bvalues, 21, 0, 9; }
+  if ($bvalues->[39] == 13) { splice @$bvalues, 39, 1; } # delete 13
+  if ($bvalues->[48] == 15) { splice @$bvalues, 48, 1; } # delete 15
+  if ($bvalues->[72] == 19) { splice @$bvalues, 72, 1; } # delete 19
+  {
+    my $diff;
+    if ($bvalues) {
+      my @got;
+      my $seq  = Math::NumSeq::Primes->new;
+      while (@got < @$bvalues) {
+        my ($i, $prime) = $seq->next;
+        push @got, ceil(sqrt($prime));
+      }
+      $diff = diff_nums(\@got, $bvalues);
+      if ($diff) {
+        MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..30]));
+        MyTestHelpers::diag ("got:     ",join(',',@got[0..30]));
+      }
+    }
+    skip (! $bvalues,
+          $diff, undef,
+          "$anum");
+  }
+
+  # count squares <= prime, including 0 as a square
+  {
+    my $diff;
+    if ($bvalues) {
+      my @got;
+      my $seq  = Math::NumSeq::Primes->new;
+      my $count = 0;
+      my $root = 0;
+      my $square = 0;
+      while (@got < @$bvalues) {
+        my ($i, $prime) = $seq->next;
+        while ($square <= $prime) {
+          $count++;
+          $root++;
+          $square = $root*$root;
+        }
+        push @got, $count;
+      }
+      $diff = diff_nums(\@got, $bvalues);
+      if ($diff) {
+        MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..30]));
+        MyTestHelpers::diag ("got:     ",join(',',@got[0..30]));
+      }
+    }
+    skip (! $bvalues,
+          $diff, undef,
+          "$anum");
+  }
+}
+
+#------------------------------------------------------------------------------
+# A003627 - primes 3k-1
+
+{
+  my $anum = 'A003627';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  if ($bvalues) {
+    my $seq  = Math::NumSeq::Primes->new;
+    while (@got < @$bvalues) {
+      my ($i, $prime) = $seq->next;
+      if (($prime % 3) == 2) {
+        push @got, $prime;
+      }
+    }
+    if (! numeq_array(\@got, $bvalues)) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        numeq_array(\@got, $bvalues),
+        1);
+}
+
+#------------------------------------------------------------------------------
+# A092178 - primes == 8 mod 13
+
+{
+  my $anum = 'A092178';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  if ($bvalues) {
+    my $seq  = Math::NumSeq::Primes->new;
+    while (@got < @$bvalues) {
+      my ($i, $prime) = $seq->next;
+      if (($prime % 13) == 8) {
+        push @got, $prime;
+      }
+    }
+    if (! numeq_array(\@got, $bvalues)) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        numeq_array(\@got, $bvalues),
+        1);
+}
 
 #------------------------------------------------------------------------------
 # A111333 - count odd numbers up to n'th prime

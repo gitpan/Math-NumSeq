@@ -16,6 +16,9 @@ You should have received a copy of the GNU General Public License along
 with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 45, June 2012
+     - new PowerFlip
+
 Version 44, June 2012
      - tests Fibbinary diagnostics
 

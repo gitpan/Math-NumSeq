@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 44;
+$VERSION = 45;
 
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IterateIth;
@@ -39,9 +39,10 @@ use constant values_min => 1;
 use constant characteristic_count => 1;
 use constant characteristic_increasing => 0;
 
-use Math::NumSeq::Base::Digits;
-*parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
+use Math::NumSeq::Base::Digits
+  'parameter_info_array';   # radix parameter
 
+#------------------------------------------------------------------------------
 # cf A001273 smallest happy which takes N steps
 #
 my @oeis_anum;
@@ -56,6 +57,8 @@ sub oeis_anum {
   my ($self) = @_;
   return $oeis_anum[$self->{'radix'}];
 }
+
+#------------------------------------------------------------------------------
 
 sub ith {
   my ($self, $i) = @_;

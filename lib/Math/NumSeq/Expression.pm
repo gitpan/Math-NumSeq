@@ -24,7 +24,7 @@ use Math::Libm;
 use Module::Util;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 44;
+$VERSION = 45;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -106,14 +106,18 @@ my %oeis_anum;
 # some experimental A-number generators for easy expressions not with their
 # own module
 
+$oeis_anum{'i*i+1'} = 'A002522';
+$oeis_anum{'i*i+2'} = 'A059100';
+# OEIS-Catalogue: A002522 expression=i*i+1
+# OEIS-Catalogue: A059100 expression=i*i+2
+#
 # but A008865 starts from i=1
 # $oeis_anum{'i*i-2'} = 'A008865';
 # # OEIS-Catalogue: A008865 expression=i*i-2
-
-$oeis_anum{'i*i+1'} = 'A002522';
-# OEIS-Catalogue: A002522 expression=i*i+1
-$oeis_anum{'i*i+2'} = 'A059100';
-# OEIS-Catalogue: A059100 expression=i*i+2
+#
+# A162395 start i=1
+# $oeis_anum{'i*i*(-1)**(i+1)'} = 'A162395';
+# # OEIS-Catalogue: A162395 expression=i*i*(-1)**(i+1)
 
 $oeis_anum{'i*(i+2)'} = 'A005563';
 # OEIS-Catalogue: A005563 expression=i*(i+2)
@@ -121,18 +125,23 @@ $oeis_anum{'i*(i+2)'} = 'A005563';
 $oeis_anum{'i*(4*i*i-1)/3'} = 'A000447';  # sum of odd squares
 # OEIS-Catalogue: A000447 expression=i*(4*i*i-1)/3
 
-# A162395 start i=1
-# $oeis_anum{'i*i*(-1)**(i+1)'} = 'A162395';
-# # OEIS-Catalogue: A162395 expression=i*i*(-1)**(i+1)
-
 $oeis_anum{'i*(4*i-1)'} = 'A033991';
 # OEIS-Catalogue: A033991 expression=i*(4*i-1)
 
 $oeis_anum{'(2*i)**3'} = 'A016743';  # even cubes (2i)^3
 # OEIS-Catalogue: A016743 expression=(2*i)**3
 
-$oeis_anum{'4**i'} = 'A000302';  # powers of 4
+# FIXME: should promote to bigint when necessary
+# cf A131577 zero and powers of 2
+#    A171449 powers of 2 with -1 instead of 1
+$oeis_anum{'2**i'} = 'A000079';   # powers of 2
+$oeis_anum{'3**i'} = 'A000244';   # powers of 3
+$oeis_anum{'4**i'} = 'A000302';   # powers of 4
+$oeis_anum{'10**i'} = 'A011557';  # powers of 10
+# OEIS-Catalogue: A000079 expression=2**i
+# OEIS-Catalogue: A000244 expression=3**i
 # OEIS-Catalogue: A000302 expression=4**i
+# OEIS-Catalogue: A011557 expression=10**i
 
 sub oeis_anum {
   my ($self) = @_;

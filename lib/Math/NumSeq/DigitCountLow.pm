@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 44;
+$VERSION = 45;
 
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IterateIth;
@@ -39,10 +39,10 @@ use constant default_i_start => 0;
 use constant characteristic_count => 1;
 use constant characteristic_increasing => 0;
 
-use Math::NumSeq::DigitCount 4;
-*parameter_info_array = \&Math::NumSeq::DigitCount::parameter_info_array;
+use Math::NumSeq::Base::Digits
+  'parameter_info_array';   # radix parameter
 
-
+#------------------------------------------------------------------------------
 # cf A006519 - highest k s.t. 2^k+1 divides n
 #    A001511 low 0s in 2*n, ie +1
 #    A070940 low 0s pos counting from the left
@@ -78,6 +78,8 @@ sub oeis_anum {
   }
   return $oeis_anum[$self->i_start]->[$radix]->[$digit];
 }
+
+#------------------------------------------------------------------------------
 
 sub ith {
   my ($self, $i) = @_;

@@ -37,8 +37,8 @@ use constant values_min => 0;
 use constant characteristic_increasing => 0;
 use constant characteristic_smaller => 1;
 
-use Math::NumSeq::Base::Digits;
-*parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
+use Math::NumSeq::Base::Digits
+  'parameter_info_array';   # radix parameter
 
 
 #------------------------------------------------------------------------------

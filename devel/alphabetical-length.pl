@@ -46,7 +46,7 @@ use Smart::Comments;
   foreach my $lang (@langs) {
     print "$lang\n";
 
-    foreach my $i (1 .. 5) {
+    foreach my $i (1 .. 185) {
       my $str = Lingua::Any::Numbers::to_string($i,$lang);
       my $ord = Lingua::Any::Numbers::to_ordinal($i,$lang);
       $str //= '[undef]';

@@ -21,7 +21,7 @@ use strict;
 use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 44;
+$VERSION = 45;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -38,9 +38,8 @@ use constant description => Math::NumSeq::__('Primes where the fraction 1/p has 
 use constant default_i_start => 1;
 use constant characteristic_integer => 1;
 
-# radix, default 10
-use Math::NumSeq::Base::Digits;
-*parameter_info_array = \&Math::NumSeq::Base::Digits::parameter_info_array;
+use Math::NumSeq::Base::Digits
+  'parameter_info_array';   # radix parameter
 
 sub values_min {
   my ($self) = @_;

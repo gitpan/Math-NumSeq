@@ -21,6 +21,18 @@
 #    A055087 - runs 0toNtwice
 #    A055086 - n repeat floor(n/2)+1 times, DiagonalsOctant X+Y
 #    A082375 - k to 0 by 2s
+#    A122196 - count down by 2s
+#    A111650 - 2n repeated n times
+#    A000194 - n repeated 2n times
+#    A111651 - n repeated 3n times
+#    A111652 - 3n repeated n times
+#
+#    A049581 diagonals absdiff, abs(x-y) not plain runs
+#    A061579 descending NtoPrev, permutation of the integers
+#    A076478 0 to 2^k-1, each written out in k many bits
+#    A000267 1,2,3,3,4,4,5,5,5,6,6,6, twice repeat each run length
+#    A122196 down by 2s
+#
 
 package Math::NumSeq::Runs;
 use 5.004;
@@ -28,7 +40,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION','@ISA';
-$VERSION = 44;
+$VERSION = 45;
 
 use Math::NumSeq 21; # v.21 for oeis_anum field
 use Math::NumSeq::Base::IterateIth;
@@ -81,12 +93,6 @@ use constant parameter_info_array =>
    },
   ];
 
-# cf A049581 diagonals absdiff, abs(x-y) not plain runs
-#    A061579 descending NtoPrev, permutation of the integers
-#    A076478 0 to 2^k-1, each written out in k many bits
-#    A000267 1,2,3,3,4,4,5,5,5,6,6,6, twice repeat each run length
-#    A122196 down by 2s
-#
 my %runs_type_data
   = ('0toN' => { i_start    => 0,
                  value      => -1, # initial
