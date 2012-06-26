@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 45;
+$VERSION = 46;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
@@ -36,6 +36,7 @@ use constant description => Math::NumSeq::__('The number of ways i can be repres
 use constant default_i_start => 1;
 use constant values_min => 0;
 use constant characteristic_count => 1;
+use constant characteristic_smaller => 1;
 
 use constant parameter_info_array =>
   [

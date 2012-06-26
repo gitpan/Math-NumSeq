@@ -21,7 +21,7 @@ use strict;
 use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 45;
+$VERSION = 46;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -37,6 +37,7 @@ use Math::NumSeq::Base::IterateIth;
 use constant description => Math::NumSeq::__('Number of repeated applications of the Dedekind psi function to reach factors 2 and 3 only.');
 use constant default_i_start => 1;
 use constant characteristic_count => 1;
+use constant characteristic_smaller => 1;
 use constant characteristic_increasing => 0;
 use constant values_min => 0;
 

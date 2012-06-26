@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 2;
+plan tests => 3;
 
 use lib 't','xt';
 use MyTestHelpers;
@@ -48,6 +48,61 @@ sub numeq_array {
   return (@$a1 == @$a2);
 }
 
+
+#------------------------------------------------------------------------------
+# A087172 - next lower Fibonacci <= n
+
+{
+  my $anum = 'A087172';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  if ($bvalues) {
+    my $seq  = Math::NumSeq::Fibonacci->new;
+    $seq->next; # skip 0
+    (undef, my $fib) = $seq->next;
+    (undef, my $next_fib) = $seq->next;
+    for (my $n = 2; @got < @$bvalues; $n++) {
+      while ($next_fib < $n) {
+        $fib = $next_fib;
+        (undef, $next_fib) = $seq->next;
+      }
+      push @got, $fib;
+    }
+    if (! numeq_array(\@got, $bvalues)) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  } else {
+    MyTestHelpers::diag ("$anum not available");
+  }
+  skip (! $bvalues,
+        numeq_array(\@got, $bvalues),
+        1, "$anum");
+}
+
+#------------------------------------------------------------------------------
+# A005592 - F(2n+1)+F(2n-1)-1
+
+{
+  my $anum = 'A005592';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  if ($bvalues) {
+    my $seq  = Math::NumSeq::Fibonacci->new;
+    for (my $n = Math::NumSeq::_to_bigint(1); @got < @$bvalues; $n++) {
+      push @got, $seq->ith(2*$n+1) + $seq->ith(2*$n-1) - 1
+    }
+    if (! numeq_array(\@got, $bvalues)) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  } else {
+    MyTestHelpers::diag ("$anum not available");
+  }
+  skip (! $bvalues,
+        numeq_array(\@got, $bvalues),
+        1, "$anum");
+}
 
 #------------------------------------------------------------------------------
 # A108852 - num fibs <= n
@@ -86,9 +141,8 @@ sub numeq_array {
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
     my $seq  = Math::NumSeq::Fibonacci->new;
+    $seq->next; # skip 0
     my $lcm = Math::NumSeq::_to_bigint(1);
     while (@got < @$bvalues) {
       my ($i, $value) = $seq->next;

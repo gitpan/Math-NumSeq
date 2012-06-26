@@ -30,7 +30,7 @@ use POSIX 'ceil';
 use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 45;
+$VERSION = 46;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -43,6 +43,7 @@ use constant name => Math::NumSeq::__('Count Hypotenuses');
 use constant description => Math::NumSeq::__('Count of ways to be a sum of two squares, A^2+B^2 for integer A,B >=0.');
 use constant i_start => 0;
 use constant characteristic_count => 1;
+use constant characteristic_smaller => 1;
 use constant characteristic_increasing => 0;
 use constant values_min => 0;
 

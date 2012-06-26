@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 45;
+$VERSION = 46;
 use Math::NumSeq;
 use List::Util 'min';
 use Math::NumSeq::Base::IterateIth;
@@ -36,6 +36,7 @@ use Math::NumSeq::Base::IterateIth;
 use constant description => Math::NumSeq::__('Number of steps of the Kaprekar iteration digits ascending + digits descending until reaching a cycle.');
 use constant i_start => 1;
 use constant characteristic_count => 1;
+use constant characteristic_smaller => 1;
 use constant characteristic_integer => 1;
 
 use Math::NumSeq::Base::Digits

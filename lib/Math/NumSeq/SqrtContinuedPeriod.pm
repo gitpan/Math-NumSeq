@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 45;
+$VERSION = 46;
 
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IterateIth;
@@ -35,6 +35,7 @@ use Math::NumSeq::Base::IterateIth;
 # use constant name => Math::NumSeq::__('Sqrt Continued Fraction Period');
 use constant description => Math::NumSeq::__('Period of the continued fraction expansion of sqrt(i), or 0 for perfect squares (where the expansion is finite)');
 use constant characteristic_count => 1;
+use constant characteristic_smaller => 1;
 use constant characteristic_increasing => 0;
 use constant default_i_start => 1;
 use constant values_min => 0;

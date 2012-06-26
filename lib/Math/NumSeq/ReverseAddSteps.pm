@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 45;
+$VERSION = 46;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -37,6 +37,7 @@ use constant description => Math::NumSeq::__('How many steps of reverse and add 
 use constant i_start => 1;
 use constant values_min => -1;
 use constant characteristic_count => 1;
+use constant characteristic_smaller => 1;
 use constant characteristic_increasing => 0;
 
 use Math::NumSeq::Base::Digits

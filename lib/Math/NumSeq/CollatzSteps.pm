@@ -28,7 +28,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 45;
+$VERSION = 46;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -56,6 +56,7 @@ sub values_min {
           : 0);
 }
 use constant characteristic_count => 1;
+use constant characteristic_smaller => 1;
 use constant characteristic_increasing => 0;
 
 use constant parameter_info_array =>

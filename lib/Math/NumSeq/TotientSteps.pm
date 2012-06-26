@@ -21,7 +21,7 @@ use strict;
 use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 45;
+$VERSION = 46;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -38,6 +38,7 @@ use Math::NumSeq::Totient;
 # use constant name => Math::NumSeq::__('Totient Steps');
 use constant description => Math::NumSeq::__('Number of repeated applications of the totient function to reach 1.');
 use constant characteristic_count => 1;
+use constant characteristic_smaller => 1;
 use constant characteristic_increasing => 0;
 use constant values_min => 0; # at i=1
 use constant i_start => 1;

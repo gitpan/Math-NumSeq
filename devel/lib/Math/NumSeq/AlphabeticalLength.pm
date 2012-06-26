@@ -21,7 +21,7 @@ use strict;
 use List::Util 'min';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 45;
+$VERSION = 46;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -35,9 +35,9 @@ use Math::NumSeq::Base::IterateIth;
 # use constant name => Math::NumSeq::__('...');
 use constant description => Math::NumSeq::__('Length of i written out in words.');
 use constant default_i_start => 1;
+use constant characteristic_count => 1;
 use constant characteristic_smaller => 1;
 use constant characteristic_integer => 1;
-use constant characteristic_count => 1;
 
 use constant _HAVE_LINGUA_ANY_NUMBERS =>
   eval { require Lingua::Any::Numbers; 1 };

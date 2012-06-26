@@ -1,4 +1,4 @@
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2012 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -15,102 +15,96 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
-
-
-# Untouchables, not sum of proper divisors of any other integer
-# p*q sum S=1+p+q
-# so sums up to hi need factorize to (hi^2)/4
-# 
-
-
-package Math::NumSeq::TotientCumulative;
+package Math::NumSeq::DuffinianNumbers;
 use 5.004;
 use strict;
+use List::Util 'sum';
+use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
+use Math::Factor::XS 'factors';
+
 
 use vars '$VERSION', '@ISA';
 $VERSION = 46;
 use Math::NumSeq;
-@ISA = ('Math::NumSeq');
+use List::Util 'min';
+use Math::NumSeq::Base::IteratePred;
+@ISA = ('Math::NumSeq::Base::IteratePred',
+        'Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
-
-use Math::NumSeq::Totient;
-*_totient_by_sieve = \&Math::NumSeq::Totient::_totient_by_sieve;
-
+*_to_bigint = \&Math::NumSeq::_to_bigint;
 
 # uncomment this to run the ### lines
-#use Devel::Comments;
+#use Smart::Comments;
 
-# use constant name => Math::NumSeq::__('Totient Cumulative');
-use constant description => Math::NumSeq::__('Cumulative totient(1..n).');
-use constant i_start => 0;
-use constant values_min => 0;
-use constant characteristic_increasing => 1;
+
+# use constant name => Math::NumSeq::__('Duffinian Numbers');
+use constant description => Math::NumSeq::__('Duffinian numbers.');
+use constant i_start => 1;
 use constant characteristic_integer => 1;
+use constant characteristic_increasing => 1;
 
-use constant oeis_anum => 'A002088';
+use constant values_min => 4;
 
-sub rewind {
-  my ($self) = @_;
-  $self->{'i'} = $self->i_start;
-  $self->{'sum'} = 0;
-}
-sub next {
-  my ($self) = @_;
-  my $i = $self->{'i'}++;
-  return ($i, $self->{'sum'} += _totient_by_sieve($self,$i));
-}
+#------------------------------------------------------------------------------
 
-sub ith {
-  my ($self, $i) = @_;
-  ### TotientCumulative ith(): $i
+use constant oeis_anum => 'A003624';
 
-  if (_is_infinite($i)) {
-    return $i;
-  }
-  my $sum = 0;
-  foreach my $n (1 .. $i) {
-    $sum += _totient_by_sieve($self,$n);
-  }
-  return $sum;
-}
+
+#------------------------------------------------------------------------------
 
 sub pred {
   my ($self, $value) = @_;
-  ### TotientCumulative pred(): $value
+  ### DuffinianNumbers pred(): $value
 
   if (_is_infinite($value)) {
+    return undef;
+  }
+  if ($value < 2 || $value != int($value)) {
     return 0;
   }
-  my $sum = 0;
-  for (my $n = 0; ; $n++) {
-    if ($sum == $value) {
-      return 1;
+  if ($value > 0xFFFF_FFFF) {
+    return undef;
+  }
+  return ! is_prime($value)
+    && _coprime($value, sum(1,factors($value)));
+}
+
+sub _coprime {
+  my ($x, $y) = @_;
+  #### _coprime(): "$x,$y"
+  if ($y > $x) {
+    return 0;
+  }
+  for (;;) {
+    if ($y <= 1) {
+      return ($y == 1);
     }
-    if ($sum > $value) {
-      return 0;
-    }
-    $sum += _totient_by_sieve($self,$n);
+    ($x,$y) = ($y, $x % $y);
   }
 }
 
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq totients ie
+=for stopwords Ryde Math-NumSeq Duffinian
 
 =head1 NAME
 
-Math::NumSeq::TotientCumulative -- cumulative totients
+Math::NumSeq::DuffinianNumbers -- numbers having no common factor with sum-of-divisors
 
 =head1 SYNOPSIS
 
- use Math::NumSeq::TotientCumulative;
- my $seq = Math::NumSeq::TotientCumulative->new;
+ use Math::NumSeq::DuffinianNumbers;
+ my $seq = Math::NumSeq::DuffinianNumbers->new ();
  my ($i, $value) = $seq->next;
 
 =head1 DESCRIPTION
 
-The cumulative sum totient(1) to totient(i).
+I<In progress ...>
+
+This is the Duffinian numbers ...
+
+    1 ...
 
 =head1 FUNCTIONS
 
@@ -118,25 +112,19 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 
-=item C<$seq = Math::NumSeq::TotientCumulative-E<gt>new ()>
+=item C<$seq = Math::NumSeq::DuffinianNumbers-E<gt>new ()>
 
 Create and return a new sequence object.
 
-=item C<$value = $seq-E<gt>ith($i)>
-
-Return totient(i).
-
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value> occurs in the sequence, ie. is a sum totient(1) to
-totient(i) for some i.
+Return true if C<$value> is a Duffinian number.
 
 =back
 
 =head1 SEE ALSO
 
-L<Math::NumSeq>,
-L<Math::NumSeq::Totient>
+L<Math::NumSeq>
 
 =head1 HOME PAGE
 
@@ -144,7 +132,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2011, 2012 Kevin Ryde
+Copyright 2012 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

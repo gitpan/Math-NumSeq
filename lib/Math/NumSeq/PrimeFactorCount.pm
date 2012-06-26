@@ -21,7 +21,7 @@ use strict;
 use List::Util 'min', 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 45;
+$VERSION = 46;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -38,8 +38,9 @@ use Math::Factor::XS 'prime_factors';
 # so sums up to hi need factorize to (hi^2)/4
 #
 
-use constant characteristic_increasing => 0;
 use constant characteristic_count => 1;
+use constant characteristic_smaller => 1;
+use constant characteristic_increasing => 0;
 use constant values_min => 0;
 use constant i_start => 1;
 

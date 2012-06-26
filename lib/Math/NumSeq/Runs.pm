@@ -26,6 +26,7 @@
 #    A000194 - n repeated 2n times
 #    A111651 - n repeated 3n times
 #    A111652 - 3n repeated n times
+#    A121997 - 1toN repeated N times
 #
 #    A049581 diagonals absdiff, abs(x-y) not plain runs
 #    A061579 descending NtoPrev, permutation of the integers
@@ -40,7 +41,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION','@ISA';
-$VERSION = 45;
+$VERSION = 46;
 
 use Math::NumSeq 21; # v.21 for oeis_anum field
 use Math::NumSeq::Base::IterateIth;

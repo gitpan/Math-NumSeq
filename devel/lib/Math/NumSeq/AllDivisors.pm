@@ -15,11 +15,16 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
-package Math::NumSeq::AllPrimeFactors;
+
+# http://www.polprimos.com/imagenespub/poldiv3v.jpg
+#
+
+
+package Math::NumSeq::AllDivisors;
 use 5.004;
 use strict;
 use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
-use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
+use Math::Factor::XS 0.39 'factors';
 
 use vars '$VERSION', '@ISA';
 $VERSION = 46;
@@ -35,8 +40,8 @@ use Math::NumSeq::Primes;
 #use Smart::Comments;
 
 
-# use constant name => Math::NumSeq::__('All Prime Factors');
-use constant description => Math::NumSeq::__('Prime factors of the integers.');
+# use constant name => Math::NumSeq::__('All Divisors');
+use constant description => Math::NumSeq::__('Divisors of the integers.');
 use constant default_i_start => 1;
 use constant characteristic_smaller => 1;
 
@@ -54,16 +59,6 @@ use constant parameter_info_array =>
                        ],
     description => Math::NumSeq::__('Order for the digits within each integer.'),
    },
-   { name    => 'multiplicity',
-     display => Math::NumSeq::__('Multiplicity'),
-     type    => 'enum',
-     choices => ['repeated','distinct'],
-     choices_display => [Math::NumSeq::__('Repeated'),
-                         Math::NumSeq::__('Distinct'),
-                        ],
-     default => 'repeated',
-     description => Math::NumSeq::__('Whether to include repeated prime factors, or only distinct prime factors.'),
-   },
    {
     name    => 'on_values',
     display => Math::NumSeq::__('On Values'),
@@ -74,7 +69,7 @@ use constant parameter_info_array =>
                         Math::NumSeq::__('Composites'),
                         Math::NumSeq::__('Odd'),
                         Math::NumSeq::__('Even')],
-     description => Math::NumSeq::__('The values to take prime factors from, either all integers or just composites or odds or evens.'),
+     description => Math::NumSeq::__('The values to take divisors from, either all integers or just composites or odds or evens.'),
    },
   ];
 
@@ -88,23 +83,19 @@ sub values_min {
 }
 
 #------------------------------------------------------------------------------
-# cf A033308 - concatenate primes digits
-#    A056538 - list of all divisors
-
-my %oeis_anum;
-$oeis_anum{'all'}       ->{'repeated'}->{'ascending'} = 'A027746';
-$oeis_anum{'composites'}->{'repeated'}->{'ascending'} = 'A109709';
-$oeis_anum{'all'}       ->{'distinct'}->{'ascending'} = 'A027748';
+# A027749 excluding 1
+# A027751 excluding n including 1, being proper divisors
+my %oeis_anum = ('all,ascending'  => 'A027750',
+                 'all,descending' => 'A056538',
+                 # 'composites,ascending' => '',
+                );;
 
 sub oeis_anum {
   my ($self) = @_;
-  return $oeis_anum{$self->{'on_values'}}
-    ->{$self->{'multiplicity'}}
-      ->{$self->{'order'}};
+  return $oeis_anum{"$self->{on_values},$self->{order}"};
 }
 
 #------------------------------------------------------------------------------
-# ENHANCE-ME: find prime factors by sieve
 
 my %rewind = (all        => [ n => 2-1, n_step => 1 ],
               composites => [ n => 2-1, n_step => 1 ],
@@ -118,6 +109,7 @@ sub rewind {
   $self->{'i'} = $self->i_start;
 }
 
+# ENHANCE-ME: could find divisors by sieve
 sub next {
   my ($self) = @_;
   ### AllDigits next(): $self->{'i'}
@@ -133,11 +125,8 @@ sub next {
       }
     }
 
-    @$pending = prime_factors($n);
-    if ($self->{'multiplicity'} eq 'distinct') {
-      my $prev = 0;
-      @$pending = grep { $_ == $prev ? () : ($prev=$_) } @$pending;
-    }
+    @$pending = (1, factors($n), $n);  # with 1 and $n too
+
     my $order = $self->{'order'};
     if ($order eq 'descending') {
       @$pending = reverse @$pending;
@@ -149,10 +138,7 @@ sub next {
 
 sub pred {
   my ($self, $value) = @_;
-  if ($self->{'on_values'} eq 'odd' && $value < 3) {
-    return 0;
-  }
-  return Math::NumSeq::Primes->pred($value);
+  return ($value == int($value));
 }
 
 1;
@@ -162,12 +148,12 @@ __END__
 
 =head1 NAME
 
-Math::NumSeq::AllPrimeFactors -- prime factors of the integers
+Math::NumSeq::AllDivisors -- divisors of the integers
 
 =head1 SYNOPSIS
 
- use Math::NumSeq::AllPrimeFactors;
- my $seq = Math::NumSeq::AllPrimeFactors->new;
+ use Math::NumSeq::AllDivisors;
+ my $seq = Math::NumSeq::AllDivisors->new;
  my ($i, $value) = $seq->next;
 
 =head1 DESCRIPTION
@@ -234,9 +220,9 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 
-=item C<$seq = Math::NumSeq::AllPrimeFactors-E<gt>new ()>
+=item C<$seq = Math::NumSeq::AllDivisors-E<gt>new ()>
 
-=item C<$seq = Math::NumSeq::AllPrimeFactors-E<gt>new (order =E<gt> $str, multiplicity =E<gt> $str, on_values =E<gt> $str)>
+=item C<$seq = Math::NumSeq::AllDivisors-E<gt>new (order =E<gt> $str, multiplicity =E<gt> $str, on_values =E<gt> $str)>
 
 Create and return a new sequence object.
 
@@ -250,8 +236,9 @@ C<$value> a prime, or for C<on_values=E<gt>'odd'> an odd prime.
 =head1 SEE ALSO
 
 L<Math::NumSeq>,
-L<Math::NumSeq::PrimeFactorCount>,
-L<Math::NumSeq::AllDigits>
+L<Math::NumSeq::AllPrimeFactors>,
+L<Math::NumSeq::AllDigits>,
+L<Math::NumSeq::DivisorCount>
 
 =head1 HOME PAGE
 

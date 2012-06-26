@@ -24,7 +24,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 45;
+$VERSION = 46;
 
 use Math::NumSeq;
 use Math::NumSeq::Primes;
@@ -49,7 +49,6 @@ use constant parameter_info_array =>
 
 # use constant name => Math::NumSeq::__('...');
 use constant description => Math::NumSeq::__('Cunningham chains of primes where P, 2*P+1, 4*P+3 etc are all prime.');
-use constant characteristic_count => 1;
 use constant characteristic_increasing => 0;
 use constant values_min => 0;
 

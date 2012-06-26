@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 45;
+$VERSION = 46;
 use Math::NumSeq;
 use List::Util 'max';
 @ISA = ('Math::NumSeq');

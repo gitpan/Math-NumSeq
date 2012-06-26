@@ -19,17 +19,16 @@
 
 use 5.004;
 use strict;
-use List::Util 'max';
 
 use Test;
-plan tests => 7;
+plan tests => 1;
 
-use lib 't','xt',              'devel/lib';
+use lib 't','xt';
 use MyTestHelpers;
 MyTestHelpers::nowarnings();
 use MyOEIS;
 
-use Math::NumSeq::AlphabeticalLength;
+use Math::NumSeq::PrimeFactorCount;
 
 # uncomment this to run the ### lines
 #use Smart::Comments '###';
@@ -62,61 +61,58 @@ sub diff_nums {
 }
 
 #------------------------------------------------------------------------------
-# A052363 - new longest alpha
+# A030230 - distinct prime factor count odd
 
 {
-  my $anum = 'A052363';
+  my $anum = 'A030230';
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my $diff;
   if ($bvalues) {
-    my $seq = Math::NumSeq::AlphabeticalLength->new (i_start => 0);
+    my $seq = Math::NumSeq::PrimeFactorCount->new (multiplicity => 'distinct');
     my @got;
-    my $record = -1;
     while (@got < @$bvalues) {
       my ($i, $value) = $seq->next;
-      if ($value > $record) {
+      if ($value & 1) {
         push @got, $i;
-        $record = $value;
       }
     }
     $diff = diff_nums(\@got, $bvalues);
     if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..10]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..10]));
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
     }
   }
   skip (! $bvalues,
         $diff, undef,
-        "$anum");
+        "$anum - new high count of steps");
 }
 
+
 #------------------------------------------------------------------------------
-# A134629 - first requiring n letters
+# A030231 - distinct prime factor count even
 
 {
-  my $anum = 'A134629';
+  my $anum = 'A030231';
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my $diff;
   if ($bvalues) {
-    my $seq = Math::NumSeq::AlphabeticalLength->new;
-    my @got = (0);
-    my $count_got = 0;
-    while ($count_got < $#$bvalues) {
+    my $seq = Math::NumSeq::PrimeFactorCount->new (multiplicity => 'distinct');
+    my @got;
+    while (@got < @$bvalues) {
       my ($i, $value) = $seq->next;
-      if ($value <= $#$bvalues && ! defined $got[$value]) {
-        $got[$value] = $i;
-        $count_got++;
+      if (! ($value & 1)) {
+        push @got, $i;
       }
     }
     $diff = diff_nums(\@got, $bvalues);
     if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..10]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..10]));
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
     }
   }
   skip (! $bvalues,
         $diff, undef,
-        "$anum");
+        "$anum - new high count of steps");
 }
 
 #------------------------------------------------------------------------------

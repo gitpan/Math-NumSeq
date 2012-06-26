@@ -21,7 +21,7 @@ use strict;
 use List::Util 'sum';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 45;
+$VERSION = 46;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -38,14 +38,30 @@ use Math::NumSeq::Repdigits;
 # use constant name => Math::NumSeq::__('...');
 use constant description => Math::NumSeq::__('Length of i written out in words.');
 use constant default_i_start => 1;
+use constant characteristic_count => 1;
 use constant characteristic_smaller => 1;
 use constant characteristic_integer => 1;
-use constant characteristic_count => 1;
 use constant values_min => 2;
 
 #------------------------------------------------------------------------------
 
+# 7 choice of  ---     --- 
+#                 |   |   |
+#                          
+#                 |       |
+#               
+#         0  1  2  3  4  5  6  7  8  9
+# A063720 6, 2, 5, 5, 4, 5, 5, 3, 7, 5, 8, 4, 7, 7, 6, 7, 7, 5, 9, 7, 11, 7, 10
+# A006942 6, 2, 5, 5, 4, 5, 6, 3, 7, 6, 8, 4, 7, 7, 6, 7, 8, 5, 9, 8, 11, 7, 10
+# A074458 6, 2, 5, 5, 4, 5, 6, 4, 7, 5
+# A010371 6, 2, 5, 5, 4, 5, 6, 4, 7, 6, 8, 4, 7, 7, 6, 7, 8, 6, 9, 8, 11, 7, 10
+# A018846 same upside down
+# A018847 same upside down
+# A018849 same upside down
+# A053701 vertically symmetric
+
 use constant oeis_anum => 'A006942';
+
 
 #------------------------------------------------------------------------------
 
@@ -68,7 +84,17 @@ sub ith {
   if (_is_infinite($i)) {
     return undef;
   }
-  return sum (map {$digit_segments[$_]} _digit_split_lowtohigh($i,10));
+  if ($i == 0) {
+    return $digit_segments[0]; # single zero digit
+  }
+  my $neg;
+  if ($i < 0) {
+    $neg = 1;   # extra segment for "-"
+    $i = -$i;
+  } else {
+    $neg = 0;
+  }
+  return sum ($neg, map {$digit_segments[$_]} _digit_split_lowtohigh($i,10));
 }
 
 1;

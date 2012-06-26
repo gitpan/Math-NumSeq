@@ -22,12 +22,16 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 45;
+$VERSION = 46;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
+
+# uncomment this to run the ### lines
+#use Smart::Comments;
+
 
 # use constant name => Math::NumSeq::__('Triangular Numbers');
 use constant description => Math::NumSeq::__('The triangular numbers 0, 1, 3, 6, 10, 15, 21, 28, etc, i*(i+1)/2.');
@@ -35,10 +39,14 @@ use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
 use constant default_i_start => 0;
 use constant values_min => 0;  # at i=0
+
+#------------------------------------------------------------------------------
+# cf A062828 gcd(2n,triangular(n))
+#
+
 use constant oeis_anum => 'A000217'; # starting from i=0 value=0
 
-# uncomment this to run the ### lines
-#use Smart::Comments;
+#------------------------------------------------------------------------------
 
 sub ith {
   my ($self, $i) = @_;

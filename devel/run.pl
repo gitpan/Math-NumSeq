@@ -180,6 +180,7 @@ $|=1;
   $values_class = 'Math::NumSeq::SevenSegments';
   $values_class = 'Math::NumSeq::LucasNumbers';
   $values_class = 'Math::NumSeq::Xenodromes';
+  $values_class = 'Math::NumSeq::DuffinianNumbers';
 
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new

@@ -21,7 +21,7 @@ use strict;
 use List::Util 'min';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 45;
+$VERSION = 46;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -37,9 +37,9 @@ use Math::NumSeq::AlphabeticalLength;
 # use constant name => Math::NumSeq::__('...');
 use constant description => Math::NumSeq::__('Steps of alphabetical length until reaching a cycle.');
 use constant default_i_start => 1;
+use constant characteristic_count => 1;
 use constant characteristic_smaller => 1;
 use constant characteristic_integer => 1;
-use constant characteristic_count => 1;
 
 *parameter_info_array
   = \&Math::NumSeq::AlphabeticalLength::parameter_info_array;
@@ -57,6 +57,8 @@ sub values_min {
 }
 
 #------------------------------------------------------------------------------
+# A133418 single step towards 4
+
 my %oeis_anum = (cardinal => { en => 'A016037',
                                # OEIS-Catalogue: A016037 i_start=0
                              },

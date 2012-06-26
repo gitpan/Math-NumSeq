@@ -44,6 +44,7 @@ devel/klarner.pl
 devel/kolakoski.pl
 devel/language-expr.pl
 devel/lib/Math/NumSeq/AbsCubicDiff.pm
+devel/lib/Math/NumSeq/AllDivisors.pm
 devel/lib/Math/NumSeq/AlphabeticalLength-oeis.t
 devel/lib/Math/NumSeq/AlphabeticalLength.pm
 devel/lib/Math/NumSeq/AlphabeticalLengthSteps.pm
@@ -57,6 +58,7 @@ devel/lib/Math/NumSeq/CunninghamLength.pm
 devel/lib/Math/NumSeq/CunninghamPrimes.pm
 devel/lib/Math/NumSeq/Derived/Cumulative.pm
 devel/lib/Math/NumSeq/DigitExtract.pm
+devel/lib/Math/NumSeq/DuffinianNumbers.pm
 devel/lib/Math/NumSeq/EratosthenesStage.pm
 devel/lib/Math/NumSeq/HypotCount.pm
 devel/lib/Math/NumSeq/KaprekarNumbers.pm
@@ -362,6 +364,7 @@ xt/oeis/NumSeq-oeis.t
 xt/oeis/Palindromes-oeis.t
 xt/oeis/Polygonal-oeis.t
 xt/oeis/PowerFlip-oeis.t
+xt/oeis/PrimeFactorCount-oeis.t
 xt/oeis/PrimeIndexPrimes-oeis.t
 xt/oeis/Primes-oeis.t
 xt/oeis/ProthNumbers-oeis.t

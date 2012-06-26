@@ -21,7 +21,7 @@ use strict;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 45;
+$VERSION = 46;
 use Math::NumSeq::Base::Sparse;  # FIXME: implement pred() directly ...
 @ISA = ('Math::NumSeq::Base::Sparse');
 

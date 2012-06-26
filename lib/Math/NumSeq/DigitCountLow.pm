@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 45;
+$VERSION = 46;
 
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IterateIth;
@@ -29,7 +29,7 @@ use Math::NumSeq::Base::IterateIth;
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
 # uncomment this to run the ### lines
-#use Devel::Comments;
+#use Smart::Comments;
 
 
 # use constant name => Math::NumSeq::__('Digit Count Low');
@@ -37,10 +37,11 @@ use constant description => Math::NumSeq::__('How many of a given digit at the l
 use constant values_min => 0;
 use constant default_i_start => 0;
 use constant characteristic_count => 1;
+use constant characteristic_smaller => 1;
 use constant characteristic_increasing => 0;
 
-use Math::NumSeq::Base::Digits
-  'parameter_info_array';   # radix parameter
+use Math::NumSeq::DigitCount 4; # radix,digit parameter
+*parameter_info_array = \&Math::NumSeq::DigitCount::parameter_info_array;
 
 #------------------------------------------------------------------------------
 # cf A006519 - highest k s.t. 2^k+1 divides n

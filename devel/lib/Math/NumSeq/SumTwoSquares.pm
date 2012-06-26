@@ -27,7 +27,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 45;
+$VERSION = 46;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -76,12 +76,13 @@ sub values_min {
 }
 
 #------------------------------------------------------------------------------
-# cf A024507 x,y>0, x==y
+# cf A024507 x,y>0, x!=y
 #    A024509 x^2+y^2 with repetitions for different ways each can occur
 #    A025284 x^2+y^2 occurring in exactly one way
 #    A001844 2n(n+1)+1 is those hypots with Y=H-1 in X^2+Y^2=H^2
 #    A057653 odd numbers x^2+y^2
-#
+#    A057961 hypot count as radius increases
+
 sub oeis_anum {
   my ($self) = @_;
   if ($self->{'distinct'}) {

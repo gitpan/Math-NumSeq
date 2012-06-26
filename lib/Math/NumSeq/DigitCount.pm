@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 45;
+$VERSION = 46;
 use Math::NumSeq;
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
@@ -37,6 +37,7 @@ use constant description => Math::NumSeq::__('How many of a given digit in each 
 use constant values_min => 0;
 use constant default_i_start => 0;
 use constant characteristic_count => 1;
+use constant characteristic_smaller => 1;
 use constant characteristic_increasing => 0;
 
 use Math::NumSeq::Base::Digits;

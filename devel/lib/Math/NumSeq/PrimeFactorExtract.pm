@@ -30,7 +30,7 @@ use List::Util qw(min max sum reduce);
 use Math::Factor::XS 'prime_factors';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 45;
+$VERSION = 46;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -47,7 +47,6 @@ use Math::NumSeq 7; # v.7 for _is_infinite()
 # use constant name => Math::NumSeq::__('...');
 use constant description => Math::NumSeq::__('Extract prime factor from i.');
 use constant default_i_start => 1;
-use constant characteristic_count => 1;
 use constant characteristic_increasing => 0;
 
 use constant parameter_info_array =>
