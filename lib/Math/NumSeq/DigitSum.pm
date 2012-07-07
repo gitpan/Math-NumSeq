@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 46;
+$VERSION = 47;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -214,6 +214,12 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 Create and return a new sequence object.  The default is decimal, with no
 powering, or C<radix> and/or C<power> parameters can be given.
+
+=back
+
+=head2 Random Access
+
+=over
 
 =item C<$value = $seq-E<gt>ith($i)>
 

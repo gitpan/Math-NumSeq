@@ -58,7 +58,6 @@ devel/lib/Math/NumSeq/CunninghamLength.pm
 devel/lib/Math/NumSeq/CunninghamPrimes.pm
 devel/lib/Math/NumSeq/Derived/Cumulative.pm
 devel/lib/Math/NumSeq/DigitExtract.pm
-devel/lib/Math/NumSeq/DuffinianNumbers.pm
 devel/lib/Math/NumSeq/EratosthenesStage.pm
 devel/lib/Math/NumSeq/HypotCount.pm
 devel/lib/Math/NumSeq/KaprekarNumbers.pm
@@ -85,6 +84,8 @@ devel/lib/Math/NumSeq/PrimeQuadraticEuler.pm
 devel/lib/Math/NumSeq/PrimeQuadraticHonaker.pm
 devel/lib/Math/NumSeq/PrimeQuadraticLegendre.pm
 devel/lib/Math/NumSeq/PrimesDigits.pm
+devel/lib/Math/NumSeq/PrimeSignatureLeast.pm
+devel/lib/Math/NumSeq/RadixConversion-oeis.t
 devel/lib/Math/NumSeq/RadixConversion.pm
 devel/lib/Math/NumSeq/ReplicateDigits.pm
 devel/lib/Math/NumSeq/SevenSegments.pm
@@ -177,6 +178,7 @@ lib/Math/NumSeq/DigitProductSteps.pm
 lib/Math/NumSeq/DigitSum.pm
 lib/Math/NumSeq/DigitSumModulo.pm
 lib/Math/NumSeq/DivisorCount.pm
+lib/Math/NumSeq/DuffinianNumbers.pm
 lib/Math/NumSeq/Emirps.pm
 lib/Math/NumSeq/ErdosSelfridgeClass.pm
 lib/Math/NumSeq/Even.pm
@@ -368,11 +370,14 @@ xt/oeis/PrimeFactorCount-oeis.t
 xt/oeis/PrimeIndexPrimes-oeis.t
 xt/oeis/Primes-oeis.t
 xt/oeis/ProthNumbers-oeis.t
+xt/oeis/ReRound-oeis.t
+xt/oeis/SophieGermainPrimes.t
 xt/oeis/SpiroFibonacci-oeis.t
 xt/oeis/SqrtDigits-oeis.t
 xt/oeis/Squares-oeis.t
 xt/oeis/SternDiatomic-oeis.t
 xt/oeis/Totient-oeis.t
+xt/oeis/TotientCumulative-oeis.t
 xt/oeis/TwinPrimes-oeis.t
 xt/oeis/Woodall-oeis.t
 xt/pod_lists.t

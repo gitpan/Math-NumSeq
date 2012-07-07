@@ -25,7 +25,7 @@ use Math::NumSeq;
 *_to_bigint = \&Math::NumSeq::_to_bigint;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 46;
+$VERSION = 47;
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
 
@@ -351,6 +351,12 @@ can select another base.  (But the C<fraction> parameter is still decimal.)
 
 If the numerator or denominator of the fraction is bigger than fits Perl
 integer calculations then C<Math::BigInt> is used automatically.
+
+=back
+
+=head2 Random Access
+
+=over
 
 =item C<$value = $seq-E<gt>ith($i)>
 

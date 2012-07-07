@@ -21,7 +21,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION','@ISA';
-$VERSION = 46;
+$VERSION = 47;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -123,10 +123,10 @@ B-file or A-file can be used alone, but in that case there's no
 C<$seq-E<gt>description()> and it may limit the
 C<$seq-E<gt>characteristic()> attributes.
 
-The F<b000000.txt> file is a long list of values.  The F<a000000.txt> too
-and longer, but sometimes an auxiliary info.  Some sequences don't have
-these, only 30 or 40 sample values from the HTML or internal page.  Those
-few samples might be enough for fast growing sequences.
+F<b000000.txt> files are long lists of values.  F<a000000.txt> similarly and
+even longer, but sometimes an auxiliary info instead.  Some sequences don't
+have these, only the 30 or 40 sample values from the HTML or internal page.
+Those samples might be enough for fast growing sequences.
 
 =head2 Other Notes
 
@@ -136,8 +136,8 @@ C<Math::NumSeq::OEIS> tries to give the better or faster one.
 
 Sometimes the OEIS has duplicates, ie. two A-numbers which are the same
 sequence.  Both are catalogued so they both give NumSeq module code, but the
-C<$seq-E<gt>oeis_anum()> method will read back as whichever is the "primary"
-one.
+C<$seq-E<gt>oeis_anum()> method from that module will read back as whichever
+is the "primary" one.
 
 =head1 FUNCTIONS
 
@@ -154,47 +154,48 @@ Create and return a new sequence object.
 Return the next index and value in the sequence.
 
 In the current code when reading from a file any values bigger than a usual
-Perl IV or NV are returned as C<Math::BigInt> objects.  Is that a good idea?
-It preserves precision.
+Perl int or float are returned as C<Math::BigInt> objects.  Is that a good
+idea?  It preserves precision.
 
-An F<a000000.txt> or F<b000000.txt> is read progressively.  There's a Perl
-5.8 ithreads C<CLONE> which re-opens in a new thread so the C<$seq> in each
-thread has its own position.  But that doesn't help a C<fork()> so care
-should be taken that only one of the parent or child use the C<$seq> in that
-case, the same as for most open files when forking.  Is this a good idea?
+An F<a000000.txt> or F<b000000.txt> is read progressively.  For Perl 5.8
+ithreads there's a C<CLONE> setup which re-opens in a new thread so the
+C<$seq> in each thread has its own position.  But that doesn't help a
+C<fork()> so care should be taken that only one of the parent or child use
+the C<$seq> in that case.  The same is true of open file handling in a fork.
+Is this a good idea?
 
 =item C<$str = $seq-E<gt>description()>
 
 Return a human-readable description of the sequence.  For the downloaded
 files this is the "name" part, a short description of the sequence.
 
-A few sequences may have non-ascii characters in the description.  For Perl
+A few sequences may have non-ASCII characters in the description.  For Perl
 5.8 and up they're decoded to wide-chars.  Not sure what to do for earlier
-Perl, currently they're left as whatever bytes the download gave, probably
-utf-8.
+Perl, currently they're left as the bytes from the download, which is
+probably utf-8.
 
 =item C<$value = $seq-E<gt>values_min()>
 
 =item C<$value = $seq-E<gt>values_max()>
 
-Return the minimum or maximum value taken by values in the sequence, or
-C<undef> if unknown or infinity.
+Return the minimum or maximum values in the sequence, or C<undef> if unknown
+or infinity.
 
 For files C<values_min()> is guessed from the first few values if
-non-negative, but C<values_max()> considered to be infinite.  If the range
+non-negative, and C<values_max()> considered to be infinite.  If the range
 seems to be limited (eg. sequences of -1,0,1) then min and max are obtained,
-and also for "full" sequences where the samples are all the values.
+and likewise for "full" sequences where the samples are all the values.
 
 =item C<$ret = $seq-E<gt>characteristic($key)>
 
-For a file the various standard characteristics are obtained as follows
+For a file the following standard characteristics are obtained,
 
 =over
 
 =item *
 
 "increasing", "non_decreasing" and "smaller" are determined from
-the sample values or the first few values from a a-file or b-file.  Looking
+the sample values or the first few values from an a-file or b-file.  Looking
 at only the few values ensures a big file isn't read in its entirety and is
 normally enough.  The intention would be to try to look at enough values not
 to be tricked by decreasing values after the first few, etc.
@@ -207,7 +208,7 @@ unreliable.
 
 =item * 
 
-"count" is obtained from a DESCRIPTION with "number of".  This is probably
+"count" is from a DESCRIPTION with "number of".  This is probably
 unreliable.
 
 =item *

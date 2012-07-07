@@ -61,6 +61,32 @@ sub diff_nums {
 }
 
 #------------------------------------------------------------------------------
+# A117360 - n and 2*n+1 have same prime factor count, with multiplicity
+
+{
+  my $anum = 'A117360';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my $diff;
+  if ($bvalues) {
+    my $seq = Math::NumSeq::PrimeFactorCount->new;
+    my @got;
+    for (my $n = 1; @got < @$bvalues; $n++) {
+      if ($seq->ith($n) == $seq->ith(2*$n+1)) {
+        push @got, $n;
+      }
+    }
+    $diff = diff_nums(\@got, $bvalues);
+    if ($diff) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        $diff, undef,
+        "$anum");
+}
+
+#------------------------------------------------------------------------------
 # A030230 - distinct prime factor count odd
 
 {
@@ -84,7 +110,7 @@ sub diff_nums {
   }
   skip (! $bvalues,
         $diff, undef,
-        "$anum - new high count of steps");
+        "$anum - count is odd");
 }
 
 
@@ -112,7 +138,7 @@ sub diff_nums {
   }
   skip (! $bvalues,
         $diff, undef,
-        "$anum - new high count of steps");
+        "$anum - count is even");
 }
 
 #------------------------------------------------------------------------------

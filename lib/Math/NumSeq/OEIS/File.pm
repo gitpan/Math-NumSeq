@@ -30,14 +30,14 @@ use Symbol 'gensym';
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 46;
+$VERSION = 47;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_to_bigint = \&Math::NumSeq::_to_bigint;
 
 use vars '$VERSION';
-$VERSION = 46;
+$VERSION = 47;
 
 eval q{use Scalar::Util 'weaken'; 1}
   || eval q{sub weaken { $_[0] = undef }; 1 }
@@ -551,7 +551,7 @@ sub _read_html {
           <td[^>]*>              # <td ...>
           \s*
           (.*?)                  # text through to ...
-          <(br|/td)>             # <br> or </td>
+          (<br>|</?td)           # <br> or </td> or <td>
        }isx) {
       _set_description ($self, $1, $filename);
     } else {

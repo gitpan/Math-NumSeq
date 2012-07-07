@@ -21,7 +21,7 @@ use strict;
 use List::Util 'min', 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 46;
+$VERSION = 47;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -426,6 +426,12 @@ Option C<prime_type> is a string either
 
 "twin" counts both primes of each twin prime pair, so all of 3,5,7, 11,13,
 17,19, etc.
+
+=back
+
+=head2 Random Access
+
+=over
 
 =item C<$value = $seq-E<gt>ith($i)>
 

@@ -25,7 +25,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 46;
+$VERSION = 47;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -327,9 +327,15 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 
-=item C<$seq = Math::NumSeq::RepdigitRadix-E<gt>new (key=E<gt>value,...)>
+=item C<$seq = Math::NumSeq::RepdigitRadix-E<gt>new ()>
 
 Create and return a new sequence object.
+
+=back
+
+=head2 Random Access
+
+=over
 
 =item C<$value = $seq-E<gt>ith($i)>
 

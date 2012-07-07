@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 46;
+$VERSION = 47;
 
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IterateIth;
@@ -153,6 +153,12 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 Create and return a new sequence object.
 
 C<digit> can be -1 to mean digit radix-1, the highest digit in the radix.
+
+=back
+
+=head2 Random Access
+
+=over
 
 =item C<$value = $seq-E<gt>ith($i)>
 

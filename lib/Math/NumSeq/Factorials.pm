@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 46;
+$VERSION = 47;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -52,6 +52,8 @@ use constant characteristic_integer => 1;
 #    A001813 quad (2*n)!/n!
 #    A008545 quad n=4k+1 products
 #    A080500 squares n*(n-1)*(n-4)*(n-9)*(n-16)*(n-25)*...*1
+#
+#    A001013 Jordan-Polya products of factorials
 #
 use constant oeis_anum => 'A000142'; # factorials 1,1,2,6,24, including 0!==1
 
@@ -103,7 +105,7 @@ sub rewind {
   $self->{'i'} = $self->i_start;
   $self->{'f'} = 1;
 }
-sub _UNTESTED__seek_to_i {
+sub seek_to_i {
   my ($self, $i) = @_;
   $self->{'i'} = $i;
   $self->{'f'} = $self->ith($i-1);
@@ -322,8 +324,10 @@ Math::NumSeq::Factorials -- factorials i! = 1*2*...*i
 
 =head1 DESCRIPTION
 
-The sequence of factorials, 1, 2, 6, 24, 120, etc, being the product
-1*2*3*...*i.
+The factorials being product 1*2*3*...*i, 1 to i inclusive.
+
+    starting i=1
+    1, 2, 6, 24, 120, ...
 
 =head1 FUNCTIONS
 
@@ -331,9 +335,20 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 
-=item C<$seq = Math::NumSeq::Factorials-E<gt>new (key=E<gt>value,...)>
+=item C<$seq = Math::NumSeq::Factorials-E<gt>new ()>
 
 Create and return a new sequence object.
+
+=item C<$seq-E<gt>seek_to_i($i)>
+
+Move the current sequence position to C<$i>.  The next call to C<next()>
+will return C<$i> and corresponding value.
+
+=back
+
+=head2 Random Access
+
+=over
 
 =item C<$value = $seq-E<gt>ith($i)>
 
@@ -363,26 +378,26 @@ The current code uses Stirling's approximation
 
     log(n!) ~= n*log(n) - n
 
-by seeking i for which the target factorial "value" has
+by seeking an i for which the target factorial "value" has
 
     i*log(i) - i == log(value)
 
 Newton's method is used to solve for i,
 
-    target t=log(value)
-    f(x) = x*log(x) - x - t, seeking f(x)=0
+    target=log(value)
+    f(x) = x*log(x) - x - target,   seeking f(x)=0
     f'(x) = log(x)
 
-    iterate new_x = x - f(x)/f'(x)
-                  = (x+target)/log(x)
+    iterate next_x = x - f(x)/f'(x)
+                   = (x+target)/log(x)
 
 Just two iterations is quite close
 
-    t = log(value)
-    i0 = t
-    i1 = (i0+t)/log(t)
-       = 2t/log(t)
-    i2 = (i1+t)/log(i1)
+    target = log(value)
+    i0 = target
+    i1 = (i0+target)/log(target)
+       = 2t/log(target)
+    i2 = (i1+target)/log(i1)
 
     i ~= int(i2)
 

@@ -24,7 +24,7 @@ use Math::Libm;
 use Module::Util;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 46;
+$VERSION = 47;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -523,6 +523,12 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 =item C<$seq = Math::NumSeq::Expression-E<gt>new (radix =E<gt> $r, modulus =E<gt> $d)>
 
 Create and return a new sequence object.
+
+=back
+
+=head2 Random Access
+
+=over
 
 =item C<$value = $seq-E<gt>ith($i)>
 

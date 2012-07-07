@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 46;
+$VERSION = 47;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -135,6 +135,12 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 =item C<$seq = Math::NumSeq::StarNumbers-E<gt>new ()>
 
 Create and return a new sequence object.
+
+=back
+
+=head2 Random Access
+
+=over
 
 =item C<$value = $seq-E<gt>ith($i)>
 

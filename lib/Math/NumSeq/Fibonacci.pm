@@ -21,7 +21,7 @@ use strict;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 46;
+$VERSION = 47;
 use Math::NumSeq::Base::Sparse;  # FIXME: implement pred() directly ...
 @ISA = ('Math::NumSeq::Base::Sparse');
 
@@ -99,14 +99,13 @@ sub rewind {
   $self->{'f1'} = 1;
   $self->{'i'} = $self->i_start;
 }
-# sub _UNTESTED__seek_to_i {
-#   my ($self, $i) = @_;
-#   $self->{'i'} = $i;
-#   if ($i >= $uv_i_limit) {
-#     $i = _to_bigint($i);
-#   }
-#   ($self->{'f0'}, $self->{'f1'}) = $self->ith_pair($i);
-# }
+sub seek_to_i {
+  my ($self, $i) = @_;
+  # ENHANCE-ME: $self->ith_pair($i) giving i and i+1, or i-1 and i
+  $self->{'f0'} = $self->ith($i);
+  $self->{'f1'} = $self->ith($i);
+  $self->{'i'} = $i;
+}
 sub next {
   my ($self) = @_;
   ### Fibonacci next(): "f0=$self->{'f0'}, f1=$self->{'f1'}"
@@ -147,7 +146,7 @@ sub ith {
     # automatic BigInt if not another bignum class
     $Fk1 = _to_bigint(0);
   }
-  my $Fk  = $Fk1 + 1;  # inherit bignum 1
+  my $Fk = $Fk1 + 1;  # inherit bignum 1
 
   my $add = -2;
   while (@bits > 1) {
@@ -306,6 +305,17 @@ Return the next index and value in the sequence.
 
 When C<$value> exceeds the range of a Perl unsigned integer the return is a
 C<Math::BigInt> to preserve precision.
+
+=item C<$seq-E<gt>seek_to_i($i)>
+
+Move the current sequence position to C<$i>.  The next call to C<next()>
+will return C<$i> and corresponding value.
+
+=back
+
+=head2 Random Access
+
+=over
 
 =item C<$value = $seq-E<gt>ith($i)>
 

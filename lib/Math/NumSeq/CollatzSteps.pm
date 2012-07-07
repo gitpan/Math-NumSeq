@@ -28,7 +28,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 46;
+$VERSION = 47;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -243,6 +243,12 @@ The optional C<step_type> parameter (a string) selects between
     "up"      upward steps 3n+1
     "down"    downward steps n/2
     "both"    both up and down, which is the default
+
+=back
+
+=head2 Random Access
+
+=over
 
 =item C<$value = $seq-E<gt>ith($i)>
 

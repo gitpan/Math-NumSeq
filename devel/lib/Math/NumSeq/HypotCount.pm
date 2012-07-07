@@ -30,7 +30,7 @@ use POSIX 'ceil';
 use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 46;
+$VERSION = 47;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -272,6 +272,12 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 =item C<$seq = Math::NumSeq::HypotCount-E<gt>new ()>
 
 Create and return a new sequence object.
+
+=back
+
+=head2 Random Access
+
+=over
 
 =item C<$value = $seq-E<gt>ith($i)>
 

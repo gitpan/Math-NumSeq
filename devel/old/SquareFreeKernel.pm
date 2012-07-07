@@ -229,6 +229,12 @@ For example at i=12 the value is 3 because the square 4 is divided out.
 
 Create and return a new sequence object.
 
+=back
+
+=head2 Random Access
+
+=over
+
 =item C<$value = $seq-E<gt>ith($i)>
 
 Return C<$i> with any square factor divided out.

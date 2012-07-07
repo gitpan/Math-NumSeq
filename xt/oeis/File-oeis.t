@@ -81,6 +81,12 @@ unless ($skip) {
         MyTestHelpers::diag ("$dir/$filename:1:0: no values under @$dont");
         $bad++;
       }
+
+      my $description = $seq->description;
+      if ($description =~ /OFFSET/) {
+        MyTestHelpers::diag ("$dir/$filename:1:0: oops, OFFSET in description()");
+        $bad++;
+      }
     }
   }
   MyTestHelpers::diag ("total $count_files files");

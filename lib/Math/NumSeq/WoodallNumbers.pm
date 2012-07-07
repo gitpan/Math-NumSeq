@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 46;
+$VERSION = 47;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -72,8 +72,9 @@ sub rewind {
   my $i = $self->{'i'} = $self->i_start;
   $self->{'power'} = 2 ** $i;
 }
-sub _UNTESTED__seek_to_i {
+sub seek_to_i {
   my ($self, $i) = @_;
+  ### seek_to_i(): $i
   $self->{'i'} = $i;
   if ($i >= $uv_i_limit) {
     $i = Math::NumSeq::_to_bigint($i);
@@ -107,7 +108,13 @@ sub next {
 
 sub ith {
   my ($self, $i) = @_;
-  return $i * 2**$i - 1;
+  my $power;
+  if (! ref $i && $i >= $uv_i_limit) {
+    $power = Math::NumSeq::_to_bigint(1) << $i;
+  } else {
+    $power = 2**$i;
+  }
+  return $i * $power - 1;
 }
 
 sub pred {
@@ -221,6 +228,17 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 =item C<$seq = Math::NumSeq::WoodallNumbers-E<gt>new ()>
 
 Create and return a new sequence object.
+
+=item C<$seq-E<gt>seek_to_i($i)>
+
+Move the current sequence position to C<$i>.  The next call to C<next()>
+will return C<$i> and corresponding value.
+
+=back
+
+=head2 Random Access
+
+=over
 
 =item C<$value = $seq-E<gt>ith($i)>
 

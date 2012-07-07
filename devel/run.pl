@@ -140,7 +140,6 @@ $|=1;
   $values_class = 'Math::NumSeq::GoldbachCount';
   $values_class = 'Math::NumSeq::LemoineCount';
   $values_class = 'Math::NumSeq::EratosthenesStage';
-  $values_class = 'Math::NumSeq::ReRound';
   $values_class = 'Math::NumSeq::ReReplace';
   $values_class = 'Math::NumSeq::SqrtContinued';
   $values_class = 'Math::NumSeq::SternDiatomic';
@@ -151,7 +150,6 @@ $|=1;
   $values_class = 'Math::NumSeq::PrimeIndexPrimes';
   $values_class = 'Math::NumSeq::AlphabeticalLengthSteps';
   $values_class = 'Math::NumSeq::AlphabeticalLength';
-  $values_class = 'Math::NumSeq::PlanePathN';
   $values_class = 'Math::NumSeq::KaprekarSteps';
   $values_class = 'Math::NumSeq::Padovan';
   $values_class = 'Math::NumSeq::StoehrSequence';
@@ -181,12 +179,16 @@ $|=1;
   $values_class = 'Math::NumSeq::LucasNumbers';
   $values_class = 'Math::NumSeq::Xenodromes';
   $values_class = 'Math::NumSeq::DuffinianNumbers';
+  $values_class = 'Math::NumSeq::ReRound';
+  $values_class = 'Math::NumSeq::SophieGermainPrimes';
+  $values_class = 'Math::NumSeq::PlanePathN';
+  $values_class = 'Math::NumSeq::PrimeSignatureLeast';
 
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new
     (
+     # extra_multiples => 0,
      # radix => 10,
-
      # order => 'sorted',
      # order => 'descending',
      # digit => 1,
@@ -231,9 +233,9 @@ $|=1;
 
      # planepath => 'ZOrderCurve',
      #coordinate_type => 'X',
-     # planepath => 'AlternatePaper',
+     # planepath => 'AlternatePaper,arms=5',
      # planepath => 'GrayCode',
-     # line_type => 'X_axis',
+     # line_type => 'X_neg',
      # planepath => 'GosperSide',
      # delta_type=>'dSum',
      # turn_type => 'Right',

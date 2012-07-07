@@ -198,6 +198,12 @@ Math::NumSeq::PowerPart -- largest square etc divisor
 
 Create and return a new sequence object.
 
+=back
+
+=head2 Random Access
+
+=over
+
 =item C<$value = $seq-E<gt>ith($i)>
 
 Return the largest perfect square dividing C<$i>.

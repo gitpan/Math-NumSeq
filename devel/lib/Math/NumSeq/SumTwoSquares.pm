@@ -27,7 +27,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 46;
+$VERSION = 47;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -82,6 +82,7 @@ sub values_min {
 #    A001844 2n(n+1)+1 is those hypots with Y=H-1 in X^2+Y^2=H^2
 #    A057653 odd numbers x^2+y^2
 #    A057961 hypot count as radius increases
+#    A014198 count x^2+y^2 <= n excluding 0,0
 
 sub oeis_anum {
   my ($self) = @_;

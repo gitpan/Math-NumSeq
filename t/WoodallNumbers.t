@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 24;
+plan tests => 52;
 
 use lib 't';
 use MyTestHelpers;
@@ -36,7 +36,7 @@ use Math::NumSeq::WoodallNumbers;
 # VERSION
 
 {
-  my $want_version = 46;
+  my $want_version = 47;
   ok ($Math::NumSeq::WoodallNumbers::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::WoodallNumbers->VERSION,  $want_version,
@@ -50,7 +50,6 @@ use Math::NumSeq::WoodallNumbers;
       1,
       "VERSION class check $check_version");
 }
-
 
 #------------------------------------------------------------------------------
 # characteristic()
@@ -77,6 +76,20 @@ use Math::NumSeq::WoodallNumbers;
   my @pnames = map {$_->{'name'}} $seq->parameter_info_list;
   ok (join(',',@pnames),
       '');
+}
+
+#------------------------------------------------------------------------------
+# seek_to_i()
+
+{
+  my $seq = Math::NumSeq::WoodallNumbers->new;
+  foreach my $i (0 .. 10, 32, 64, 128) {
+    $seq->seek_to_i($i);
+    my ($got_i, $got_value) = $seq->next;
+    ok ($got_i, $i);
+    ok ($got_value, $seq->ith($i),
+        "seek_to_i($i) value");
+  }
 }
 
 #------------------------------------------------------------------------------

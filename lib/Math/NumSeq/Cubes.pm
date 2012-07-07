@@ -23,7 +23,7 @@ use POSIX 'floor','ceil';
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 46;
+$VERSION = 47;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -208,16 +208,22 @@ Return the next index and value in the sequence.
 If C<$value> overflows a usual Perl UV integer the return is promoted to
 C<Math::BigInt> to preserve all bits.
 
-=item C<$i = $seq-E<gt>seek_to_i($i)>
+=item C<$seq-E<gt>seek_to_i($i)>
 
 Move the current sequence position to C<$i>.  The next call to C<next()>
-will return C<$i>.
+will return C<$i> and corresponding value.
 
-=item C<$i = $seq-E<gt>seek_to_value($value)>
+=item C<$seq-E<gt>seek_to_value($value)>
 
 Move the current sequence position so that C<next()> will give C<$value> on
 the next call, or if C<$value> is not a cube then the next cube above
 C<$value>.
+
+=back
+
+=head2 Random Access
+
+=over
 
 =item C<$value = $seq-E<gt>ith($i)>
 

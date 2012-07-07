@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 46;
+$VERSION = 47;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -139,18 +139,25 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 
-=item C<$seq = Math::NumSeq::Odd-E<gt>new (key=E<gt>value,...)>
+=item C<$seq = Math::NumSeq::Odd-E<gt>new ()>
 
 Create and return a new sequence object.
 
-=item C<$i = $seq-E<gt>seek_to_i($i)>
+=item C<$seq-E<gt>seek_to_i($i)>
 
-Move the current i so C<next()> returns C<$i> on the next call.
+Move the current sequence position to C<$i>.  The next call to C<next()>
+will return C<$i> and corresponding value.
 
-=item C<$i = $seq-E<gt>seek_to_value($value)>
+=item C<$seq-E<gt>seek_to_value($value)>
 
 Move the current i so that C<next()> gives C<$value> on the next call, or if
 C<$value> is an even integer then the next higher even.
+
+=back
+
+=head2 Random Access
+
+=over
 
 =item C<$value = $seq-E<gt>ith($i)>
 

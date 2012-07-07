@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 46;
+$VERSION = 47;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -77,6 +77,7 @@ use constant parameter_info_array =>
 #    A055983 a(n+1) = a(n) base 10 converted to base 12, recurrence
 #    A032917 decimal digits 1,3 only
 #    A199341 decimal digits 1,3,4 only
+#    A032940 base 5 odd positions 0, is base 25
 
 my @oeis_anum;
 $oeis_anum[10]->[2] = 'A007088';  # numbers written in base 2, starting n=0
@@ -290,13 +291,13 @@ Math::NumSeq::RadixConversion -- radix conversion
 
  use Math::NumSeq::RadixConversion;
  my $seq = Math::NumSeq::RadixConversion->new (radix => 2,
-                                                        to_radix => 10);
+                                               to_radix => 10);
  my ($i, $value) = $seq->next;
 
 =head1 DESCRIPTION
 
-This is integers converted from one radix to another.  The default is binary
-converted to decimal,
+This sequence is integers converted from one radix to another.  The default
+is binary converted to decimal,
 
     0, 1, 10, 11, 100, 101, 110, 111, 1000, 1001, 1010, 1011, ...
 
@@ -330,6 +331,12 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 =item C<$seq = Math::NumSeq::RadixConversion-E<gt>new (radix =E<gt> $r, to_radix =E<gt> $t)>
 
 Create and return a new sequence object.
+
+=back
+
+=head2 Random Access
+
+=over
 
 =item C<$value = $seq-E<gt>ith($i)>
 

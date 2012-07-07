@@ -26,7 +26,7 @@ use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 use List::Util 'max','min';
 use Math::Trig 'pi';
 
-#use Smart::Comments;
+use Smart::Comments;
 
 # use blib "$ENV{HOME}/perl/bit-vector/Bit-Vector-7.1/blib";
 
@@ -37,8 +37,11 @@ use Math::Trig 'pi';
   # require Math::NumSeq::Primes;
   # my $seq = Math::NumSeq::Primes->new;
 
-  require Math::NumSeq::TwinPrimes;
-  my $seq = Math::NumSeq::TwinPrimes->new;
+   require Math::NumSeq::TwinPrimes;
+  # my $seq = Math::NumSeq::TwinPrimes->new;
+
+  require Math::NumSeq::SophieGermainPrimes;
+  my $seq = Math::NumSeq::SophieGermainPrimes->new;
 
   my $target = 2;
   for (;;) {
@@ -63,6 +66,90 @@ use Math::Trig 'pi';
   }
   exit 0;
 }
+
+{
+  # SG density
+  require Math::NumSeq::Primes;
+  my $seq = Math::NumSeq::Primes->new;
+  my $count_total = 0;
+  my $count_primes = 0;
+  my $target = 10;
+  foreach (1 .. 1000) {
+    my ($i, $prime) = $seq->next;
+    $count_total++;
+    $count_primes += is_prime(2*$prime+1);
+    if ($count_total > $target) {
+      my $frac = $count_primes/$count_total;
+      my $log = log($count_total)/$count_total;
+      print "$count_primes/$count_total = $frac  cf log=$log\n";
+      $target *= 1.5;
+    }
+  }
+  exit 0;
+}
+
+{
+  # SG factorizations
+  require Math::NumSeq::Primes;
+  my $seq = Math::NumSeq::Primes->new;
+  $, = ', ';
+  foreach (1 .. 1000) {
+    my ($i, $prime) = $seq->next;
+    my @prime_factors = prime_factors(2*$prime+1);
+    if (@prime_factors > 1) {
+      print "$prime  ";
+      print $prime_factors[0],"\n";
+    }
+  }
+  exit 0;
+}
+{
+  use Math::Prime::Util;
+  {
+    my $ret = Math::Prime::Util::is_prime(2**256);
+    ### $ret
+  }
+  {
+    my $approx = Math::Prime::Util::prime_count_approx(2**1024);
+    ### $approx
+  }
+  exit 0;
+}
+
+{
+  # SG speed
+
+  require Math::NumSeq::Primes;
+  require Math::NumSeq::SophieGermainPrimes;
+  my $seq = Math::NumSeq::SophieGermainPrimes->new;
+
+  require Devel::TimeThis;
+  {
+    my $t = Devel::TimeThis->new('seq');
+    foreach (1 .. 1000) {
+      $seq->next;
+    }
+  }
+  my ($i, $prime) = $seq->next;
+  {
+    my $t = Devel::TimeThis->new('pred');
+    foreach (1 .. $prime) {
+      $seq->pred($_);
+    }
+  }
+  my $p = Math::NumSeq::Primes->new;
+  {
+    my $t = Devel::TimeThis->new('p-pred');
+    foreach (;;) {
+      my ($i, $p) = $p->next;
+      last if $p > $prime;
+      $p->pred(2*$_+1);
+    }
+  }
+  exit 0;
+}
+
+
 
 
 {

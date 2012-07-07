@@ -6,6 +6,24 @@
 # DigitExtract
 # DigitAverage
 
+# minimum
+# maximum
+# high
+# low
+
+# mean
+# geometric_mean
+# quadratic_mean
+# median_min
+# median_max
+# median_mean
+# median_average
+# mode_min
+# mode_max
+# mode_mean
+# middle_high
+# middle_low
+# middle_mean
 
 
 
@@ -32,7 +50,7 @@ use strict;
 use List::Util qw(min max sum reduce);
 
 use vars '$VERSION', '@ISA';
-$VERSION = 46;
+$VERSION = 47;
 
 use Math::NumSeq::Base::IterateIth;
 use Math::NumSeq::Base::Digits;
@@ -379,6 +397,12 @@ See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 =item C<$seq = Math::NumSeq::DigitExtract-E<gt>new (length =E<gt> $integer)>
 
 Create and return a new sequence object.
+
+=back
+
+=head2 Random Access
+
+=over
 
 =item C<$value = $seq-E<gt>ith($i)>
 

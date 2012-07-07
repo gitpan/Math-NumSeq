@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 46;
+$VERSION = 47;
 
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IterateIth;
@@ -52,6 +52,7 @@ use constant parameter_info_array =>
    },
   ];
 
+#------------------------------------------------------------------------------
 # cf A007952 sieve+1
 #    A099361 sieve by primes
 #    A099204 sieve by primes
@@ -59,7 +60,7 @@ use constant parameter_info_array =>
 #    A099243 sieve by primes
 #    A002960 square sieve
 #
-#    A056533 sieve evens, every 2nd, 3rd, etc
+#    A056533 sieve out even every 2nd,4th,6th,etc
 #    A039672 sieve fibonacci style i+j prev terms
 #    A056530 Flavius Josephus after 2nd round
 #    A056531 Flavius Josephus after 4th round
@@ -87,6 +88,9 @@ sub oeis_anum {
   my ($self) = @_;
   return $oeis_anum[$self->{'extra_multiples'}];
 }
+
+#------------------------------------------------------------------------------
+
 
 sub ith {
   my ($self, $i) = @_;
@@ -277,8 +281,9 @@ Math::NumSeq::ReRound -- sequence from repeated rounding up
 =head1 DESCRIPTION
 
 This is the sequence of values formed by repeatedly rounding up to a
-multiple of i-1,i-2,...,2,1.
+multiple of i-1, i-2, ..., 2, 1.
 
+    starting i=1
     1, 2, 4, 6, 10, 12, 18, 22, 30, 34, 42, 48, 58, 60, 78, ...
 
 For example i=5 start at 5, round up to a multiple of 4 to give 8, then
@@ -396,6 +401,12 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 =item C<$seq = Math::NumSeq::ReRound-E<gt>new (extra_multiples =E<gt> $integer)>
 
 Create and return a new sequence object.
+
+=back
+
+=head2 Random Access
+
+=over
 
 =item C<$value = $seq-E<gt>ith($i)>
 

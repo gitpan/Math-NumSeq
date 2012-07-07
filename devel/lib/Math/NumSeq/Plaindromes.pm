@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 46;
+$VERSION = 47;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
@@ -85,6 +85,8 @@ my %oeis_anum = (
                  '7,strict-ascending' => 'A023776',
                  '8,strict-ascending' => 'A023777',
 
+                 # karadromes
+                 '5,strict-descending' => 'A023787',
                 );
 sub oeis_anum {
   my ($self) = @_;

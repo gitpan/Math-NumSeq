@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 46;
+$VERSION = 47;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -411,6 +411,12 @@ on the powering
     "1/2-3/2"    sqrt(n)   and sqrt(n^3)
     "2/3-3/2"    cbrt(n^2) and sqrt(n^3)
     "3/4-4/3"    n^(3/4)   and n^(4/3)
+
+=back
+
+=head2 Random Access
+
+=over
 
 =item C<$value = $seq-E<gt>ith($i)>
 

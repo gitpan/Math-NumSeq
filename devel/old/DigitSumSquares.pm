@@ -124,6 +124,12 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 Create and return a new sequence object.  The default radix is 10,
 ie. decimal, or a C<radix> parameter can be given.
 
+=back
+
+=head2 Random Access
+
+=over
+
 =item C<$value = $seq-E<gt>ith($i)>
 
 Return the sum of the digits of C<$i>.

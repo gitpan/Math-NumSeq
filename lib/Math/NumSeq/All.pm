@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 46;
+$VERSION = 47;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -182,6 +182,12 @@ Create and return a new sequence object.
 
 Move the current i so that C<next()> will give C<$value> on the next call,
 or ceil($value) if C<$value> is an integer.
+
+=back
+
+=head2 Random Access
+
+=over
 
 =item C<$value = $seq-E<gt>ith($i)>
 

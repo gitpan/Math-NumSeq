@@ -24,7 +24,7 @@ use Math::Factor::XS 'factors';
 
 
 use vars '$VERSION', '@ISA';
-$VERSION = 46;
+$VERSION = 47;
 use Math::NumSeq;
 use List::Util 'min';
 use Math::NumSeq::Base::IteratePred;
@@ -65,18 +65,22 @@ sub pred {
   if ($value > 0xFFFF_FFFF) {
     return undef;
   }
+  $value = "$value"; # numize any Math::BigInt for factors() and speed
+
   return ! is_prime($value)
     && _coprime($value, sum(1,factors($value)));
 }
 
+# return true if coprime
 sub _coprime {
   my ($x, $y) = @_;
-  #### _coprime(): "$x,$y"
+  ### _coprime(): "$x,$y"
   if ($y > $x) {
-    return 0;
+    ($x,$y) = ($y,$x);
   }
   for (;;) {
     if ($y <= 1) {
+      ### result: ($y == 1)
       return ($y == 1);
     }
     ($x,$y) = ($y, $x % $y);
@@ -90,7 +94,7 @@ __END__
 
 =head1 NAME
 
-Math::NumSeq::DuffinianNumbers -- numbers having no common factor with sum-of-divisors
+Math::NumSeq::DuffinianNumbers -- no common factor with sum of divisors
 
 =head1 SYNOPSIS
 
@@ -100,11 +104,16 @@ Math::NumSeq::DuffinianNumbers -- numbers having no common factor with sum-of-di
 
 =head1 DESCRIPTION
 
-I<In progress ...>
+This is the Duffinian numbers which are composites having no common factor
+with their sum of divisors.
 
-This is the Duffinian numbers ...
+    starting i=1
+    4, 8, 9, 16, 21, 25, 27, 32, 35, 36, 39, 49, 50, 55, 57, 63, ...
 
-    1 ...
+For example 21 has divisors 1,3,7,21 total 32 which has no common factor
+with 21.  Only composites are included since primes would not be
+particularly interesting for this rule.  They'd having only divisors 1,p and
+so p+1 never having a common factor with p.
 
 =head1 FUNCTIONS
 
@@ -119,6 +128,10 @@ Create and return a new sequence object.
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> is a Duffinian number.
+
+In the current code a hard limit of 2**32 is placed on the C<$value> to be
+checked, in the interests of not going into a near-infinite loop.  The
+return is C<undef> for bigger values.
 
 =back
 

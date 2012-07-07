@@ -35,7 +35,7 @@ plan tests => $test_count;
 # VERSION
 
 {
-  my $want_version = 46;
+  my $want_version = 47;
   ok ($Math::NumSeq::Multiples::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::Multiples->VERSION,  $want_version,

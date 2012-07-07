@@ -27,7 +27,7 @@ BEGIN { MyTestHelpers::nowarnings(); }
 
 use Math::NumSeq::Factorials;
 
-my $test_count = (tests => 40)[1];
+my $test_count = (tests => 66)[1];
 plan tests => $test_count;
 
 
@@ -35,7 +35,7 @@ plan tests => $test_count;
 # VERSION
 
 {
-  my $want_version = 46;
+  my $want_version = 47;
   ok ($Math::NumSeq::Factorials::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::Factorials->VERSION,  $want_version,
@@ -65,6 +65,18 @@ plan tests => $test_count;
       '');
 }
 
+#------------------------------------------------------------------------------
+# seek_to_i()
+
+{
+  my $seq = Math::NumSeq::Factorials->new;
+  foreach my $i (0 .. 10, 20, 30) {
+    $seq->seek_to_i($i);
+    my ($got_i, $got_value) = $seq->next;
+    ok ($got_i, $i);
+    ok ($got_value, $seq->ith($i));
+  }
+}
 
 #------------------------------------------------------------------------------
 # pred()
@@ -94,7 +106,6 @@ plan tests => $test_count;
   ok ($seq->pred(120.25), 0);
   ok ($seq->pred(121), 0);
 }
-
 
 #------------------------------------------------------------------------------
 # value_to_i_floor()

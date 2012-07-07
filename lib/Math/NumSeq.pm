@@ -38,7 +38,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 46;
+$VERSION = 47;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -233,9 +233,10 @@ iterate through values and some sequences have random access and/or
 predicate test.
 
 The idea is to generate things like squares or primes in a generic way.
-Some sequences, like squares, are so easy there's no need for this except
+Some sequences, like squares, are so easy there's no need for a class except
 for the genericness.  Other sequences are trickier and an iterator is a good
-way to go through the values.
+way to go through the values.  The iterating tries to be progressive, not
+calculating too far ahead but doing reasonable size chunks for efficiency.
 
 Sequence values have an integer index "i" starting either from i=0 or i=1 or
 similar as best suits the sequence.  The values themselves can be anything,
@@ -296,7 +297,7 @@ returns to.
 =item C<$str = $seq-E<gt>description()>
 
 A human-readable description of the sequence.  This might be translated into
-the locale language (but there's no message translations yet).
+the locale language, but there's no message translations yet.
 
 =item C<$value = $seq-E<gt>values_min()>
 
@@ -313,7 +314,7 @@ a sequence can have to describe itself.
 
     digits            integer or undef, the radix if seq is digits
     count             boolean, true if values are counts of something
-    smaller           boolean, true if v[i] < i generally
+    smaller           boolean, true if value[i] < i generally
     integer           boolean, true if all values are integers
 
     increasing        boolean, true if v[i+1] > v[i] always
@@ -325,8 +326,8 @@ a sequence can have to describe itself.
 
 C<value_is_radix> means each value is a radix applying to the i index.  For
 example RepdigitRadix gives a value which is a radix where i is a repdigit.
-Such values might also be 0 or 1 or -1 or some such non-radix to indicate no
-radix.
+These values might also be 0 or 1 or -1 or some such non-radix to indicate
+no radix.
 
 =item C<$str = $seq-E<gt>oeis_anum()>
 
@@ -379,10 +380,10 @@ C<type> is a string, one of
 handling to ensure it reaches Perl as a byte string, whereas a "string" type
 might in principle take Perl wide chars.
 
-For "enum" the C<choices> field is the possible values, such as
+For "enum" the C<choices> field is an arrayref of possible values, such as
 
-    { name => "flavour",
-      type => "enum",
+    { name    => "flavour",
+      type    => "enum",
       choices => ["strawberry","chocolate"],
     }
 
@@ -396,7 +397,7 @@ on the parameter.
 C<share_key> is designed to indicate when parameters from different NumSeq
 classes can be a single control widget in a GUI etc.  Normally the C<name>
 is enough, but when the same name has slightly different meanings in
-different classes a C<share_key> allows the same meanings to be matched up.
+different classes a C<share_key> keeps different meanings separate.
 
 =back
 
@@ -404,17 +405,17 @@ different classes a C<share_key> allows the same meanings to be matched up.
 
 The following methods are only implemented for some sequences since it's
 sometimes difficult to generate an arbitrary numbered element etc.  Check
-with C<$seq-E<gt>can('ith')> etc before using.
+C<$seq-E<gt>can('ith')> etc before using.
 
 =over
 
-=item C<$i = $seq-E<gt>seek_to_i($i)>
+=item C<$seq-E<gt>seek_to_i($i)>
 
-=item C<$i = $seq-E<gt>seek_to_value($value)>
+=item C<$seq-E<gt>seek_to_value($value)>
 
-Move the current i so C<next()> returns C<$i> or C<$value> on the next call.
-If C<$value> is not in the sequence then move so as to return the next
-higher value which is.
+Move the current i so C<next()> will return C<$i> or C<$value> on the next
+call.  If C<$value> is not in the sequence then move so as to return the
+next higher value which is.
 
 =item C<$value = $seq-E<gt>ith($i)>
 
@@ -440,7 +441,7 @@ Return an estimate of the i corresponding to C<$value>.
 
 The accuracy of this estimate is unspecified, but can at least hint at the
 growth rate of the sequence.  For example if making an "intersection"
-checking for a given values in the sequence then if the estimated i is small
+checking for given values in the sequence then if the estimated i is small
 it may be fastest to go through the sequence by C<next()> and compare,
 rather than apply C<pred()> to each target.
 
@@ -560,7 +561,8 @@ L<Math::NumSeq::ReverseAddSteps>,
 L<Math::NumSeq::JugglerSteps>,
 L<Math::NumSeq::SternDiatomic>,
 L<Math::NumSeq::NumAronson>,
-L<Math::NumSeq::HofstadterFigure>
+L<Math::NumSeq::HofstadterFigure>,
+L<Math::NumSeq::DuffinianNumbers>
 
 L<Math::NumSeq::Kolakoski>,
 L<Math::NumSeq::GolombSequence>,

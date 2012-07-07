@@ -27,7 +27,7 @@ use Smart::Comments;
 {
   require Math::NumSeq::OEIS::File;
   my $seq = Math::NumSeq::OEIS::File->new(
-                                          anum=>'A057962',
+                                          anum=>'A088218',
                                           # anum=>'A000290',
                                          );
   ### $seq

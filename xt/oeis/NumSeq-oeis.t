@@ -128,7 +128,7 @@ sub check_class {
 
   # skip all except ...
   #
-  # return unless $class =~ /Collatz/;
+  # return unless $class =~ /Soph/;
   # return unless $class =~ /PrimeIndex/;
   # return unless $class =~ /Golomb/;
   # return unless $class =~ /Spiro/;
@@ -138,7 +138,7 @@ sub check_class {
   # return unless $class =~ /Luc|Fib|Cullen|Wood/;
   # return unless $class =~ /Lucas/;
   # return unless $class =~ /RadixWithout/;
-  # return unless $class =~ /Modulo/;
+   return unless $class =~ /Duf/;
   # return unless $class =~ /SqrtD/;
   # return unless $class =~ /Power/;
   # return unless $class =~ /Repdigit/;

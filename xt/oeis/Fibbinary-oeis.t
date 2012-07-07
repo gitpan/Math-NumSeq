@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 8;
+plan tests => 10;
 
 use lib 't','xt';
 use MyTestHelpers;
@@ -50,6 +50,29 @@ sub numeq_array {
 
 
 #------------------------------------------------------------------------------
+# A118113 - 2*fibbinary+1
+
+{
+  my $anum = 'A118113';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  if ($bvalues) {
+    my $seq  = Math::NumSeq::Fibbinary->new;
+    for (my $n = 0; @got < @$bvalues; $n++) {
+      my ($i, $value) = $seq->next;
+      push @got, 2*$value+1;
+    }
+    if (! numeq_array(\@got, $bvalues)) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        numeq_array(\@got, $bvalues),
+        1, "$anum");
+}
+
+#------------------------------------------------------------------------------
 # A003622 - odd Zeckendorfs
 
 {
@@ -57,7 +80,6 @@ sub numeq_array {
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
   if ($bvalues) {
-    require Math::NumSeq::Fibonacci;
     my $seq  = Math::NumSeq::Fibbinary->new;
     for (my $n = 0; @got < @$bvalues; $n++) {
       my ($i, $value) = $seq->next;
@@ -84,7 +106,6 @@ sub numeq_array {
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
   if ($bvalues) {
-    require Math::NumSeq::Fibonacci;
     my $seq  = Math::NumSeq::Fibbinary->new;
     for (my $n = 0; @got < @$bvalues; $n++) {
       my ($i, $value) = $seq->next;

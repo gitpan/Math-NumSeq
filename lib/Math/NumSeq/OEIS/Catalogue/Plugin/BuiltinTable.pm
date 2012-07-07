@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 46;
+$VERSION = 47;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 740 A-numbers in 107 modules
+# total 741 A-numbers in 108 modules
 
 use constant info_arrayref =>
 [
@@ -1057,6 +1057,10 @@ use constant info_arrayref =>
   {
     'anum' => 'A000005',
     'class' => 'Math::NumSeq::DivisorCount'
+  },
+  {
+    'anum' => 'A003624',
+    'class' => 'Math::NumSeq::DuffinianNumbers'
   },
   {
     'anum' => 'A080790',

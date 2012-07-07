@@ -27,7 +27,7 @@ BEGIN { MyTestHelpers::nowarnings(); }
 
 use Math::NumSeq::Pronic;
 
-my $test_count = (tests => 23)[1];
+my $test_count = (tests => 47)[1];
 plan tests => $test_count;
 
 
@@ -35,7 +35,7 @@ plan tests => $test_count;
 # VERSION
 
 {
-  my $want_version = 46;
+  my $want_version = 47;
   ok ($Math::NumSeq::Pronic::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::Pronic->VERSION,  $want_version,
@@ -88,6 +88,26 @@ plan tests => $test_count;
 }
 
 #------------------------------------------------------------------------------
+# value_to_i_ceil()
+
+{
+  my $seq = Math::NumSeq::Pronic->new;
+  ok ($seq->value_to_i_ceil(0), 0);
+  ok ($seq->value_to_i_ceil(0.5), 1);
+
+  ok ($seq->value_to_i_ceil(1.5), 1);
+  ok ($seq->value_to_i_ceil(2), 1);
+  ok ($seq->value_to_i_ceil(2.5), 2);
+
+  ok ($seq->value_to_i_ceil(5.5), 2);
+  ok ($seq->value_to_i_ceil(6), 2);
+  ok ($seq->value_to_i_ceil(6.5), 3);
+
+  ok ($seq->value_to_i_ceil(-0.5), 0);
+  ok ($seq->value_to_i_ceil(-100), 0);
+}
+
+#------------------------------------------------------------------------------
 # seek_to_i()
 
 {
@@ -106,7 +126,56 @@ plan tests => $test_count;
   }
 }
 
+#------------------------------------------------------------------------------
+# seek_to_value()
 
+{
+  my $seq = Math::NumSeq::Pronic->new;
+  {
+    $seq->seek_to_value(-123);
+    my ($i, $value) = $seq->next;
+    ok ($i, 0);
+    ok ($value, 0);
+  }
+  {
+    $seq->seek_to_value(0);
+    my ($i, $value) = $seq->next;
+    ok ($i, 0);
+    ok ($value, 0);
+  }
+  {
+    $seq->seek_to_value(0.5);
+    my ($i, $value) = $seq->next;
+    ok ($i, 1);
+    ok ($value, 2);
+  }
+  {
+    $seq->seek_to_value(1.5);
+    my ($i, $value) = $seq->next;
+    ok ($i, 1);
+    ok ($value, 2);
+  }
+  {
+    $seq->seek_to_value(2);
+    my ($i, $value) = $seq->next;
+    ok ($i, 1);
+    ok ($value, 2);
+  }
+  {
+    $seq->seek_to_value(2.5);
+    my ($i, $value) = $seq->next;
+    ok ($i, 2);
+    ok ($value, 6);
+  }
+  {
+    $seq->seek_to_value(20.5);
+    my ($i, $value) = $seq->next;
+    ok ($i, 5);
+    ok ($value, 30);
+  }
+}
+
+#------------------------------------------------------------------------------
 exit 0;
 
 

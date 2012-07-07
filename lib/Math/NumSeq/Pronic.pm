@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 46;
+$VERSION = 47;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -48,9 +48,9 @@ sub seek_to_i {
   my ($self, $i) = @_;
   $self->{'i'} = $i;
 }
-sub _UNTESTED__seek_to_value {
+sub seek_to_value {
   my ($self, $value) = @_;
-  $self->{'i'} = $self->value_to_i_ceil($value);
+  $self->seek_to_i($self->value_to_i_ceil($value));
 }
 sub ith {
   my ($self, $i) = @_;
@@ -93,6 +93,15 @@ sub value_to_i_floor {
   }
   return int((sqrt(4*int($value) + 1) - 1)/2);
 }
+sub value_to_i_ceil {
+  my ($self, $value) = @_;
+  my $i = $self->value_to_i_floor($value);
+  if ($self->ith($i) < $value) {
+    return $i+1;
+  } else {
+    return $i;
+  }
+}
 *value_to_i_estimate = \&value_to_i_floor;
 
 1;
@@ -112,8 +121,9 @@ Math::NumSeq::Pronic -- pronic numbers
 
 =head1 DESCRIPTION
 
-The pronic numbers i*(i+1), starting from i=0,
+The pronic numbers i*(i+1),
 
+    starting i=0
     0, 2, 6, 12, 20, 30, ...
 
 These are twice the triangular numbers, and half way between the perfect
@@ -125,9 +135,26 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 
-=item C<$seq = Math::NumSeq::Pronic-E<gt>new (key=E<gt>value,...)>
+=item C<$seq = Math::NumSeq::Pronic-E<gt>new ()>
 
 Create and return a new sequence object.
+
+=item C<$seq-E<gt>seek_to_i($i)>
+
+Move the current sequence position to C<$i>.  The next call to C<next()>
+will return C<$i> and corresponding value.
+
+=item C<$seq-E<gt>seek_to_value($value)>
+
+Move the current sequence position so that C<next()> will give C<$value> on
+the next call, or if C<$value> is not a pronic number then the next pronic
+above C<$value>.
+
+=back
+
+=head2 Random Access
+
+=over
 
 =item C<$value = $seq-E<gt>ith($i)>
 
@@ -137,10 +164,19 @@ Return C<$i*($i+1)>.
 
 Return true if C<$value> is a pronic number, ie. i*(i+1) for some i.
 
+=item C<$i = $seq-E<gt>value_to_i_ceil($value)>
+
+=item C<$i = $seq-E<gt>value_to_i_floor($value)>
+
+Return the C<$i> index of C<$value>, rounding up or down if C<$value> is not
+a pronic number.
+
 =item C<$i = $seq-E<gt>value_to_i_estimate($value)>
 
 Return an estimate of the i corresponding to C<$value>.  value=i*(i+1) is
-inverted by C<$i = int ((sqrt(4*$value + 1) - 1)/2)>.
+inverted by
+
+    $i = int( (sqrt(4*$value + 1) - 1)/2 )
 
 =back
 
