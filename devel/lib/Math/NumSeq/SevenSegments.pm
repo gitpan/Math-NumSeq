@@ -21,7 +21,7 @@ use strict;
 use List::Util 'sum';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 47;
+$VERSION = 48;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -50,7 +50,13 @@ use constant values_min => 2;
 #                          
 #                 |       |
 #               
-#         0  1  2  3  4  5  6  7  8  9
+# 9 choice of  ---     --- 
+#             |   |   |   |
+#              ---     --- 
+#                 |       |
+#                      ---
+#
+#         0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19
 # A063720 6, 2, 5, 5, 4, 5, 5, 3, 7, 5, 8, 4, 7, 7, 6, 7, 7, 5, 9, 7, 11, 7, 10
 # A006942 6, 2, 5, 5, 4, 5, 6, 3, 7, 6, 8, 4, 7, 7, 6, 7, 8, 5, 9, 8, 11, 7, 10
 # A074458 6, 2, 5, 5, 4, 5, 6, 4, 7, 5

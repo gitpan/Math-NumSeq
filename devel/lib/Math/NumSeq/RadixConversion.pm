@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 47;
+$VERSION = 48;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -77,7 +77,9 @@ use constant parameter_info_array =>
 #    A055983 a(n+1) = a(n) base 10 converted to base 12, recurrence
 #    A032917 decimal digits 1,3 only
 #    A199341 decimal digits 1,3,4 only
-#    A032940 base 5 odd positions 0, is base 25
+#    A032940 base 5 odd positions 0, but counting from top end
+#
+
 
 my @oeis_anum;
 $oeis_anum[10]->[2] = 'A007088';  # numbers written in base 2, starting n=0
@@ -121,6 +123,7 @@ $oeis_anum[16]->[2] = 'A033052';  # binary in base 16
 # OEIS-Catalogue: A033050 to_radix=14
 # OEIS-Catalogue: A033051 to_radix=15
 # OEIS-Catalogue: A033052 to_radix=16
+
 
 sub oeis_anum {
   my ($self) = @_;

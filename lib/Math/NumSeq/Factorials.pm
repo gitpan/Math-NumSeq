@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 47;
+$VERSION = 48;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -47,7 +47,7 @@ use constant characteristic_integer => 1;
 #    
 #    A007661 triple a(n)=n*a(n-3)
 #    A007662 quadruple a(n)=n*a(n-4)
-#    A047053 quad 4^n*n! quad on on multiples of 4
+#    A047053 quad 4^n*n! quad on multiples of 4
 #    A007696 quad n=4k+1 products
 #    A001813 quad (2*n)!/n!
 #    A008545 quad n=4k+1 products

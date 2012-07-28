@@ -50,7 +50,7 @@ HERE
     
     # restricted to ...
     # next unless $module =~ /Aron/;
-    next unless $module =~ /PlanePath/;
+    next unless $module =~ /PlanePathN/;
     # next unless $module =~ /AllPr/;
     
     my $class = App::MathImage::Generator->values_class($module);
@@ -623,7 +623,8 @@ sub p_radix {
 sub grep_for_values {
   my ($name, $values) = @_;
   unless (system 'fgrep', '-e', $values, "$ENV{HOME}/OEIS/oeis-grep.txt") {
-    print "  for $name\n";
-    print "  matching $values\n";
+    print "  match $values\n";
+    print "  $name\n";
+    print "\n"
   }
 }

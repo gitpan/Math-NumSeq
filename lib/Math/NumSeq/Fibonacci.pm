@@ -21,7 +21,7 @@ use strict;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 47;
+$VERSION = 48;
 use Math::NumSeq::Base::Sparse;  # FIXME: implement pred() directly ...
 @ISA = ('Math::NumSeq::Base::Sparse');
 
@@ -103,7 +103,7 @@ sub seek_to_i {
   my ($self, $i) = @_;
   # ENHANCE-ME: $self->ith_pair($i) giving i and i+1, or i-1 and i
   $self->{'f0'} = $self->ith($i);
-  $self->{'f1'} = $self->ith($i);
+  $self->{'f1'} = $self->ith($i+1);
   $self->{'i'} = $i;
 }
 sub next {

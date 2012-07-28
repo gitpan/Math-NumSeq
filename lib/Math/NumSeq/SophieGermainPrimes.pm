@@ -21,7 +21,7 @@ use strict;
 use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 47;
+$VERSION = 48;
 
 use Math::NumSeq;
 use Math::NumSeq::Primes;
@@ -45,6 +45,14 @@ use constant values_min => 2; # first 2*2+1=5
 #     A156875 count safe primes <= n
 #     A117360 n and 2*n+1 have same number of prime factors
 #
+#     A156876 count SG or safe
+#     A156877 count SG and safe
+#     A156878 count neither SG nor safe
+#    A156875 safe count
+#    A156659 safe charact
+#    A156658 p also 2*p+1 or (p-1)/2 prime
+#    A156657 not safe primes
+
 use constant oeis_anum => 'A005384';
 
 #------------------------------------------------------------------------------

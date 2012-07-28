@@ -51,6 +51,31 @@ sub numeq_array {
 
 
 #------------------------------------------------------------------------------
+# A094267 -- first diffs of count low 0 bits, starting diff i=2,i=1
+{
+  my $anum = 'A094267';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  if ($bvalues) {
+    my $seq  = Math::NumSeq::DigitCountLow->new (radix => 2, digit => 0);
+    $seq->seek_to_i(1);
+    my ($i, $prev) = $seq->next;
+    while (@got < @$bvalues) {
+      my ($i, $value) = $seq->next;
+      push @got, $value - $prev;
+      $prev = $value;
+    }
+    if (! numeq_array(\@got, $bvalues)) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        numeq_array(\@got, $bvalues),
+        1, "$anum");
+}
+
+#------------------------------------------------------------------------------
 # A067251 numbers with no trailing 0s in decimal
 
 {

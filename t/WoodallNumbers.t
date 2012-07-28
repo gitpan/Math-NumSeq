@@ -36,7 +36,7 @@ use Math::NumSeq::WoodallNumbers;
 # VERSION
 
 {
-  my $want_version = 47;
+  my $want_version = 48;
   ok ($Math::NumSeq::WoodallNumbers::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::WoodallNumbers->VERSION,  $want_version,

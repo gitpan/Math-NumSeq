@@ -15,12 +15,16 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
+
+# A137518 smallest same divisor count
+
+
 package Math::NumSeq::DivisorCount;
 use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 47;
+$VERSION = 48;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 

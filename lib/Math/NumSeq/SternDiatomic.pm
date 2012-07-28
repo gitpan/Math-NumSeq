@@ -22,13 +22,15 @@
 #
 # from 1858
 #
+# cf A000119 fibonacci diatomic
+
 
 package Math::NumSeq::SternDiatomic;
 use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 47;
+$VERSION = 48;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',

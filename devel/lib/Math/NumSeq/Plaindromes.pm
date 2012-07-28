@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 47;
+$VERSION = 48;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;

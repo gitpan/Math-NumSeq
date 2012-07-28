@@ -27,7 +27,7 @@ use List::Util 'max';
 use POSIX 'ceil';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 47;
+$VERSION = 48;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -55,7 +55,7 @@ use constant parameter_info_array =>
 #------------------------------------------------------------------------------
 # cf A178482 Golden Patterns Phi-antipalindromic 
 #    A007067 nearest(i*PHI)
-#
+#    A187389 floor of r=sqrt(6)+sqrt(7)
 sub oeis_anum {
   my ($self) = @_;
   my $spectrum = (ref $self

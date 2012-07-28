@@ -109,7 +109,7 @@ sub check_class {
   # return unless $class =~ /DigitP/;
   # return unless $class =~ /DigitCount/;
   # return unless $class =~ /Plain/;
-  return unless $class =~ /Alpha/;
+  # return unless $class =~ /Alpha/;
   # return unless $class =~ /Spiro/;
   # return unless $class =~ /Cbrt/;
   # return unless $class =~ /Slop/;
@@ -120,9 +120,11 @@ sub check_class {
   # return unless $class =~ /DigitP/;
   # return unless $class =~ /Kap/;
   # return unless $class =~ /Pier/;
-  # return unless $class =~ /LongF/;
+  # return unless $class =~ /FactorialP/;
+   return unless $class =~ /Fibonacci/;
   # return unless $class =~ /Erdos/;
-  #  return unless $anum eq 'A163540';
+  # return unless $class =~ /RadixConv/;
+  # return unless $anum eq 'A001013';
 
   eval "require $class" or die;
 
@@ -135,7 +137,7 @@ sub check_class {
   my $max_count = undef;
   if ($class eq 'Math::NumSeq::Factorials'
       || $class eq 'Math::NumSeq::Primorials'
-      || $class eq 'Math::NumSeq::MathImageRadixConversion'
+      || $class eq 'Math::NumSeq::RadixConversion'
      ) {
     $max_value = 'unlimited';
 
@@ -151,6 +153,12 @@ sub check_class {
 
   } elsif ($anum eq 'A006886') {  # Kaprekar
     $max_value = 100_000;
+
+  } elsif ($class =~ /FactorialProducts/) {
+    $max_value = 100_000;
+
+  } elsif ($class =~ /FibonacciProducts/) {
+    $max_value = 10000; # bit slow yet
 
   } elsif ($anum eq 'A005384') {
     # Sophie Germain / Cunningham, shorten for now
@@ -279,7 +287,7 @@ sub check_class {
 
     my $i = $seq->i_start;
     if (($max_value||'') eq 'unlimited') {
-      $i = Math::NumSeq::_tobigint($i);
+      $i = Math::NumSeq::_to_bigint($i);
     }
 
     my @got;
@@ -428,10 +436,11 @@ unlink  'devel/lib/Math/NumSeq/OEIS/Catalogue/Plugin/TempDevel.pm' or die;
 # rmdir  'devel/lib/Math/NumSeq/OEIS/Catalogue/Plugin' or die;
 # rmdir  'devel/lib/Math/NumSeq/OEIS/Catalogue' or die;
 # rmdir  'devel/lib/Math/NumSeq/OEIS' or die;
-
 my $aref = Math::NumSeq::OEIS::Catalogue::Plugin::TempDevel::info_arrayref();
-require Math::NumSeq::OEIS::Catalogue::Plugin::Alpha;
-$aref = Math::NumSeq::OEIS::Catalogue::Plugin::Alpha::info_arrayref();
+
+# require Math::NumSeq::OEIS::Catalogue::Plugin::Alpha;
+# $aref = Math::NumSeq::OEIS::Catalogue::Plugin::Alpha::info_arrayref();
+
 foreach my $info (@$aref) {
   ### $info
   check_class ($info->{'anum'},

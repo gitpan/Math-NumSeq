@@ -24,7 +24,7 @@ use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 use Math::Factor::XS 0.39 'factors', 'prime_factors';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 47;
+$VERSION = 48;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;

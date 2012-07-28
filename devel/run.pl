@@ -156,7 +156,6 @@ $|=1;
   $values_class = 'Math::NumSeq::PrimeFactorExtract';
   $values_class = 'Math::NumSeq::PowerSieve';
   $values_class = 'Math::NumSeq::DigitProductSteps';
-  $values_class = 'Math::NumSeq::Fibonacci';
   $values_class = 'Math::NumSeq::KaprekarNumbers';
   $values_class = 'Math::NumSeq::CollatzSteps';
   $values_class = 'Math::NumSeq::LongFractionPrimes';
@@ -165,7 +164,6 @@ $|=1;
   $values_class = 'Math::NumSeq::Aronson';
   $values_class = 'Math::NumSeq::DigitCountLow';
   $values_class = 'Math::NumSeq::Repdigits';
-  $values_class = 'Math::NumSeq::PlanePathDelta';
   $values_class = 'Math::NumSeq::LeastPrimitiveRoot';
   $values_class = 'Math::NumSeq::AllPrimeFactors';
   $values_class = 'Math::NumSeq::MaxDigitCount';
@@ -181,8 +179,12 @@ $|=1;
   $values_class = 'Math::NumSeq::DuffinianNumbers';
   $values_class = 'Math::NumSeq::ReRound';
   $values_class = 'Math::NumSeq::SophieGermainPrimes';
-  $values_class = 'Math::NumSeq::PlanePathN';
   $values_class = 'Math::NumSeq::PrimeSignatureLeast';
+  $values_class = 'Math::NumSeq::FactorialProducts';
+  $values_class = 'Math::NumSeq::Fibonacci';
+  $values_class = 'Math::NumSeq::FibonacciProducts';
+  $values_class = 'Math::NumSeq::PlanePathDelta';
+  $values_class = 'Math::NumSeq::PlanePathN';
 
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new
@@ -231,13 +233,14 @@ $|=1;
      # including_self => 0,
      # offset => 3,
 
+     # planepath => 'TriangleSpiralSkewed,n_start=0',
+     planepath => 'TriangleSpiralSkewed',
+     line_type => 'Diagonal',
      # planepath => 'ZOrderCurve',
      #coordinate_type => 'X',
-     # planepath => 'AlternatePaper,arms=5',
      # planepath => 'GrayCode',
-     # line_type => 'X_neg',
-     # planepath => 'GosperSide',
-     # delta_type=>'dSum',
+      # planepath => 'Diagonals',
+      # delta_type=>'dY',
      # turn_type => 'Right',
      # planepath => 'SquareSpiral',
      # planepath => 'ZOrderCurve,radix=10',

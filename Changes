@@ -16,6 +16,9 @@ You should have received a copy of the GNU General Public License along
 with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 48, July 2012
+     - fix Fibonacci seek_to_i()
+
 Version 47, June 2012
      - new DuffinianNumbers
      - SophieGermainPrimes faster noticed by Dana Jacobsen

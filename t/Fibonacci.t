@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 33;
+plan tests => 111;
 
 use lib 't';
 use MyTestHelpers;
@@ -35,7 +35,7 @@ use Math::NumSeq::Fibonacci;
 # VERSION
 
 {
-  my $want_version = 47;
+  my $want_version = 48;
   ok ($Math::NumSeq::Fibonacci::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::Fibonacci->VERSION,  $want_version,
@@ -58,9 +58,26 @@ use Math::NumSeq::Fibonacci;
   my $seq = Math::NumSeq::Fibonacci->new;
   foreach my $i (0 .. 10, 100,200) {
     $seq->seek_to_i($i);
-    my ($got_i, $got_value) = $seq->next;
-    ok ($got_i, $i);
-    ok ($got_value, $seq->ith($i));
+    {
+      my ($got_i, $got_value) = $seq->next;
+      ok ($got_i, $i);
+      ok ($got_value == $seq->ith($i), 1);
+    }
+    {
+      my ($got_i, $got_value) = $seq->next;
+      ok ($got_i, $i+1);
+      ok ($got_value == $seq->ith($i+1), 1);
+    }
+    {
+      my ($got_i, $got_value) = $seq->next;
+      ok ($got_i, $i+2);
+      ok ($got_value == $seq->ith($i+2), 1);
+    }
+    {
+      my ($got_i, $got_value) = $seq->next;
+      ok ($got_i, $i+3);
+      ok ($got_value == $seq->ith($i+3), 1);
+    }
   }
 }
 

@@ -61,6 +61,62 @@ sub diff_nums {
 }
 
 
+#------------------------------------------------------------------------------
+# A053176 primes with 2*p+1 composite, ie. primes which are not SG primes
+{
+  my $anum = 'A053176';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my $diff;
+  if ($bvalues) {
+    my @got;
+    my $seq  = Math::NumSeq::SophieGermainPrimes->new;
+    my $primes  = Math::NumSeq::Primes->new;
+    while (@got < @$bvalues) {
+      my ($i, $prime) = $primes->next;
+      if (! $seq->pred($prime)) {
+        push @got, $prime;
+      }
+    }
+    $diff = diff_nums(\@got, $bvalues);
+    if ($diff) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..30]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..30]));
+    }
+  }
+  skip (! $bvalues,
+        $diff, undef,
+        "$anum");
+}
+
+#------------------------------------------------------------------------------
+# A092816 - count <= 10^n
+{
+  my $anum = 'A092816';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum, max_count => 7);
+  my $diff;
+  if ($bvalues) {
+    my @got;
+    my $seq  = Math::NumSeq::SophieGermainPrimes->new;
+    my $count = 0;
+    my $target = 10;
+    while (@got < @$bvalues) {
+      my ($i, $prime) = $seq->next;
+      if ($prime > $target) {
+        push @got, $count;
+        $target *= 10;
+      }
+      $count++;
+    }
+    $diff = diff_nums(\@got, $bvalues);
+    if ($diff) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..4]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..4]));
+    }
+  }
+  skip (! $bvalues,
+        $diff, undef,
+        "$anum");
+}
 
 #------------------------------------------------------------------------------
 # A156660 - 0/1 SG characteristic
@@ -111,6 +167,7 @@ sub diff_nums {
         $diff, undef,
         "$anum");
 }
+
 
 
 #------------------------------------------------------------------------------

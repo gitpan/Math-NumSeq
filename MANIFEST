@@ -59,6 +59,8 @@ devel/lib/Math/NumSeq/CunninghamPrimes.pm
 devel/lib/Math/NumSeq/Derived/Cumulative.pm
 devel/lib/Math/NumSeq/DigitExtract.pm
 devel/lib/Math/NumSeq/EratosthenesStage.pm
+devel/lib/Math/NumSeq/FactorialProducts.pm
+devel/lib/Math/NumSeq/FibonacciProducts.pm
 devel/lib/Math/NumSeq/HypotCount.pm
 devel/lib/Math/NumSeq/KaprekarNumbers.pm
 devel/lib/Math/NumSeq/KaprekarRoutineSteps.pm
@@ -362,6 +364,7 @@ xt/oeis/GolayRudinShapiroCumulative-oeis.t
 xt/oeis/GolombSequence-oeis.t
 xt/oeis/LemoineCount-oeis.t
 xt/oeis/LuckyNumbers-oeis.t
+xt/oeis/MobiusFunction-oeis.t
 xt/oeis/NumSeq-oeis.t
 xt/oeis/Palindromes-oeis.t
 xt/oeis/Polygonal-oeis.t
@@ -378,6 +381,8 @@ xt/oeis/Squares-oeis.t
 xt/oeis/SternDiatomic-oeis.t
 xt/oeis/Totient-oeis.t
 xt/oeis/TotientCumulative-oeis.t
+xt/oeis/TotientSteps-oeis.t
+xt/oeis/Triangular-oeis.t
 xt/oeis/TwinPrimes-oeis.t
 xt/oeis/Woodall-oeis.t
 xt/pod_lists.t
