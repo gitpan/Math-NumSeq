@@ -50,7 +50,7 @@ HERE
     
     # restricted to ...
     # next unless $module =~ /Aron/;
-    next unless $module =~ /PlanePathN/;
+    next unless $module =~ /PlanePath/;
     # next unless $module =~ /AllPr/;
     
     my $class = App::MathImage::Generator->values_class($module);
@@ -105,7 +105,7 @@ HERE
         $signed = 'signed:';
       }
       
-      special_values($module, $p_string, $seq, \@values);
+      special_values($module, $p_string, $seq, [ $first_value, @values ]);
       
       my $values_escaped = URI::Escape::uri_escape($values);
       print OUT "<br>\n$p_string\n" or die;
@@ -454,15 +454,28 @@ sub parameter_info_list_to_parameters {
 sub info_extend_parameters {
   my ($info, $parameters) = @_;
   my @new_parameters;
-
+  
   if ($info->{'name'} eq 'planepath') {
     my @strings;
     foreach my $choice (@{$info->{'choices'}}) {
+      next unless $choice eq 'GrayCode';
+      # next unless $choice eq 'DiagonalsAlternating';
       my $path_class = "Math::PlanePath::$choice";
       Module::Load::load($path_class);
-
+      
       my @parameter_info_list = $path_class->parameter_info_list;
-
+      
+      {
+        my $path = $path_class->new;
+        if (defined $path->{'n_start'}) {
+          push @parameter_info_list,{ name      => 'n_start',
+                                      type      => 'enum',
+                                      choices   => [0,1,2],
+                                      default   => $path->default_n_start,
+                                    };
+        }
+      }
+      
       if ($path_class->isa('Math::PlanePath::Rows')) {
         push @parameter_info_list,{ name       => 'width',
                                     type       => 'integer',
@@ -479,11 +492,11 @@ sub info_extend_parameters {
                                      minimum    => 1,
                                    };
       }
-
+      
       my $path_parameters
         = parameter_info_list_to_parameters(@parameter_info_list);
       ### $path_parameters
-
+      
       foreach my $aref (@$path_parameters) {
         my $str = $choice;
         while (@$aref) {
@@ -501,12 +514,23 @@ sub info_extend_parameters {
     @$parameters = @new_parameters;
     return;
   }
-
+  
   if ($info->{'name'} eq 'arms') {
     print "  skip parameter $info->{'name'}\n";
     return;
   }
-
+  
+  if ($info->{'name'} eq 'n_start') {
+    my @new_parameters;
+    foreach my $p (@$parameters) {
+      foreach my $n_start (0, 1, 2) {
+        push @new_parameters, [ @$p, $info->{'name'}, $n_start ];
+      }
+    }
+    @$parameters = @new_parameters;
+    return;
+  }
+  
   if ($info->{'choices'}) {
     my @new_parameters;
     foreach my $p (@$parameters) {
@@ -525,7 +549,7 @@ sub info_extend_parameters {
     @$parameters = @new_parameters;
     return;
   }
-
+  
   if ($info->{'type'} eq 'boolean') {
     my @new_parameters;
     foreach my $p (@$parameters) {
@@ -536,7 +560,7 @@ sub info_extend_parameters {
     @$parameters = @new_parameters;
     return;
   }
-
+  
   if ($info->{'type'} eq 'integer'
       || $info->{'name'} eq 'multiples') {
     my $min = $info->{'minimum'} // -5;
@@ -567,7 +591,7 @@ sub info_extend_parameters {
     @$parameters = @new_parameters;
     return;
   }
-
+  
   if ($info->{'name'} eq 'fraction') {
     ### fraction ...
     my @new_parameters;

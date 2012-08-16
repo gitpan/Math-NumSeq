@@ -66,13 +66,9 @@ sub diff_nums {
 {
   my $anum = 'A103581';
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my @got;
   my $diff;
-  if (! $bvalues) {
-    MyTestHelpers::diag ("$anum not available");
-  } else {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
+  if ($bvalues) {
+    my @got;
     my $seq = Math::NumSeq::SlopingExcluded->new (radix => 2);
     while (@got < @$bvalues) {
       my ($i, $value) = $seq->next;

@@ -54,7 +54,6 @@ $|=1;
   # $values_class = $gen->values_class('DigitLength');
   # $values_class = $gen->values_class('SumXsq3Ysq');
   # $values_class = $gen->values_class('DigitSumModulo');
-  # $values_class = $gen->values_class('PrimeFactorCount');
   # $values_class = $gen->values_class('ReverseAddSteps');
   # $values_class = $gen->values_class('Harshad');
   # $values_class = $gen->values_class('TotientPerfect');
@@ -100,7 +99,6 @@ $|=1;
   $values_class = 'Math::NumSeq::SieveMultiples';
   $values_class = 'Math::NumSeq::ReverseAdd';
   $values_class = 'Math::NumSeq::PythagoreanHypots';
-  $values_class = 'Math::NumSeq::PrimeFactorCount';
   $values_class = 'Math::NumSeq::AbsCubicDiff';
   $values_class = 'Math::NumSeq::RepdigitAny';
   $values_class = 'Math::NumSeq::PlanePathDelta';
@@ -134,7 +132,6 @@ $|=1;
   $values_class = 'Math::NumSeq::RadixConversion';
   $values_class = 'Math::NumSeq::CullenNumbers';
   $values_class = 'Math::NumSeq::WoodallNumbers';
-  $values_class = 'Math::NumSeq::Runs';
   $values_class = 'Math::NumSeq::HypotCount';
   $values_class = 'Math::NumSeq::ErdosSelfridgeClass';
   $values_class = 'Math::NumSeq::GoldbachCount';
@@ -145,7 +142,6 @@ $|=1;
   $values_class = 'Math::NumSeq::SternDiatomic';
   $values_class = 'Math::NumSeq::CbrtContinued';
   $values_class = 'Math::NumSeq::SlopingExcluded';
-  $values_class = 'Math::NumSeq::PlanePathTurn';
   $values_class = 'Math::NumSeq::PrimeIndexOrder';
   $values_class = 'Math::NumSeq::PrimeIndexPrimes';
   $values_class = 'Math::NumSeq::AlphabeticalLengthSteps';
@@ -168,7 +164,6 @@ $|=1;
   $values_class = 'Math::NumSeq::AllPrimeFactors';
   $values_class = 'Math::NumSeq::MaxDigitCount';
   $values_class = 'Math::NumSeq::Palindromes';
-  $values_class = 'Math::NumSeq::PlanePathCoord';
   $values_class = 'Math::NumSeq::PrimeExponentFlip';
   $values_class = 'Math::NumSeq::PrimesDigits';
   $values_class = 'Math::NumSeq::PowerPart';
@@ -183,12 +178,19 @@ $|=1;
   $values_class = 'Math::NumSeq::FactorialProducts';
   $values_class = 'Math::NumSeq::Fibonacci';
   $values_class = 'Math::NumSeq::FibonacciProducts';
-  $values_class = 'Math::NumSeq::PlanePathDelta';
+  $values_class = 'Math::NumSeq::PlanePathTurn';
   $values_class = 'Math::NumSeq::PlanePathN';
+  $values_class = 'Math::NumSeq::PrimeFactorCount';
+  $values_class = 'Math::NumSeq::PlanePathCoord';
+  $values_class = 'Math::NumSeq::PlanePathDelta';
+  $values_class = 'Math::NumSeq::Runs';
 
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new
     (
+      # runs_type => '1to2N',
+     # values_type => 'mod2',
+
      # extra_multiples => 0,
      # radix => 10,
      # order => 'sorted',
@@ -204,7 +206,6 @@ $|=1;
      # step_type => 'both',
      # on_values => 'even',
      # i_start => 0,
-     # values_type => 'root',
      # recurrence_type => 'absdiff',
      # language => 'sv',
      # i_start => 0,
@@ -216,7 +217,6 @@ $|=1;
      # stage => 1,
 
      # p_or_m => '-',
-     # runs_type => '1to2N',
      # digit => 1,
      # using_values => 'primes',
      # values_type => 'radix',
@@ -234,14 +234,21 @@ $|=1;
      # offset => 3,
 
      # planepath => 'TriangleSpiralSkewed,n_start=0',
-     planepath => 'TriangleSpiralSkewed',
-     line_type => 'Diagonal',
-     # planepath => 'ZOrderCurve',
-     #coordinate_type => 'X',
+     # planepath => 'SquareSpiral,n_start=0',
+      # planepath => 'ImaginaryHalf,radix=37',
+      # line_type => 'Y_axis',
+
+     # planepath => 'DiagonalRationals',
+     # coordinate_type => 'Sum',
+
      # planepath => 'GrayCode',
-      # planepath => 'Diagonals',
-      # delta_type=>'dY',
+     # planepath => 'Diagonals',
+     # planepath => 'PyramidRows,step=1,n_start=0',
+     # delta_type=>'dDiffYX',
+
+     # planepath => 'R5DragonCurve',
      # turn_type => 'Right',
+
      # planepath => 'SquareSpiral',
      # planepath => 'ZOrderCurve,radix=10',
      # planepath => 'PythagoreanTree,coordinates=BA',
@@ -274,7 +281,7 @@ $|=1;
      # round_count => 2,
      # pairs => 'both',
      # powerful_type => 'all',
-     power => 3,
+     # power => 3,
      # abundant_type => 'primitive',
      # multiples => 1,
      # digit => 1,
@@ -324,6 +331,9 @@ $|=1;
   print "characteristic(integer)    ",($seq->characteristic('integer')//'[undef]'),"\n";
   print "characteristic hash: ",join(', ',%{$seq->{'characteristic'}||{}}),"\n";
   print "parameters: ",join(', ',map{$_->{'name'}}$seq->parameter_info_list),"\n";
+  if (my $planepath_object = $seq->{'planepath_object'}) {
+    print "planepath_object ",ref $planepath_object,"\n";
+  }
   print "\n";
 
   my $values_min = $seq->values_min;

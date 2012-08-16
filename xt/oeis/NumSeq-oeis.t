@@ -138,7 +138,7 @@ sub check_class {
   # return unless $class =~ /Luc|Fib|Cullen|Wood/;
   # return unless $class =~ /Lucas/;
   # return unless $class =~ /RadixWithout/;
-   return unless $class =~ /Duf/;
+  # return unless $class =~ /Duf/;
   # return unless $class =~ /SqrtD/;
   # return unless $class =~ /Power/;
   # return unless $class =~ /Repdigit/;

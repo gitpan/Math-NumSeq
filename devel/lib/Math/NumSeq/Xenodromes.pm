@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 48;
+$VERSION = 49;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
@@ -56,15 +56,26 @@ sub values_max {
 # cf A036918 total count of xenodromes in base n
 #    A073531 count xenodromes with n digits
 #    A109303 non-xenodromes in decimal, at least one duplicate digit
-#    A178788 0/1 characteristic
-#    A029743 primes distinct digits
+#    A178788 0/1 characteristic decimal distinct digits
+#    A029743 primes with distinct digits
+#
+#    A001339   Sum (k+1)! * C(n,k), k = 0..n.
+#              = Sum (k+1)! * n!/k!*(n-k)!, k = 0..n.
+#              = Sum (k+1) * n!/(n-k)!, k = 0..n.
+#              = Sum k = 0..n of (k+1)*n*(n-1)*...*(n-k+1)
+#
+#
+# A023787 katadromes OFFSET=0
+# A023754 plaindromes base13 OFFSET=0
+# A023755 plaindromes base14 OFFSET=0
+# A023756 plaindromes base15 OFFSET=0
 
 # OFFSET=1 for value=0
 my @oeis_anum = (
                  # OEIS-Catalogue array begin
                  undef,     #   # 0
                  undef,     #   # 1
-                 undef,     #   # radix=2 ?
+                 undef,     #   # radix=2 ? 0,1,2 only
                  'A023798', # radix=3
                  'A023799', # radix=4
                  'A023800', # radix=5

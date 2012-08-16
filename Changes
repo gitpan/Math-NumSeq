@@ -16,6 +16,10 @@ You should have received a copy of the GNU General Public License along
 with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 49, August 2012
+     - Runs new runs_type="0to2N"
+     - document Math::NumSeq::OEIS::Catalogue::Plugin info_arrayref()
+
 Version 48, July 2012
      - fix Fibonacci seek_to_i()
 
@@ -59,8 +63,8 @@ Version 38, April 2012
     - ReRound fix value_to_i_estimate() for large extra_multiples
     - FractionDigits new ith()
     - Totient new pred()
-    - GoldbachCount new option on_values=>'even'
-    - LemoineCount new option on_values=>'odd'
+    - GoldbachCount new option on_values=>"even"
+    - LemoineCount new option on_values=>"odd"
     - ReReplace new option stage=>123
     - OEIS allow leading whitespace in b-files
     - Fibonacci, LucasNumbers ith() by powering
@@ -69,11 +73,11 @@ Version 38, April 2012
       DigitLengthCumulative, WoodallNumbers new value_to_i_floor(),
       value_to_i_estimate()
     - ConcatNumbers new value_to_i_estimate()
-    - Runs new runs_type=>'1toFib','1to2N+1'
+    - Runs new runs_type=>"1toFib","1to2N+1"
 
 Version 37, March 2012
     - new DeletablePrimes
-    - new characteristic('value_is_radix')
+    - new characteristic("value_is_radix")
     - GolombSequence new using_values=>all,odd,even,3k,squares,primes
 
 Version 36, March 2012
@@ -129,7 +133,7 @@ Version 24, December 2011
 
 Version 23, December 2011
     - new AllDigits, Perrin
-    - new characteristic('integer')
+    - new characteristic("integer")
 
 Version 22, December 2011
     - new characteristic() smaller, increasing, non_decreasing,

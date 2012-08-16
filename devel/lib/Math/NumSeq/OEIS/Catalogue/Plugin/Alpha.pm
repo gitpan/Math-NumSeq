@@ -21,7 +21,7 @@ use strict;
 use Module::Util;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 48;
+$VERSION = 49;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 

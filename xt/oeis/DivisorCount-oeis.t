@@ -49,6 +49,33 @@ sub numeq_array {
   return (@$a1 == @$a2);
 }
 
+sub diff_nums {
+  my ($gotaref, $wantaref) = @_;
+  for (my $i = 0; $i < @$gotaref; $i++) {
+    if ($i > @$wantaref) {
+      return "want ends prematurely pos=$i";
+    }
+    my $got = $gotaref->[$i];
+    my $want = $wantaref->[$i];
+    if (! defined $got && ! defined $want) {
+      next;
+    }
+    if (! defined $got || ! defined $want) {
+      return "different pos=$i got=".(defined $got ? $got : '[undef]')
+        ." want=".(defined $want ? $want : '[undef]');
+    }
+    $got =~ /^[0-9.-]+$/
+      or return "not a number pos=$i got='$got'";
+    $want =~ /^[0-9.-]+$/
+      or return "not a number pos=$i want='$want'";
+    if ($got != $want) {
+      return "different pos=$i numbers got=$got want=$want";
+    }
+  }
+  return undef;
+}
+
+
 
 # No, counts factorizations.
 # #------------------------------------------------------------------------------
@@ -85,26 +112,33 @@ sub numeq_array {
 
 {
   my $anum = 'A005179';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my @got;
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum, max_count => 20);
+  my $diff;
   if ($bvalues) {
     my $seq  = Math::NumSeq::DivisorCount->new;
-    my $target = 1;
-    while (@got < @$bvalues) {
-      my ($i, $value) = $seq->next;
-      if ($value == $target) {
-        push @got, $i;
-        $target++;
+    my $count = 0;
+    my ($i, $value);
+    my @got;
+    while ($count < @$bvalues) {
+      ($i, $value) = $seq->next;
+      ### $i
+      ### $value
+      if ($value <= @$bvalues) {
+        if (! defined $got[$value-1]) {
+          $got[$value-1] = $i;
+          $count++;
+        }
       }
     }
-    if (! numeq_array(\@got, $bvalues)) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..5]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..5]));
+    $diff = diff_nums(\@got, $bvalues);
+    if ($diff) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..9]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..9]));
+      MyTestHelpers::diag ("  stopped at i=$i value=$value");
     }
   }
   skip (! $bvalues,
-        numeq_array(\@got, $bvalues),
-        1,
+        $diff, undef,
         "$anum");
 }
 

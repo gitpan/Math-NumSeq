@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION';
-$VERSION = 48;
+$VERSION = 49;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -93,9 +93,46 @@ Math::NumSeq::OEIS::Catalogue::Plugin -- pluggable catalogue extensions
 
 =head1 DESCRIPTION
 
+Catalogue plugins are loaded and used by C<Math::NumSeq::OEIS::Catalogue>.
+A plug allows an add-on distribution or semi-independent components to
+declare which OEIS A-numbers they implement and what NumSeq sequence
+parameters can create the sequence.
+
 This is an internal part of C<Math::NumSeq::OEIS::Catalogue> not yet meant
 for general use yet, but the intention is for add-on sequences to declare
 themselves in the A-number catalogue.
+
+A plugin "Foo" should sub-class C<Math::NumSeq::OEIS::Catalogue::Plugin>, so
+
+    package Math::NumSeq::OEIS::Catalogue::Plugin::Foo;
+    use strict;
+    use vars '@ISA';
+    use Math::NumSeq::OEIS::Catalogue::Plugin;
+    @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
+
+A set of A-numbers can be declared with an arrayref of information records
+(a hashref each).  For example
+
+    use constant info_arrayref =>
+      [
+       { anum  => 'A999998',
+         class => 'Math::NumSeq::Foo',
+       },
+       { anum  => 'A999999',
+         class => 'Math::NumSeq::Foo',
+         parameters => [ param_a => 123, param_b => 456 ],
+       },
+       # ...
+      ];
+
+This means A999998 is implemented by class C<Math::NumSeq::Foo> as
+
+    $seq = Math::NumSeq::Foo->new ();
+
+and A999999 likewise but with additional parameters
+
+    $seq = Math::NumSeq::Foo->new (param_a => 123,
+                                   param_b => 456);
 
 =head1 SEE ALSO
 

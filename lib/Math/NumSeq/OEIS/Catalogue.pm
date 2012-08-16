@@ -34,7 +34,7 @@ my @plugins = sort __PACKAGE__->plugins;
 ### @plugins
 
 use vars '$VERSION';
-$VERSION = 48;
+$VERSION = 49;
 
 # sub seq_to_num {
 #   my ($class, $num) = @_;
@@ -145,6 +145,9 @@ files.
 A-numbers are handled as strings like "A000032".  Six digits is usual,
 though rumour has it the plan is for seven digits like "A1000000" when the
 millionth sequence is reached.
+
+Add-on distributions can extend the catalogue by creating a plugin module.
+See L<Math::NumSeq::OEIS::Catalogue::Plugin> for details.
 
 =head1 FUNCTIONS
 

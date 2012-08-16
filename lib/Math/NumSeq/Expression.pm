@@ -24,7 +24,7 @@ use Math::Libm;
 use Module::Util;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 48;
+$VERSION = 49;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -106,11 +106,6 @@ my %oeis_anum;
 # some experimental A-number generators for easy expressions not with their
 # own module
 
-$oeis_anum{'i*i+1'} = 'A002522';
-$oeis_anum{'i*i+2'} = 'A059100';
-# OEIS-Catalogue: A002522 expression=i*i+1
-# OEIS-Catalogue: A059100 expression=i*i+2
-#
 # but A008865 starts from i=1
 # $oeis_anum{'i*i-2'} = 'A008865';
 # # OEIS-Catalogue: A008865 expression=i*i-2
@@ -124,9 +119,6 @@ $oeis_anum{'i*(i+2)'} = 'A005563';
 
 $oeis_anum{'i*(4*i*i-1)/3'} = 'A000447';  # sum of odd squares
 # OEIS-Catalogue: A000447 expression=i*(4*i*i-1)/3
-
-$oeis_anum{'i*(4*i-1)'} = 'A033991';
-# OEIS-Catalogue: A033991 expression=i*(4*i-1)
 
 $oeis_anum{'(2*i)**3'} = 'A016743';  # even cubes (2i)^3
 # OEIS-Catalogue: A016743 expression=(2*i)**3

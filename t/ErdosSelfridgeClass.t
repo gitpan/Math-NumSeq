@@ -36,7 +36,7 @@ use Math::NumSeq::ErdosSelfridgeClass;
 # VERSION
 
 {
-  my $want_version = 48;
+  my $want_version = 49;
   ok ($Math::NumSeq::ErdosSelfridgeClass::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::ErdosSelfridgeClass->VERSION,  $want_version,

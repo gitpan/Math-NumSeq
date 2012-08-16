@@ -60,6 +60,62 @@ sub diff_nums {
   return undef;
 }
 
+# No.
+#
+# #------------------------------------------------------------------------------
+# # A000028 - count mod2 == 1
+# 
+# {
+#   my $anum = 'A000028';
+#   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+#   my $diff;
+#   if ($bvalues) {
+#     my $seq = Math::NumSeq::PrimeFactorCount->new (values_type => 'mod2');
+#     my @got;
+#     while (@got < @$bvalues) {
+#       my ($i, $value) = $seq->next;
+#       if ($value == 1) {
+#         push @got, $i;
+#       }
+#     }
+#     $diff = diff_nums(\@got, $bvalues);
+#     if ($diff) {
+#       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+#       MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+#     }
+#   }
+#   skip (! $bvalues,
+#         $diff, undef,
+#         "$anum");
+# }
+# 
+# #------------------------------------------------------------------------------
+# # A000379 - count mod2 == 0
+# 
+# {
+#   my $anum = 'A000028';
+#   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+#   my $diff;
+#   if ($bvalues) {
+#     my $seq = Math::NumSeq::PrimeFactorCount->new (values_type => 'mod2');
+#     my @got;
+#     while (@got < @$bvalues) {
+#       my ($i, $value) = $seq->next;
+#       if ($value == 0) {
+#         push @got, $i;
+#       }
+#     }
+#     $diff = diff_nums(\@got, $bvalues);
+#     if ($diff) {
+#       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+#       MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+#     }
+#   }
+#   skip (! $bvalues,
+#         $diff, undef,
+#         "$anum");
+# }
+
 #------------------------------------------------------------------------------
 # A117360 - n and 2*n+1 have same prime factor count, with multiplicity
 

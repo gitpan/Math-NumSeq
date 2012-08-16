@@ -78,6 +78,35 @@ sub diff_nums {
 
 
 #------------------------------------------------------------------------------
+# A145445 - smallest square > nth prime
+
+{
+  my $anum = 'A145445';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+
+  my $diff;
+  if ($bvalues) {
+    require Math::NumSeq::Squares;
+    my @got;
+    my $seq  = Math::NumSeq::Primes->new;
+    my $squares = Math::NumSeq::Squares->new;
+    while (@got < @$bvalues) {
+      my ($i, $prime) = $seq->next;
+      my $sqrt = $squares->value_to_i_ceil($prime);
+      push @got, $sqrt*$sqrt;
+    }
+    $diff = diff_nums(\@got, $bvalues);
+    if ($diff) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..30]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..30]));
+    }
+  }
+  skip (! $bvalues,
+        $diff, undef,
+        "$anum");
+}
+
+#------------------------------------------------------------------------------
 # A104103 - ceil(sqrt(prime))
 # cf A177357 squares <= prime(n)-3
 #

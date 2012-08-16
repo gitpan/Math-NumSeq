@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 48;
+$VERSION = 49;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;

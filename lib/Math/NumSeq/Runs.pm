@@ -42,7 +42,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION','@ISA';
-$VERSION = 48;
+$VERSION = 49;
 
 use Math::NumSeq 21; # v.21 for oeis_anum field
 use Math::NumSeq::Base::IterateIth;
@@ -68,6 +68,7 @@ use constant parameter_info_array =>
     type    => 'enum',
     default => '0toN',
     choices => ['0toN',
+                '0to2N',
                 '1toN',
                 '1to2N',
                 '1toFib',
@@ -80,6 +81,7 @@ use constant parameter_info_array =>
                 '3rep',
                ],
     choices_display => [Math::NumSeq::__('0toN'),
+                        Math::NumSeq::__('0to2N'),
                         Math::NumSeq::__('1toN'),
                         Math::NumSeq::__('1to2N'),
                         Math::NumSeq::__('1toFib'),
@@ -121,6 +123,18 @@ my %runs_type_data
                  oeis_anum  => 'A002260',  # 1 to N, is 0toN + 1
                  # OEIS-Catalogue: A002260 runs_type=1toN
                },
+     '0to2N' => { i_start    => 0,
+                  value      => -1, # initial
+                  values_min => 0,
+                  vstart     => 0,
+                  vstart_inc => 0,
+                  value_inc  => 1,
+                  c          => 1, # initial
+                  count      => 0,
+                  count_inc  => 2,
+                  oeis_anum  => 'A053186',
+                  # OEIS-Catalogue: A053186 runs_type=0to2N
+                },
      '1to2N' => { i_start    => 1,
                   value      => 0, # initial
                   values_min => 1,
@@ -366,7 +380,8 @@ sub ith {
 
     return $i - ($d-1)*$d;
 
-  } elsif ($self->{'runs_type'} eq '1to2N+1') {
+  } elsif ($self->{'runs_type'} eq '0to2N'
+           || $self->{'runs_type'} eq '1to2N+1') {
     ### 1to2N+1 ...
     # values 1, 1,2,3, 1,2,3,4,5
     # run beginning i=1,2,5,10,17,26
@@ -374,13 +389,14 @@ sub ith {
     # d = 1 + sqrt(1 * $n + -1)
     #   = 1 + sqrt($n-1)
 
-    my $d = int(sqrt($i-1)) + 1;
+    $i -= $self->{'i_start'};
+    my $d = int(sqrt($i)) + 1;
 
     ### $d
     ### base: ($d-2)*$d
     ### rem: $i - ($d-2)*$d
 
-    return $i - ($d-2)*$d - 1;
+    return $i - ($d-2)*$d + $self->{'vstart'}-1;
 
   } elsif ($self->{'runs_type'} eq '1toFib') {
     my $f0 = ($i*0) + 1;  # inherit bignum 1

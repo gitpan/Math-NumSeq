@@ -25,7 +25,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 48;
+$VERSION = 49;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -33,7 +33,7 @@ use Math::NumSeq;
 use Math::NumSeq::NumAronson;
 *_round_down_pow = \&Math::NumSeq::NumAronson::_round_down_pow;
 
-use Math::Factor::XS 0.37 'factors';
+use Math::Factor::XS 0.40 'factors'; # version 0.40 for factors() on BigInt
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -164,7 +164,6 @@ sub ith {
     return $i; # nan
   }
 
-  $i = "$i"; # numize any Math::BigInt for factors()
   my @factors = reverse (1, factors($i));
   ### @factors
 

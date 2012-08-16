@@ -30,7 +30,7 @@ use Cwd;
 use File::Path;
 
 use vars '$VERSION';
-$VERSION = 48;
+$VERSION = 49;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;

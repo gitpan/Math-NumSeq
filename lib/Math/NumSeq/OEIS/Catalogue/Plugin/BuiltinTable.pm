@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 48;
+$VERSION = 49;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 741 A-numbers in 108 modules
+# total 739 A-numbers in 108 modules
 
 use constant info_arrayref =>
 [
@@ -1101,22 +1101,6 @@ use constant info_arrayref =>
     'class' => 'Math::NumSeq::Even'
   },
   {
-    'anum' => 'A002522',
-    'class' => 'Math::NumSeq::Expression',
-    'parameters' => [
-      'expression',
-      'i*i+1'
-    ]
-  },
-  {
-    'anum' => 'A059100',
-    'class' => 'Math::NumSeq::Expression',
-    'parameters' => [
-      'expression',
-      'i*i+2'
-    ]
-  },
-  {
     'anum' => 'A005563',
     'class' => 'Math::NumSeq::Expression',
     'parameters' => [
@@ -1130,14 +1114,6 @@ use constant info_arrayref =>
     'parameters' => [
       'expression',
       'i*(4*i*i-1)/3'
-    ]
-  },
-  {
-    'anum' => 'A033991',
-    'class' => 'Math::NumSeq::Expression',
-    'parameters' => [
-      'expression',
-      'i*(4*i-1)'
     ]
   },
   {
@@ -3374,6 +3350,14 @@ use constant info_arrayref =>
     'parameters' => [
       'runs_type',
       '1toN'
+    ]
+  },
+  {
+    'anum' => 'A053186',
+    'class' => 'Math::NumSeq::Runs',
+    'parameters' => [
+      'runs_type',
+      '0to2N'
     ]
   },
   {

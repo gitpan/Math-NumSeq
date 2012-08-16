@@ -24,7 +24,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 48;
+$VERSION = 49;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -79,6 +79,8 @@ sub values_min {
 #    A028422 - count of ways to factorize
 #    A033834 - n with new high count factorizations
 #    A033833 - highly factorable
+#
+#    A056595 - sum non-square divisors
 #
 sub oeis_anum {
   my ($self) = @_;

@@ -35,8 +35,8 @@ WriteMakefile
                     'Math::Libm' => 0,
                     'Math::Prime::XS' => '0.23', # version 0.23 for fix 1928099
 
-                    # version 0.39 for prime_factors()
-                    'Math::Factor::XS' => '0.39',
+                    # version 0.40 for factors() on Math::BigInt
+                    'Math::Factor::XS' => '0.40',
 
                     'Module::Util' => 0,
                     'Module::Load' => 0,
@@ -58,7 +58,7 @@ WriteMakefile
      no_index => { directory=>['devel'] },
 
      recommends =>
-     { 'Math::Prime::XS' => '0.26', # v.26 for faster is_prime()
+     { 'Math::Prime::XS'  => '0.26', # v.26 for faster is_prime()
      },
      optional_features =>
      { maximum_interoperation =>

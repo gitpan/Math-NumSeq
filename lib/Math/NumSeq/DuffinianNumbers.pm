@@ -20,11 +20,11 @@ use 5.004;
 use strict;
 use List::Util 'sum';
 use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
-use Math::Factor::XS 'factors';
+use Math::Factor::XS 0.40 'factors'; # version 0.40 for factors() on BigInt
 
 
 use vars '$VERSION', '@ISA';
-$VERSION = 48;
+$VERSION = 49;
 use Math::NumSeq;
 use List::Util 'min';
 use Math::NumSeq::Base::IteratePred;
@@ -65,7 +65,7 @@ sub pred {
   if ($value > 0xFFFF_FFFF) {
     return undef;
   }
-  $value = "$value"; # numize any Math::BigInt for factors() and speed
+  $value = "$value"; # numize any Math::BigInt for speed
 
   return ! is_prime($value)
     && _coprime($value, sum(1,factors($value)));

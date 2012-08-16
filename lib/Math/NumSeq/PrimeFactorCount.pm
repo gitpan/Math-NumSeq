@@ -15,13 +15,17 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
+
+# values_type => 'mod2'
+
+
 package Math::NumSeq::PrimeFactorCount;
 use 5.004;
 use strict;
 use List::Util 'min', 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 48;
+$VERSION = 49;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -32,23 +36,32 @@ use Math::Factor::XS 'prime_factors';
 #use Smart::Comments;
 
 
-
 # cf. Untouchables, not sum of proper divisors of any other integer
 # p*q sum S=1+p+q
 # so sums up to hi need factorize to (hi^2)/4
 #
 
+use constant values_min => 0;
+use constant i_start => 1;
+
+sub values_max {
+  my ($self) = @_;
+  if ($self->{'values_type'} eq 'mod2') {
+    return 1;;
+  } else {
+    return undef;;
+  }
+}
 use constant characteristic_count => 1;
 use constant characteristic_smaller => 1;
 use constant characteristic_increasing => 0;
-use constant values_min => 0;
-use constant i_start => 1;
 
 use constant parameter_info_array =>
   [
    { name    => 'prime_type',
      display => Math::NumSeq::__('Prime Type'),
      type    => 'enum',
+     default => 'all',
      choices => ['all','odd','4k+1','4k+3',
                  'twin','SG','safe'],
      choices_display => [Math::NumSeq::__('All'),
@@ -60,7 +73,6 @@ use constant parameter_info_array =>
                          Math::NumSeq::__('SG'),
                          Math::NumSeq::__('Safe'),
                         ],
-     default => 'all',
      description => Math::NumSeq::__('The type of primes to count.
 twin=P where P+2 or P-2 also prime.
 SG=Sophie Germain P where 2P+1 also prime.
@@ -69,12 +81,24 @@ safe=P where (P-1)/2 also prime (the "other" of the SGs).'),
    { name    => 'multiplicity',
      display => Math::NumSeq::__('Multiplicity'),
      type    => 'enum',
+     default => 'repeated',
      choices => ['repeated','distinct'],
      choices_display => [Math::NumSeq::__('Repeated'),
                          Math::NumSeq::__('Distinct'),
                         ],
-     default => 'repeated',
      description => Math::NumSeq::__('Whether to include repeated prime factors, or only distinct prime factors.'),
+   },
+
+   # not documented yet
+   { name    => 'values_type',
+     display => Math::NumSeq::__('Values Type'),
+     type    => 'enum',
+     default => 'count',
+     choices => ['count','mod2'],
+     choices_display => [Math::NumSeq::__('Count'),
+                         Math::NumSeq::__('Mod2'),
+                        ],
+     # description => Math::NumSeq::__('...'),
    },
   ];
 
@@ -98,6 +122,16 @@ sub description {
 }
 
 #------------------------------------------------------------------------------
+#
+# count 1-bits in exponents of primes
+# A000028,A000379 seqs
+#    A133008  characteristic
+#    A131181,A026416  same, but 1 in "B" class
+#    A064547  count 1 bits in prime exponents
+#    A066724  so a(i)*a(j) not in seq
+#    A026477  so a(i)*a(j)*a(k) not in seq
+#    A050376  prime^(2^k)
+#    A084400  smallest not dividing product a(1)..a(n-1), is prime^(2^k)
 
 my %oeis_anum = (repeated => { all    => 'A001222',
                                odd    => 'A087436',
@@ -202,10 +236,13 @@ sub next {
     }
   }
   ### ret: "$i, $ret"
+  if ($self->{'values_type'} eq 'mod2') {
+    $ret %= 2;
+  }
   return ($i, $ret);
 }
 
-# prime_factors() ends up about 5x faster
+# prime_factors() is about 5x faster
 #
 sub ith {
   my ($self, $i) = @_;
@@ -249,6 +286,9 @@ sub ith {
     $count += $c;
   }
 
+  if ($self->{'values_type'} eq 'mod2') {
+    $count %= 2;
+  }
   return $count;
 }
 
