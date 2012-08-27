@@ -21,7 +21,7 @@ use strict;
 use List::Util 'min';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 49;
+$VERSION = 50;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -104,23 +104,19 @@ sub values_min {
 #    A052363 new longest alpha
 #    A134629 first requiring n letters
 #
-# A003078 (Danish)
-# A001050 (Finnish)
-# A001368 (Irish Gaelic)
+# A003078 (Danish) DK
+# A001050 (Finnish) FI
+# A001368 (Irish Gaelic) GA
 # A006968 or A092196 (Roman numerals)
-# A006994 (Russian)
-# A051785 (Catalan)
-# A056597 (Serbian or Croatian)
-# A132984 (Latin)
-# A140395 (Hindi),
+# A051785 (Catalan) CA
+# A056597 (Serbian or Croatian) SR
+# A132984 (Latin) LA
+# A140395 (Hindi) HI
 # A053306 (Galego)
-# A057853 (Esperanto)
-# A140396 (Welsh)
-# A140438 (Tamil)
-# A014656 (Bokmal), A028292 (Nynorsk)
-# Lingua::NO::Num2Word
-# Lingua::PT::Nums2Words
-# A057696 (Brazilian Portuguese)
+# A140396 (Welsh) CY
+# A140438 (Tamil) TA
+# A014656 (Bokmal) NB, was NO   Lingua::NO::Num2Word
+# A028292 (Nynorsk) NN
 
 # catalogued in Alpha.pm
 my %oeis_anum
@@ -133,6 +129,8 @@ my %oeis_anum
      # Lingua::DE::Num2Word doubtful ...
      # 'de,cardinal,1' => 'A007208', # German, Lingua::DE::Num2Word
 
+     'eo,cardinal,0' => 'A057853', # Esperanto, Lingua::EO::Numbers
+
      'es,cardinal,0' => 'A011762', # Spanish, Lingua::ES::Numeros
 
      'fr,ordinal,1' => 'A006969', # French, Lingua::FR::Numbers
@@ -140,15 +138,28 @@ my %oeis_anum
 
      'hu,cardinal,1' => 'A007292', # Hungarian, Lingua::HU::Numbers
 
-     # centottanta in A026858 vs centoottanta in Lingua
+     # Not quite, centottanta in A026858 vs centoottanta in Lingua
      # 'it,cardinal,0' => 'A026858', # Italian, Lingua::IT::Numbers
 
      'ja,cardinal,0' => 'A030166', # Japanese Kanji, Lingua::JA::Numbers
 
      'nl,cardinal,1' => 'A090589', # Dutch, Lingua::NL::Numbers
-     # A007485 ij as one letter
+     # cf A007485 ij as one letter
+
+     # Not sure about 11=ellve cf A014656(11)=6
+     # # Bokmal NO, lately code change to NB
+     # 'no,cardinal,1' => 'A014656', # Lingua::NO::Num2Word
+     #
+     # cf A028292 Nynorsk A028292(1)=3
+     # 'nn,cardinal,1' => 'A028292',
 
      'pl,cardinal,0' => 'A008962', # Polish, Lingua::PL::Numbers
+
+     # No, Brazilian Portuguese "catorze" cf "quatorze"
+     # 'pt,cardinal,1' => 'A057696',  # Lingua::PT::Nums2Words
+
+     # No, Lingua::RU::Number 0.05 is money amounts only.
+     # 'ru,cardinal,1' => 'A006994', # Russian, Lingua::RU::Number
 
      'sv,cardinal,0' => 'A059124', # Swedish, Lingua::SV::Numbers
 
@@ -158,6 +169,7 @@ sub oeis_anum {
   my ($self) = @_;
   ### oeis_anum: $self
   ### key: "\L$self->{language}\E,$self->{number_type},".$self->i_start
+
   return $oeis_anum
     {"\L$self->{language}\E,$self->{number_type},".$self->i_start};
 }
@@ -194,23 +206,35 @@ sub ith {
   if ($self->{'number_type'} eq 'ordinal') {
     $str = Lingua::Any::Numbers::to_ordinal ($i, $self->{'language'});
     if ($str eq $i) {
+      # some modules without ordinal support return $i as numerals unchanged
       return undef;
     }
+
   } else {
-    $str = Lingua::Any::Numbers::to_string ($i, $self->{'language'});
+    if ($self->{'language'} eq 'eo' && $i == 1) {
+      # HACK: avoid warn() from num2eo(1) in Lingua::EO::Numbers 0.03
+      $str = 'unu';
+    } else {
+      $str = Lingua::Any::Numbers::to_string ($i, $self->{'language'});
+    }
   }
   if (my $decode_chars = $self->{'decode_chars'}) {
     $decode_chars->($str);
   }
+  ### language: $self->{'language'}
   ### $str
 
-  $str =~ s/\W//g;
-  ### letters only: $str
+  my $count = 0;
+  while ($str =~ /(\w|[^[:ascii:]])/g) {
+    $count += length($1);
+  }
+  ### $count
+  return $count;
 
+  # ### letters only: $str
   # counting whitespace ...
   # $str =~ s/[^[:word:][:space:]]//g;
-
-  return length($str);
+  # return length($str);
 }
 
 1;

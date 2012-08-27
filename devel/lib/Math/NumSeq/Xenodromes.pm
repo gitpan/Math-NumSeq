@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 49;
+$VERSION = 50;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
@@ -58,8 +58,8 @@ sub values_max {
 #    A109303 non-xenodromes in decimal, at least one duplicate digit
 #    A178788 0/1 characteristic decimal distinct digits
 #    A029743 primes with distinct digits
-#
-#    A001339   Sum (k+1)! * C(n,k), k = 0..n.
+#    A001339   count xenodromes of n digits
+#       Sum (k+1)! * C(n,k), k = 0..n.
 #              = Sum (k+1)! * n!/k!*(n-k)!, k = 0..n.
 #              = Sum (k+1) * n!/(n-k)!, k = 0..n.
 #              = Sum k = 0..n of (k+1)*n*(n-1)*...*(n-k+1)

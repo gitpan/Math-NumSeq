@@ -30,7 +30,7 @@ use Carp;
 use POSIX ();
 
 use vars '$VERSION', '@ISA';
-$VERSION = 49;
+$VERSION = 50;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');

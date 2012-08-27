@@ -458,7 +458,7 @@ sub info_extend_parameters {
   if ($info->{'name'} eq 'planepath') {
     my @strings;
     foreach my $choice (@{$info->{'choices'}}) {
-      next unless $choice eq 'GrayCode';
+      next unless $choice =~ /SierpinskiCurve/;
       # next unless $choice eq 'DiagonalsAlternating';
       my $path_class = "Math::PlanePath::$choice";
       Module::Load::load($path_class);
@@ -516,8 +516,8 @@ sub info_extend_parameters {
   }
   
   if ($info->{'name'} eq 'arms') {
-    print "  skip parameter $info->{'name'}\n";
-    return;
+    # print "  skip parameter $info->{'name'}\n";
+    # return;
   }
   
   if ($info->{'name'} eq 'n_start') {

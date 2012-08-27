@@ -21,7 +21,7 @@ use strict;
 use Module::Util;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 49;
+$VERSION = 50;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
@@ -47,6 +47,14 @@ use constant::defer info_arrayref => sub {
               anum  => 'A011762',
               class => 'Math::NumSeq::AlphabeticalLength',
               parameters => [ language => 'es', i_start => 0 ],
+             }
+           : ()),
+
+          (exists $available{'EO'} # Esperanto
+           ? {
+              anum  => 'A057853',
+              class => 'Math::NumSeq::AlphabeticalLength',
+              parameters => [ language => 'eo', i_start => 0 ],
              }
            : ()),
 
@@ -87,6 +95,7 @@ use constant::defer info_arrayref => sub {
           #    }
           #  : ()),
 
+          # doubtful pos=17 is n=18 "achtien" want 8 ?
           # (exists $available{'NL'}
           #  ? {
           #     anum  => 'A090589',
@@ -95,11 +104,38 @@ use constant::defer info_arrayref => sub {
           #    }
           #  : ()),
 
+          # (exists $available{'NO'}
+          #  ? {
+          #     anum  => 'A014656',
+          #     class => 'Math::NumSeq::AlphabeticalLength',
+          #     parameters => [ language => 'no', i_start => 1 ],
+          #    }
+          #  : ()),
+
           # (exists $available{'PL'}
           #  ? {
           #     anum  => 'A008962',
           #     class => 'Math::NumSeq::AlphabeticalLength',
           #     parameters => [ language => 'pl', i_start => 0 ],
+          #    }
+          #  : ()),
+
+          # No, Brazilian Portuguese "catorze" cf PT "quatorze"
+          # # A057696 values start n=1 but OFFSET=0
+          # (exists $available{'PT'}
+          #  ? {
+          #     anum  => 'A057696',
+          #     class => 'Math::NumSeq::AlphabeticalLength',
+          #     parameters => [ language => 'pt', i_start => 1 ],
+          #    }
+          #  : ()),
+
+          # No, Lingua::RU::Number 0.05 is money amounts only.
+          # (exists $available{'RU'}
+          #  ? {
+          #     anum  => 'A006994',
+          #     class => 'Math::NumSeq::AlphabeticalLength',
+          #     parameters => [ language => 'ru', i_start => 0 ],
           #    }
           #  : ()),
 

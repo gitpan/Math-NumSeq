@@ -145,7 +145,6 @@ $|=1;
   $values_class = 'Math::NumSeq::PrimeIndexOrder';
   $values_class = 'Math::NumSeq::PrimeIndexPrimes';
   $values_class = 'Math::NumSeq::AlphabeticalLengthSteps';
-  $values_class = 'Math::NumSeq::AlphabeticalLength';
   $values_class = 'Math::NumSeq::KaprekarSteps';
   $values_class = 'Math::NumSeq::Padovan';
   $values_class = 'Math::NumSeq::StoehrSequence';
@@ -178,16 +177,21 @@ $|=1;
   $values_class = 'Math::NumSeq::FactorialProducts';
   $values_class = 'Math::NumSeq::Fibonacci';
   $values_class = 'Math::NumSeq::FibonacciProducts';
-  $values_class = 'Math::NumSeq::PlanePathTurn';
   $values_class = 'Math::NumSeq::PlanePathN';
   $values_class = 'Math::NumSeq::PrimeFactorCount';
-  $values_class = 'Math::NumSeq::PlanePathCoord';
-  $values_class = 'Math::NumSeq::PlanePathDelta';
   $values_class = 'Math::NumSeq::Runs';
+  $values_class = 'Math::NumSeq::PlanePathCoord';
+  $values_class = 'Math::NumSeq::AlphabeticalLength';
+  $values_class = 'Math::NumSeq::PisanoPeriod';
+  $values_class = 'Math::NumSeq::PlanePathTurn';
+  $values_class = 'Math::NumSeq::PlanePathDelta';
 
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new
     (
+     # language => 'no',
+     # i_start => 0,
+
       # runs_type => '1to2N',
      # values_type => 'mod2',
 
@@ -197,7 +201,6 @@ $|=1;
      # order => 'descending',
      # digit => 1,
      # root_type => 'negative',
-     # i_start => 1,
      # letter => '',
      # multiplicity => 'distinct',
      # order => 'descending',
@@ -207,7 +210,6 @@ $|=1;
      # on_values => 'even',
      # i_start => 0,
      # recurrence_type => 'absdiff',
-     # language => 'sv',
      # i_start => 0,
      # on_values => 'primes',
      # level => 2,
@@ -238,16 +240,17 @@ $|=1;
       # planepath => 'ImaginaryHalf,radix=37',
       # line_type => 'Y_axis',
 
-     # planepath => 'DiagonalRationals',
-     # coordinate_type => 'Sum',
+     # planepath => 'DragonCurve',
+     # coordinate_type => 'NumSurround4',
 
      # planepath => 'GrayCode',
-     # planepath => 'Diagonals',
      # planepath => 'PyramidRows,step=1,n_start=0',
-     # delta_type=>'dDiffYX',
+     # planepath => 'DragonCurve,arms=4',
+     planepath => 'SierpinskiCurveStair',
+     delta_type=>'AbsdX',
 
-     # planepath => 'R5DragonCurve',
-     # turn_type => 'Right',
+     # planepath => 'SierpinskiArrowhead',
+     # turn_type => 'Left',
 
      # planepath => 'SquareSpiral',
      # planepath => 'ZOrderCurve,radix=10',

@@ -330,7 +330,7 @@ sub check_class {
 
   # skip all except ...
   #
-  # return unless $anum eq 'A006512';
+  # return unless $anum eq 'A057696';
 
 
   my $want_count = scalar(@$want);

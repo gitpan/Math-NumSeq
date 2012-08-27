@@ -36,7 +36,7 @@ use Math::NumSeq::LuckyNumbers;
 # VERSION
 
 {
-  my $want_version = 49;
+  my $want_version = 50;
   ok ($Math::NumSeq::LuckyNumbers::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::LuckyNumbers->VERSION,  $want_version,

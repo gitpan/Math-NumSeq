@@ -25,7 +25,7 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
-my $test_count = (tests => 1693)[1];
+my $test_count = (tests => 1720)[1];
 plan tests => $test_count;
 
 # uncomment this to run the ### lines
@@ -126,6 +126,21 @@ foreach my $elem
    # MobiusFunction.pm
    # PiBits.pm
    
+   [ 'Math::NumSeq::RadixConversion',
+     [ 0, 1, 10, 11, 100, 101, 110, 111, 1000, 1001, 1010, 1011, ], # per POD
+   ],
+   [ 'Math::NumSeq::RadixConversion',
+     [ 0x0, 0x1, 0x10, 0x11, 0x100, 0x101, 0x110, 0x111,
+       0x1000, 0x1001, 0x1010, 0x1011, ],
+     { to_radix => 16 },
+   ],
+   [ 'Math::NumSeq::RadixConversion',
+     [ 0,1,2,3,4,5, 6, 7, 8, 9,
+       2,3,4,5,6,7, 8, 9,10,11,
+       4,5,6,7,8,9,10,11,12,13, ],
+     { from_radix => 10, to_radix => 2 },
+   ],
+
    # [ 'Math::NumSeq::CbrtContinued',
    #   [ 1,3,1,5,1,1,4,1,1,8,1,14,1,10,2,1,4,12,2,3,2,1,3 ],
    # ],

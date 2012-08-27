@@ -85,3 +85,43 @@ use List::Util 'max','min';
   exit 0;
 }
 
+{
+  require Math::Fibonacci;
+  require POSIX;
+  my $phi = (1 + sqrt(5)) / 2;
+  foreach my $i (1 .. 40) {
+    my $f = Math::Fibonacci::term($i);
+    my $theta = $f / ($phi*$phi);
+    my $frac = $theta - POSIX::floor($theta);
+    printf("%2d  %10.2f  %5.2f  %1.3f  %5.3f\n",
+           $i, $f, sqrt($f), $frac, $theta);
+  }
+  exit 0;
+}
+{
+  require Math::Fibonacci;
+  my @f = Math::Fibonacci::series(90);
+  local $, = ' ';
+  print @f,"\n";
+
+  foreach my $i (1 .. $#f) {
+    if ($f[$i] > $f[$i]) {
+      print "$i\n";
+    }
+  }
+  my @add = (1, 1);
+  for (;;) {
+    my $n = $add[-1] + $add[-2];
+    if ($n > 2**53) {
+      last;
+    }
+    push @add, $n;
+  }
+  print "add count ",scalar(@add),"\n";
+  foreach my $i (0 .. $#add) {
+    if ($f[$i] != $add[$i]) {
+      print "diff $i    $f[$i] != $add[$i]    log ",log($add[$i])/log(2),"\n";
+    }
+  }
+  exit 0;
+}

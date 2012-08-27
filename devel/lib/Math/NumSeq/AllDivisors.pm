@@ -27,7 +27,7 @@ use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 use Math::Factor::XS 0.39 'factors';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 49;
+$VERSION = 50;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -85,6 +85,11 @@ sub values_min {
 #------------------------------------------------------------------------------
 # A027749 excluding 1
 # A027751 excluding n including 1, being proper divisors
+
+# A161901 with sqrt(n) repeated if an integer
+# A161906 list divisors <= sqrt(n)
+# A161908 list divisors >= sqrt(n)
+
 my %oeis_anum = ('all,ascending'  => 'A027750',
                  'all,descending' => 'A056538',
                  # 'composites,ascending' => '',

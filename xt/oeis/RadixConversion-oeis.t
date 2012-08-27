@@ -28,7 +28,7 @@ use MyTestHelpers;
 MyTestHelpers::nowarnings();
 use MyOEIS;
 
-use Math::NumSeq::Math::NumSeq::RadixConversion;
+use Math::NumSeq::RadixConversion;
 
 # uncomment this to run the ### lines
 #use Smart::Comments '###';
@@ -63,20 +63,22 @@ sub diff_nums {
 
 
 #------------------------------------------------------------------------------
-# A062847 - base 2 interpreted as base 6 is multiple of original
+# A062847 - base 2 interpreted as base 6 which is multiple of original
 
 {
-  my $anum = 'A156660';
+  my $anum = 'A062847';
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my $diff;
   if ($bvalues) {
     my @got;
-    my $seq = Math::NumSeq::RadixConversion->new (radix => 2,
+    my $seq = Math::NumSeq::RadixConversion->new (from_radix => 2,
                                                   to_radix => 6);
-    for (my $n = 0; @got < @$bvalues; $n++) {
-      my $value = $seq->ith($n);
-      if (($value % $n) == 0) {
-        push @got, $n;
+    while (@got < @$bvalues) {
+      my ($i, $value) = $seq->next;
+      if ($i == 0 || ($value % $i) == 0) {
+        ### $i
+        ### $value
+        push @got, $i;
       }
     }
     $diff = diff_nums(\@got, $bvalues);

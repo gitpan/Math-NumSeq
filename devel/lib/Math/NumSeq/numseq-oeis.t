@@ -121,10 +121,10 @@ sub check_class {
   # return unless $class =~ /Kap/;
   # return unless $class =~ /Pier/;
   # return unless $class =~ /FactorialP/;
-   return unless $class =~ /Fibonacci/;
+  # return unless $class =~ /Fibonacci/;
   # return unless $class =~ /Erdos/;
   # return unless $class =~ /RadixConv/;
-  # return unless $anum eq 'A001013';
+  return unless $anum eq 'A014656';
 
   eval "require $class" or die;
 
@@ -177,6 +177,9 @@ sub check_class {
   ### $want_i_start
 
 
+  if ($anum eq 'A057696') { # pt_BR lengths
+    $want_i_start = 1;
+  }
 
 
   my $want_count = scalar(@$want);
@@ -438,8 +441,8 @@ unlink  'devel/lib/Math/NumSeq/OEIS/Catalogue/Plugin/TempDevel.pm' or die;
 # rmdir  'devel/lib/Math/NumSeq/OEIS' or die;
 my $aref = Math::NumSeq::OEIS::Catalogue::Plugin::TempDevel::info_arrayref();
 
-# require Math::NumSeq::OEIS::Catalogue::Plugin::Alpha;
-# $aref = Math::NumSeq::OEIS::Catalogue::Plugin::Alpha::info_arrayref();
+require Math::NumSeq::OEIS::Catalogue::Plugin::Alpha;
+$aref = Math::NumSeq::OEIS::Catalogue::Plugin::Alpha::info_arrayref();
 
 foreach my $info (@$aref) {
   ### $info

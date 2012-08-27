@@ -38,7 +38,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 49;
+$VERSION = 50;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -529,6 +529,7 @@ L<Math::NumSeq::DigitProductSteps>,
 L<Math::NumSeq::DigitSum>,
 L<Math::NumSeq::DigitSumModulo>,
 L<Math::NumSeq::RadixWithoutDigit>
+L<Math::NumSeq::RadixConversion>
 L<Math::NumSeq::MaxDigitCount>
 
 L<Math::NumSeq::Palindromes>,

@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 49;
+$VERSION = 50;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 739 A-numbers in 108 modules
+# total 757 A-numbers in 109 modules
 
 use constant info_arrayref =>
 [
@@ -2704,6 +2704,146 @@ use constant info_arrayref =>
     'parameters' => [
       'pythagorean_type',
       'primitive'
+    ]
+  },
+  {
+    'anum' => 'A007088',
+    'class' => 'Math::NumSeq::RadixConversion'
+  },
+  {
+    'anum' => 'A007089',
+    'class' => 'Math::NumSeq::RadixConversion',
+    'parameters' => [
+      'from_radix',
+      3
+    ]
+  },
+  {
+    'anum' => 'A007090',
+    'class' => 'Math::NumSeq::RadixConversion',
+    'parameters' => [
+      'from_radix',
+      4
+    ]
+  },
+  {
+    'anum' => 'A007091',
+    'class' => 'Math::NumSeq::RadixConversion',
+    'parameters' => [
+      'from_radix',
+      5
+    ]
+  },
+  {
+    'anum' => 'A007092',
+    'class' => 'Math::NumSeq::RadixConversion',
+    'parameters' => [
+      'from_radix',
+      6
+    ]
+  },
+  {
+    'anum' => 'A007093',
+    'class' => 'Math::NumSeq::RadixConversion',
+    'parameters' => [
+      'from_radix',
+      7
+    ]
+  },
+  {
+    'anum' => 'A007094',
+    'class' => 'Math::NumSeq::RadixConversion',
+    'parameters' => [
+      'from_radix',
+      8
+    ]
+  },
+  {
+    'anum' => 'A000695',
+    'class' => 'Math::NumSeq::RadixConversion',
+    'parameters' => [
+      'to_radix',
+      4
+    ]
+  },
+  {
+    'anum' => 'A033042',
+    'class' => 'Math::NumSeq::RadixConversion',
+    'parameters' => [
+      'to_radix',
+      5
+    ]
+  },
+  {
+    'anum' => 'A033043',
+    'class' => 'Math::NumSeq::RadixConversion',
+    'parameters' => [
+      'to_radix',
+      6
+    ]
+  },
+  {
+    'anum' => 'A033045',
+    'class' => 'Math::NumSeq::RadixConversion',
+    'parameters' => [
+      'to_radix',
+      8
+    ]
+  },
+  {
+    'anum' => 'A033046',
+    'class' => 'Math::NumSeq::RadixConversion',
+    'parameters' => [
+      'to_radix',
+      9
+    ]
+  },
+  {
+    'anum' => 'A033047',
+    'class' => 'Math::NumSeq::RadixConversion',
+    'parameters' => [
+      'to_radix',
+      11
+    ]
+  },
+  {
+    'anum' => 'A033048',
+    'class' => 'Math::NumSeq::RadixConversion',
+    'parameters' => [
+      'to_radix',
+      12
+    ]
+  },
+  {
+    'anum' => 'A033049',
+    'class' => 'Math::NumSeq::RadixConversion',
+    'parameters' => [
+      'to_radix',
+      13
+    ]
+  },
+  {
+    'anum' => 'A033050',
+    'class' => 'Math::NumSeq::RadixConversion',
+    'parameters' => [
+      'to_radix',
+      14
+    ]
+  },
+  {
+    'anum' => 'A033051',
+    'class' => 'Math::NumSeq::RadixConversion',
+    'parameters' => [
+      'to_radix',
+      15
+    ]
+  },
+  {
+    'anum' => 'A033052',
+    'class' => 'Math::NumSeq::RadixConversion',
+    'parameters' => [
+      'to_radix',
+      16
     ]
   },
   {

@@ -24,7 +24,7 @@ use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 use Math::Factor::XS 0.39 'factors', 'prime_factors';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 49;
+$VERSION = 50;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -44,9 +44,12 @@ use constant characteristic_increasing => 0;
 use constant values_min => 1;
 use constant i_start => 1;
 
+#------------------------------------------------------------------------------
 # cf A007617 non-totients, all odds, plus evens per A005277
 #    A005277 even non-totients, n s.t. n==phi(something) no solution
 #    A058980 non-totients 0mod4
+#    A056595 - sum non-square divisors
+#    A007614 totients ascending, with multiplicity
 
 # Dressler (1970) N(x) = num phi(n)<=x, then N(x)/x -> A
 # A = zeta(2)*zeta(3)/zeta(6) = product primes 1+1/(p*(p-1))

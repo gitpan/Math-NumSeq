@@ -79,6 +79,7 @@ devel/lib/Math/NumSeq/pi.gz
 devel/lib/Math/NumSeq/PiBits.pm
 devel/lib/Math/NumSeq/PiDigits.pm
 devel/lib/Math/NumSeq/PierpontPrimes.pm
+devel/lib/Math/NumSeq/PisanoPeriod.pm
 devel/lib/Math/NumSeq/Plaindromes.pm
 devel/lib/Math/NumSeq/PowerSieve.pm
 devel/lib/Math/NumSeq/PrimeFactorExtract.pm
@@ -87,8 +88,6 @@ devel/lib/Math/NumSeq/PrimeQuadraticHonaker.pm
 devel/lib/Math/NumSeq/PrimeQuadraticLegendre.pm
 devel/lib/Math/NumSeq/PrimesDigits.pm
 devel/lib/Math/NumSeq/PrimeSignatureLeast.pm
-devel/lib/Math/NumSeq/RadixConversion-oeis.t
-devel/lib/Math/NumSeq/RadixConversion.pm
 devel/lib/Math/NumSeq/ReplicateDigits.pm
 devel/lib/Math/NumSeq/SevenSegments.pm
 devel/lib/Math/NumSeq/SlopingBinaryExcluded-oeis.t
@@ -238,6 +237,7 @@ lib/Math/NumSeq/Primorials.pm
 lib/Math/NumSeq/Pronic.pm
 lib/Math/NumSeq/ProthNumbers.pm
 lib/Math/NumSeq/PythagoreanHypots.pm
+lib/Math/NumSeq/RadixConversion.pm
 lib/Math/NumSeq/RadixWithoutDigit.pm
 lib/Math/NumSeq/RepdigitAny.pm
 lib/Math/NumSeq/RepdigitRadix.pm
@@ -373,6 +373,7 @@ xt/oeis/PrimeFactorCount-oeis.t
 xt/oeis/PrimeIndexPrimes-oeis.t
 xt/oeis/Primes-oeis.t
 xt/oeis/ProthNumbers-oeis.t
+xt/oeis/RadixConversion-oeis.t
 xt/oeis/ReRound-oeis.t
 xt/oeis/SophieGermainPrimes.t
 xt/oeis/SpiroFibonacci-oeis.t
