@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 50;
+$VERSION = 51;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -65,7 +65,8 @@ use constant description => Math::NumSeq::__('Sum of the digits in the given rad
 # cf A001969  numbers with even 1s
 #    A026147  numbers with ...
 #    A001285  thue-morse
-#    A010059  inverse of radix=2
+#    A010059  inverse of radix=2 thue-morse
+#    A106400  radix=2 Thue-Morse as +/-1
 #
 my @oeis_anum = (
                  # OEIS-Catalogue array begin

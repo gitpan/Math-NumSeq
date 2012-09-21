@@ -22,7 +22,7 @@ use Carp;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 50;
+$VERSION = 51;
 
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
@@ -70,10 +70,12 @@ $oeis_anum[2]->[2] = 'A004539';   # base 2, sqrt2
 $oeis_anum[3]->[2] = 'A004540';   # base 3, sqrt2
 $oeis_anum[4]->[2] = 'A004541';   # base 4, sqrt2
 $oeis_anum[5]->[2] = 'A004542';   # base 5, sqrt2
+$oeis_anum[60]->[2] = 'A070197';  # base 60, sqrt2
 # OEIS-Catalogue: A004539 sqrt=2 radix=2
 # OEIS-Catalogue: A004540 sqrt=2 radix=3
 # OEIS-Catalogue: A004541 sqrt=2 radix=4
 # OEIS-Catalogue: A004542 sqrt=2 radix=5
+# OEIS-Catalogue: A070197 sqrt=2 radix=60
 
 # sqrt 3
 $oeis_anum[2]->[3] = 'A004547';   # base 2, sqrt3

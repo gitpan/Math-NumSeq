@@ -458,7 +458,10 @@ sub info_extend_parameters {
   if ($info->{'name'} eq 'planepath') {
     my @strings;
     foreach my $choice (@{$info->{'choices'}}) {
-      next unless $choice =~ /SierpinskiCurve/;
+      # next unless $choice =~ /DiamondSpiral/;
+      # next unless $choice =~ /CellularRule/;
+       next unless $choice =~ /RationalsTree/;
+      # next unless $choice =~ /SierpinskiArrowheadC/;
       # next unless $choice eq 'DiagonalsAlternating';
       my $path_class = "Math::PlanePath::$choice";
       Module::Load::load($path_class);

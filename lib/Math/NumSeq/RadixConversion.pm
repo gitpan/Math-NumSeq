@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 50;
+$VERSION = 51;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -73,15 +73,15 @@ use constant parameter_info_array =>
 
 #------------------------------------------------------------------------------
 # cf A136399 decimal is not entirely 0,1 digits
-#    A001737 squares written in binary
-#    A099820 even numbers written in binary
-#    A099821 odd numbers written in binary
-#    A178569 binary to decimal expressed by recurrence
-#    A031345 primes written in 10 interpret as base 13
 #    A055983 a(n+1) = a(n) base 10 converted to base 12, repeated conversion
 #    A032917 decimal digits 1,3 only
 #    A199341 decimal digits 1,3,4 only
 #    A032940 base 5 odd positions 0, but counting from top end
+#
+#    A099820 even numbers written in binary
+#    A099821 odd numbers written in binary
+#    A001737 squares written in binary
+#    A031345 primes written in 10 interpret as base 13
 #
 
 my @oeis_anum;

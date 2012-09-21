@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 50;
+$VERSION = 51;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -39,6 +39,7 @@ use constant characteristic_integer => 1;
 # cf A189658 - positions of 0
 #    A189659 - positions of 1
 #    A189660 - cumulative 0/1
+#    A156595 - xor diffs, OFFSET=0 so m(n) xor m(n+1)
 #
 use constant oeis_anum => 'A064990';  # mephisto waltz 0/1 values
 
@@ -69,7 +70,7 @@ sub next {
       ### carry to digit: $digit
       if ($digit >= 27) {
         $self->{'digits'}->[$i++] = 0;
-        $self->{'value'} ^= 1;
+        $self->{'value'} ^= 1;  # three 2s have become 0s
       } else {
         $self->{'value'} ^= $delta[$digit];
         last;
@@ -118,9 +119,13 @@ Math::NumSeq::MephistoWaltz -- Mephisto waltz sequence
 
 =head1 DESCRIPTION
 
-The Mephisto waltz sequence 0,0,1, 0,0,1, 1,1,0, etc, being the mod 2 count
-of ternary digit 2s in i.  i=0 has no 2s so 0 and similarly i=1.  Then i=2
-has one 2 so 1.
+The Mephisto waltz sequence, being the mod 2 count of ternary digit 2s in i.
+
+    starting i=0
+    0,0,1, 0,0,1, 1,1,0, ...
+
+i=0 has no 2s so value=0, and likewise i=1 value=0.  Then i=2 has one 2 so
+value=1.
 
 The sequence can also be expressed as starting with 0 and repeatedly
 expanding
@@ -135,11 +140,11 @@ So
     0,0,1, 0,0,1, 1,1,0,
     0,0,1, 0,0,1, 1,1,0, 0,0,1, 0,0,1, 1,1,0, 1,1,0, 1,1,0, 0,0,1
 
-    |                 |  |     copy        |  |     inverse     |
+    |   original      |  |     copy        |  |     inverse     |
     +-----------------+  +-----------------+  +-----------------+
 
-The effect of the expansion is keep the initial third the same, append a
-copy of it, and an inverse of it 0 changed to 1 and 1 changed to 0.
+The effect of the expansion is keep the first third the same, append a copy
+of it, and append an inverse of it 0E<lt>-E<gt>1.
 
 =head1 FUNCTIONS
 

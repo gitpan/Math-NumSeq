@@ -26,7 +26,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 50;
+$VERSION = 51;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -44,6 +44,7 @@ use constant i_start => 0;
 use constant characteristic_integer => 1;
 
 # cf A037011 "Baum Sweet cubic"
+#            a(k)=1 iff k/3 is in A003714 fibbinary
 #
 use constant oeis_anum => 'A086747'; # starting OFFSET=0 value 1
 

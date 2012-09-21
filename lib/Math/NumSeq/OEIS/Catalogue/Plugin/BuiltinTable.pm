@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 50;
+$VERSION = 51;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 757 A-numbers in 109 modules
+# total 759 A-numbers in 109 modules
 
 use constant info_arrayref =>
 [
@@ -1299,6 +1299,14 @@ use constant info_arrayref =>
   {
     'anum' => 'A020985',
     'class' => 'Math::NumSeq::GolayRudinShapiro'
+  },
+  {
+    'anum' => 'A020987',
+    'class' => 'Math::NumSeq::GolayRudinShapiro',
+    'parameters' => [
+      'values_type',
+      '0,1'
+    ]
   },
   {
     'anum' => 'A020986',
@@ -4932,6 +4940,16 @@ use constant info_arrayref =>
       2,
       'radix',
       5
+    ]
+  },
+  {
+    'anum' => 'A070197',
+    'class' => 'Math::NumSeq::SqrtDigits',
+    'parameters' => [
+      'sqrt',
+      2,
+      'radix',
+      60
     ]
   },
   {

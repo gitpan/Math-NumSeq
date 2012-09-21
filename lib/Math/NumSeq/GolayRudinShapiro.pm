@@ -18,9 +18,10 @@
 package Math::NumSeq::GolayRudinShapiro;
 use 5.004;
 use strict;
+use List::Util 'max','min';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 50;
+$VERSION = 51;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -28,21 +29,40 @@ use Math::NumSeq::Base::IterateIth;
         'Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
+use Math::NumSeq::Repdigits;
+*_digit_split_lowtohigh = \&Math::NumSeq::Repdigits::_digit_split_lowtohigh;
+
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
 
 # use constant name => Math::NumSeq::__('Golay-Rudin-Shapiro');
-use constant description => Math::NumSeq::__('Golay/Rudin/Shapiro (-1)^(count adjacent 11 bit pairs), so +1 if even count -1 if odd.');
-use constant values_min => -1;
-use constant values_max => 1;
-use constant characteristic_integer => 1;
 use constant default_i_start => 0;
 
+use constant parameter_info_array =>
+  [ {
+     name    => 'values_type',
+     type    => 'enum',
+     default => '1,-1',
+     choices => ['1,-1',
+                 '0,1',
+                ],
+     # TRANSLATORS: "1,-1" offered for translation of the "," if that might look like a decimal point, otherwise can be left unchanged
+     choices_display => [Math::NumSeq::__('1,-1'),
+                         Math::NumSeq::__('0,1'),
+                        ],
+     description => Math::NumSeq::__('The values to give for even or odd parity.'),
+    },
+  ];
+
+sub description {
+  my ($self) = @_;
+  return sprintf (Math::NumSeq::__('Golay/Rudin/Shapiro parity of adjacent 11 bit pairs, %s if even count %s if odd count.'),
+                  @{$self->{'values'}});
+}
+
 #------------------------------------------------------------------------------
-# cf A020985 - 1 and -1
-#    A020987 - 0 and 1
-#    A022155 - positions of -1
+# cf A022155 - positions of -1
 #    A203463 - positions of +1
 #    A014081 - count of 11 bit pairs
 #    A020986 - cumulative 1,-1, always positive
@@ -50,9 +70,36 @@ use constant default_i_start => 0;
 #    A020991 - position of last occurrence of n in the partial sums
 #    A005943 - number of subwords length n
 #
-use constant oeis_anum => 'A020985';  # 1,-1
+my %oeis_anum = ('1,-1' => 'A020985',  # 1 and -1
+                 '0,1'  => 'A020987',  # 0 and 1
+                 # OEIS-Catalogue: A020985
+                 # OEIS-Catalogue: A020987 values_type=0,1
+                );
+sub oeis_anum {
+  my ($self) = @_;
+  return $oeis_anum{$self->{'values_type'}};
+}
 
 #------------------------------------------------------------------------------
+
+sub new {
+  my $self = shift->SUPER::new(@_);
+  my @values = split /,/, $self->{'values_type'};
+  $self->{'values'} = \@values;
+  $self->{'values_min'} = min(@values);
+  $self->{'values_max'} = max(@values);
+  $self->{'characteristic'}->{'integer'}
+    = (_is_integer($values[0]) && _is_integer($values[1]));
+  $self->{'characteristic'}->{'pn1'}
+    = ($values[0] == 1 && $values[1] == -1);
+  ### $self
+  return $self;
+}
+sub _is_integer {
+  my ($n) = @_;
+  return ($n == int($n));
+}
+
 
 # ENHANCE-ME: use as_bin() on BigInt when available
 #
@@ -72,19 +119,18 @@ sub ith {
     return $i;
   }
 
-  my $prev = $i % 2; $i = int($i/2);
+  my $prev = 0;
   my $xor = 0;
-  while ($i) {
-    my $bit = $i % 2; $i = int($i/2);
+  foreach my $bit (_digit_split_lowtohigh($i,2)) {
     $xor ^= ($prev & $bit);
     $prev = $bit;
   }
-  return (1 - 2*$xor);
+  return $self->{'values'}->[$xor];
 }
 
 sub pred {
   my ($self, $value) = @_;
-  return ($value == 1 || $value == -1);
+  return ($value == $self->{'values'}->[0] || $value == $self->{'values'}->[1]);
 }
 
 # Jorg Arndt fxtbook next step by
@@ -133,6 +179,14 @@ Such a parity of even-length 1-bit runs and hence the GRS sequence arises as
 the "dX,dY" change for each segment of the alternate paper folding curve.
 See L<Math::PlanePath::AlternatePaper/dX,dY>.
 
+=head2 Values Type
+
+Parameter C<values_type =E<gt> '0,1'> gives values 0 and 1, being the count
+of adjacent 11s taken modulo 2, ie. 0 if even, 1 if odd.
+
+    values_type => '0,1'
+    0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, ...
+
 =head1 FUNCTIONS
 
 See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
@@ -140,6 +194,8 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 =over 4
 
 =item C<$seq = Math::NumSeq::GolayRudinShapiro-E<gt>new ()>
+
+=item C<$seq = Math::NumSeq::GolayRudinShapiro-E<gt>new (values_type =E<gt> $str)>
 
 Create and return a new sequence object.
 
@@ -157,7 +213,7 @@ number of adjacent 11 bit pairs in C<$i>.
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> occurs in the sequence, which simply means C<$value
-== 1> or C<$value == -1>.
+== 1> or C<$value == -1>.  Or if C<values_type=E<gt>'0,1'> then 0 or 1.
 
 =back
 

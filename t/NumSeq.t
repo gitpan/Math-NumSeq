@@ -25,7 +25,7 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
-my $test_count = (tests => 1720)[1];
+my $test_count = (tests => 1728)[1];
 plan tests => $test_count;
 
 # uncomment this to run the ### lines
@@ -125,6 +125,68 @@ foreach my $elem
    # Ln2Bits.pm
    # MobiusFunction.pm
    # PiBits.pm
+   
+   [ 'Math::NumSeq::GolayRudinShapiro',
+     [ 1,   # 0
+       1,   # 1
+       1,   # 10
+       -1,  # 11
+       1,   # 100
+       1,   # 101
+       -1,  # 110
+       1,   # 111
+       1,   # 1000
+       1,   # 1001
+       1,   # 1010
+       -1,  # 1011
+       -1,  # 1100
+       -1,  # 1101
+       1,   # 1110
+       -1,  # 1111
+       1,   # 10000
+     ],
+   ],
+   [ 'Math::NumSeq::GolayRudinShapiro',
+     [ 0,   # 0
+       0,   # 1
+       0,   # 10
+       1,   # 11
+       0,   # 100
+       0,   # 101
+       1,   # 110
+       0,   # 111
+       0,   # 1000
+       0,   # 1001
+       0,   # 1010
+       1,   # 1011
+       1,   # 1100
+       1,   # 1101
+       0,   # 1110
+       1,   # 1111
+       0,   # 10000
+     ],
+     { values_type => '0,1' },
+   ],
+   [ 'Math::NumSeq::GolayRudinShapiroCumulative',
+     [ 1,  # 0
+       2,  # 1
+       3,  # 10
+       2,  # 11
+       3,  # 100
+       4,  # 101
+       3,  # 110
+       4,  # 111
+       5,  # 1000
+       6,  # 1001
+       7,  # 1010
+       6,  # 1011
+       5,  # 1100
+       4,  # 1101
+       5,  # 1110
+       4,  # 1111
+       5,  # 10000
+     ],
+   ],
    
    [ 'Math::NumSeq::RadixConversion',
      [ 0, 1, 10, 11, 100, 101, 110, 111, 1000, 1001, 1010, 1011, ], # per POD
@@ -617,48 +679,6 @@ foreach my $elem
      ],
      { radix => 2 },
    ],
-   
-   [ 'Math::NumSeq::GolayRudinShapiro',
-     [ 1,   # 0
-       1,   # 1
-       1,   # 10
-       -1,  # 11
-       1,   # 100
-       1,   # 101
-       -1,  # 110
-       1,   # 111
-       1,   # 1000
-       1,   # 1001
-       1,   # 1010
-       -1,  # 1011
-       -1,  # 1100
-       -1,  # 1101
-       1,   # 1110
-       -1,  # 1111
-       1,   # 10000
-     ],
-   ],
-   [ 'Math::NumSeq::GolayRudinShapiroCumulative',
-     [ 1,  # 0
-       2,  # 1
-       3,  # 10
-       2,  # 11
-       3,  # 100
-       4,  # 101
-       3,  # 110
-       4,  # 111
-       5,  # 1000
-       6,  # 1001
-       7,  # 1010
-       6,  # 1011
-       5,  # 1100
-       4,  # 1101
-       5,  # 1110
-       4,  # 1111
-       5,  # 10000
-     ],
-   ],
-   
    
    [ 'Math::NumSeq::DeletablePrimes',
      [ 2,3,5,7,

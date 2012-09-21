@@ -7,7 +7,6 @@ debian/copyright
 debian/rules
 debian/source/format
 debian/watch
-devel/alphabetical-length.pl
 devel/ascii-self.pl
 devel/Base4Only01.pm
 devel/baum-sweet.pl
@@ -45,9 +44,6 @@ devel/kolakoski.pl
 devel/language-expr.pl
 devel/lib/Math/NumSeq/AbsCubicDiff.pm
 devel/lib/Math/NumSeq/AllDivisors.pm
-devel/lib/Math/NumSeq/AlphabeticalLength-oeis.t
-devel/lib/Math/NumSeq/AlphabeticalLength.pm
-devel/lib/Math/NumSeq/AlphabeticalLengthSteps.pm
 devel/lib/Math/NumSeq/Base/File.pm
 devel/lib/Math/NumSeq/Base/FileWriter.pm
 devel/lib/Math/NumSeq/Base/ValuesFile.t
@@ -60,13 +56,16 @@ devel/lib/Math/NumSeq/Derived/Cumulative.pm
 devel/lib/Math/NumSeq/DigitExtract.pm
 devel/lib/Math/NumSeq/EratosthenesStage.pm
 devel/lib/Math/NumSeq/FactorialProducts.pm
+devel/lib/Math/NumSeq/FibonacciFrequency.pm
 devel/lib/Math/NumSeq/FibonacciProducts.pm
 devel/lib/Math/NumSeq/HypotCount.pm
+devel/lib/Math/NumSeq/JacobsthalFunction.pm
 devel/lib/Math/NumSeq/KaprekarNumbers.pm
 devel/lib/Math/NumSeq/KaprekarRoutineSteps.pm
 devel/lib/Math/NumSeq/KolakoskiMajority.pm
 devel/lib/Math/NumSeq/LeastPrimitiveRoot-oeis.t
 devel/lib/Math/NumSeq/LeastPrimitiveRoot.pm
+devel/lib/Math/NumSeq/LeonardoLogarithm.pm
 devel/lib/Math/NumSeq/LipschitzClass.pm
 devel/lib/Math/NumSeq/ln2.gz
 devel/lib/Math/NumSeq/Ln2Bits.pm
@@ -79,8 +78,11 @@ devel/lib/Math/NumSeq/pi.gz
 devel/lib/Math/NumSeq/PiBits.pm
 devel/lib/Math/NumSeq/PiDigits.pm
 devel/lib/Math/NumSeq/PierpontPrimes.pm
+devel/lib/Math/NumSeq/PisanoPeriod-oeis.t
 devel/lib/Math/NumSeq/PisanoPeriod.pm
 devel/lib/Math/NumSeq/Plaindromes.pm
+devel/lib/Math/NumSeq/pow2mod10.pl
+devel/lib/Math/NumSeq/Pow2Mod10.pm
 devel/lib/Math/NumSeq/PowerSieve.pm
 devel/lib/Math/NumSeq/PrimeFactorExtract.pm
 devel/lib/Math/NumSeq/PrimeQuadraticEuler.pm
@@ -89,7 +91,6 @@ devel/lib/Math/NumSeq/PrimeQuadraticLegendre.pm
 devel/lib/Math/NumSeq/PrimesDigits.pm
 devel/lib/Math/NumSeq/PrimeSignatureLeast.pm
 devel/lib/Math/NumSeq/ReplicateDigits.pm
-devel/lib/Math/NumSeq/SevenSegments.pm
 devel/lib/Math/NumSeq/SlopingBinaryExcluded-oeis.t
 devel/lib/Math/NumSeq/SlopingExcluded.pm
 devel/lib/Math/NumSeq/Spectrum.pm
@@ -363,7 +364,9 @@ xt/oeis/GolayRudinShapiro-oeis.t
 xt/oeis/GolayRudinShapiroCumulative-oeis.t
 xt/oeis/GolombSequence-oeis.t
 xt/oeis/LemoineCount-oeis.t
+xt/oeis/LiouvilleFunction-oeis.t
 xt/oeis/LuckyNumbers-oeis.t
+xt/oeis/MephistoWaltz-oeis.t
 xt/oeis/MobiusFunction-oeis.t
 xt/oeis/NumSeq-oeis.t
 xt/oeis/Palindromes-oeis.t

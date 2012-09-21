@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 50;
+$VERSION = 51;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
@@ -37,7 +37,7 @@ use Math::NumSeq::Repdigits;
 
 # use constant name => Math::NumSeq::__('...');
 use constant description => Math::NumSeq::__('Numbers with non-decreasing hex digits, and options for related numbers.');
-use constant i_start => 0;
+use constant default_i_start => 0;
 use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
 use constant characteristic_smaller => 0;

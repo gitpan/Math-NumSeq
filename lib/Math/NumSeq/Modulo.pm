@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 50;
+$VERSION = 51;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -101,7 +101,7 @@ sub oeis_anum {
 
 sub ith {
   my ($self, $i) = @_;
-  return ($i % $self->{'modulus'});
+  return $i % $self->{'modulus'};
 }
 
 sub pred {

@@ -50,7 +50,7 @@ use strict;
 use List::Util qw(min max sum reduce);
 
 use vars '$VERSION', '@ISA';
-$VERSION = 50;
+$VERSION = 51;
 
 use Math::NumSeq::Base::IterateIth;
 use Math::NumSeq::Base::Digits;
@@ -143,6 +143,7 @@ my @oeis_anum;
 #    A077648 high digit of the primes
 #    A044959 numbers with a distinct mode, ie. unique most populous
 #    A141391 when RMS is an integer
+#    A038374 length longest run of 1-bits
 
 $oeis_anum[0]->{'low'}->{'unrounded'}->[10] = 'A010879';  # 0 to 9 rep
 # OEIS-Catalogue: A010879 extract_type=low

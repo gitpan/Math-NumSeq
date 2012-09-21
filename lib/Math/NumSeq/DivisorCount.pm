@@ -24,7 +24,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 50;
+$VERSION = 51;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -75,6 +75,10 @@ sub values_min {
 #    A070824 - proper divisors starting n=2
 #    A002182 - number with new highest number of divisors
 #    A002183 -    that count of divisors
+#    A001876 - count 5k+1 divisors
+#    A001877 - count 5k+2 divisors
+#    A001878 - count 5k+3 divisors
+#    A001899 - count 5k+4 divisors
 #
 #    A028422 - count of ways to factorize
 #    A033834 - n with new high count factorizations

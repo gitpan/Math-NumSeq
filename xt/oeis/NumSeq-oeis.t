@@ -146,7 +146,7 @@ sub check_class {
   # return unless $class =~ /PrimesD/;
   # return unless $class =~ /Golay/;
   # return unless $class =~ /Trib/;
-  # return unless $anum eq 'A137164';
+  # return unless $anum eq 'A070197';
 
   eval "require $class" or die;
 
@@ -282,6 +282,10 @@ sub check_class {
     MyTestHelpers::diag ("trim doubtful end $anum $name");
     $max_count = 50;
 
+  } elsif ($anum eq 'A070197') {
+    # final 12 of sqrt(2) base 60 seems bad, trim
+    $max_count = 72;
+    MyTestHelpers::diag ("trim doubtful end $anum $name");
   } elsif ($anum eq 'A004582') {
     # last few of sample values sqrt(8) base 7 seem bad, trim
     $max_count = 50;

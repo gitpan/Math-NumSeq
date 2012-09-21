@@ -27,7 +27,7 @@ use List::Util 'max';
 use POSIX 'ceil';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 50;
+$VERSION = 51;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -41,6 +41,7 @@ use constant PHI => (1 + sqrt(5)) / 2;
 # use constant description => Math::NumSeq::__('');
 use constant values_min => 1;
 use constant characteristic_increasing => 1;
+use constant characteristic_integer => 1;
 
 use constant parameter_info_array =>
   [ { name    => 'spectrum',

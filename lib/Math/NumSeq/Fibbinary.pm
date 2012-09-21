@@ -27,7 +27,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 50;
+$VERSION = 51;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -246,7 +246,7 @@ sub value_to_i_estimate {
 }
 
 # Can get close taking bits low to high and tweaking for consecutive 1s.
-# But the high to low of the full value_to_i_floor() isn't very much extra
+# But the high to low of the full value_to_i_floor() is only a little extra
 # work.
 #
 # sub value_to_i_estimate {

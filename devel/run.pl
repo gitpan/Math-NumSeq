@@ -91,7 +91,6 @@ $|=1;
   $values_class = 'Math::NumSeq::SquareFreeKernel';
   $values_class = 'Math::NumSeq::SqrtContinued';
   $values_class = 'Math::NumSeq::SqrtContinuedPeriod';
-  $values_class = 'Math::NumSeq::LiouvilleFunction';
   $values_class = 'Math::NumSeq::PolignacObstinate';
   $values_class = 'Math::NumSeq::Powerful';
   $values_class = 'Math::NumSeq::RepdigitRadix';
@@ -177,18 +176,25 @@ $|=1;
   $values_class = 'Math::NumSeq::FactorialProducts';
   $values_class = 'Math::NumSeq::Fibonacci';
   $values_class = 'Math::NumSeq::FibonacciProducts';
-  $values_class = 'Math::NumSeq::PlanePathN';
   $values_class = 'Math::NumSeq::PrimeFactorCount';
   $values_class = 'Math::NumSeq::Runs';
-  $values_class = 'Math::NumSeq::PlanePathCoord';
   $values_class = 'Math::NumSeq::AlphabeticalLength';
-  $values_class = 'Math::NumSeq::PisanoPeriod';
-  $values_class = 'Math::NumSeq::PlanePathTurn';
+  $values_class = 'Math::NumSeq::PlanePathCoord';
   $values_class = 'Math::NumSeq::PlanePathDelta';
+  $values_class = 'Math::NumSeq::PlanePathTurn';
+  $values_class = 'Math::NumSeq::Pow2Mod10';
+  $values_class = 'Math::NumSeq::JacobsthalFunction';
+  $values_class = 'Math::NumSeq::LeonardoLogarithm';
+  $values_class = 'Math::NumSeq::PisanoPeriod';
+  $values_class = 'Math::NumSeq::FibonacciFrequency';
+  $values_class = 'Math::NumSeq::GolayRudinShapiro';
+  $values_class = 'Math::NumSeq::LiouvilleFunction';
+  $values_class = 'Math::NumSeq::PlanePathN';
 
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new
     (
+     # values_type => '0,1',
      # language => 'no',
      # i_start => 0,
 
@@ -235,21 +241,28 @@ $|=1;
      # including_self => 0,
      # offset => 3,
 
-     # planepath => 'TriangleSpiralSkewed,n_start=0',
+     # planepath => 'RationalsTree',
+     planepath => 'SierpinskiTriangle',
+     # planepath => 'UlamWarburtonQuarter',
      # planepath => 'SquareSpiral,n_start=0',
-      # planepath => 'ImaginaryHalf,radix=37',
-      # line_type => 'Y_axis',
+     #  planepath => 'DigitGroups,radix=2',
+      line_type => 'Depth_end',
+     # i_start => 1,
 
      # planepath => 'DragonCurve',
-     # coordinate_type => 'NumSurround4',
+     # planepath => 'SierpinskiTriangle',
+     # planepath => 'UlamWarburton',
+     # coordinate_type => 'TreeDepth',
+     # coordinate_type => 'NumChildren',
 
      # planepath => 'GrayCode',
      # planepath => 'PyramidRows,step=1,n_start=0',
      # planepath => 'DragonCurve,arms=4',
-     planepath => 'SierpinskiCurveStair',
-     delta_type=>'AbsdX',
+     # planepath => 'SierpinskiCurveStair',
+     # planepath => 'Rows,width=3',
+     # delta_type=>'dX',
 
-     # planepath => 'SierpinskiArrowhead',
+     # planepath => 'TerdragonCurve',
      # turn_type => 'Left',
 
      # planepath => 'SquareSpiral',
@@ -309,9 +322,6 @@ $|=1;
      # polygonal => 6,
      # pairs => 'average',
 
-     # i_start => 1,
-     # endian => 'little',
-
      # including_zero => 1,
      # # divisors_type => 'proper',
      # # algorithm_type => '1/2-3/2',
@@ -341,8 +351,8 @@ $|=1;
 
   my $values_min = $seq->values_min;
   my $values_max = $seq->values_max;
-  my $saw_value_min;
-  my $saw_value_max;
+  my $saw_values_min;
+  my $saw_values_max;
   my $prev_value;
   my $prev_i;
 
@@ -376,11 +386,11 @@ $|=1;
         if (defined $values_max && $value > $values_max) {
           print " oops, value > values_max=$values_max\n";
         }
-        if (! defined $saw_value_min || $value < $saw_value_min) {
-          $saw_value_min = $value;
+        if (! defined $saw_values_min || $value < $saw_values_min) {
+          $saw_values_min = $value;
         }
-        if (! defined $saw_value_max || $value > $saw_value_max) {
-          $saw_value_max = $value;
+        if (! defined $saw_values_max || $value > $saw_values_max) {
+          $saw_values_max = $value;
         }
         # if ($value > DBL_INT_MAX) {
         #   print "\nstop at DBL_INT_MAX\n";
@@ -447,11 +457,11 @@ $|=1;
       $prev_i = $i;
     }
     print "\n";
-    if (defined $values_min && $saw_value_min != $values_min) {
-      print "hmm, saw_value_min=$saw_value_min not seq->values_min=$values_min\n";
+    if (defined $values_min && $saw_values_min != $values_min) {
+      print "hmm, saw_values_min=$saw_values_min not seq->values_min=$values_min\n";
     }
-    if (defined $values_max && $saw_value_max != $values_max) {
-      print "hmm, saw_value_max=$saw_value_max not seq->values_max=$values_max\n";
+    if (defined $values_max && $saw_values_max != $values_max) {
+      print "hmm, saw_values_max=$saw_values_max not seq->values_max=$values_max\n";
     }
     if ($rep < 2) {
       print "rewind\n";

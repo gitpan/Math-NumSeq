@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 50;
+$VERSION = 51;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -71,6 +71,7 @@ use constant parameter_info_array =>
    # },
   ];
 
+#------------------------------------------------------------------------------
 # eg. 78901 peaks at about 370,000 digits ...
 #
 # cf
@@ -125,6 +126,8 @@ sub oeis_anum {
   my ($self) = @_;
   return $oeis_anum{$self->{'step_type'}}->{$self->{'juggler_type'}};
 }
+
+#------------------------------------------------------------------------------
 
 sub rewind {
   my ($self) = @_;
@@ -200,6 +203,7 @@ my %cache_upto;
 sub next {
   my ($self) = @_;
   ### JugglerSteps next(): $self->{'i'}
+
   my $i = $self->{'i'}++;
   my $pkey = ($self->{'pkey'} ||= do {
     ### make pkey ...
@@ -210,9 +214,11 @@ sub next {
     $k
   });
   my $key_i = $pkey . $i;
+
   ### $pkey
   ### $key_i
   ### cache upto: "$cache_upto{$pkey} cf i=$i"
+
   if ($i < $cache_upto{$pkey}) {
     ### fetch from cache ...
     return ($i, $cache{$key_i});

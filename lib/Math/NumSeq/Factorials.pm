@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 50;
+$VERSION = 51;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -55,6 +55,40 @@ use constant characteristic_integer => 1;
 #
 #    A001013 Jordan-Polya products of factorials
 #
+# A008906 n! num digits excl trailing zeros
+# A027868 n! num trailing zeros, is power of 5
+# A000966 n! never ends these 0s
+#
+# A008904 n! low non-zero 
+# A136690 base 3
+# A136691 base 4
+# A136692 base 5
+# A136693 base 6
+# A136694 base 7
+# A136695 base 8
+# A136696 base 9
+# A136697 base 11
+# A136698 base 12
+# A136699 base 13
+# A136700 base 14
+# A136701 base 15
+# A136702 base 16
+#
+# A008905 n! leading digit
+# A136754 base 3
+# A136755 base 4
+# A136756 base 5
+# A136757 base 6
+# A136758 base 7
+# A136759 base 8
+# A136760 base 9
+# A136761 base 11
+# A136762 base 12
+# A136763 base 13
+# A136764 base 14
+# A136765 base 15
+# A136766 base 16
+
 use constant oeis_anum => 'A000142'; # factorials 1,1,2,6,24, including 0!==1
 
 #------------------------------------------------------------------------------

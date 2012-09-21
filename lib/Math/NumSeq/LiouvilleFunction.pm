@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 50;
+$VERSION = 51;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -37,7 +37,7 @@ use constant characteristic_increasing => 0;
 use constant characteristic_integer => 1;
 use constant values_min => -1;
 use constant values_max => 1;
-use constant i_start => 1;
+use constant default_i_start => 1;
 
 # cf A026424 - the -1 positions, odd number of primes
 #    A028260 - the 1 positions, even number of primes
@@ -149,15 +149,23 @@ Math::NumSeq::LiouvilleFunction -- Liouville function sequence
 
 =head1 DESCRIPTION
 
-The Liouville function, 1, -1, -1, 0, -1, 1, etc, being
+The Liouville function parity of the prime factors of i,
+
+    starting i=1
+    1, -1, -1, 1, -1, 1, -1, -1, 1, 1, -1, -1, -1, 1, 1, ...
+
+being
 
     1   if i has an even number of prime factors
     -1  if i has an odd number of prime factors
 
 The sequence starts from i=1 which is taken to be no prime factors,
-ie. zero, which is even, hence Liouville function 1.  Then i=2 and i=3 are
--1 since they have one prime factor (they're primes), and i=4 is value 1
-because it's 2*2 which is an even number of prime factors (two 2s).
+ie. zero, which is even, hence value 1.  Then i=2 and i=3 are -1 since they
+have one prime factor (they're primes), and i=4 is value 1 because it's 2*2
+which is an even number of prime factors (two 2s).
+
+This parity is similar to the MobiusFunction, but here repeated prime
+factors are included, whereas in MobiusFunction they give a value 0.
 
 =head1 FUNCTIONS
 

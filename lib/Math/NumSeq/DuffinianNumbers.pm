@@ -24,7 +24,7 @@ use Math::Factor::XS 0.40 'factors'; # version 0.40 for factors() on BigInt
 
 
 use vars '$VERSION', '@ISA';
-$VERSION = 50;
+$VERSION = 51;
 use Math::NumSeq;
 use List::Util 'min';
 use Math::NumSeq::Base::IteratePred;
@@ -75,6 +75,7 @@ sub pred {
 sub _coprime {
   my ($x, $y) = @_;
   ### _coprime(): "$x,$y"
+
   if ($y > $x) {
     ($x,$y) = ($y,$x);
   }

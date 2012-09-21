@@ -121,10 +121,10 @@ sub check_class {
   # return unless $class =~ /Kap/;
   # return unless $class =~ /Pier/;
   # return unless $class =~ /FactorialP/;
-  # return unless $class =~ /Fibonacci/;
-  # return unless $class =~ /Erdos/;
-  # return unless $class =~ /RadixConv/;
-  return unless $anum eq 'A014656';
+  # return unless $class =~ /Pisano/;
+  # return unless $class =~ /FibonacciFreq/;
+   return unless $class =~ /Jacobs/;
+  # return unless $anum eq 'A048669';
 
   eval "require $class" or die;
 
@@ -150,6 +150,9 @@ sub check_class {
 
   } elsif ($anum eq 'A005109') { # Pierpont
     $max_value = 1_000_000;
+
+  } elsif ($class =~ /Jacobs/) { # JacobsthalFunction
+    $max_count = 2000;
 
   } elsif ($anum eq 'A006886') {  # Kaprekar
     $max_value = 100_000;
@@ -441,8 +444,8 @@ unlink  'devel/lib/Math/NumSeq/OEIS/Catalogue/Plugin/TempDevel.pm' or die;
 # rmdir  'devel/lib/Math/NumSeq/OEIS' or die;
 my $aref = Math::NumSeq::OEIS::Catalogue::Plugin::TempDevel::info_arrayref();
 
-require Math::NumSeq::OEIS::Catalogue::Plugin::Alpha;
-$aref = Math::NumSeq::OEIS::Catalogue::Plugin::Alpha::info_arrayref();
+# require Math::NumSeq::OEIS::Catalogue::Plugin::Alpha;
+# $aref = Math::NumSeq::OEIS::Catalogue::Plugin::Alpha::info_arrayref();
 
 foreach my $info (@$aref) {
   ### $info

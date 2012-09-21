@@ -24,12 +24,12 @@ use List::Util 'max';
 use Test;
 plan tests => 7;
 
-use lib 't','xt',              'devel/lib';
+use lib 't','xt';
 use MyTestHelpers;
 MyTestHelpers::nowarnings();
 use MyOEIS;
 
-use Math::NumSeq::AlphabeticalLength;
+use Math::NumSeq::PisanoPeriod;
 
 # uncomment this to run the ### lines
 #use Smart::Comments '###';
@@ -62,21 +62,21 @@ sub diff_nums {
 }
 
 #------------------------------------------------------------------------------
-# A052363 - new longest alpha
+# A071774 n for which period(n)==2n+1
+# or rather period==2n+2 in reckoning of PisanoPeriod
+# primes final digit 3 or 7
 
 {
-  my $anum = 'A052363';
+  my $anum = 'A071774';
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my $diff;
   if ($bvalues) {
-    my $seq = Math::NumSeq::AlphabeticalLength->new (i_start => 0);
+    my $pisano = Math::NumSeq::PisanoPeriod->new;
     my @got;
-    my $record = -1;
     while (@got < @$bvalues) {
-      my ($i, $value) = $seq->next;
-      if ($value > $record) {
+      my ($i, $value) = $pisano->next or last;
+      if ($value == 2*$i+2) {
         push @got, $i;
-        $record = $value;
       }
     }
     $diff = diff_nums(\@got, $bvalues);
@@ -91,22 +91,20 @@ sub diff_nums {
 }
 
 #------------------------------------------------------------------------------
-# A134629 - first requiring n letters
+# A060305 - period mod prime(n)
 
 {
-  my $anum = 'A134629';
+  my $anum = 'A060305';
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my $diff;
   if ($bvalues) {
-    my $seq = Math::NumSeq::AlphabeticalLength->new;
-    my @got = (0);
-    my $count_got = 0;
-    while ($count_got < $#$bvalues) {
-      my ($i, $value) = $seq->next;
-      if ($value <= $#$bvalues && ! defined $got[$value]) {
-        $got[$value] = $i;
-        $count_got++;
-      }
+    require Math::NumSeq::Primes;
+    my $primes = Math::NumSeq::Primes->new;
+    my $pisano = Math::NumSeq::PisanoPeriod->new;
+    my @got;
+    while (@got < @$bvalues) {
+      my ($i, $prime) = $primes->next or last;
+      push @got, $pisano->ith($prime);
     }
     $diff = diff_nums(\@got, $bvalues);
     if ($diff) {
