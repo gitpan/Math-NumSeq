@@ -25,7 +25,7 @@ use Math::NumSeq::OEIS::Catalogue::Plugin::FractionDigits;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin::FractionDigits');
 
 use vars '$VERSION';
-$VERSION = 51;
+$VERSION = 52;
 
 # uncomment this to run the ### lines
 use Smart::Comments;

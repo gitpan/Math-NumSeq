@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 51;
+$VERSION = 52;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 759 A-numbers in 109 modules
+# total 761 A-numbers in 109 modules
 
 use constant info_arrayref =>
 [
@@ -1529,6 +1529,22 @@ use constant info_arrayref =>
   {
     'anum' => 'A008836',
     'class' => 'Math::NumSeq::LiouvilleFunction'
+  },
+  {
+    'anum' => 'A066829',
+    'class' => 'Math::NumSeq::LiouvilleFunction',
+    'parameters' => [
+      'values_type',
+      '0,1'
+    ]
+  },
+  {
+    'anum' => 'A065043',
+    'class' => 'Math::NumSeq::LiouvilleFunction',
+    'parameters' => [
+      'values_type',
+      '1,0'
+    ]
   },
   {
     'anum' => 'A000204',

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 51;
+$VERSION = 52;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;

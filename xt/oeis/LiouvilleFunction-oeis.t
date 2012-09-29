@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use Test;
-plan tests => 3;
+plan tests => 6;
 
 use lib 't','xt';
 use MyTestHelpers;
@@ -59,6 +59,117 @@ sub diff_nums {
   }
   return undef;
 }
+
+#------------------------------------------------------------------------------
+# A055037 - cumulative 1,0
+
+{
+  my $anum = 'A055037';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my $diff;
+  if ($bvalues) {
+    my $seq = Math::NumSeq::LiouvilleFunction->new (values_type => '1,0');
+    my @got;
+    my $total = 0;
+    while (@got < @$bvalues) {
+      my ($i, $value) = $seq->next;
+      $total += $value;
+      push @got, $total;
+    }
+    $diff = diff_nums(\@got, $bvalues);
+    if ($diff) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        $diff, undef,
+        "$anum");
+}
+
+#------------------------------------------------------------------------------
+# A002819 - cumulative 1,-1
+
+{
+  my $anum = 'A002819';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my $diff;
+  if ($bvalues) {
+    my $seq = Math::NumSeq::LiouvilleFunction->new;
+    my @got = (0);  # also n=0 value=0
+    my $total = 0;
+    while (@got < @$bvalues) {
+      my ($i, $value) = $seq->next;
+      $total += $value;
+      push @got, $total;
+    }
+    $diff = diff_nums(\@got, $bvalues);
+    if ($diff) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        $diff, undef,
+        "$anum");
+}
+
+#------------------------------------------------------------------------------
+# A072203 - cumulative -1,1
+# initially positive, but eventually a(906180359)=-1
+
+{
+  my $anum = 'A072203';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my $diff;
+  if ($bvalues) {
+    my $seq = Math::NumSeq::LiouvilleFunction->new (values_type => '-1,1');
+    my @got;
+    my $total = 1;
+    while (@got < @$bvalues) {
+      my ($i, $value) = $seq->next;
+      $total += $value;
+      push @got, $total;
+    }
+    $diff = diff_nums(\@got, $bvalues);
+    if ($diff) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        $diff, undef,
+        "$anum");
+}
+
+#------------------------------------------------------------------------------
+# A055038 - cumulative 0,1
+
+{
+  my $anum = 'A055038';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my $diff;
+  if ($bvalues) {
+    my $seq = Math::NumSeq::LiouvilleFunction->new (values_type => '0,1');
+    my @got;
+    my $total = 0;
+    while (@got < @$bvalues) {
+      my ($i, $value) = $seq->next;
+      $total += $value;
+      push @got, $total;
+    }
+    $diff = diff_nums(\@got, $bvalues);
+    if ($diff) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        $diff, undef,
+        "$anum");
+}
+
+
 
 #------------------------------------------------------------------------------
 # A026424 - the -1 positions, odd number of primes

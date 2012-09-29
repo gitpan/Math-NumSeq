@@ -179,7 +179,6 @@ $|=1;
   $values_class = 'Math::NumSeq::PrimeFactorCount';
   $values_class = 'Math::NumSeq::Runs';
   $values_class = 'Math::NumSeq::AlphabeticalLength';
-  $values_class = 'Math::NumSeq::PlanePathCoord';
   $values_class = 'Math::NumSeq::PlanePathDelta';
   $values_class = 'Math::NumSeq::PlanePathTurn';
   $values_class = 'Math::NumSeq::Pow2Mod10';
@@ -188,13 +187,14 @@ $|=1;
   $values_class = 'Math::NumSeq::PisanoPeriod';
   $values_class = 'Math::NumSeq::FibonacciFrequency';
   $values_class = 'Math::NumSeq::GolayRudinShapiro';
-  $values_class = 'Math::NumSeq::LiouvilleFunction';
   $values_class = 'Math::NumSeq::PlanePathN';
+  $values_class = 'Math::NumSeq::PlanePathCoord';
+  $values_class = 'Math::NumSeq::LiouvilleFunction';
 
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new
     (
-     # values_type => '0,1',
+      values_type => '0,1',
      # language => 'no',
      # i_start => 0,
 
@@ -242,17 +242,17 @@ $|=1;
      # offset => 3,
 
      # planepath => 'RationalsTree',
-     planepath => 'SierpinskiTriangle',
+     # planepath => 'SierpinskiTriangle',
      # planepath => 'UlamWarburtonQuarter',
      # planepath => 'SquareSpiral,n_start=0',
      #  planepath => 'DigitGroups,radix=2',
-      line_type => 'Depth_end',
+     # line_type => 'Depth_end',
      # i_start => 1,
 
      # planepath => 'DragonCurve',
      # planepath => 'SierpinskiTriangle',
      # planepath => 'UlamWarburton',
-     # coordinate_type => 'TreeDepth',
+     # coordinate_type => 'GCD',
      # coordinate_type => 'NumChildren',
 
      # planepath => 'GrayCode',

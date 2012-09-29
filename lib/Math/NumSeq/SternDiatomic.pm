@@ -30,7 +30,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 51;
+$VERSION = 52;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -48,12 +48,18 @@ use constant characteristic_smaller => 1;
 use constant characteristic_increasing => 0;
 use constant characteristic_integer => 1;
 
+#------------------------------------------------------------------------------
 # cf A126606 - starting 0,2 gives 2*diatomic
 #    A049455 - repeat 0..2^k
 #    A049456 - extra 1 at end of each row
 #    A174980 - type ([0,1],1), adding 1 extra at n=2^k
+#    A049455,A049456 stern/farey tree
+#    A070878 stern by rows
+#    A070879 stern by rows
 #
 use constant oeis_anum => 'A002487';
+
+#------------------------------------------------------------------------------
 
 sub ith {
   my ($self, $i) = @_;

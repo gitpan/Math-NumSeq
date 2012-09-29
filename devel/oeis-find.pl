@@ -460,7 +460,7 @@ sub info_extend_parameters {
     foreach my $choice (@{$info->{'choices'}}) {
       # next unless $choice =~ /DiamondSpiral/;
       # next unless $choice =~ /CellularRule/;
-       next unless $choice =~ /RationalsTree/;
+      next unless $choice =~ /Chan|Cfrac/;
       # next unless $choice =~ /SierpinskiArrowheadC/;
       # next unless $choice eq 'DiagonalsAlternating';
       my $path_class = "Math::PlanePath::$choice";

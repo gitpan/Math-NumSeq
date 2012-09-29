@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max','min';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 51;
+$VERSION = 52;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -57,8 +57,10 @@ use constant parameter_info_array =>
 
 sub description {
   my ($self) = @_;
-  return sprintf (Math::NumSeq::__('Golay/Rudin/Shapiro parity of adjacent 11 bit pairs, %s if even count %s if odd count.'),
-                  @{$self->{'values'}});
+  my ($even,$odd) = (ref $self ? @{$self->{'values'}} : (1,-1));
+  # ENHANCE-ME: use __x(), maybe
+  return sprintf(Math::NumSeq::__('Golay/Rudin/Shapiro parity of adjacent 11 bit pairs, %s if even count %s if odd count.'),
+                 $even, $odd);
 }
 
 #------------------------------------------------------------------------------
@@ -91,7 +93,8 @@ sub new {
   $self->{'characteristic'}->{'integer'}
     = (_is_integer($values[0]) && _is_integer($values[1]));
   $self->{'characteristic'}->{'pn1'}
-    = ($values[0] == 1 && $values[1] == -1);
+    = (($values[0] == 1 && $values[1] == -1)
+       || ($values[0] == -1 && $values[1] == 1));
   ### $self
   return $self;
 }
@@ -130,7 +133,8 @@ sub ith {
 
 sub pred {
   my ($self, $value) = @_;
-  return ($value == $self->{'values'}->[0] || $value == $self->{'values'}->[1]);
+  return ($value == $self->{'values'}->[0]
+          || $value == $self->{'values'}->[1]);
 }
 
 # Jorg Arndt fxtbook next step by

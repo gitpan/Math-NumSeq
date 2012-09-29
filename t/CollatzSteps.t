@@ -51,7 +51,7 @@ plan tests => $test_count;
 # VERSION
 
 {
-  my $want_version = 51;
+  my $want_version = 52;
   ok ($Math::NumSeq::CollatzSteps::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::CollatzSteps->VERSION,  $want_version,

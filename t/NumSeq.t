@@ -25,7 +25,7 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
-my $test_count = (tests => 1728)[1];
+my $test_count = (tests => 1752)[1];
 plan tests => $test_count;
 
 # uncomment this to run the ### lines
@@ -126,6 +126,42 @@ foreach my $elem
    # MobiusFunction.pm
    # PiBits.pm
    
+   [ 'Math::NumSeq::LiouvilleFunction',
+     [ 1,  # 1
+       -1, # 2
+       -1, # 3
+       1,  # 4
+       -1, # 5
+       1,  # 6
+       -1, # 7
+       -1, # 8
+     ],
+   ],
+   [ 'Math::NumSeq::LiouvilleFunction',
+     [ 0,  # 1
+       1,  # 2
+       1,  # 3
+       0,  # 4
+       1,  # 5
+       0,  # 6
+       1,  # 7
+       1,  # 8
+     ],
+     { values_type => '0,1' },
+   ],
+   [ 'Math::NumSeq::LiouvilleFunction',
+     [ 1,  # 1
+       0,  # 2
+       0,  # 3
+       1,  # 4
+       0,  # 5
+       1,  # 6
+       0,  # 7
+       0,  # 8
+     ],
+     { values_type => '1,0' },
+   ],
+
    [ 'Math::NumSeq::GolayRudinShapiro',
      [ 1,   # 0
        1,   # 1
@@ -1925,6 +1961,10 @@ foreach my $elem
   ### $class
   eval "require $class; 1" or die $@;
   my $seq = $class->new (%$values_options);
+
+  $seq->oeis_anum;
+  $seq->description;
+  $class->description;
 
 
   #### $want

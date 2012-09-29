@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 51;
+$VERSION = 52;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -43,7 +43,7 @@ use Math::NumSeq::Base::Digits
   'parameter_info_array';   # radix parameter
 
 #------------------------------------------------------------------------------
-# cf A000523 - floor(log2(n))
+# cf A000523 - floor(log2(n)), is bitlength-1
 #    A036786 - roman numeral length <  decimal length
 #    A036787 - roman numeral length == decimal length
 #    A036788 - roman numeral length <= decimal length

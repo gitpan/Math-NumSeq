@@ -44,7 +44,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION','@ISA';
-$VERSION = 51;
+$VERSION = 52;
 
 use Math::NumSeq 21; # v.21 for oeis_anum field
 use Math::NumSeq::Base::IterateIth;
@@ -60,6 +60,7 @@ use constant description => Math::NumSeq::__('Runs of integers of various kinds.
 use constant characteristic_smaller => 1;
 use constant characteristic_increasing => 0;
 use constant characteristic_integer => 1;
+use constant default_i_start => 0;
 
 
 use constant parameter_info_array =>
@@ -248,36 +249,47 @@ my %runs_type_data
 #   ### assert: scalar(@{parameter_info_array()->[0]->{'choices'}}) == scalar(@a)
 # }
 
-my @rep_oeis_anum = (undef, # 0rep, nothing
+my @rep_oeis_anum
+  = ([ undef, # 0rep, nothing
 
-                     'A001477',  # 1rep, integers 0 upwards
-                     # OEIS-Other: A001477 runs_type=1rep
+       'A001477',  # 1rep, integers 0 upwards
+       # OEIS-Other: A001477 runs_type=1rep
 
-                     # cf A008619 2rep starting from 1
-                     'A004526', # 2rep, N appears 2 times, starting from 0
-                     # OEIS-Catalogue: A004526 runs_type=2rep
+       'A004526', # 2rep, N appears 2 times, starting from 0
+       # OEIS-Catalogue: A004526 runs_type=2rep
 
-                     'A002264', # 3rep, N appears 3 times
-                     # OEIS-Catalogue: A002264 runs_type=3rep
+       'A002264', # 3rep, N appears 3 times
+       # OEIS-Catalogue: A002264 runs_type=3rep
 
-                     'A002265', # 4rep
-                     # OEIS-Catalogue: A002265 runs_type=4rep
+       'A002265', # 4rep
+       # OEIS-Catalogue: A002265 runs_type=4rep
 
-                     'A002266', # 5rep
-                     # OEIS-Catalogue: A002266 runs_type=5rep
+       'A002266', # 5rep
+       # OEIS-Catalogue: A002266 runs_type=5rep
 
-                     'A152467', # 6rep
-                     # OEIS-Catalogue: A152467 runs_type=6rep
+       'A152467', # 6rep
+       # OEIS-Catalogue: A152467 runs_type=6rep
 
-                     # no, A132270 has OFFSET=1 (with 7 initial 0s)
-                     # 'A132270', # 7rep
-                     # # OEIS-Catalogue: A132270 runs_type=7rep
+       # no, A132270 has OFFSET=1 (with 7 initial 0s)
+       # 'A132270', # 7rep
+       # # OEIS-Catalogue: A132270 runs_type=7rep
 
-                     # no, A132292 has OFFSET=1 (with 8 initial 0s)
-                     # 'A132292', # 8rep
-                     # # OEIS-Catalogue: A132292 runs_type=8rep
+       # no, A132292 has OFFSET=1 (with 8 initial 0s)
+       # 'A132292', # 8rep
+       # # OEIS-Catalogue: A132292 runs_type=8rep
 
-                    );
+     ],
+
+     # starting i=1
+     [ undef, # 0rep, nothing
+
+       'A000027',  # 1rep, integers 1 upwards
+       # OEIS-Other: A000027 runs_type=1rep i_start=1
+
+       # Not quite, A008619 starts OFFSET=0 value=1,1,2,2,
+       # 'A008619', # 2rep, N appears 2 times, starting from 0
+       # # OEIS-Catalogue: A008619 runs_type=2rep i_start=1
+     ] );
 
 sub rewind {
   my ($self) = @_;
@@ -286,23 +298,25 @@ sub rewind {
   my $data;
   if ($self->{'runs_type'} =~ /^(\d+)rep/) {
     my $rep = $1;
-    $data = { i_start    => 0,
-              value      => 0,
-              values_min => 0,
+    my $i_start = ($self->{'i_start'} || 0);
+    $data = { i_start    => $i_start,
+              value      => $i_start,
+              values_min => $i_start,
               value_inc  => 0,
-              vstart     => 0,
+              vstart     => $i_start,
               vstart_inc => 1,
               c          => $rep,   # initial
               count      => $rep-1,
               count_inc  => 0,
-              oeis_anum  => $rep_oeis_anum[$rep],
+              oeis_anum  => ($i_start >= 0
+                             ? $rep_oeis_anum[$i_start][$rep]
+                             : undef),
             };
   } else {
     $data = $runs_type_data{$self->{'runs_type'}}
       || croak "Unrecognised runs_type: ", $self->{'runs_type'};
   }
   %$self = (%$self, %$data);
-
   $self->{'i'} = $self->i_start;
 }
 

@@ -128,10 +128,10 @@ sub check_class {
 
   # skip all except ...
   #
-  # return unless $class =~ /Soph/;
+  # return unless $class =~ /Liouv/;
   # return unless $class =~ /PrimeIndex/;
   # return unless $class =~ /Golomb/;
-  # return unless $class =~ /Spiro/;
+  # return unless $class =~ /Runs/;
   # return unless $class =~ /FactorCount/;
   # return unless $class =~ /Cbrt/;
   # return unless $class =~ /Star/;
@@ -178,6 +178,10 @@ sub check_class {
       || $name eq 'Repdigiits,radix=2'
      ) {
     $max_value = 'unlimited';
+
+  } elsif ($anum eq 'A001477' || $anum eq 'A000027') {
+    # integers and naturals
+    $max_count = 10000;
 
   } elsif ($anum eq 'A009003') { # Math::NumSeq::PythagoreanHypots slow
     $max_count = 250;

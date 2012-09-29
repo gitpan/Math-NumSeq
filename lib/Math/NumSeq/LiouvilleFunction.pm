@@ -18,32 +18,99 @@
 package Math::NumSeq::LiouvilleFunction;
 use 5.004;
 use strict;
+use List::Util 'max','min';
 
 use vars '$VERSION','@ISA';
-$VERSION = 51;
+$VERSION = 52;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
 use Math::NumSeq::PrimeFactorCount;
 
 # uncomment this to run the ### lines
-#use Devel::Comments;
+#use Smart::Comments;
 
 
 # use constant name => Math::NumSeq::__('Liouville Function');
-use constant description => Math::NumSeq::__('The Liouville function, being 1 for an even number of prime factors or -1 for an odd number.');
-use constant characteristic_pn1 => 1;
 use constant characteristic_increasing => 0;
-use constant characteristic_integer => 1;
-use constant values_min => -1;
-use constant values_max => 1;
 use constant default_i_start => 1;
 
-# cf A026424 - the -1 positions, odd number of primes
-#    A028260 - the 1 positions, even number of primes
-#
-use constant oeis_anum => 'A008836'; # liouville 1,-1
+use constant parameter_info_array =>
+  [ {
+     name    => 'values_type',
+     type    => 'enum',
+     default => '1,-1',
+     choices => ['1,-1',
+                 '0,1',
+                 '1,0',
+                ],
+     # TRANSLATORS: "1,-1" offered for translation of the "," if that might look like a decimal point, otherwise can be left unchanged
+     choices_display => [Math::NumSeq::__('1,-1'),
+                         Math::NumSeq::__('0,1'),
+                         Math::NumSeq::__('1,0'),
+                        ],
+     description => Math::NumSeq::__('The values to give for even or odd parity.'),
+    },
+  ];
 
+sub description {
+  my ($self) = @_;
+  my ($even,$odd) = (ref $self ? @{$self->{'values'}} : (1,-1));
+  # ENHANCE-ME: use __x(), maybe
+  return sprintf(Math::NumSeq::__('The Liouville function, being %s for an even number of prime factors or %s for an odd number.'),
+                 $even, $odd);
+}
+
+
+#------------------------------------------------------------------------------
+# cf A026424  the -1 positions, odd number of primes
+#    A028260  the 1 positions, even number of primes
+#    A072203  cumulative +/-1
+#    A055038  cumulative 1=odd
+#    A028488  where cumulative==0
+#    A051470  first cumulative==n
+
+my %oeis_anum = ('1,-1' => 'A008836',  # liouville 1,-1
+                 '0,1'  => 'A066829',  # 0 and 1
+                 '1,0'  => 'A065043',  # 1 and 0
+                 # OEIS-Catalogue: A008836
+                 # OEIS-Catalogue: A066829 values_type=0,1
+                 # OEIS-Catalogue: A065043 values_type=1,0
+                );
+sub oeis_anum {
+  my ($self) = @_;
+  return $oeis_anum{join(',',@{$self->{'values'}})};
+}
+
+
+#------------------------------------------------------------------------------
+
+sub new {
+  ### Liouville new(): @_
+  my $self = shift->SUPER::new(@_);
+  ### $self
+
+  my @values = split /,/, $self->{'values_type'};
+  $self->{'values'} = \@values;
+  $self->{'values_min'} = min(@values);
+  $self->{'values_max'} = max(@values);
+  $self->{'characteristic'}->{'integer'}
+    = (_is_integer($values[0]) && _is_integer($values[1]));
+  $self->{'characteristic'}->{'pn1'}
+    = (($values[0] == 1 && $values[1] == -1)
+       || ($values[0] == -1 && $values[1] == 1));
+
+  $self->{'multiplicity'} = 'repeated'; # for PrimeFactorCount ith()
+  $self->{'prime_type'} = 'all';        # for PrimeFactorCount ith()
+  $self->{'values_type'} = 'count';     # for PrimeFactorCount ith()
+
+  ### $self
+  return $self;
+}
+sub _is_integer {
+  my ($n) = @_;
+  return ($n == int($n));
+}
 
 # each 2-bit vec() value is
 #    0 unset
@@ -51,14 +118,9 @@ use constant oeis_anum => 'A008836'; # liouville 1,-1
 #    2 even count of factors
 #    3 odd count of factors
 
-my @transform = (0, 0, 1, -1);
-
 sub rewind {
   my ($self) = @_;
   $self->{'i'} = $self->i_start;
-  $self->{'multiplicity'} = 'repeated'; # for PrimeFactorCount ith()
-  $self->{'prime_type'} = 'all';        # for PrimeFactorCount ith()
-  $self->{'values_type'} = 'count';     # for PrimeFactorCount ith()
   _restart_sieve ($self, 500);
 }
 sub _restart_sieve {
@@ -76,12 +138,7 @@ sub next {
   my $i = $self->{'i'}++;
   my $hi = $self->{'hi'};
   if ($i <= 1) {
-    if ($i <= 0) {
-      return ($i, 0);
-    }
-    else {
-      return ($i, 1);
-    }
+    return ($i, $self->{'values'}->[0]);
   }
 
   my $start = $i;
@@ -114,8 +171,8 @@ sub next {
       # }
     }
   }
-  ### ret: "$i, $ret -> ".$transform[$ret]
-  return ($i, $transform[$ret]);
+  ### ret: "$i, $ret -> ".$self->{'values'}->[$ret-2]
+  return ($i, $self->{'values'}->[$ret-2]);
 }
 
 sub ith {
@@ -123,13 +180,15 @@ sub ith {
   ### LiouvilleFunction ith(): $i
 
   my $count = $self->Math::NumSeq::PrimeFactorCount::ith($i);
-  return (defined $count ? ($count & 1 ? -1 : 1)
+  return (defined $count
+          ? $self->{'values'}->[$count & 1]
           : undef);
 }
 
 sub pred {
   my ($self, $value) = @_;
-  return ($value == 1 || $value == -1);
+  return ($value == $self->{'values'}->[0]
+          || $value == $self->{'values'}->[1]);
 }
 
 1;
