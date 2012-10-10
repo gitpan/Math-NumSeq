@@ -25,8 +25,12 @@ use vars '@ISA';
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
+use Math::NumSeq::OEIS::Catalogue::Plugin::FractionDigits;
+*_anum_to_num
+  = \&Math::NumSeq::OEIS::Catalogue::Plugin::FractionDigits::_anum_to_num;
+
 use vars '$VERSION';
-$VERSION = 52;
+$VERSION = 53;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -83,30 +87,43 @@ sub info_arrayref {
     if (! defined $mtime) { $mtime = -1; } # if $dir doesn't exist
     if ($cached_mtime != $mtime) {
       $cached_mtime = $mtime;
-      $cached_arrayref = _info_arrayref($dir);
+      $cached_arrayref = nocache_info_arrayref($dir);
     }
   }
   return $cached_arrayref;
 }
 
-sub _info_arrayref {
+sub nocache_info_arrayref {
   my ($dir) = @_;
-  ### _info_arrayref(): $dir
+  ### nocache_info_arrayref(): $dir
 
   my @ret;
-  my %seen;
+  _anum_traverse(sub {
+                   my ($num) = @_;
+                   my $anum = _num_to_anum($num);
+                   push @ret, _make_info($anum);
+                   return 1; # continue
+                 });
+  return \@ret;
+}
+sub _anum_traverse {
+  my ($callback) = @_;
+  
+  my $dir = Math::NumSeq::OEIS::File::oeis_dir();
   if (! opendir DIR, $dir) {
     ### cannot opendir: $!
-    return [];
+    return;
   }
+  my %seen;
   while (defined (my $basename = readdir DIR)) {
     ### $basename
 
-    unless (-e File::Spec->catfile($dir,$basename)) {
-      ### skip dangling symlink ...
-      next;
-    }
-
+    # stat() on every file is a bit slow ...
+    # unless (-e File::Spec->catfile($dir,$basename)) {
+    #   ### skip dangling symlink ...
+    #   next;
+    # }
+    
     # Case insensitive for MS-DOS.  But dunno what .internal or
     # .internal.html will be or should be on an 8.3 DOS filesystem.  Maybe
     # "A000000.int", maybe "A000000i.htm" until 7-digit A-numbers.
@@ -114,14 +131,62 @@ sub _info_arrayref {
                                  A(\d*)(\.internal)?(\.html?)?  # $2 num
                                |[ab](\d*)\.txt                  # $5 num
                                )$}ix;
-
-    my $anum = 'A'.($2||$5);
-    next if $seen{$anum}++;  # uniquify
-
-    push @ret, _make_info($anum);
+    my $num = ($2||$5)+0;   # numize
+    next if $seen{$num}++;  # uniquify
+    last unless &$callback($num);                           
   }
   closedir DIR or die "Error closing $dir: $!";
-  return \@ret;
+}
+
+# Works, but cached array might be enough.
+#
+# sub anum_after {
+#   my ($class, $after_anum) = @_;
+#   my $after_num = _anum_to_num($after_anum);
+#   ### $after_num
+#   my $ret_num;
+#   _anum_traverse(sub {
+#                    my ($num) = @_;
+#                    ### $num
+#                    if ($num > $after_num
+#                        && (! defined $ret_num || $num < $ret_num)) {
+#                      $ret_num = $num;
+#                      ### new ret: $ret_num
+#                      if ($ret_num == $after_num + 1) {
+#                        return 0;  # stop, found after+1
+#                      }
+#                    }
+#                    return 1; # continue
+#                  });
+#   return _num_to_anum($ret_num);
+# }
+# sub anum_before {
+#   my ($class, $before_anum) = @_;
+#   my $before_num = _anum_to_num($before_anum);
+#   my $ret_num;
+#   _anum_traverse(sub {
+#                    my ($num) = @_;
+#                    if ($num > $before_num
+#                        && (! defined $ret_num || $num < $ret_num)) {
+#                      $ret_num = $num;
+#                      if ($ret_num == $before_num - 1) {
+#                        return 0;  # stop, found before-1
+#                      }
+#                    }
+#                    return 1; # continue
+#                  });
+#   return _num_to_anum($ret_num);
+# }
+
+#------------------------------------------------------------------------------
+
+sub _num_to_anum {
+  my ($num) = @_;
+  if (defined $num) {
+    return sprintf 'A%06d', $num;
+  } else {
+    return undef;
+  }
 }
 
 1;

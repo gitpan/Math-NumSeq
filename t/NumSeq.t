@@ -25,7 +25,7 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
-my $test_count = (tests => 1752)[1];
+my $test_count = (tests => 1785)[1];
 plan tests => $test_count;
 
 # uncomment this to run the ### lines
@@ -123,9 +123,25 @@ foreach my $elem
    # DigitsModulo.pm
    # Expression.pm
    # Ln2Bits.pm
-   # MobiusFunction.pm
    # PiBits.pm
    
+   [ 'Math::NumSeq::MobiusFunction',
+     [ 1, -1, -1, 0, -1, 1, ],
+   ],
+
+   [ 'Math::NumSeq::BalancedBinary',
+     [ 2, 10, 12, 42, 44, 50, 52, 56, 170, 172, 178, ],
+   ],
+
+   [ 'Math::NumSeq::Catalan',
+     [ 1, 1, 2, 5, 14, 42, 132, 429, 1430, 4862, 16796, 58786, 208012,
+       742900, ],
+   ],
+   [ 'Math::NumSeq::Catalan',
+     [ 1, 1, 1, 5, 7, 21, 33, 429, 715, 2431, 4199, ],
+     { values_type => 'odd' },
+   ],
+
    [ 'Math::NumSeq::LiouvilleFunction',
      [ 1,  # 1
        -1, # 2

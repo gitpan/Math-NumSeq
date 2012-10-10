@@ -94,7 +94,6 @@ $|=1;
   $values_class = 'Math::NumSeq::PolignacObstinate';
   $values_class = 'Math::NumSeq::Powerful';
   $values_class = 'Math::NumSeq::RepdigitRadix';
-  $values_class = 'Math::NumSeq::MobiusFunction';
   $values_class = 'Math::NumSeq::SieveMultiples';
   $values_class = 'Math::NumSeq::ReverseAdd';
   $values_class = 'Math::NumSeq::PythagoreanHypots';
@@ -176,10 +175,7 @@ $|=1;
   $values_class = 'Math::NumSeq::FactorialProducts';
   $values_class = 'Math::NumSeq::Fibonacci';
   $values_class = 'Math::NumSeq::FibonacciProducts';
-  $values_class = 'Math::NumSeq::PrimeFactorCount';
   $values_class = 'Math::NumSeq::Runs';
-  $values_class = 'Math::NumSeq::AlphabeticalLength';
-  $values_class = 'Math::NumSeq::PlanePathDelta';
   $values_class = 'Math::NumSeq::PlanePathTurn';
   $values_class = 'Math::NumSeq::Pow2Mod10';
   $values_class = 'Math::NumSeq::JacobsthalFunction';
@@ -187,14 +183,22 @@ $|=1;
   $values_class = 'Math::NumSeq::PisanoPeriod';
   $values_class = 'Math::NumSeq::FibonacciFrequency';
   $values_class = 'Math::NumSeq::GolayRudinShapiro';
+  $values_class = 'Math::NumSeq::PrimeFactorCount';
+  $values_class = 'Math::NumSeq::MobiusFunction';
+  $values_class = 'Math::NumSeq::PlanePathDelta';
   $values_class = 'Math::NumSeq::PlanePathN';
   $values_class = 'Math::NumSeq::PlanePathCoord';
   $values_class = 'Math::NumSeq::LiouvilleFunction';
+  $values_class = 'Math::NumSeq::Catalan';
+  $values_class = 'Math::NumSeq::AlphabeticalLength';
+  $values_class = 'Math::NumSeq::BalancedBinary';
 
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new
     (
-      values_type => '0,1',
+conjunctions => 1,
+     # values_type => 'odd',
+     # values_type => 'odd',
      # language => 'no',
      # i_start => 0,
 
@@ -241,26 +245,33 @@ $|=1;
      # including_self => 0,
      # offset => 3,
 
-     # planepath => 'RationalsTree',
+     # planepath => 'Diagonals,x_start=1,y_start=1',
+     # planepath => 'ChanTree',
      # planepath => 'SierpinskiTriangle',
-     # planepath => 'UlamWarburtonQuarter',
-     # planepath => 'SquareSpiral,n_start=0',
-     #  planepath => 'DigitGroups,radix=2',
-     # line_type => 'Depth_end',
-     # i_start => 1,
-
-     # planepath => 'DragonCurve',
-     # planepath => 'SierpinskiTriangle',
-     # planepath => 'UlamWarburton',
+      planepath => 'CellularRule,rule=2',
+     # planepath => 'GcdRationals,pairs_order=rows_reverse',
+     coordinate_type => 'RSquared',
      # coordinate_type => 'GCD',
      # coordinate_type => 'NumChildren',
+
+     # planepath => 'SierpinskiTriangle',
+     # planepath => 'RationalsTree',
+     # planepath => 'DiamondSpiral,n_start=0',
+     # planepath => 'TriangleSpiralSkewed',
+     # planepath => 'SquareSpiral',
+     #  planepath => 'DigitGroups,radix=2',
+     # planepath => 'CellularRule,rule=206',
+     # line_type => 'Depth_end',
+     # line_type => 'X_axis',
+     # i_start => 1,
 
      # planepath => 'GrayCode',
      # planepath => 'PyramidRows,step=1,n_start=0',
      # planepath => 'DragonCurve,arms=4',
      # planepath => 'SierpinskiCurveStair',
+     #planepath => 'RationalsTree,tree_type=L',
      # planepath => 'Rows,width=3',
-     # delta_type=>'dX',
+     # delta_type=>'dY',
 
      # planepath => 'TerdragonCurve',
      # turn_type => 'Left',
@@ -330,7 +341,7 @@ $|=1;
      # hi => 10, # 200*$rep,
      # where => 'low',
     );
-  my $hi = 50;
+  my $hi = 103;
 
   my $i_start = $seq->i_start;
   print "i_start $i_start\n";
@@ -431,11 +442,29 @@ $|=1;
         {
           my $try_value = $value - 1;
           unless (defined $prev_value && $try_value == $prev_value) {
-            my $want_i = $i - 1;
-            if ($want_i < $i_start) { $want_i = $i_start; }
+            my $want_i = ($try_value < $values_min ? $i_start : $i - 1);
+            if (defined $want_i && $want_i < $i_start) { $want_i = undef; }
             my $i_floor = $seq->value_to_i_floor($try_value);
-            unless ($i_floor == $want_i) {
+            unless (equal($i_floor, $want_i)) {
+              $want_i //= 'undef';
               print " oops, value_to_i_floor($value-1=$try_value)=$i_floor want_i=$want_i\n";
+            }
+          }
+        }
+      }
+      if ($seq->can('value_to_i')) {
+        {
+          my $i_reverse = $seq->value_to_i($value);
+          unless ($i_reverse == $i) {
+            print " oops, value_to_i($value)=$i_reverse want i=$i\n";
+          }
+        }
+        {
+          my $try_value = $value - 1;
+          unless (defined $prev_value && $try_value == $prev_value) {
+            my $i_reverse = $seq->value_to_i($try_value);
+            if (defined $i_reverse) {
+              print " oops, value_to_i($value-1=$try_value)=$i_reverse expected undef\n";
             }
           }
         }
@@ -563,6 +592,12 @@ $|=1;
   }
   print "done\n";
   exit 0;
+}
+
+sub equal {
+  my ($x,$y) = @_;
+  return ((defined $x && defined $y && $x == $y)
+          || (! defined $x && ! defined $y));
 }
 
 {

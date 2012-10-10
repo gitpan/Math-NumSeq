@@ -24,7 +24,7 @@ use Math::NumSeq;
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 52;
+$VERSION = 53;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
@@ -50,6 +50,7 @@ use constant parameter_info_array =>
    },
    {
     name        => 'values_type',
+    share_key => 'values_type_cr',
     type        => 'enum',
     default     => 'count',
     choices     => ['count','radix'],

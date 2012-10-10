@@ -25,12 +25,16 @@ use strict;
 use List::Util 'min', 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 52;
+$VERSION = 53;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
+*_is_infinite = \&Math::NumSeq::_is_infinite;
 
 use Math::Prime::XS 'is_prime';
 use Math::Factor::XS 'prime_factors';
+
+use Math::NumSeq::Fibonacci;
+*_blog2_estimate = \&Math::NumSeq::Fibonacci::_blog2_estimate;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -91,6 +95,7 @@ safe=P where (P-1)/2 also prime (the "other" of the SGs).'),
 
    # not documented yet
    { name    => 'values_type',
+     share_key => 'values_type_cm2',
      display => Math::NumSeq::__('Values Type'),
      type    => 'enum',
      default => 'count',
@@ -247,14 +252,14 @@ sub next {
 sub ith {
   my ($self, $i) = @_;
   $i = abs($i);
-  unless ($i >= 0 && $i <= 0xFFFF_FFFF) {
+
+  my ($good, @primes) = _prime_factors($i);
+  if (! $good) {
     return undef;
   }
 
   my $multiplicity = ($self->{'multiplicity'} ne 'distinct');
   my $prime_type = $self->{'prime_type'};
-
-  my @primes = prime_factors($i);
   my $count = 0;
 
   while (@primes) {
@@ -290,6 +295,42 @@ sub ith {
     $count %= 2;
   }
   return $count;
+}
+
+sub _prime_factors {
+  my ($n) = @_;
+  ### _prime_factors(): $n
+
+  unless ($n >= 0) {
+    return 0;
+  }
+  my @ret;
+  if (_is_infinite($n)) {
+    return 0;
+  }
+  if ($n > 0xFFFF_FFFF) {
+    my $limit = 10_000 / (_blog2_estimate($n) || 1);
+    until ($n % 2) {
+      ### div2: $n
+      $n /= 2;
+      push @ret, 2;
+    }
+    for (my $p = 3; $p <= $limit; $p += 2) {
+      while (($n % $p) == 0) {
+        ### prime: $p
+        $n /= $p;
+        push @ret, $p;
+      }
+      if ($n <= 1) {
+        return (1, @ret);  # all factors found
+      }
+    }
+  }
+  if ($n <= 0xFFFF_FFFF) {
+    return (1, @ret, prime_factors($n));
+  } else {
+    return 0;  # factors too big
+  }
 }
 
 sub _is_twin_prime {
@@ -477,8 +518,9 @@ Option C<prime_type> is a string either
 
 Return the number of prime factors in C<$i>.
 
-This requires factorizing C<$i> and the current code has a hard limit of
-2**32 on C<$i>, in the interests of not going into a near-infinite loop.
+This requires factorizing C<$i> and the current code tries small primes then
+has a hard limit of 2**32 on C<$i>, in the interests of not going into a
+near-infinite loop.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 

@@ -17,7 +17,8 @@
 
 
 
-# cf A010751 - runs incr then decr
+# cf A165162 - Nto1,N-1to1 cf A057058 making fracs A165200
+#    A010751 - runs incr then decr
 #    A055087 - runs 0toNtwice
 #    A055086 - n repeat floor(n/2)+1 times, DiagonalsOctant X+Y
 #    A082375 - k to 0 by 2s
@@ -44,7 +45,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION','@ISA';
-$VERSION = 52;
+$VERSION = 53;
 
 use Math::NumSeq 21; # v.21 for oeis_anum field
 use Math::NumSeq::Base::IterateIth;

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 52;
+$VERSION = 53;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -154,9 +154,8 @@ sub next {
   ### Factorials next() ...
 
   my $i = $self->{'i'}++;
-  my $f = $self->{'f'};
   if ($i == _UV_I_LIMIT) {
-    $self->{'f'} = Math::NumSeq::_to_bigint($f);
+    $self->{'f'} = Math::NumSeq::_to_bigint($self->{'f'});
   }
   return ($i, $self->{'f'} *= ($i||1));
 }
@@ -396,7 +395,8 @@ some i.
 
 =item C<$i = $seq-E<gt>value_to_i_floor($value)>
 
-Return the index i of C<$value> or of the next factorial below C<$value>.
+Return the index i of C<$value> or if it's not a factorial then the next
+below C<$value>.
 
 =item C<$i = $seq-E<gt>value_to_i_estimate($value)>
 
@@ -416,10 +416,10 @@ by seeking an i for which the target factorial "value" has
 
     i*log(i) - i == log(value)
 
-Newton's method is used to solve for i,
+Newton's method is applied to solve for i,
 
     target=log(value)
-    f(x) = x*log(x) - x - target,   seeking f(x)=0
+    f(x) = x*log(x) - x - target,     wanting f(x)=0
     f'(x) = log(x)
 
     iterate next_x = x - f(x)/f'(x)

@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max','min';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 52;
+$VERSION = 53;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -42,6 +42,7 @@ use constant default_i_start => 0;
 use constant parameter_info_array =>
   [ {
      name    => 'values_type',
+     share_key => 'values_type_1-101',
      type    => 'enum',
      default => '1,-1',
      choices => ['1,-1',

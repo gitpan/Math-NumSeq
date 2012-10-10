@@ -38,7 +38,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 52;
+$VERSION = 53;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -433,7 +433,8 @@ squares this returns true if C<$value> is a square or false if not.
 
 Return the index i of C<$value>, or if C<$value> is not in the sequence then
 the i of the next higher or lower value which is.  These methods usually
-only make sense for non-decreasing sequences.
+only make sense for monotonic increasing sequences, or perhaps with some
+repeating values so non-decreasing.
 
 =item C<$i = $seq-E<gt>value_to_i_estimate($value)>
 
@@ -504,6 +505,8 @@ L<Math::NumSeq::Primorials>,
 L<Math::NumSeq::Fibonacci>,
 L<Math::NumSeq::FibonacciWord>,
 L<Math::NumSeq::LucasNumbers>,
+L<Math::NumSeq::Catalan>,
+L<Math::NumSeq::BalancedBinary>,
 L<Math::NumSeq::Fibbinary>,
 L<Math::NumSeq::FibbinaryBitCount>,
 L<Math::NumSeq::Pell>,

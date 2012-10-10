@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 52;
+$VERSION = 53;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 761 A-numbers in 109 modules
+# total 764 A-numbers in 111 modules
 
 use constant info_arrayref =>
 [
@@ -487,6 +487,10 @@ use constant info_arrayref =>
     'class' => 'Math::NumSeq::AsciiSelf'
   },
   {
+    'anum' => 'A014486',
+    'class' => 'Math::NumSeq::BalancedBinary'
+  },
+  {
     'anum' => 'A086747',
     'class' => 'Math::NumSeq::BaumSweet'
   },
@@ -496,6 +500,18 @@ use constant info_arrayref =>
     'parameters' => [
       'radix',
       10
+    ]
+  },
+  {
+    'anum' => 'A000108',
+    'class' => 'Math::NumSeq::Catalan'
+  },
+  {
+    'anum' => 'A098597',
+    'class' => 'Math::NumSeq::Catalan',
+    'parameters' => [
+      'values_type',
+      'odd'
     ]
   },
   {

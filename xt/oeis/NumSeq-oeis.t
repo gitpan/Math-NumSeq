@@ -145,8 +145,8 @@ sub check_class {
   # return unless $class =~ /PowerF/;
   # return unless $class =~ /PrimesD/;
   # return unless $class =~ /Golay/;
-  # return unless $class =~ /Trib/;
-  # return unless $anum eq 'A070197';
+  # return unless $class =~ /Bal/;
+  # return unless $anum eq 'A000108';
 
   eval "require $class" or die;
 
@@ -166,6 +166,7 @@ sub check_class {
       || $class eq 'Math::NumSeq::Fibonacci'
       || $class eq 'Math::NumSeq::Pell'
       || $class eq 'Math::NumSeq::LucasNumbers'
+      || $class eq 'Math::NumSeq::Catalan'
       || $class eq 'Math::NumSeq::Perrin'
       || $class eq 'Math::NumSeq::Squares'
       || $class eq 'Math::NumSeq::Cubes'

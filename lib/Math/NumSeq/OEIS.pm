@@ -21,7 +21,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION','@ISA';
-$VERSION = 52;
+$VERSION = 53;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -104,35 +104,38 @@ available A-numbers.
 
 =head2 Files
 
-Files should be in an F<OEIS> directory in the user's home directory (see
-L<File::HomeDir>).  Files can be HTML, OEIS internal, B-file, and/or A-file.
+Local files should be in F<~/OEIS>, ie. an F<OEIS> directory in the user's
+home directory (see L<File::HomeDir>).  Files can be HTML, OEIS internal,
+B-file, and/or A-file.
 
     ~/OEIS/A000032.html
     ~/OEIS/A000032.internal.html
     ~/OEIS/b000032.txt
     ~/OEIS/a000032.txt
 
-    downloaded from:
+As downloaded from
+
     http://oeis.org/A000032
     http://oeis.org/A000032/internal
     http://oeis.org/A000032/b000032.txt
     http://oeis.org/A000032/a000032.txt
 
-The "internal" format is more reliable than the HTML for parsing (it's
-served as HTML, hence F<.internal.html> filename).  The B-file or A-file can
+The "internal" format is more reliable than the HTML for parsing.  It's
+served as HTML, hence F<.internal.html> filename.  The B-file or A-file can
 be used alone, but in that case there's no C<$seq-E<gt>description()> and it
 may limit the C<$seq-E<gt>characteristic()> attributes.
 
 F<b000000.txt> files are long lists of values.  F<a000000.txt> similarly and
-even longer, or sometimes auxiliary info instead (which is ignored).  Some
+even longer, but sometimes auxiliary info instead (which is ignored).  Some
 sequences don't have these, only the 30 or 40 sample values from the HTML or
-internal page but those samples might be enough for fast growing sequences.
+internal page.  Those samples might be enough for fast growing sequences.
 
 =head2 Other Notes
 
 Sometimes more than one NumSeq module generates an OEIS sequence.  For
-example A000290 is either Squares and Polygonal k=4.  C<Math::NumSeq::OEIS>
-tries to give the better or faster one.
+example A000290 is Squares but also Polygonal k=4.  The catalogue is
+arranged so C<Math::NumSeq::OEIS> is the better, faster, or more specific
+one.
 
 Sometimes the OEIS has duplicates, ie. two A-numbers which are the same
 sequence.  Both are catalogued so they both give NumSeq module code, but the
@@ -158,8 +161,8 @@ Perl int or float are returned as C<Math::BigInt> objects.  Is that a good
 idea?  It preserves precision.
 
 An F<a000000.txt> or F<b000000.txt> file is read line by line.  In Perl 5.8
-ithreads there's a C<CLONE> setup which re-opens in a new thread so the
-C<$seq> in each thread has its own position.  But a C<fork()> will still
+ithreads there's a C<CLONE> setup which re-opens the file in a new thread so
+the C<$seq> in each thread has its own position.  But a C<fork()> will still
 have both parent and child with the same open file so care should be taken
 that just one of them uses the C<$seq> in that case.  The same is true of
 all open file handling across a fork.  Is this a good idea?
@@ -167,7 +170,8 @@ all open file handling across a fork.  Is this a good idea?
 =item C<$str = $seq-E<gt>description()>
 
 Return a human-readable description of the sequence.  For the downloaded
-files this is the "name" part, which is a short description of the sequence.
+files this is the "%N NAME" part, which is a short description of the
+sequence.
 
 A few sequences may have non-ASCII characters in the description.  For Perl
 5.8 and up they're decoded to wide-chars.  Not sure what to do for earlier
@@ -184,14 +188,19 @@ or infinity.
 For files C<values_min()> is guessed from the first few values if
 non-negative, and C<values_max()> normally is considered to be infinite.  If
 the range seems to be limited (eg. sequences of -1,0,1) then min and max are
-obtained, and likewise for "full" sequences where the samples are all the
-values.
+obtained from those, and likewise for "full" sequences where the samples are
+all the full finite set of values.
 
 =item C<$ret = $seq-E<gt>characteristic($key)>
 
-For a file the following standard characteristics are obtained,
+For a file the following standard characteristics are obtained (per
+L<Math::NumSeq/Information>),
 
 =over
+
+=item *
+
+"integer" is always true.
 
 =item *
 

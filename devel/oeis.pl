@@ -25,6 +25,14 @@ use POSIX;
 use Smart::Comments;
 
 {
+  require Math::NumSeq::OEIS;
+  print "o\n";
+  my $info = Math::NumSeq::OEIS->parameter_info_array;
+  ### $info
+  exit 0;
+}
+
+{
   require Math::NumSeq::OEIS::File;
   my $seq = Math::NumSeq::OEIS::File->new(
                                           anum=>'A088218',

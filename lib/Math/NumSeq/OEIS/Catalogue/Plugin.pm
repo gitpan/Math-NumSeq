@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION';
-$VERSION = 52;
+$VERSION = 53;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -65,12 +65,12 @@ sub anum_before {
 }
 
 sub anum_first {
-  my ($class, $after_num) = @_;
-  return $class->anum_after('A000000');
+  my ($class) = @_;
+  return $class->anum_after ('A000000');
 }
 sub anum_last {
-  my ($class, $before_num) = @_;
-  return $class->anum_before('A1000000');
+  my ($class) = @_;
+  return $class->anum_before('A9999999');
 }
 
 1;

@@ -35,7 +35,7 @@ use Math::NumSeq::Powerful;
 # VERSION
 
 {
-  my $want_version = 52;
+  my $want_version = 53;
   ok ($Math::NumSeq::Powerful::VERSION, $want_version, 'VERSION variable');
   ok (Math::NumSeq::Powerful->VERSION,  $want_version, 'VERSION class method');
 
@@ -71,6 +71,75 @@ use Math::NumSeq::Powerful;
       'powerful_type,power');
 }
 
+
+# Not implemented yet.
+#
+# #------------------------------------------------------------------------------
+# # seek_to_value()
+# 
+# {
+#   my $seq = Math::NumSeq::Powerful->new;
+#   {
+#     $seq->seek_to_value(-123);
+#     my ($i, $value) = $seq->next;
+#     ok ($i, 1);
+#     ok ($value, 4);
+#   }
+#   {
+#     $seq->seek_to_value(-100.5);
+#     my ($i, $value) = $seq->next;
+#     ok ($i, 1);
+#     ok ($value, 4);
+#   }
+#   {
+#     $seq->seek_to_value(0);
+#     my ($i, $value) = $seq->next;
+#     ok ($i, 1);
+#     ok ($value, 4);
+#   }
+#   {
+#     $seq->seek_to_value(3.75);
+#     my ($i, $value) = $seq->next;
+#     ok ($i, 1);
+#     ok ($value, 4);
+#   }
+#   {
+#     $seq->seek_to_value(4);
+#     my ($i, $value) = $seq->next;
+#     ok ($i, 1);
+#     ok ($value, 4);
+#   }
+#   {
+#     $seq->seek_to_value(4.5);
+#     my ($i, $value) = $seq->next;
+#     ok ($i, 2);
+#     ok ($value, 9);
+#   }
+#   {
+#     $seq->seek_to_value(17);
+#     my ($i, $value) = $seq->next;
+#     ok ($i, 6);
+#     ok ($value, 18);
+#   }
+#   {
+#     $seq->seek_to_value(17.75);
+#     my ($i, $value) = $seq->next;
+#     ok ($i, 6);
+#     ok ($value, 18);
+#   }
+#   {
+#     $seq->seek_to_value(18);
+#     my ($i, $value) = $seq->next;
+#     ok ($i, 6);
+#     ok ($value, 18);
+#   }
+#   {
+#     $seq->seek_to_value(18.25);
+#     my ($i, $value) = $seq->next;
+#     ok ($i, 7);
+#     ok ($value, 20);
+#   }
+# }
 
 #------------------------------------------------------------------------------
 # pred() on BigInt

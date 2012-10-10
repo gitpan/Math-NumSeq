@@ -35,7 +35,7 @@ plan tests => $test_count;
 # VERSION
 
 {
-  my $want_version = 52;
+  my $want_version = 53;
   ok ($Math::NumSeq::Tribonacci::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::Tribonacci->VERSION,  $want_version,

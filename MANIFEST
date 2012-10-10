@@ -8,6 +8,7 @@ debian/rules
 debian/source/format
 debian/watch
 devel/ascii-self.pl
+devel/balanced-binary.pl
 devel/Base4Only01.pm
 devel/baum-sweet.pl
 devel/binary-undulant.pl
@@ -156,6 +157,7 @@ lib/Math/NumSeq/AllDigits.pm
 lib/Math/NumSeq/AllPrimeFactors.pm
 lib/Math/NumSeq/AlmostPrimes.pm
 lib/Math/NumSeq/AsciiSelf.pm
+lib/Math/NumSeq/BalancedBinary.pm
 lib/Math/NumSeq/Base/Array.pm
 lib/Math/NumSeq/Base/Digits.pm
 lib/Math/NumSeq/Base/IterateIth.pm
@@ -163,6 +165,7 @@ lib/Math/NumSeq/Base/IteratePred.pm
 lib/Math/NumSeq/Base/Sparse.pm
 lib/Math/NumSeq/BaumSweet.pm
 lib/Math/NumSeq/Beastly.pm
+lib/Math/NumSeq/Catalan.pm
 lib/Math/NumSeq/CollatzSteps.pm
 lib/Math/NumSeq/ConcatNumbers.pm
 lib/Math/NumSeq/Cubes.pm
@@ -277,6 +280,7 @@ META.yml
 SIGNATURE
 t/All.t
 t/AsciiSelf.t
+t/BalancedBinary.t
 t/bigint-preload.t
 t/CollatzSteps.t
 t/Cubes.t
@@ -345,7 +349,9 @@ xt/0-Test-YAML-Meta.t
 xt/MyOEIS.pm
 xt/OEIS-File-ithreads.t
 xt/OEIS-File-weaken.t
+xt/oeis/BalancedBinary-oeis.t
 xt/oeis/Beastly-oeis.t
+xt/oeis/Catalan-oeis.t
 xt/oeis/CollatzSteps-oeis.t
 xt/oeis/DeletablePrimes-oeis.t
 xt/oeis/DigitCount-oeis.t

@@ -25,7 +25,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 52;
+$VERSION = 53;
 use Math::NumSeq;
 use List::Util 'reduce';
 use Math::NumSeq::Base::IterateIth;
@@ -50,20 +50,21 @@ use constant characteristic_smaller => 1;
 use constant characteristic_integer => 1;
 
 use Math::NumSeq::Base::Digits;   # radix
-use constant parameter_info_array => 
+use constant parameter_info_array =>
   [
    Math::NumSeq::Base::Digits::parameter_common_radix(),
    {
     name => 'values_type',
-      type    => 'enum',
-      default => 'count',
-      choices => ['count',
-                  'root',
-                 ],
-      choices_display => [Math::NumSeq::__('Count'),
-                          Math::NumSeq::__('Root'),
-                         ],
-      description => Math::NumSeq::__('The values, either steps count or the final value after the steps.'),
+    type    => 'enum',
+    share_key => 'values_type_countroot',
+    default => 'count',
+    choices => ['count',
+                'root',
+               ],
+    choices_display => [Math::NumSeq::__('Count'),
+                        Math::NumSeq::__('Root'),
+                       ],
+    description => Math::NumSeq::__('The values, either steps count or the final value after the steps.'),
    } ];
 use constant values_min => 0;
 

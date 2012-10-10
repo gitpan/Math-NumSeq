@@ -30,7 +30,19 @@ use Smart::Comments;
 
 # use blib "$ENV{HOME}/perl/bit-vector/Bit-Vector-7.1/blib";
 
-
+{
+  require Math::NumSeq::PrimeFactorCount;
+  require Math::NumSeq::MobiusFunction;
+  require Math::NumSeq::Primorials;
+  require Math::BigInt;
+  my $seq = Math::NumSeq::MobiusFunction->new;
+  my $i = Math::NumSeq::Primorials->new()->ith(14);
+  ### $i
+  # my $i = Math::BigInt->new(2)**256;
+  my $value = $seq->ith($i);
+  ### $value
+  exit 0;
+}
 
 {
   # value_to_i_estimate()

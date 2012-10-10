@@ -18,14 +18,19 @@
 package Math::NumSeq::MobiusFunction;
 use 5.004;
 use strict;
+use List::Util 'min','max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 52;
+$VERSION = 53;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
+*_is_infinite = \&Math::NumSeq::_is_infinite;
+
+use Math::NumSeq::Fibonacci;
+*_blog2_estimate = \&Math::NumSeq::Fibonacci::_blog2_estimate;
 
 # uncomment this to run the ### lines
-#use Devel::Comments;
+#use Smart::Comments;
 
 
 # use constant name => Math::NumSeq::__('Mobius Function');
@@ -34,7 +39,7 @@ use constant characteristic_increasing => 0;
 use constant characteristic_integer => 1;
 use constant values_min => -1;
 use constant values_max => 1;
-use constant i_start => 1;
+use constant default_i_start => 1;
 
 # cf A030059 the -1 positions, being odd number of distinct primes
 #    A030229 the 1 positions, being even number of distinct primes
@@ -127,11 +132,6 @@ sub ith {
   my ($self, $i) = @_;
   ### MobiusFunction ith(): $i
 
-  if ($i < 0 || $i > 0xFFFF_FFFF) {
-    return undef;
-  }
-  $i = "$i"; # numize Math::BigInt for speed
-
   my $ret = 0;
 
   if (($i % 2) == 0) {
@@ -142,24 +142,40 @@ sub ith {
     $ret = 1;
   }
 
-  my $limit = int(sqrt($i));
-  my $p = 3;
-  while ($p <= $limit) {
+  if (_is_infinite($i) || $i < 0) {
+    return undef;
+  }
+
+  if ($i <= 0xFFFF_FFFF) {
+    $i = "$i"; # numize Math::BigInt for speed
+  }
+
+  my $sqrt = int(sqrt($i));
+  my $limit = min ($sqrt,
+                   10_000 / (_blog2_estimate($i) || 1));
+  ### $sqrt
+  ### $limit
+
+  for (my $p = 3; $p <= $limit; $p += 2) {
     if (($i % $p) == 0) {
       $i /= $p;
       if (($i % $p) == 0) {
         return 0;  # square factor
       }
-      $limit = int(sqrt($i));  # new smaller limit
       $ret ^= 1;
+      $sqrt = int(sqrt($i));  # new smaller limit
+      $limit = min ($sqrt, $limit);
       ### factor: "$p new ret $ret new limit $limit"
     }
-    $p += 2;
+  }
+  if ($sqrt > $limit) {
+    ### not all factors found up to limit ...
+    return undef;
   }
   if ($i != 1) {
     $ret ^= 1;
   }
-  return 1-2*$ret;
+  return ($ret ? -1 : 1);
 }
 
 sub pred {
@@ -184,7 +200,12 @@ Math::NumSeq::MobiusFunction -- Mobius function sequence
 
 =head1 DESCRIPTION
 
-The sequence of the Mobius function, 1, -1, -1, 0, -1, 1, etc,
+The sequence of the Mobius function,
+
+    starting i=1
+    1, -1, -1, 0, -1, 1, ...
+
+Each value is
 
     1   if i has an even number of distinct prime factors
     -1  if i has an odd number of distinct prime factors
@@ -216,9 +237,9 @@ Create and return a new sequence object.
 Return the Mobius function of C<$i>, being 1, 0 or -1 according to the prime
 factors of C<$i>.
 
-This calculation requires factorizing C<$i> and in the current code a hard
-limit of 2**32 is placed on C<$i>, in the interests of not going into a
-near-infinite loop.
+This calculation requires factorizing C<$i> and in the current code small
+primes are checked then a hard limit of 2**32 is placed on C<$i>, in the
+interests of not going into a near-infinite loop.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 

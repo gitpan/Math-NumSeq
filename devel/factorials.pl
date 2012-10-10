@@ -22,7 +22,52 @@ use strict;
 use warnings;
 use Math::NumSeq::Factorials;
 
-use Smart::Comments;
+#use Smart::Comments;
+
+{
+  # Zeckendorf
+
+  require Math::NumSeq::Catalan;
+  require Math::NumSeq::Fibbinary;
+  require Math::BigInt;
+  my $seq = Math::NumSeq::Catalan->new;
+  my $fib = Math::NumSeq::Fibbinary->new;
+  foreach (1..29) {
+    my ($i, $value) = $seq->next;
+    $value = Math::BigInt->new($value);
+    ### $value
+    my $z = $fib->ith($value);
+    $z = Math::BigInt->new($z);
+    printf "%2d  %72s\n", $i, $z->as_bin;
+  }
+  exit 0;
+}
+
+{
+  # value_to_i_estimate()
+
+  require Math::NumSeq::Catalan;
+  my $seq = Math::NumSeq::Catalan->new;
+  my $prev_value = 0;
+  foreach (1..18) {
+    my ($i, $value_next) = $seq->next;
+    my $value_ith = $seq->ith($i);
+    print "$i $value_next $value_ith\n";
+    my $eq = ($value_ith == $value_next);
+    my $streq = ($value_ith eq $value_next);
+
+    unless ($streq) {
+      die "oops, not streq";
+    }
+    unless ($eq) {
+  require Devel::Peek;
+  print Devel::Peek::Dump($value_next);
+  print Devel::Peek::Dump($value_ith);
+      die "oops, not eq";
+    }
+  }
+  exit 0;
+}
 
 {
   # value_to_i_estimate()

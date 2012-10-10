@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max','min';
 
 use vars '$VERSION','@ISA';
-$VERSION = 52;
+$VERSION = 53;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -38,6 +38,7 @@ use constant default_i_start => 1;
 use constant parameter_info_array =>
   [ {
      name    => 'values_type',
+     share_key => 'values_type_1-10110',
      type    => 'enum',
      default => '1,-1',
      choices => ['1,-1',
@@ -226,6 +227,20 @@ which is an even number of prime factors (two 2s).
 This parity is similar to the MobiusFunction, but here repeated prime
 factors are included, whereas in MobiusFunction they give a value 0.
 
+=head2 Values Type
+
+The C<values_type> parameter can change the two values returned for even or
+odd prime factors.  "0,1" gives 0 for even and 1 for odd, the same as the
+count mod 2,
+
+    values_type => '0,1'
+    0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, ...
+
+Or "1,0" the other way around, 1 for even, 0 for odd,
+
+    values_type => '1,0'
+    1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, ...
+
 =head1 FUNCTIONS
 
 See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
@@ -234,7 +249,14 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =item C<$seq = Math::NumSeq::LiouvilleFunction-E<gt>new ()>
 
-Create and return a new sequence object.
+=item C<$seq = Math::NumSeq::LiouvilleFunction-E<gt>new (values_type =E<gt> $str)>
+
+Create and return a new sequence object.  Optional C<values_type> (a string)
+can be
+
+    "1,-1"     1=even, -1=odd  (the default)
+    "0,1"      0=even, 1=odd
+    "1,0"      1=even, 0=odd
 
 =back
 
@@ -244,16 +266,17 @@ Create and return a new sequence object.
 
 =item C<$value = $seq-E<gt>ith($i)>
 
-Return the Liouville function of C<$i>, being 1 or -1 according to the
-number of prime factors in C<$i>.
+Return the Liouville function of C<$i>, being 1 or -1 (or other
+C<values_type>) according to the number of prime factors in C<$i>.
 
-This calculation requires factorizing C<$i> and in the current code a hard
-limit of 2**32 is placed on C<$i>, in the interests of not going into a
+This requires factorizing C<$i> and the current code tries small primes then
+has a hard limit of 2**32 on C<$i>, in the interests of not going into a
 near-infinite loop.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value> occurs in the sequence, which simply means 1 or -1.
+Return true if C<$value> occurs in the sequence, which simply means 1 or -1,
+or the two C<values_type> values.
 
 =back
 
@@ -269,7 +292,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2010, 2011, 2012 Kevin Ryde
+Copyright 2011, 2012 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free
