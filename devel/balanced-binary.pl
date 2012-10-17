@@ -29,6 +29,18 @@ use List::Util 'max','min';
 
 
 {
+  # ith()
+  require Math::NumSeq::BalancedBinary;
+  my $seq = Math::NumSeq::BalancedBinary->new;
+  $seq->ith(4);
+  foreach my $i (1 .. 30) {
+    my $value = $seq->ith($i);
+    printf "%2d %3d %12b\n", $i, $value, $value;
+  }
+  exit 0;
+}
+
+{
   # odd Catalan 2s
 
   require Math::NumSeq::Catalan;
@@ -98,18 +110,6 @@ use List::Util 'max','min';
   #   my $value = $seq->ith($i);
   #   printf "%2d %3d %12b\n", $i, $value, $value;
   # }
-  exit 0;
-}
-
-{
-  # ith()
-  require Math::NumSeq::BalancedBinary;
-  my $seq = Math::NumSeq::BalancedBinary->new;
-  $seq->ith(4);
-  foreach my $i (1 .. 15) {
-    my $value = $seq->ith($i);
-    printf "%2d %3d %12b\n", $i, $value, $value;
-  }
   exit 0;
 }
 

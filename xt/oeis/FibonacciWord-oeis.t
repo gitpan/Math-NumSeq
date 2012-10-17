@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 14;
+plan tests => 15;
 
 use lib 't','xt';
 use MyTestHelpers;
@@ -50,6 +50,33 @@ sub numeq_array {
 
 
 #------------------------------------------------------------------------------
+# A089910 - positions of 1,1 in inverse, which is 0,0 in plain
+
+{
+  my $anum = 'A089910';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  if ($bvalues) {
+    my $seq  = Math::NumSeq::FibonacciWord->new;
+    my $prev = -1;
+    while (@got < @$bvalues) {
+      my ($i, $value) = $seq->next;
+      if ($value == 0 && $prev == 0) {
+        push @got, $i+1;
+      }
+      $prev = $value;
+    }
+    if (! numeq_array(\@got, $bvalues)) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        numeq_array(\@got, $bvalues),
+        1, "$anum -- dense");
+}
+
+#------------------------------------------------------------------------------
 # A000201 - position of 0s, starting from 1
 
 {
@@ -57,8 +84,6 @@ sub numeq_array {
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
     my $seq  = Math::NumSeq::FibonacciWord->new;
     while (@got < @$bvalues) {
       my ($i, $value) = $seq->next;
@@ -70,8 +95,6 @@ sub numeq_array {
       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
       MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         numeq_array(\@got, $bvalues),
@@ -87,8 +110,6 @@ sub numeq_array {
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
     push @got, 1;
     my $seq  = Math::NumSeq::FibonacciWord->new;
     while (@got < @$bvalues) {
@@ -99,8 +120,6 @@ sub numeq_array {
       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
       MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         numeq_array(\@got, $bvalues),
@@ -115,8 +134,6 @@ sub numeq_array {
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
     my $seq  = Math::NumSeq::FibonacciWord->new;
     while (@got < @$bvalues) {
       my ($i, $value) = $seq->next;
@@ -128,8 +145,6 @@ sub numeq_array {
       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
       MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         numeq_array(\@got, $bvalues),
@@ -145,8 +160,6 @@ sub numeq_array {
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
     push @got, 0;
     my $seq  = Math::NumSeq::FibonacciWord->new;
     while (@got < @$bvalues) {
@@ -157,8 +170,6 @@ sub numeq_array {
       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
       MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         numeq_array(\@got, $bvalues),
@@ -174,8 +185,6 @@ sub numeq_array {
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
     push @got, 0,1;
     my $seq  = Math::NumSeq::FibonacciWord->new;
     while (@got < @$bvalues) {
@@ -186,8 +195,6 @@ sub numeq_array {
       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
       MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         numeq_array(\@got, $bvalues),
@@ -202,8 +209,6 @@ sub numeq_array {
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
     require Math::BigInt;
     my $big = Math::BigInt->new (0);
 
@@ -230,8 +235,6 @@ sub numeq_array {
       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
       MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         numeq_array(\@got, $bvalues),
@@ -246,10 +249,8 @@ sub numeq_array {
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
     require Math::BigInt;
-    my $big = Math::BigInt->new (0);
+    my $big = Math::BigInt->new(0);
 
     require Math::NumSeq::Fibonacci;
     my $fib  = Math::NumSeq::Fibonacci->new;
@@ -259,7 +260,7 @@ sub numeq_array {
 
     push @got, 1;
     my $seq  = Math::NumSeq::FibonacciWord->new;
-    my $pow = 1;
+    my $pow = Math::BigInt->new(1);
     while (@got < @$bvalues) {
       my ($i, $value) = $seq->next;
 
@@ -272,11 +273,9 @@ sub numeq_array {
       $pow *= 10;
     }
     if (! numeq_array(\@got, $bvalues)) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..10]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..10]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         numeq_array(\@got, $bvalues),
@@ -291,8 +290,6 @@ sub numeq_array {
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
     my $seq  = Math::NumSeq::FibonacciWord->new;
     while (@got < @$bvalues) {
       my ($i, $value) = $seq->next;
@@ -300,11 +297,9 @@ sub numeq_array {
       push @got, $value;
     }
     if (! numeq_array(\@got, $bvalues)) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..10]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..10]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         numeq_array(\@got, $bvalues),
@@ -319,19 +314,15 @@ sub numeq_array {
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
     my $seq  = Math::NumSeq::FibonacciWord->new;
     while (@got < @$bvalues) {
       my ($i, $value) = $seq->next;
       push @got, ($value ? 2 : 1);
     }
     if (! numeq_array(\@got, $bvalues)) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..10]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..10]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         numeq_array(\@got, $bvalues),
@@ -346,8 +337,6 @@ sub numeq_array {
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
     my $seq  = Math::NumSeq::FibonacciWord->new;
     while (@got < @$bvalues) {
       my ($i, $value) = $seq->next;
@@ -357,8 +346,6 @@ sub numeq_array {
       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
       MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         numeq_array(\@got, $bvalues),
@@ -373,8 +360,6 @@ sub numeq_array {
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
     push @got, 1;
     my $seq  = Math::NumSeq::FibonacciWord->new;
     while (@got < @$bvalues) {
@@ -385,8 +370,6 @@ sub numeq_array {
       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
       MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         numeq_array(\@got, $bvalues),
@@ -401,8 +384,6 @@ sub numeq_array {
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
     push @got, 3;
     my $seq  = Math::NumSeq::FibonacciWord->new;
     while (@got < @$bvalues) {
@@ -413,8 +394,6 @@ sub numeq_array {
       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
       MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         numeq_array(\@got, $bvalues),
@@ -429,8 +408,6 @@ sub numeq_array {
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
     my $seq  = Math::NumSeq::FibonacciWord->new;
     while (@got < @$bvalues) {
       my ($i1, $value1) = $seq->next;
@@ -441,8 +418,6 @@ sub numeq_array {
       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
       MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         numeq_array(\@got, $bvalues),
@@ -457,8 +432,6 @@ sub numeq_array {
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
   my @got;
   if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
     require Math::BigInt;
     my $big = Math::BigInt->new (0);
 
@@ -484,8 +457,6 @@ sub numeq_array {
       MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..8]));
       MyTestHelpers::diag ("got:     ",join(',',@got[0..8]));
     }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
   }
   skip (! $bvalues,
         numeq_array(\@got, $bvalues),

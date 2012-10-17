@@ -15,12 +15,16 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
+
+# cf Knuth volume 2 Seminumerical Algorithms section 4.5.3 exercise 12.
+#
+
 package Math::NumSeq::SqrtContinued;
 use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 53;
+$VERSION = 54;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -36,7 +40,7 @@ use Math::NumSeq::SqrtContinuedPeriod;
 
 # use constant name => Math::NumSeq::__('Sqrt Continued Fraction');
 use constant description => Math::NumSeq::__('Continued fraction expansion of a square root.');
-use constant i_start => 0;
+use constant default_i_start => 0;
 use constant characteristic_smaller => 1;
 use constant characteristic_increasing => 0;
 # use constant characteristic_continued_fraction => 1;

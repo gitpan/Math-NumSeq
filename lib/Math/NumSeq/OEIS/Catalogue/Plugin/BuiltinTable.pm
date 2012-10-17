@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 53;
+$VERSION = 54;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 764 A-numbers in 111 modules
+# total 871 A-numbers in 114 modules
 
 use constant info_arrayref =>
 [
@@ -50,6 +50,856 @@ use constant info_arrayref =>
     'parameters' => [
       'abundant_type',
       'primitive'
+    ]
+  },
+  {
+    'anum' => 'A002945',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt2',
+      'i_start',
+      1
+    ]
+  },
+  {
+    'anum' => 'A002946',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt3',
+      'i_start',
+      1
+    ]
+  },
+  {
+    'anum' => 'A002947',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt4',
+      'i_start',
+      1
+    ]
+  },
+  {
+    'anum' => 'A002948',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt5',
+      'i_start',
+      1
+    ]
+  },
+  {
+    'anum' => 'A002949',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt6',
+      'i_start',
+      1
+    ]
+  },
+  {
+    'anum' => 'A010239',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt9'
+    ]
+  },
+  {
+    'anum' => 'A010240',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt10'
+    ]
+  },
+  {
+    'anum' => 'A010241',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt11'
+    ]
+  },
+  {
+    'anum' => 'A010242',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt12'
+    ]
+  },
+  {
+    'anum' => 'A010243',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt13'
+    ]
+  },
+  {
+    'anum' => 'A010244',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt14'
+    ]
+  },
+  {
+    'anum' => 'A010245',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt15'
+    ]
+  },
+  {
+    'anum' => 'A010246',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt16'
+    ]
+  },
+  {
+    'anum' => 'A010247',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt17'
+    ]
+  },
+  {
+    'anum' => 'A010248',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt18'
+    ]
+  },
+  {
+    'anum' => 'A010249',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt19'
+    ]
+  },
+  {
+    'anum' => 'A010250',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt20'
+    ]
+  },
+  {
+    'anum' => 'A010251',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt21'
+    ]
+  },
+  {
+    'anum' => 'A010252',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt22'
+    ]
+  },
+  {
+    'anum' => 'A010253',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt23'
+    ]
+  },
+  {
+    'anum' => 'A010254',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt24'
+    ]
+  },
+  {
+    'anum' => 'A010255',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt25'
+    ]
+  },
+  {
+    'anum' => 'A010256',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt26'
+    ]
+  },
+  {
+    'anum' => 'A010257',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt28'
+    ]
+  },
+  {
+    'anum' => 'A010258',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt29'
+    ]
+  },
+  {
+    'anum' => 'A010259',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt30'
+    ]
+  },
+  {
+    'anum' => 'A010260',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt31'
+    ]
+  },
+  {
+    'anum' => 'A010261',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt32'
+    ]
+  },
+  {
+    'anum' => 'A010262',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt33'
+    ]
+  },
+  {
+    'anum' => 'A010263',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt34'
+    ]
+  },
+  {
+    'anum' => 'A010264',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt35'
+    ]
+  },
+  {
+    'anum' => 'A010265',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt36'
+    ]
+  },
+  {
+    'anum' => 'A010266',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt37'
+    ]
+  },
+  {
+    'anum' => 'A010267',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt38'
+    ]
+  },
+  {
+    'anum' => 'A010268',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt39'
+    ]
+  },
+  {
+    'anum' => 'A010269',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt40'
+    ]
+  },
+  {
+    'anum' => 'A010270',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt41'
+    ]
+  },
+  {
+    'anum' => 'A010271',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt42'
+    ]
+  },
+  {
+    'anum' => 'A010272',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt43'
+    ]
+  },
+  {
+    'anum' => 'A010273',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt44'
+    ]
+  },
+  {
+    'anum' => 'A010274',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt45'
+    ]
+  },
+  {
+    'anum' => 'A010275',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt46'
+    ]
+  },
+  {
+    'anum' => 'A010276',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt47'
+    ]
+  },
+  {
+    'anum' => 'A010277',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt48'
+    ]
+  },
+  {
+    'anum' => 'A010278',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt49'
+    ]
+  },
+  {
+    'anum' => 'A010279',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt50'
+    ]
+  },
+  {
+    'anum' => 'A010280',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt51'
+    ]
+  },
+  {
+    'anum' => 'A010281',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt52'
+    ]
+  },
+  {
+    'anum' => 'A010282',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt53'
+    ]
+  },
+  {
+    'anum' => 'A010283',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt54'
+    ]
+  },
+  {
+    'anum' => 'A010284',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt55'
+    ]
+  },
+  {
+    'anum' => 'A010285',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt56'
+    ]
+  },
+  {
+    'anum' => 'A010286',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt57'
+    ]
+  },
+  {
+    'anum' => 'A010287',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt58'
+    ]
+  },
+  {
+    'anum' => 'A010288',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt59'
+    ]
+  },
+  {
+    'anum' => 'A010289',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt60'
+    ]
+  },
+  {
+    'anum' => 'A010290',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt61'
+    ]
+  },
+  {
+    'anum' => 'A010291',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt62'
+    ]
+  },
+  {
+    'anum' => 'A010292',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt63'
+    ]
+  },
+  {
+    'anum' => 'A010293',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt65'
+    ]
+  },
+  {
+    'anum' => 'A010294',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt66'
+    ]
+  },
+  {
+    'anum' => 'A010295',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt67'
+    ]
+  },
+  {
+    'anum' => 'A010296',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt68'
+    ]
+  },
+  {
+    'anum' => 'A010297',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt69'
+    ]
+  },
+  {
+    'anum' => 'A010298',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt70'
+    ]
+  },
+  {
+    'anum' => 'A010299',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt71'
+    ]
+  },
+  {
+    'anum' => 'A010300',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt72'
+    ]
+  },
+  {
+    'anum' => 'A010301',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt73'
+    ]
+  },
+  {
+    'anum' => 'A010302',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt74'
+    ]
+  },
+  {
+    'anum' => 'A010303',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt75'
+    ]
+  },
+  {
+    'anum' => 'A010304',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt76'
+    ]
+  },
+  {
+    'anum' => 'A010305',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt77'
+    ]
+  },
+  {
+    'anum' => 'A010306',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt78'
+    ]
+  },
+  {
+    'anum' => 'A010307',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt79'
+    ]
+  },
+  {
+    'anum' => 'A010308',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt80'
+    ]
+  },
+  {
+    'anum' => 'A010309',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt81'
+    ]
+  },
+  {
+    'anum' => 'A010310',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt82'
+    ]
+  },
+  {
+    'anum' => 'A010311',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt83'
+    ]
+  },
+  {
+    'anum' => 'A010312',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt84'
+    ]
+  },
+  {
+    'anum' => 'A010313',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt85'
+    ]
+  },
+  {
+    'anum' => 'A010314',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt86'
+    ]
+  },
+  {
+    'anum' => 'A010315',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt87'
+    ]
+  },
+  {
+    'anum' => 'A010316',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt88'
+    ]
+  },
+  {
+    'anum' => 'A010317',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt89'
+    ]
+  },
+  {
+    'anum' => 'A010318',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt90'
+    ]
+  },
+  {
+    'anum' => 'A010319',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt91'
+    ]
+  },
+  {
+    'anum' => 'A010320',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt92'
+    ]
+  },
+  {
+    'anum' => 'A010321',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt93'
+    ]
+  },
+  {
+    'anum' => 'A010322',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt94'
+    ]
+  },
+  {
+    'anum' => 'A010323',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt95'
+    ]
+  },
+  {
+    'anum' => 'A010324',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt96'
+    ]
+  },
+  {
+    'anum' => 'A010325',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt97'
+    ]
+  },
+  {
+    'anum' => 'A010326',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt98'
+    ]
+  },
+  {
+    'anum' => 'A010327',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt99'
+    ]
+  },
+  {
+    'anum' => 'A010328',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      'cbrt100'
+    ]
+  },
+  {
+    'anum' => 'A179613',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      '4throot2',
+      'i_start',
+      1
+    ]
+  },
+  {
+    'anum' => 'A179615',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      '4throot3',
+      'i_start',
+      1
+    ]
+  },
+  {
+    'anum' => 'A179616',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      '4throot5',
+      'i_start',
+      1
+    ]
+  },
+  {
+    'anum' => 'A093876',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      '4throot9.1',
+      'i_start',
+      1
+    ]
+  },
+  {
+    'anum' => 'A002950',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      '5throot2',
+      'i_start',
+      1
+    ]
+  },
+  {
+    'anum' => 'A003117',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      '5throot3',
+      'i_start',
+      1
+    ]
+  },
+  {
+    'anum' => 'A003118',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      '5throot4',
+      'i_start',
+      1
+    ]
+  },
+  {
+    'anum' => 'A002951',
+    'class' => 'Math::NumSeq::AlgebraicContinued',
+    'parameters' => [
+      'expression',
+      '5throot5',
+      'i_start',
+      1
     ]
   },
   {
@@ -1193,6 +2043,18 @@ use constant info_arrayref =>
     'class' => 'Math::NumSeq::FibonacciWord'
   },
   {
+    'anum' => 'A143667',
+    'class' => 'Math::NumSeq::FibonacciWord',
+    'parameters' => [
+      'fibonacci_word_type',
+      'dense',
+      'i_start',
+      1,
+      'i_offset',
+      '-1'
+    ]
+  },
+  {
     'anum' => 'A020806',
     'class' => 'Math::NumSeq::FractionDigits',
     'parameters' => [
@@ -1903,6 +2765,22 @@ use constant info_arrayref =>
   {
     'anum' => 'A001608',
     'class' => 'Math::NumSeq::Perrin'
+  },
+  {
+    'anum' => 'A001175',
+    'class' => 'Math::NumSeq::PisanoPeriod'
+  },
+  {
+    'anum' => 'A001178',
+    'class' => 'Math::NumSeq::PisanoPeriodSteps'
+  },
+  {
+    'anum' => 'A001179',
+    'class' => 'Math::NumSeq::PisanoPeriodSteps',
+    'parameters' => [
+      'values_type',
+      'log'
+    ]
   },
   {
     'anum' => 'A006285',

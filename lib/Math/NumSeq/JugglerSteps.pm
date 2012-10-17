@@ -20,12 +20,16 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 53;
+$VERSION = 54;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
+
+use Math::NumSeq::Base::Cache
+  'cache_hash',
+  'make_key';
 
 # uncomment this to run the ### lines
 #use Devel::Comments;
@@ -148,57 +152,6 @@ use constant _UV_3_2_LIMIT => do {
   (1 << $bits) - 1
 };
 
-use vars '%cache';
-my $tempdir;
-use constant::defer _cache => sub {
-  require SDBM_File;
-  require File::Temp;
-  $tempdir = File::Temp->newdir;
-  ### $tempdir
-  ### tempdir: $tempdir->dirname
-  tie (%cache, 'SDBM_File',
-       File::Spec->catfile ($tempdir->dirname, "cache"),
-       Fcntl::O_RDWR()|Fcntl::O_CREAT(),
-       0666)
-    or die "Couldn't tie SDBM file 'filename': $!; aborting";
-
-  END {
-    if ($tempdir) {
-      ### unlink cache ...
-      untie %cache;
-      my $dirname = $tempdir->dirname;
-      unlink File::Spec->catfile ($dirname, "cache.pag");
-      unlink File::Spec->catfile ($dirname, "cache.dir");
-    }
-  }
-  # END {
-  #   if ($tempdir) {
-  #     ### cache diagnostics ...
-  #     my $count = 0;
-  #     while (each %cache) {
-  #       $count++;
-  #     }
-  #     untie %cache;
-  #     my $dirname = $tempdir->dirname;
-  #     print "cache final $count file sizes cache.pag ",
-  #       (-s File::Spec->catfile($dirname,"cache.pag")),
-  #         " cache.dir ",
-  #           (-s File::Spec->catfile($dirname,"cache.dir")),
-  #             "\n";
-  #   }
-  # }
-  return \%cache;
-};
-my $cache_key = 0;
-sub cache_key {
-  my $params = join ('.', "CacheKey",@_);
-  ### $params
-  if (my $c = _cache()->{$params}) {
-    return $c;
-  }
-  return sprintf '%X.', (_cache()->{$params} = $cache_key++);
-}
-
 my %cache_upto;
 sub next {
   my ($self) = @_;
@@ -207,9 +160,9 @@ sub next {
   my $i = $self->{'i'}++;
   my $pkey = ($self->{'pkey'} ||= do {
     ### make pkey ...
-    my $k = cache_key('JugglerSteps',
-                      $self->{'juggler_type'},
-                      $self->{'step_type'});
+    my $k = make_key('JugglerSteps',
+                     $self->{'juggler_type'},
+                     $self->{'step_type'});
     $cache_upto{$k} ||= 0;
     $k
   });
@@ -221,11 +174,11 @@ sub next {
 
   if ($i < $cache_upto{$pkey}) {
     ### fetch from cache ...
-    return ($i, $cache{$key_i});
+    return ($i, cache_hash()->{$key_i});
   } else {
     ### store to cache ...
     my $ret = $self->ith($i);
-    $cache{$key_i} = $ret;
+    cache_hash()->{$key_i} = $ret;
     $cache_upto{$pkey} = $i;
     ### cache upto now: $cache_upto{$pkey}
     return ($i, $ret);
@@ -250,7 +203,7 @@ sub ith {
     ### 1/2 and 3/2 ...
     for (;;) {
       if ($pkey && $i < $cache_upto{$pkey}) {
-        my $c = $cache{$pkey.$i};
+        my $c = cache_hash()->{$pkey.$i};
         ### from cache: "$c at i=$i"
         if ($c < 0) {
           return $c;
@@ -267,7 +220,7 @@ sub ith {
           ### using bigint: "$i"
           for (;;) {
             if ($pkey && $i < $cache_upto{$pkey}) {
-              my $c = $cache{$pkey.$i};
+              my $c = cache_hash()->{$pkey.$i};
               ### from cache: "$c at i=$i"
               if ($c < 0) {
                 return $c;
@@ -323,7 +276,7 @@ sub ith {
 
     for (;;) {
       if ($pkey && $i < $cache_upto{$pkey}) {
-        my $c = $cache{$pkey.$i};
+        my $c = cache_hash()->{$pkey.$i};
         ### from cache: "$c at i=$i"
         if ($c < 0) {
           return $c;
@@ -384,13 +337,16 @@ sequence,
     n ->  /  floor(n^(1/2))      if n even
           \  floor(n^(3/2))      if n odd
 
-So it's a sqrt if n even, or sqrt(n^3) if odd, rounding downwards each time.
-For example i=17 goes 17 -> sqrt(17^3)=70 -> sqrt(70)=8 -> sqrt(8)=2 ->
+So sqrt if n even, or sqrt(n^3) if n odd, each rounded downwards.  For
+example i=17 goes 17 -> sqrt(17^3)=70 -> sqrt(70)=8 -> sqrt(8)=2 ->
 sqrt(2)=1, for a count of 4 steps.
 
-The intermediate values in the calculation can become quite large.
+    starting i=1
+    0, 1, 6, 2, 5, 2, 4, 2, 7, 7, 4, 7, 4, 7, 6, 3, 4, 3, 9, 3, ...
+
+The intermediate values in the calculation can become quite large and
 C<Math::BigInt> is used if necessary.  There's some secret experimental
-caching in a temp file, for a small speedup.
+caching in a temporary file, for a small speedup.
 
 =head1 FUNCTIONS
 

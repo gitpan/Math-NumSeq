@@ -27,7 +27,7 @@ use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 use Math::Factor::XS 0.39 'factors';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 53;
+$VERSION = 54;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -93,6 +93,9 @@ sub values_min {
 my %oeis_anum = ('all,ascending'  => 'A027750',
                  'all,descending' => 'A056538',
                  # 'composites,ascending' => '',
+
+                 # OEIS-Catalogue: A027750
+                 # OEIS-Catalogue: A056538 order=descending
                 );;
 
 sub oeis_anum {

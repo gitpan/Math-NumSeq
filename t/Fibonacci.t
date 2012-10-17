@@ -35,7 +35,7 @@ use Math::NumSeq::Fibonacci;
 # VERSION
 
 {
-  my $want_version = 53;
+  my $want_version = 54;
   ok ($Math::NumSeq::Fibonacci::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::Fibonacci->VERSION,  $want_version,

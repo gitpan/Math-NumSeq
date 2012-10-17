@@ -21,7 +21,7 @@ use strict;
 use warnings;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 53;
+$VERSION = 54;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 

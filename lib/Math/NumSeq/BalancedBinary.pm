@@ -15,13 +15,18 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
+
+# http://www.iki.fi/~kartturi/matikka/tab9766.htm
+# A009766 Catalan triangle
+# A099039 Riordan array
+
 package Math::NumSeq::BalancedBinary;
 use 5.004;
 use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 53;
+$VERSION = 54;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -75,8 +80,9 @@ sub new {
 # A085192 first diffs
 # A000108 Catalan numbers, count of values in 4^k blocks
 # A071152 balanced/2, Lukasiewicz words for the rooted plane binary trees
+# A075171 trees by binary runs in integers, coded to Dyck words
+# A071153 Lukasiewicz coded digits
 #
-
 my %oeis_anum = (HtoL => 'A014486',  # balanced binary
                  # OEIS-Catalogue: A014486
 
@@ -570,6 +576,23 @@ traversal (by whatever node order).
 The code here acts on values as numbers but for encodings like this a list
 or string of bits would be more use.
 
+=head2 Mountain Ranges
+
+A cute interpretation of the opens and closes is as up and down slopes of a
+mountain range.
+
+         /\
+        /  \  /\
+       /    \/  \       11110001100010
+      /          \/\
+    -------------------   
+
+The mountain range must end at its starting level, and cannot descend below
+that level.  Numerical order of the values means wider ranges are after
+narrower ones, and that between two ranges of equal width which are the same
+for some distance are then ordered by the down-sloping one preceding the
+up-sloping one.
+
 =head1 FUNCTIONS
 
 See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
@@ -612,16 +635,16 @@ Return true if C<$value> is balanced binary.
 
 =head2 Next
 
-When stepping to the next value the number of 1s and 0s does not change
-(within a width 2*w block).  The 1s move around to make a numerically higher
-value.  The simplest is an isolated lowest 1-bit, it must move up one place.
-For example,
+When stepping to the next value the number of 1s and 0s does not change,
+within a width 2*w block.  The 1s move to make a numerically higher value.
+The simplest is an isolated lowest 1-bit.  It must move up one place.  For
+example,
 
     11100100
     ->
     11101000
 
-If the low 1 has a 1 above it then that bit must move up and the low bit
+If the low 1 has a 1 above it then that bit must move up and the lower one
 goes to the end of the value.  For example
 
     1110011000
@@ -637,12 +660,12 @@ up one place and the rest move down to be a 1010..10 pattern at the low end.
           ^     ^ ^
          up     end
 
-The final value in a 2*w block is all 1s at the top and 0s at the bottom.
-It extends and becomes alternating 1010..10 as the first of the next bigger
-block.  For example
+The final value in a 2*w block is all 1s at the top.  It becomes an
+alternating 1010..10 with one extra 1-bit and 0-bit as the first of the next
+bigger block.  For example
 
       111000    last 6-bit value
-      ->
+    ->
     10101010    first 8-bit value
 
 =head2 Ith
@@ -666,7 +689,7 @@ reduce z or n accordingly.
             and subtract numvalues(z-1,n)
             which are the "0..." combinations skipped
 
-The numvalues() table can be constructed by
+numvalues() is the "Catalan table" constructed by
 
     for z=1 upwards
       numvalues(z,0) = 1
@@ -674,7 +697,7 @@ The numvalues() table can be constructed by
         numvalues(z,n) = numvalues(z-1,n)  # the 0... forms
                        + numvalues(z,n-1)  # the 1... forms
 
-Each numvalues(z,n-1) is just the previous value calculated, so
+Each numvalues(z,n-1) is the previous value calculated, so
 
     for z=1 upwards
       t = numvalues(z,0) = 1
@@ -682,12 +705,12 @@ Each numvalues(z,n-1) is just the previous value calculated, so
         t += numvalues(z-1,n)
         numvalues(z,n) = t
 
-The last entry numvalues(w,w) in each row is Catalan(w), so can be used for
-the initial i subtractions seeking the width w.  If building or extending a
-table each time then stop the table at that point.
+The last entry numvalues(w,w) in each row is Catalan(w), so that can be used
+for the initial i subtractions seeking the width w.  If building or
+extending a table each time then stop the table at that point.
 
-Catalan(w) grows as a power a little less than 4^w so the table has roughly
-log4(i) many rows.
+Catalan(w) grows as a little less than a power 4^w so the table has log4(i)
+many rows (or a couple more).
 
 =head1 SEE ALSO
 

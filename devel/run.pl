@@ -65,7 +65,6 @@ $|=1;
   $values_class = 'Math::NumSeq::KlarnerRado';
   $values_class = 'Math::NumSeq::DivisorCount';
   $values_class = 'Math::NumSeq::DigitCount';
-  $values_class = 'Math::NumSeq::JugglerSteps';
   $values_class = 'Math::NumSeq::Kolakoski';
   $values_class = 'Math::NumSeq::UlamSequence';
   $values_class = 'Math::NumSeq::ReplicateDigits';
@@ -109,7 +108,6 @@ $|=1;
   $values_class = 'Math::NumSeq::DedekindPsiSteps';
   $values_class = 'Math::NumSeq::TotientPerfect';
   $values_class = 'Math::NumSeq::TotientSteps';
-  $values_class = 'Math::NumSeq::FibonacciWord';
   $values_class = 'Math::NumSeq::DeletablePrimes';
   $values_class = 'Math::NumSeq::LipschitzClass';
   $values_class = 'Math::NumSeq::GolombSequence';
@@ -138,11 +136,9 @@ $|=1;
   $values_class = 'Math::NumSeq::ReReplace';
   $values_class = 'Math::NumSeq::SqrtContinued';
   $values_class = 'Math::NumSeq::SternDiatomic';
-  $values_class = 'Math::NumSeq::CbrtContinued';
   $values_class = 'Math::NumSeq::SlopingExcluded';
   $values_class = 'Math::NumSeq::PrimeIndexOrder';
   $values_class = 'Math::NumSeq::PrimeIndexPrimes';
-  $values_class = 'Math::NumSeq::AlphabeticalLengthSteps';
   $values_class = 'Math::NumSeq::KaprekarSteps';
   $values_class = 'Math::NumSeq::Padovan';
   $values_class = 'Math::NumSeq::StoehrSequence';
@@ -165,7 +161,6 @@ $|=1;
   $values_class = 'Math::NumSeq::PrimesDigits';
   $values_class = 'Math::NumSeq::PowerPart';
   $values_class = 'Math::NumSeq::Plaindromes';
-  $values_class = 'Math::NumSeq::SevenSegments';
   $values_class = 'Math::NumSeq::LucasNumbers';
   $values_class = 'Math::NumSeq::Xenodromes';
   $values_class = 'Math::NumSeq::DuffinianNumbers';
@@ -179,28 +174,41 @@ $|=1;
   $values_class = 'Math::NumSeq::PlanePathTurn';
   $values_class = 'Math::NumSeq::Pow2Mod10';
   $values_class = 'Math::NumSeq::JacobsthalFunction';
-  $values_class = 'Math::NumSeq::LeonardoLogarithm';
-  $values_class = 'Math::NumSeq::PisanoPeriod';
-  $values_class = 'Math::NumSeq::FibonacciFrequency';
   $values_class = 'Math::NumSeq::GolayRudinShapiro';
   $values_class = 'Math::NumSeq::PrimeFactorCount';
   $values_class = 'Math::NumSeq::MobiusFunction';
   $values_class = 'Math::NumSeq::PlanePathDelta';
-  $values_class = 'Math::NumSeq::PlanePathN';
   $values_class = 'Math::NumSeq::PlanePathCoord';
   $values_class = 'Math::NumSeq::LiouvilleFunction';
   $values_class = 'Math::NumSeq::Catalan';
-  $values_class = 'Math::NumSeq::AlphabeticalLength';
   $values_class = 'Math::NumSeq::BalancedBinary';
+  $values_class = 'Math::NumSeq::CbrtContinued';
+  $values_class = 'Math::NumSeq::PlanePathN';
+  $values_class = 'Math::NumSeq::AlphabeticalLength';
+  $values_class = 'Math::NumSeq::AlphabeticalLengthSteps';
+  $values_class = 'Math::NumSeq::SevenSegments';
+  $values_class = 'Math::NumSeq::AlgebraicContinued';
+  $values_class = 'Math::NumSeq::PisanoPeriod';
+  $values_class = 'Math::NumSeq::JugglerSteps';
+  $values_class = 'Math::NumSeq::PisanoPeriodSteps';
+  $values_class = 'Math::NumSeq::FibonacciWord';
+  $values_class = 'Math::NumSeq::LucasSequenceModulo';
 
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new
     (
-conjunctions => 1,
+fibonacci_word_type=>'dense',
+     # initial_0 => 1,
+     # initial_1 => 0,
+     modulus => 2,
+     # expression => '5throot 2',
+     # expression => 'cbrt 7',
+     # i_start => 1,
+     # cbrt => 2,
+     # conjunctions => 1,
+      values_type => 'log',
      # values_type => 'odd',
-     # values_type => 'odd',
-     # language => 'no',
-     # i_start => 0,
+     # lang => 'fr',
 
       # runs_type => '1to2N',
      # values_type => 'mod2',
@@ -214,8 +222,6 @@ conjunctions => 1,
      # letter => '',
      # multiplicity => 'distinct',
      # order => 'descending',
-     # initial_0 => 1,
-     # initial_1 => 0,
      # step_type => 'both',
      # on_values => 'even',
      # i_start => 0,
@@ -224,7 +230,6 @@ conjunctions => 1,
      # on_values => 'primes',
      # level => 2,
      # level_type => 'exact',
-     # cbrt => 2,
      # sqrt => 104,
      # stage => 1,
 
@@ -248,20 +253,21 @@ conjunctions => 1,
      # planepath => 'Diagonals,x_start=1,y_start=1',
      # planepath => 'ChanTree',
      # planepath => 'SierpinskiTriangle',
-      planepath => 'CellularRule,rule=2',
+     # planepath => 'CellularRule,rule=2',
      # planepath => 'GcdRationals,pairs_order=rows_reverse',
-     coordinate_type => 'RSquared',
+     # coordinate_type => 'RSquared',
      # coordinate_type => 'GCD',
      # coordinate_type => 'NumChildren',
 
      # planepath => 'SierpinskiTriangle',
      # planepath => 'RationalsTree',
-     # planepath => 'DiamondSpiral,n_start=0',
+     # planepath => 'UlamWarburton,n_start=1',
+     # planepath => 'UlamWarburtonQuarter,n_start=0',
      # planepath => 'TriangleSpiralSkewed',
      # planepath => 'SquareSpiral',
      #  planepath => 'DigitGroups,radix=2',
      # planepath => 'CellularRule,rule=206',
-     # line_type => 'Depth_end',
+     # line_type => 'Depth_first',
      # line_type => 'X_axis',
      # i_start => 1,
 

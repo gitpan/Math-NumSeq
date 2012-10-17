@@ -37,8 +37,8 @@ package Math::NumSeq;
 use 5.004;
 use strict;
 
-use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 53;
+use vars '$VERSION', '@ISA';
+$VERSION = 54;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -503,12 +503,15 @@ L<Math::NumSeq::PolignacObstinate>
 L<Math::NumSeq::Factorials>,
 L<Math::NumSeq::Primorials>,
 L<Math::NumSeq::Fibonacci>,
-L<Math::NumSeq::FibonacciWord>,
 L<Math::NumSeq::LucasNumbers>,
-L<Math::NumSeq::Catalan>,
-L<Math::NumSeq::BalancedBinary>,
+L<Math::NumSeq::FibonacciWord>,
+L<Math::NumSeq::PisanoPeriod>,
+L<Math::NumSeq::PisanoPeriodSteps>,
 L<Math::NumSeq::Fibbinary>,
 L<Math::NumSeq::FibbinaryBitCount>,
+
+L<Math::NumSeq::Catalan>,
+L<Math::NumSeq::BalancedBinary>,
 L<Math::NumSeq::Pell>,
 L<Math::NumSeq::Tribonacci>,
 L<Math::NumSeq::Perrin>,
@@ -519,6 +522,7 @@ L<Math::NumSeq::SqrtDigits>,
 L<Math::NumSeq::SqrtEngel>,
 L<Math::NumSeq::SqrtContinued>,
 L<Math::NumSeq::SqrtContinuedPeriod>
+L<Math::NumSeq::AlgebraicContinued>
 
 L<Math::NumSeq::DigitCount>,
 L<Math::NumSeq::DigitCountLow>,
@@ -580,10 +584,16 @@ L<Math::NumSeq::OEIS>
 
 =for my_pod see_also end
 
+L<Math::NumSeq::AlphabeticalLength>,
+L<Math::NumSeq::AlphabeticalLengthSteps>,
+L<Math::NumSeq::SevenSegments>
+(in the Math-NumSeq-Alpha dist)
+
 L<Math::NumSeq::Aronson> (in the Math-Aronson dist)
 
 L<Math::NumSeq::PlanePathCoord>, L<Math::NumSeq::PlanePathDelta>,
-L<Math::NumSeq::PlanePathTurn> (in the Math-PlanePath dist)
+L<Math::NumSeq::PlanePathTurn>, L<Math::NumSeq::PlanePathN> (in the
+Math-PlanePath dist)
 
 =head2 Other Modules Etc
 

@@ -128,12 +128,11 @@ sub check_class {
 
   # skip all except ...
   #
-  # return unless $class =~ /Liouv/;
+  # return unless $class =~ /Pisano/;
   # return unless $class =~ /PrimeIndex/;
-  # return unless $class =~ /Golomb/;
+   return unless $class =~ /FibonacciWord/;
   # return unless $class =~ /Runs/;
   # return unless $class =~ /FactorCount/;
-  # return unless $class =~ /Cbrt/;
   # return unless $class =~ /Star/;
   # return unless $class =~ /Luc|Fib|Cullen|Wood/;
   # return unless $class =~ /Lucas/;
@@ -194,10 +193,10 @@ sub check_class {
     # Math::NumSeq::Happy bit slow, not B-file 140,000 ...
     $max_count = 20000;
 
-  } elsif ($anum eq 'A002945'   # CbrtContinued
-           || $anum eq 'A002946'
-           || $anum eq 'A010239') {
-    $max_count = 400;
+  # } elsif ($anum eq 'A002945'   # CbrtContinued
+  #          || $anum eq 'A002946'
+  #          || $anum eq 'A010239') {
+  #   $max_count = 400;
 
   } elsif ($anum eq 'A000959') { # LuckyNumbers
     $max_value = 20_000;

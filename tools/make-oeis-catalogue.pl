@@ -30,7 +30,7 @@ use Cwd;
 use File::Path;
 
 use vars '$VERSION';
-$VERSION = 53;
+$VERSION = 54;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -101,8 +101,8 @@ foreach my $filename (@filenames) {
     } elsif (/OEIS-Catalogue array begin/ .. /OEIS-Catalogue array end/) {
       next if /^\s*undef/;
       next if /^\s*# OEIS-Catalogue array/;
-      next if /^\s*$/;
-      ($anum,$parameters,$comment) = /^\s*'(A\d+)',?\s*(?:#\s*(.*?)(#.*)?)?$/
+      next if /^\s*(#|$)/;
+      ($anum,$parameters,$comment) = /^[^#]*'(A\d+)',?\s*(?:#\s*(.*?)(#.*)?)?$/
         or die "$where: oops, bad OEIS array line: $_";
       defined $parameters
         or die "$where: no parameters comment part in array line: $_";

@@ -26,7 +26,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 53;
+$VERSION = 54;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_to_bigint = \&Math::NumSeq::_to_bigint;
@@ -139,7 +139,6 @@ my %oeis_anum = ('additive,0,1' => 'A078510',
                  # OEIS-Other: A000004 initial_1=0
                  # OEIS-Other: A000004 initial_1=0 recurrence_type=absdiff
                 );
-
 
 sub oeis_anum {
   my ($self) = @_;

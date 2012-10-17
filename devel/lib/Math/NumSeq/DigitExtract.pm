@@ -50,7 +50,7 @@ use strict;
 use List::Util qw(min max sum reduce);
 
 use vars '$VERSION', '@ISA';
-$VERSION = 53;
+$VERSION = 54;
 
 use Math::NumSeq::Base::IterateIth;
 use Math::NumSeq::Base::Digits;

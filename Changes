@@ -16,6 +16,9 @@ You should have received a copy of the GNU General Public License along
 with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
+Version 54, October 2012
+     - new AlgebraicContinued, PisanoPeriod, PisanoPeriodSteps
+
 Version 53, October 2012
      - new Catalan, BalancedBinary
      - document Math::NumSeq::Base::IterateIth, Math::NumSeq::Base::IteratePred

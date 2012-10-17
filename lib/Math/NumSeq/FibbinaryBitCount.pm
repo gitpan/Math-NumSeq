@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 53;
+$VERSION = 54;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -43,6 +43,7 @@ use constant characteristic_smaller => 1;
 #------------------------------------------------------------------------------
 # cf A027941 new highest bit count positions, being Fibonacci(2i+1)-1
 #    A095111 bit count parity, 1/0
+#    A020908 bit count of 2^k
 #
 use constant oeis_anum => 'A007895';  # fibbinary bit count
 

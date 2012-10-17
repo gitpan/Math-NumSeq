@@ -49,7 +49,6 @@ devel/lib/Math/NumSeq/Base/File.pm
 devel/lib/Math/NumSeq/Base/FileWriter.pm
 devel/lib/Math/NumSeq/Base/ValuesFile.t
 devel/lib/Math/NumSeq/BinaryUndulants.pm
-devel/lib/Math/NumSeq/CbrtContinued.pm
 devel/lib/Math/NumSeq/CunninghamChain.pm
 devel/lib/Math/NumSeq/CunninghamLength.pm
 devel/lib/Math/NumSeq/CunninghamPrimes.pm
@@ -57,7 +56,6 @@ devel/lib/Math/NumSeq/Derived/Cumulative.pm
 devel/lib/Math/NumSeq/DigitExtract.pm
 devel/lib/Math/NumSeq/EratosthenesStage.pm
 devel/lib/Math/NumSeq/FactorialProducts.pm
-devel/lib/Math/NumSeq/FibonacciFrequency.pm
 devel/lib/Math/NumSeq/FibonacciProducts.pm
 devel/lib/Math/NumSeq/HypotCount.pm
 devel/lib/Math/NumSeq/JacobsthalFunction.pm
@@ -66,12 +64,12 @@ devel/lib/Math/NumSeq/KaprekarRoutineSteps.pm
 devel/lib/Math/NumSeq/KolakoskiMajority.pm
 devel/lib/Math/NumSeq/LeastPrimitiveRoot-oeis.t
 devel/lib/Math/NumSeq/LeastPrimitiveRoot.pm
-devel/lib/Math/NumSeq/LeonardoLogarithm.pm
 devel/lib/Math/NumSeq/LipschitzClass.pm
 devel/lib/Math/NumSeq/ln2.gz
 devel/lib/Math/NumSeq/Ln2Bits.pm
 devel/lib/Math/NumSeq/Loeschian.pm
 devel/lib/Math/NumSeq/LongFractionPrimes.pm
+devel/lib/Math/NumSeq/LucasSequenceModulo.pm
 devel/lib/Math/NumSeq/numseq-oeis.t
 devel/lib/Math/NumSeq/OEIS/Catalogue/Plugin/Alpha.pm
 devel/lib/Math/NumSeq/Padovan.pm
@@ -79,8 +77,6 @@ devel/lib/Math/NumSeq/pi.gz
 devel/lib/Math/NumSeq/PiBits.pm
 devel/lib/Math/NumSeq/PiDigits.pm
 devel/lib/Math/NumSeq/PierpontPrimes.pm
-devel/lib/Math/NumSeq/PisanoPeriod-oeis.t
-devel/lib/Math/NumSeq/PisanoPeriod.pm
 devel/lib/Math/NumSeq/Plaindromes.pm
 devel/lib/Math/NumSeq/pow2mod10.pl
 devel/lib/Math/NumSeq/Pow2Mod10.pm
@@ -112,6 +108,7 @@ devel/oeis-grep.pl
 devel/oeis.pl
 devel/OeisCatalogue-SqrtDigits.pm
 devel/old/Base4Without3.pm
+devel/old/CbrtContinued.pm
 devel/old/ChampernowneBinary.pm
 devel/old/ChampernowneBinary.t
 devel/old/ChampernowneBinaryLsb.pm
@@ -152,6 +149,7 @@ devel/totient.pl
 devel/triangular.pl
 lib/Math/NumSeq.pm
 lib/Math/NumSeq/Abundant.pm
+lib/Math/NumSeq/AlgebraicContinued.pm
 lib/Math/NumSeq/All.pm
 lib/Math/NumSeq/AllDigits.pm
 lib/Math/NumSeq/AllPrimeFactors.pm
@@ -159,6 +157,7 @@ lib/Math/NumSeq/AlmostPrimes.pm
 lib/Math/NumSeq/AsciiSelf.pm
 lib/Math/NumSeq/BalancedBinary.pm
 lib/Math/NumSeq/Base/Array.pm
+lib/Math/NumSeq/Base/Cache.pm
 lib/Math/NumSeq/Base/Digits.pm
 lib/Math/NumSeq/Base/IterateIth.pm
 lib/Math/NumSeq/Base/IteratePred.pm
@@ -228,6 +227,8 @@ lib/Math/NumSeq/OEIS/File.pm
 lib/Math/NumSeq/Palindromes.pm
 lib/Math/NumSeq/Pell.pm
 lib/Math/NumSeq/Perrin.pm
+lib/Math/NumSeq/PisanoPeriod.pm
+lib/Math/NumSeq/PisanoPeriodSteps.pm
 lib/Math/NumSeq/PolignacObstinate.pm
 lib/Math/NumSeq/Polygonal.pm
 lib/Math/NumSeq/PowerFlip.pm
@@ -395,6 +396,7 @@ xt/oeis/TotientSteps-oeis.t
 xt/oeis/Triangular-oeis.t
 xt/oeis/TwinPrimes-oeis.t
 xt/oeis/Woodall-oeis.t
+xt/PisanoPeriod-oeis.t
 xt/pod_lists.t
 xtools/my-check-copyright-years.sh
 xtools/my-check-spelling.sh

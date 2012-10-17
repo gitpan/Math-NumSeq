@@ -35,12 +35,15 @@ use strict;
 use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 53;
+$VERSION = 54;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
+
+use Math::NumSeq::Base::Cache
+  'cache_hash';
 
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
@@ -60,58 +63,12 @@ use constant values_min => 1;
 #------------------------------------------------------------------------------
 # cf A071774 n for which period(n)==2n+1
 #    A060305 period mod nthprime
-#    A003893 fib mod 10
-#    A105955 fib mod 11
-#    A089911 fib mod 12
-#    A064737 fib mod 10 with carry
 #    A001176 how many zeros
 #    A001177 least k where n divides F[k]
 
 use constant oeis_anum => 'A001175';
 
 #------------------------------------------------------------------------------
-
-use vars '%cache';
-my $tempdir;
-use constant::defer _cache => sub {
-  require SDBM_File;
-  require File::Temp;
-  $tempdir = File::Temp->newdir;
-  ### $tempdir
-  ### tempdir: $tempdir->dirname
-  tie (%cache, 'SDBM_File',
-       File::Spec->catfile ($tempdir->dirname, "cache"),
-       Fcntl::O_RDWR()|Fcntl::O_CREAT(),
-       0666)
-    or die "Couldn't tie SDBM file 'filename': $!; aborting";
-
-  END {
-    if ($tempdir) {
-      ### unlink cache ...
-      untie %cache;
-      my $dirname = $tempdir->dirname;
-      unlink File::Spec->catfile ($dirname, "cache.pag");
-      unlink File::Spec->catfile ($dirname, "cache.dir");
-    }
-  }
-  # END {
-  #   if ($tempdir) {
-  #     ### cache diagnostics ...
-  #     my $count = 0;
-  #     while (each %cache) {
-  #       $count++;
-  #     }
-  #     untie %cache;
-  #     my $dirname = $tempdir->dirname;
-  #     print "cache final $count file sizes cache.pag ",
-  #       (-s File::Spec->catfile($dirname,"cache.pag")),
-  #         " cache.dir ",
-  #           (-s File::Spec->catfile($dirname,"cache.dir")),
-  #             "\n";
-  #   }
-  # }
-  return \%cache;
-};
 
 sub ith {
   my ($self, $i) = @_;
@@ -153,7 +110,7 @@ sub ith {
       $modulus = $prime ** $power;
     }
 
-    $period *= (_cache()->{"$prime,$power"} ||= do {
+    $period *= (cache_hash()->{"PisanoPeriod:$prime,$power"} ||= do {
       my $f0 = 0;
       my $f1 = 1;
       my $period = 1;

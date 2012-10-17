@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 53;
+$VERSION = 54;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -40,7 +40,7 @@ sub description {
           ? Math::NumSeq::__('0/1/2 dense Fibonacci word taking pairs from the plain word.')
           : Math::NumSeq::__('0/1 values related to Fibonacci numbers, 0,1,0,0,1,0,1,0,etc.'));
 }
-use constant i_start => 0;
+use constant default_i_start => 0;
 use constant characteristic_integer => 1;
 use constant values_min => 0;
 sub values_max {
@@ -71,35 +71,54 @@ use constant parameter_info_array =>
 #
 #    A003622 positions of 1s
 #    A000201 positions of 0s
+#    A089910 positions of 1,1 pairs
 #    A114986 characteristic of A000201, with extra 1 ??
 #    A096270 expressed as 01 and 011, is inverse with leading 0
 #    A036299 values 0/1 inverse, bignum concatenating
 #    A008352 values 1/2 inverse, bignum concatenating
 #
 #    A189479 0->01 1->101
-#    A007066  positions of 0s
-#    A076662   first diffs of positions, values 3/2 with extra leading 3
+#    A007066 positions of 0s
+#    A076662 first diffs of positions, values 3/2 with extra leading 3
 #
 #    A135817 whythoff repres 0s
 #    A135818 whythoff repres 1s
 #    A189921 whythoff form
 #    A135817 whythoff length A+B
 #
+
+# A003849 OFFSET=0 values 0,1, 0,0, 1,0, 1,0, etc
+# A143667 OFFSET=1 values 1,0,2,2,etc
+#
+my %oeis_anum
+  = (
+     # OEIS-Catalogue array begin
+     plain => 'A003849', #
+     'dense,i_start=1,i_offset=-1' => 'A143667', # fibonacci_word_type=dense i_start=1 i_offset=-1
+     # OEIS-Catalogue array end
+    );
 sub oeis_anum {
   my ($self) = @_;
-  return ($self->{'fibonacci_word_type'} eq 'dense'
-          ? 'A143667'   # dense fibonacci word 0->0 01->1 10->2
-          : 'A003849'); # 0/1 values Fibonacci word starting 0,1 OFFSET=0
-  # OEIS-Catalogue: A003849
+  my $key = $self->{'fibonacci_word_type'};
+  my $i_start = $self->i_start;
+  if ($i_start != $self->default_i_start) {
+    $key .= ",i_start=$i_start";
+  }
+  if ($self->{'i_offset'}) {
+    $key .= ",i_offset=$self->{'i_offset'}";
+  }
+  return $oeis_anum{$key};
 }
 
 #------------------------------------------------------------------------------
-
+# i_offset is a hack to number A143667 starting OFFSET=1, whereas otherwise
+# here start i=0
 
 sub rewind {
   my ($self) = @_;
   $self->{'i'} = $self->i_start;
   $self->{'value'} = 0;
+  $self->{'i_offset'} ||= 0;
 }
 sub next {
   my ($self) = @_;
@@ -138,6 +157,8 @@ sub next {
 sub ith {
   my ($self, $i) = @_;
   ### FibonacciWord ith(): $i
+
+  $i = $i + $self->{'i_offset'};
 
   # if $i is inf or nan then $f0=$i*0 is nan and the while loop zero-trips
   # and return is nan

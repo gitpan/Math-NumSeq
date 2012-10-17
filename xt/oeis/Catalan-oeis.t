@@ -62,6 +62,33 @@ sub diff_nums {
 
 
 #------------------------------------------------------------------------------
+# A014138 catalan cumulative
+
+{
+  my $anum = 'A014138';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my $diff;
+  if ($bvalues) {
+    my $seq = Math::NumSeq::Catalan->new;
+    my $total = 0;
+    my @got;
+    $seq->next; # skip doubled initial 1,1
+    while (@got < @$bvalues) {
+      push @got, $total;
+      my ($i, $value) = $seq->next;
+      $total += $value;
+    }
+    $diff = diff_nums(\@got, $bvalues);
+    if ($diff) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..10]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..10]));
+    }
+  }
+  skip (! $bvalues,
+        $diff, undef,
+        "$anum");
+}
+#------------------------------------------------------------------------------
 # A048881 power-of-2 in Catalan
 
 {
@@ -70,8 +97,8 @@ sub diff_nums {
   my $diff;
   if ($bvalues) {
     require Math::NumSeq::DigitCountLow;
-    my $seq = Math::NumSeq::CatalanBinary->new;
     my $low = Math::NumSeq::DigitCountLow->new (radix => 2, digit => 0);
+    my $seq = Math::NumSeq::Catalan->new;
     my @got;
     while (@got < @$bvalues) {
       my ($i, $value) = $seq->next;

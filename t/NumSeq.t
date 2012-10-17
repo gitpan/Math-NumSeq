@@ -25,7 +25,7 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
-my $test_count = (tests => 1785)[1];
+my $test_count = (tests => 1801)[1];
 plan tests => $test_count;
 
 # uncomment this to run the ### lines
@@ -124,6 +124,14 @@ foreach my $elem
    # Expression.pm
    # Ln2Bits.pm
    # PiBits.pm
+   
+   [ 'Math::NumSeq::AlgebraicContinued',
+     [ 1,3,1,5,1,1,4,1,1,8,1,14,1,10,2,1,4,12,2,3,2,1,3 ],
+   ],
+   [ 'Math::NumSeq::AlgebraicContinued',
+     [ 1,2,3,1,4,1,5,1,1,6,2,5,8,3,3,4,2,6,4,4,1,3,2,3 ],
+     { expression => 'cbrt(3)' },
+   ],
    
    [ 'Math::NumSeq::MobiusFunction',
      [ 1, -1, -1, 0, -1, 1, ],
@@ -255,14 +263,6 @@ foreach my $elem
      { from_radix => 10, to_radix => 2 },
    ],
 
-   # [ 'Math::NumSeq::CbrtContinued',
-   #   [ 1,3,1,5,1,1,4,1,1,8,1,14,1,10,2,1,4,12,2,3,2,1,3 ],
-   # ],
-   # [ 'Math::NumSeq::CbrtContinued',
-   #   [ 1,2,3,1,4,1,5,1,1,6,2,5,8,3,3,4,2,6,4,4,1,3,2,3 ],
-   #   { cbrt => 3 },
-   # ],
-   
    # [ 'Math::NumSeq::PrimesDigits',
    #   [ 2, 3, 5, 7, 1, 1, 1, 3, 1, 7, 1, 9, 2, 3, 2, 9, ],
    # ],

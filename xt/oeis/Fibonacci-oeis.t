@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 3;
+plan tests => 5;
 
 use lib 't','xt';
 use MyTestHelpers;
@@ -48,6 +48,35 @@ sub numeq_array {
   return (@$a1 == @$a2);
 }
 
+
+#------------------------------------------------------------------------------
+# A020909 - length in bits of F[n]
+
+{
+  my $anum = 'A020909';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my @got;
+  if ($bvalues) {
+    require Math::BigInt;
+    require Math::NumSeq::DigitLength;
+    my $len  = Math::NumSeq::DigitLength->new(radix=>2);
+    my $seq  = Math::NumSeq::Fibonacci->new;
+    $seq->next; # skip initial 0
+    while (@got < @$bvalues) {
+      my ($i, $fib) = $seq->next;
+      push @got, $len->ith($fib);
+    }
+    if (! numeq_array(\@got, $bvalues)) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  } else {
+    MyTestHelpers::diag ("$anum not available");
+  }
+  skip (! $bvalues,
+        numeq_array(\@got, $bvalues),
+        1, "$anum");
+}
 
 #------------------------------------------------------------------------------
 # A087172 - next lower Fibonacci <= n

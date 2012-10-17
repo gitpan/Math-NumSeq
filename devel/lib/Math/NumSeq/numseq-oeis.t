@@ -109,8 +109,8 @@ sub check_class {
   # return unless $class =~ /DigitP/;
   # return unless $class =~ /DigitCount/;
   # return unless $class =~ /Plain/;
-  # return unless $class =~ /Alpha/;
-  # return unless $class =~ /Spiro/;
+  # return unless $class =~ /PisanoPeriodSteps/;
+  return unless $class =~ /LucasSeq/;
   # return unless $class =~ /Cbrt/;
   # return unless $class =~ /Slop/;
   # return unless $class =~ /Kap/;
@@ -123,7 +123,7 @@ sub check_class {
   # return unless $class =~ /FactorialP/;
   # return unless $class =~ /Pisano/;
   # return unless $class =~ /FibonacciFreq/;
-   return unless $class =~ /Jacobs/;
+  # return unless $class =~ /Jacobs/;
   # return unless $anum eq 'A048669';
 
   eval "require $class" or die;
@@ -147,6 +147,9 @@ sub check_class {
            || $anum eq 'A023330') {
     # Cunningham
     $max_value = 100_000;
+
+  } elsif ($class =~ /Algebraic/) {
+    $max_count = 200;
 
   } elsif ($anum eq 'A005109') { # Pierpont
     $max_value = 1_000_000;

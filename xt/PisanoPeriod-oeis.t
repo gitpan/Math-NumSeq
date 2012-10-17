@@ -22,7 +22,7 @@ use strict;
 use List::Util 'max';
 
 use Test;
-plan tests => 7;
+plan tests => 2;
 
 use lib 't','xt';
 use MyTestHelpers;

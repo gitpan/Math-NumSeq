@@ -1,4 +1,6 @@
 # expression => 'cbrt(2)'
+# expression => 'cbrt 2'
+# expression => '7throot 10'
 # rootof(x^3-2)
 # type => 'custom'
 # 
@@ -27,17 +29,19 @@
 package Math::NumSeq::CbrtContinued;
 use 5.004;
 use strict;
+use Carp;
 
 use vars '$VERSION', '@ISA';
 $VERSION = 53;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
+*_to_bigint = \&Math::NumSeq::_to_bigint;
 
 use Math::NumSeq::Cubes;
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+use Smart::Comments;
 
 
 # use constant name => Math::NumSeq::__('Cbrt Continued Fraction');
@@ -69,6 +73,8 @@ use constant parameter_info_array =>
 # A002945 to A002949 are OFFSET=1, unlike i_start=0 here
 # (OFFSET=0 is rumoured to be the preferred style for continued fractions)
 #
+# cbrt 2
+# 1,3,1,5,1,1,4,1,1,8,1,14,1,10,2,1,4,12,2,3,2,1,3,   
 #
 my @oeis_anum = (
                  # OEIS-Catalogue array begin
@@ -189,18 +195,16 @@ sub values_min {
   if (Math::NumSeq::Cubes->pred($self->{'cbrt'})) {
     ### pefect cube ...
     return Math::NumSeq::Cubes->value_to_i_floor($self->{'cbrt'});
-  } else {
-    return 1;
   }
+  return 1;
 }
 sub values_max {
   my ($self) = @_;
   if (Math::NumSeq::Cubes->pred($self->{'cbrt'})) {
     ### pefect cube ...
     return Math::NumSeq::Cubes->value_to_i_floor($self->{'cbrt'});
-  } else {
-    return undef;
   }
+  return undef;
 }
 
 #------------------------------------------------------------------------------
@@ -251,6 +255,19 @@ sub values_max {
 # new q = -(3*p*j^2 + 2*q*j + r)
 # new p = -(p*j^3 + q*j^2 + r*j + s)
 #
+# o*(x+j)^4 + p*(x+j)^3 + q*(x+j)^2 + r*(x+j) + s
+# low  = s + r*j + q*j^2 + p*j^3 + o*j^4
+# next =     r   + q*2*j + p*3j^2 + o*4*j^3
+# next =           q     + p*3j + o* 6 j^2           1,3,6,10,15,21,28
+# next =                   p    + o*4j               1,4,10,20,35,56
+# high =                          o                  1,5,15,35,70,126
+#
+# bin(n,m) = n!/m!(n-m)!
+# bin(n+1,m+1) = (n+1)!/(m+1)!(n+1-m-1)!
+#              = (n+1)/(m+1) * n!/m!/(n-m)!
+# bin(10,3)=120   120*11/4 = 330
+# bin(11,4)=330 = 120*11/4
+#
 #-------------
 # perfect cube C=2
 # new = (C+0)/(0+1) - 2
@@ -263,10 +280,7 @@ sub rewind {
   my ($self) = @_;
   $self->{'i'} = $self->i_start;
 
-  $self->{'a'} = $self->{'d'} = Math::NumSeq::_to_bigint(1);
-  $self->{'b'} = $self->{'c'} = Math::NumSeq::_to_bigint(0);
-
-  $self->{'p'} =Math::NumSeq::_to_bigint(-1);
+  $self->{'p'} = _to_bigint(-1);
   $self->{'q'} = $self->{'r'} = Math::NumSeq::_to_bigint(0);
   $self->{'s'} = Math::NumSeq::_to_bigint($self->{'cbrt'});
 }
@@ -274,6 +288,7 @@ sub rewind {
 sub next {
   my ($self) = @_;
   ### CbrtContinued next() ...
+
 
   my $cbrt = $self->{'cbrt'};
   my $p = $self->{'p'};
@@ -284,7 +299,7 @@ sub next {
   ### q: "$q"
   ### r: "$r"
   ### s: "$s"
-
+  
   if ($p == 0) {
     ### perfect cube ...
     return;
@@ -292,12 +307,12 @@ sub next {
   if ($p > 0) {
     die "Oops, CbrtContinued poly not negative";
   }
-
+  
   my $poly = sub {
     my ($j) = @_;
     return (($p*$j + $q)*$j + $r)*$j + $s;
   };
-
+  
   my $lo = 1;
   my $hi = 2;
   while ($poly->($hi) >= 0) {
@@ -305,16 +320,16 @@ sub next {
     ### lohi: "$lo,$hi  poly ".$poly->($lo)." ".$poly->($hi)
     ($lo,$hi) = ($hi,2*$hi);
   }
-
+  
   my $j;
   for (;;) {
     $j = int(($lo+$hi)/2);
-
+  
     ### lohi: "$lo,$hi  poly ".$poly->($lo)." ".$poly->($hi)
     ### $j
     ### assert: $poly->($lo) >= 0
     ### assert: $poly->($hi) < 0
-
+  
     if ($j == $lo) {
       last;
     }
@@ -325,12 +340,12 @@ sub next {
     }
   }
   ### $j
-
+  
   $self->{'p'} = -($p*$j**3 + $q*$j**2 + $r*$j + $s);
   $self->{'q'} = -(3*$p*$j**2 + 2*$q*$j + $r);
   $self->{'r'} = -(3*$p*$j + $q);
   $self->{'s'} = -$p;
-
+  
   return ($self->{'i'}++, $j);
 }
 

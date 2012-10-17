@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use Test;
-plan tests => 3;
+plan tests => 5;
 
 use lib 't','xt';
 use MyTestHelpers;
@@ -58,6 +58,56 @@ sub diff_nums {
     }
   }
   return undef;
+}
+
+#------------------------------------------------------------------------------
+# A020908 - number of 1-bits in Zeckendorf of i=2^k
+
+{
+  my $anum = 'A020908';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my $diff;
+  if ($bvalues) {
+    require Math::BigInt;
+    my $seq  = Math::NumSeq::FibbinaryBitCount->new;
+    my @got;
+    for (my $i = Math::BigInt->new(1); @got < @$bvalues; $i *= 2) {
+      push @got, $seq->ith($i);
+    }
+    $diff = diff_nums(\@got, $bvalues);
+    if ($diff) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        $diff, undef,
+        "$anum");
+}
+
+#------------------------------------------------------------------------------
+# A020910 - number of 1-bits in Zeckendorf of i=3^k
+
+{
+  my $anum = 'A020910';
+  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
+  my $diff;
+  if ($bvalues) {
+    require Math::BigInt;
+    my $seq  = Math::NumSeq::FibbinaryBitCount->new;
+    my @got;
+    for (my $i = Math::BigInt->new(1); @got < @$bvalues; $i *= 3) {
+      push @got, $seq->ith($i);
+    }
+    $diff = diff_nums(\@got, $bvalues);
+    if ($diff) {
+      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
+      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
+    }
+  }
+  skip (! $bvalues,
+        $diff, undef,
+        "$anum");
 }
 
 #------------------------------------------------------------------------------
