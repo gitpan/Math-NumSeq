@@ -36,7 +36,7 @@ use Math::NumSeq::Fibbinary;
 # VERSION
 
 {
-  my $want_version = 54;
+  my $want_version = 55;
   ok ($Math::NumSeq::Fibbinary::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::Fibbinary->VERSION,  $want_version,
@@ -72,10 +72,23 @@ use Math::NumSeq::Fibbinary;
 
   ok ($seq->pred(17), 1);
 
+  # On cygwin perl 5.10.1 sprintf '%.0f' doesn't give an exact full set of
+  # digits for 17*2**256.
   {
     my $nv = 17 * 2**256;
-    ok ($seq->pred($nv), 1,
-        '17*2**256 float -> bigint');
+    my $pred_result = $seq->pred($nv);
+    my $big_conv = Math::NumSeq::_to_bigint(sprintf('%.0f',$nv));
+    my $big_calc = (Math::NumSeq::_to_bigint(2) ** 256) * 17;
+    MyTestHelpers::diag ("big_calc ",$big_calc);
+    MyTestHelpers::diag ("big_conv ",$big_conv);
+    my $nv_to_bigint_good = ($big_conv == $big_calc);
+
+    my $skip_nv_to_bigint = ($nv_to_bigint_good
+                             ? undef
+                             : 'sprintf NV -> BigInt is not exact');
+    skip ($skip_nv_to_bigint,
+          $pred_result, 1,
+          '17*2**256 float -> bigint');
     MyTestHelpers::diag ("nv is ",$nv);
     MyTestHelpers::diag ("~0 is ",~0);
     my $str = sprintf('%.0f',$nv);

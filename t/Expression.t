@@ -36,7 +36,7 @@ use Math::NumSeq::Expression;
 # VERSION
 
 {
-  my $want_version = 54;
+  my $want_version = 55;
   ok ($Math::NumSeq::Expression::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::Expression->VERSION,  $want_version,

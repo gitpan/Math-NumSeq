@@ -178,7 +178,6 @@ $|=1;
   $values_class = 'Math::NumSeq::PrimeFactorCount';
   $values_class = 'Math::NumSeq::MobiusFunction';
   $values_class = 'Math::NumSeq::PlanePathDelta';
-  $values_class = 'Math::NumSeq::PlanePathCoord';
   $values_class = 'Math::NumSeq::LiouvilleFunction';
   $values_class = 'Math::NumSeq::Catalan';
   $values_class = 'Math::NumSeq::BalancedBinary';
@@ -193,11 +192,12 @@ $|=1;
   $values_class = 'Math::NumSeq::PisanoPeriodSteps';
   $values_class = 'Math::NumSeq::FibonacciWord';
   $values_class = 'Math::NumSeq::LucasSequenceModulo';
+  $values_class = 'Math::NumSeq::PlanePathCoord';
 
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new
     (
-fibonacci_word_type=>'dense',
+     # fibonacci_word_type=>'dense',
      # initial_0 => 1,
      # initial_1 => 0,
      modulus => 2,
@@ -252,10 +252,11 @@ fibonacci_word_type=>'dense',
 
      # planepath => 'Diagonals,x_start=1,y_start=1',
      # planepath => 'ChanTree',
+      planepath => 'LCornerTree',
      # planepath => 'SierpinskiTriangle',
      # planepath => 'CellularRule,rule=2',
      # planepath => 'GcdRationals,pairs_order=rows_reverse',
-     # coordinate_type => 'RSquared',
+      coordinate_type => 'Depth',
      # coordinate_type => 'GCD',
      # coordinate_type => 'NumChildren',
 
@@ -267,7 +268,7 @@ fibonacci_word_type=>'dense',
      # planepath => 'SquareSpiral',
      #  planepath => 'DigitGroups,radix=2',
      # planepath => 'CellularRule,rule=206',
-     # line_type => 'Depth_first',
+     # line_type => 'Depth_start',
      # line_type => 'X_axis',
      # i_start => 1,
 

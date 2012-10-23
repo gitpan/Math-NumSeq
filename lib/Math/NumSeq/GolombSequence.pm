@@ -26,6 +26,10 @@
 #   http://www.lix.polytechnique.fr/Labo/Ilan.Vardi/publications.html
 #   http://www.lix.polytechnique.fr/Labo/Ilan.Vardi/discrete_derivatives.ps
 #
+# cf A112377 self seq sub1 drop 0s    1, 2, 1, 1, 3, 1, 2
+#    A112378 self seq add1 drop 0s
+#    A112379 self seq sub1 drop 0s    1, 2, 1, 3,
+#    A112380 self seq sub1 drop 0s    1, 2, 1, 1, 3, 2, 1
 
 
 package Math::NumSeq::GolombSequence;
@@ -34,7 +38,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 54;
+$VERSION = 55;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');

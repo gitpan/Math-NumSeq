@@ -18,7 +18,8 @@
 # Mark Renault
 # http://www.math.temple.edu/~renault/fibonacci/fib.html
 # http://www.math.temple.edu/~renault/fibonacci/thesis.ps
-
+# http://web.archive.org/web/20100813104051/http://webspace.ship.edu/msrenault/fibonacci/FibThesis.html
+#
 # On Arithmetical Functions Related to the Fibonacci Numbers, Fulton and Morris
 # aa1621.pdf
 #
@@ -35,7 +36,7 @@ use strict;
 use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 54;
+$VERSION = 55;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;

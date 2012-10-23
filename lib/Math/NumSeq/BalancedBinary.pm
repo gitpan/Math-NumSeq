@@ -26,7 +26,7 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 54;
+$VERSION = 55;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -547,9 +547,9 @@ and/or right child.  Such a tree can be encoded by writing
     0               if no node (empty tree)
     1,left,right    at a node
 
-The "left" and "right" parts are the left and right legs of the node written
-out recursively.  If those legs are both empty (the node is a leaf) then
-they're empty and are "0" each, otherwise more 1s and 0s.  For example,
+The "left" and "right" parts are the left and right legs from the node
+written out recursively.  If those legs are both empty (the node is a leaf)
+then they're empty and are "0" each, otherwise more 1s and 0s.  For example,
 going depth-first,
 
         d  
@@ -560,38 +560,40 @@ going depth-first,
 
 At "a" write 1 and recurse to write its left and right legs.  The left leg
 is "b" so write 1 and its two legs are empty so write 0,0.  That completes
-the "b" sub-tree so resume at the right leg of "a" which is a 1 for "c".
-The left of "c" is empty so write 0.  The right of "c" is "d" so write 1 and
-the two empty legs of "d" are 0,0.  The very final 0 is dropped.
+the "b" sub-tree so resume at the right leg of "a" which is 1 for "c" and
+descend to the left and right of "c".  The left of "c" is empty so write 0.
+The right of "c" is "d" so write 1 and the two empty legs of "d" are 0,0.
+The very final 0 is dropped.
 
 This encoding can be applied breadth-first too by pushing the left and right
-descents onto a queue of pending work (instead of a stack by recursing).  In
-both cases there's an extra 0 at the end which is dropped.  It arises
-because in any binary tree of K nodes there are K+1 empty legs.
+descents onto a queue of pending work, instead of onto a stack by recursing.
+In both cases there's an extra final 0 which is dropped.  This 0 arises
+because in any binary tree with K nodes there are K+1 empty legs, which
+would give K many 1-bits and K+1 many 0-bits.
 
-Int this encoding the balanced binary condition "count 1s E<gt>= count 0s"
+In this encoding the balanced binary condition "count 1s E<gt>= count 0s"
 corresponds to there being at least one unfinished node at any time in the
 traversal (by whatever node order).
 
-The code here acts on values as numbers but for encodings like this a list
-or string of bits would be more use.
+The code here acts on values as numbers but encodings like this are probably
+better handled as a list or string of bits.
 
 =head2 Mountain Ranges
 
 A cute interpretation of the opens and closes is as up and down slopes of a
-mountain range.
+mountain range.  1-bit for up, 0-bit for down.  For example,
 
-         /\
-        /  \  /\
-       /    \/  \       11110001100010
-      /          \/\
-    -------------------   
+        /\
+       /  \  /\
+      /    \/  \    
+     /          \/\
+    ----------------
+     11110001100010
 
 The mountain range must end at its starting level, and cannot descend below
-that level.  Numerical order of the values means wider ranges are after
-narrower ones, and that between two ranges of equal width which are the same
-for some distance are then ordered by the down-sloping one preceding the
-up-sloping one.
+the starting level.  Numerical order of the values means wider mountain
+ranges are after narrower ones, and that two ranges of equal width and the
+same for some initial distance are ordered by down-slope preceding up-slope.
 
 =head1 FUNCTIONS
 
@@ -636,9 +638,9 @@ Return true if C<$value> is balanced binary.
 =head2 Next
 
 When stepping to the next value the number of 1s and 0s does not change,
-within a width 2*w block.  The 1s move to make a numerically higher value.
-The simplest is an isolated lowest 1-bit.  It must move up one place.  For
-example,
+within a width 2*w block, only the 1s move to make a numerically higher
+value.  The simplest is an isolated low 1-bit.  It must move up one place.
+For example,
 
     11100100
     ->
@@ -651,8 +653,9 @@ goes to the end of the value.  For example
     ->
     1110100010
 
-In general the lowest run of 1-bits is changed to the highest of them move
-up one place and the rest move down to be a 1010..10 pattern at the low end.
+In general the lowest run of 1-bits is changed to have the highest of them
+move up one place and the rest move down to be a 1010..10 pattern at the low
+end.  For example a low run of 3 bits
 
     1111100111000000
     ->
@@ -661,7 +664,7 @@ up one place and the rest move down to be a 1010..10 pattern at the low end.
          up     end
 
 The final value in a 2*w block is all 1s at the top.  It becomes an
-alternating 1010..10 with one extra 1-bit and 0-bit as the first of the next
+alternating 1010..10 with an extra 1-bit and 0-bit as the first of the next
 bigger block.  For example
 
       111000    last 6-bit value
@@ -671,8 +674,8 @@ bigger block.  For example
 =head2 Ith
 
 As described above there are Catalan(w) many values with 2*w bits.  The
-width of the i'th can be found by successively subtracting C(1), C(2), etc
-until reaching a remainder S<i E<lt> C(w)>, giving width 2*w with w many
+width of the i'th value can be found by successively subtracting C(1), C(2),
+etc until reaching a remainder S<i E<lt> C(w)>, giving width 2*w with w many
 "1"s and w many "0"s.
 
 After outputting some bits there will be some number z many "0"s and n many
@@ -680,14 +683,14 @@ After outputting some bits there will be some number z many "0"s and n many
 reduce z or n accordingly.
 
     numvalues(z,n) = number of sequences of z "0"s and n "1"s
-                     with remaining 0s never less than remaining 1s
+                     with remaining 1s >= remaining 0s at all points
 
     output
       0   if i < numvalues(z-1,n)
 
       1   if i >= numvalues(z-1,n)
             and subtract numvalues(z-1,n)
-            which are the "0..." combinations skipped
+            for the "0..." combinations skipped
 
 numvalues() is the "Catalan table" constructed by
 
@@ -709,8 +712,8 @@ The last entry numvalues(w,w) in each row is Catalan(w), so that can be used
 for the initial i subtractions seeking the width w.  If building or
 extending a table each time then stop the table at that point.
 
-Catalan(w) grows as a little less than a power 4^w so the table has log4(i)
-many rows (or a couple more).
+Catalan(w) grows as a little less than a power 4^w so the table has a little
+more than log4(i) many rows.
 
 =head1 SEE ALSO
 
