@@ -1,4 +1,4 @@
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -110,6 +110,10 @@ $oeis_anum[4]->[3] = 'A023717'; # base 4 no 3    OFFSET=0
 # # OEIS-Other: A023737 radix=5 digit=4  # base 5 no 4, in RadixWithoutDigit
 
 # $oeis_anum[7]->[6] = 'A020657'; # "no 7-term arithmetic progression" OFFSET=1
+
+# Not quite, A102489 starts OFFSET=1 value=0
+# $oeis_anum[10]->[16] = 'A102489'; # base 10 treated as base 16
+# # OEIS-Catalogue: A102489 from_radix=10 to_radix=16
 
 # Not quite, A005836 starts OFFSET=1 value=0
 # $oeis_anum[3]->[2] = 'A005836';  # binary in base 3, base3 without 2s
@@ -263,7 +267,7 @@ sub _digit_join_lowtohigh {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq
+=for stopwords Ryde Math-NumSeq radix ie
 
 =head1 NAME
 
@@ -281,7 +285,7 @@ Math::NumSeq::RadixConversion -- radix conversion
 This sequence is the index i converted from one radix to another.  The
 default is from binary to decimal,
 
-    starting i=0
+    # starting i=0
     0, 1, 10, 11, 100, 101, 110, 111, 1000, 1001, 1010, 1011, ...
 
 For example i=3 in binary is 0b11 which is interpreted as decimal for value
@@ -345,7 +349,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2012 Kevin Ryde
+Copyright 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

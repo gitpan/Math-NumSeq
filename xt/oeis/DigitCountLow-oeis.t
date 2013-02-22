@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -51,7 +51,7 @@ sub numeq_array {
 
 
 #------------------------------------------------------------------------------
-# A094267 -- first diffs of count low 0 bits, starting diff i=2,i=1
+# A094267 -- first diffs of count low 0-bits, starting diff i=2,i=1
 {
   my $anum = 'A094267';
   my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);

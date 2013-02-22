@@ -1,4 +1,4 @@
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -21,7 +21,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -413,7 +413,7 @@ sub next {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq BigInt
+=for stopwords Ryde Math-NumSeq BigInt Seminumerical OEIS
 
 =head1 NAME
 
@@ -430,6 +430,7 @@ Math::NumSeq::AlgebraicContinued -- continued fraction expansion of algebraic nu
 This is terms in the continued fraction expansion of an algebraic number
 such as a cube root or Nth root.  For example cbrt(2),
 
+    # starting i=0
     1, 3, 1, 5, 1, 1, 4, 1, 1, 8, 1, 14, 1, 10, 2, 1, 4, 12, 2, ...
 
 A continued fraction approaches the root by a form
@@ -453,13 +454,13 @@ Then a[1] is the integer part of that R, and so on repeatedly.
 
 The current code uses a generic approach manipulating a polynomial with
 C<Math::BigInt> coefficients (see L</FORMULAS> below).  It tends to be a
-little slow since the coefficients become large, representing an every more
+little slow because the coefficients become large, representing an ever more
 precise approximation to the target value.
 
 =head2 Expression
 
 The C<expression> parameter currently only accepts a couple of forms for a
-cube root or general specified Nth root.
+cube root or Nth root.
 
     cbrt 123
     7throot 123
@@ -507,8 +508,8 @@ for the biggest integer x with
 
     p*x^3 + q*x^2 + r*x + s < 0
 
-Choosing the signs so the high cofficient C<pE<lt>0> means the polynomial is
-positive for small x and becomes negative above the root.
+Choosing the signs so the high coefficient C<pE<lt>0> means the polynomial
+is positive for small x and becomes negative above the root.
 
 Various root finding algorithms could probably be used, but the current code
 is a binary search.
@@ -561,7 +562,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2012 Kevin Ryde
+Copyright 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

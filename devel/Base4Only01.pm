@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -41,7 +41,7 @@ use Math::NumSeq;
 use base 'Math::NumSeq';
 
 use vars '$VERSION';
-$VERSION = 55;
+$VERSION = 56;
 
 # http://oeis.org/A000695
 #    Moser-de Bruijn sequence, sums of distinct powers of 4
@@ -61,12 +61,11 @@ use constant oeis_anum => 'A000695';
 
 sub new {
   my ($class, %options) = @_;
-  my $lo = $options{'lo'} || 0;
   return bless { i => -1,
                }, $class;
 }
 
-# ENHANCE-ME: binary with interleaved 0 bits
+# ENHANCE-ME: binary with interleaved 0-bits
 sub next {
   my ($self) = @_;
   ### Base4Only01 next()

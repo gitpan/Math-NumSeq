@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -40,7 +40,7 @@ use constant oeis_anum => 'A005843'; # even 0,2,4
 
 sub rewind {
   my ($self) = @_;
-  $self->{'i'} = $self->i_start;   # int (($self->{'lo'}+1) / 2);
+  $self->{'i'} = $self->i_start;
 }
 sub seek_to_i {
   my ($self, $i) = @_;
@@ -57,7 +57,7 @@ sub next {
 }
 sub ith {
   my ($self, $i) = @_;
-  return 2*$i;     # $self->{'lo'} + 2*$i;
+  return 2*$i;
 }
 sub pred {
   my ($self, $value) = @_;
@@ -179,7 +179,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2010, 2011, 2012 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

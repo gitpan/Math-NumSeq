@@ -1,4 +1,4 @@
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
@@ -222,6 +222,7 @@ Math::NumSeq::LemoineCount -- number of representations as P+2*Q for primes P,Q
 This is a count of how many ways i can be represented as P+2*Q for primes
 P,Q, starting from i=1.
 
+    # starting i=1
     0, 0, 0, 0, 0, 1, 1, 1, 2, 0, 2, 1, 2, 0, 2, 1, 4, 0, ...
 
 For example i=6 can only be written 2+2*2 so just 1 way.  But i=9 is 3+2*3=9
@@ -232,6 +233,7 @@ and 5+2*2=9 so 2 ways.
 Option C<on_values =E<gt> 'odd'> gives the count on just the odd numbers,
 starting i=0 for number of ways "1" can be expressed (none),
 
+    # starting i=0
     0, 0, 0, 1, 2, 2, 2, 2, 4, 2, 3, 3, 3, 4, 4, 2, 5, 3, 4, ...
 
 Lemoine conjectured circa 1894 that all odd i E<gt>= 7 can be represented as
@@ -287,7 +289,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2012 Kevin Ryde
+Copyright 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

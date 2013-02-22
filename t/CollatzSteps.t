@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -51,7 +51,7 @@ plan tests => $test_count;
 # VERSION
 
 {
-  my $want_version = 55;
+  my $want_version = 56;
   ok ($Math::NumSeq::CollatzSteps::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::CollatzSteps->VERSION,  $want_version,
@@ -76,6 +76,7 @@ my $uv_bits = 0;
   while ($uv) {
     $uv_bits++;
     $uv >>= 1;
+    last if $uv_bits >= 64;
   }
 }
 MyTestHelpers::diag ("uv_bits is $uv_bits");

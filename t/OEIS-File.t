@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -35,7 +35,7 @@ use Math::NumSeq::OEIS::File;
 # VERSION
 
 {
-  my $want_version = 55;
+  my $want_version = 56;
   ok ($Math::NumSeq::OEIS::File::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::OEIS::File->VERSION, $want_version,
@@ -221,7 +221,7 @@ foreach my $options ([],
         ($i, $value) = $seq->next or last;
         ### $i
         ### $value
-        if (length($value) > length(~0)) {
+        if (length($value) > Math::NumSeq::OEIS::File::_MAX_DIGIT_LENGTH) {
           if (! ref $value) {
             $err = "large value not a bigint i=$i value=$value";
             $bad = 1;

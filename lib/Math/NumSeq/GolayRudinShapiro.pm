@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max','min';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -149,7 +149,7 @@ __END__
 
 
 
-=for stopwords Ryde OEIS GRS dX dY NumSeq
+=for stopwords Ryde Math-NumSeq OEIS GRS dX dY dX,dY ie
 
 =head1 NAME
 
@@ -173,11 +173,11 @@ being an even or odd number of adjacent 11 bit pairs in i.
 
 The first -1 is at i=3 which is binary 11 with a single 11 bit pair, then
 i=6 binary 110 likewise -1.  Or later for example i=14 is binary 1110 which
-has two adjacent 11 pairs (overlaps count), so value=1.
+has two adjacent 11 pairs (overlapping pairs count), so value=1.
 
-The value is also the parity of the number of even-length runs of 1 bits
+The value is also the parity of the number of even-length runs of 1-bits
 in i.  An even length run has an odd number of 11 pairs, so each of them is
-a -1 in the product.  An odd-length run of 1 bits is an even number of 11
+a -1 in the product.  An odd-length run of 1-bits is an even number of 11
 pairs and so is +1 and has no effect on the result.
 
 Such a parity of even-length 1-bit runs and hence the GRS sequence arises as
@@ -187,7 +187,7 @@ See L<Math::PlanePath::AlternatePaper/dX,dY>.
 =head2 Values Type
 
 Parameter C<values_type =E<gt> '0,1'> gives values 0 and 1, being the count
-of adjacent 11s taken modulo 2, ie. 0 if even, 1 if odd.
+of adjacent 11s taken modulo 2, so 0 if even, 1 if odd.
 
     values_type => '0,1'
     0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, ...
@@ -202,7 +202,11 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =item C<$seq = Math::NumSeq::GolayRudinShapiro-E<gt>new (values_type =E<gt> $str)>
 
-Create and return a new sequence object.
+Create and return a new sequence object.  The C<values_type> parameter (a
+string) can be
+
+    "1,-1"        1=even, -1=odd
+    "0,1"         0=even, 1=odd
 
 =back
 
@@ -212,8 +216,8 @@ Create and return a new sequence object.
 
 =item C<$value = $seq-E<gt>ith($i)>
 
-Return the C<$i>'th value from the sequence, being +1 or -1 according to the
-number of adjacent 11 bit pairs in C<$i>.
+Return the C<$i>'th value from the sequence, being +1 or -1 (or per
+C<values_type>) according to the number of adjacent 11 bit pairs in C<$i>.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
@@ -237,7 +241,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2010, 2011, 2012 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

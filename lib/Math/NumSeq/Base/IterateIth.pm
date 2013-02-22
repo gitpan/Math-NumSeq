@@ -1,4 +1,4 @@
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION';
-$VERSION = 55;
+$VERSION = 56;
 
 sub rewind {
   my ($self) = @_;
@@ -43,7 +43,7 @@ sub next {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq
+=for stopwords Ryde Math-NumSeq multi-inheritance
 
 =head1 NAME
 
@@ -74,7 +74,7 @@ This is a multi-inheritance mix-in providing the following methods
 They iterate simply by calling C<ith()> to get each successive value,
 starting from C<i_start()>.
 
-This is a handy way to implement the iterating methods for a NumSeq if
+This is a handy way to implement the iterating methods for a C<NumSeq> if
 there's nothing special that C<next()> can do beyond a full C<ith()>
 calculation.
 
@@ -91,7 +91,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2011, 2012 Kevin Ryde
+Copyright 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

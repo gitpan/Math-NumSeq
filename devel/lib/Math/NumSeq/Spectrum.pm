@@ -2,7 +2,7 @@
 # 'custom' or expression for spectrum value.
 
 
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -27,7 +27,7 @@ use List::Util 'max';
 use POSIX 'ceil';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -87,7 +87,7 @@ sub rewind {
   my ($self) = @_;
   ### Spectrum rewind() ...
 
-  my $lo = $self->{'lo'};
+  my $lo = $self->{'lo'} || 0;
   $lo = max (1, $lo);
 
   my $spectrum = $self->{'spectrum'} || PHI;

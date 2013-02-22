@@ -1,4 +1,4 @@
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -33,7 +33,7 @@ use Math::NumSeq::Base::IterateIth;
 
 
 # use constant name => Math::NumSeq::__('Digit Sum');
-use constant description => Math::NumSeq::__('Sum of the digits in the given radix.  For binary this is how many 1 bits.');
+use constant description => Math::NumSeq::__('Sum of the digits in the given radix.  For binary this is how many 1-bits.');
 use constant values_min => 0;
 use constant i_start => 0;
 use constant characteristic_increasing => 0;
@@ -62,7 +62,7 @@ use constant parameter_info_array =>
 
 my @oeis_anum;
 
-$oeis_anum[1]->[2] = 'A000120';  # 2 binary, count of 1 bits like DigitCount
+$oeis_anum[1]->[2] = 'A000120';  # 2 binary, count of 1-bits like DigitCount
 # OEIS-Other: A000120 radix=2
 # OEIS-Other: A000120 radix=2 power=2
 # OEIS-Other: A000120 radix=2 power=3
@@ -246,7 +246,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2011, 2012 Kevin Ryde
+Copyright 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

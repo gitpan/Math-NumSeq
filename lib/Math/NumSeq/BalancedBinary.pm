@@ -1,4 +1,4 @@
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -26,7 +26,7 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -495,7 +495,7 @@ sub value_to_i_estimate {
 1;
 __END__
 
-=for stopwords Ryde
+=for stopwords Ryde Math-NumSeq ie recurse recursing encodings Ith i'th
 
 =head1 NAME
 
@@ -509,15 +509,16 @@ Math::NumSeq::BalancedBinary -- balanced 1,0 bits
 
 =head1 DESCRIPTION
 
-This sequence is integers with 1-bits and 0-bits balanced like parentheses,
+This sequence is integers with 1-bits and 0-bits balanced like opening and
+closing parentheses.
 
-    starting i=1
+    # starting i=1
     2, 10, 12, 42, 44, 50, 52, 56, 170, 172, 178, ...
 
-Written in binary it's as if a 1-bit is an opening "(" and a 0-bit is a
-closing ")".
+Written in binary a 1-bit is an opening "(" and a 0-bit is a closing ")".
 
-     i    binary      parens
+     i    value in    parens
+          binary 
     ---  --------   ----------
      1         10   ()
      2       1010   () ()
@@ -531,52 +532,55 @@ closing ")".
     10   10101100   () () (())
 
 Balanced means the total number of 1s and 0s are the same, and reading from
-high to low has count 1s E<gt>= count 0s at all times, ie. no closing ")"
+high to low has count(1s) E<gt>= count(0s) at all times, ie. no closing ")"
 without a preceding matching open "(".
 
-Because the number of 1s and 0s are equal the width is always an even 2*n.
+Because the number of 1s and 0s are equal the width is always an even 2*w.
 The number of values with a given width is the Catalan number
-(2n)!/(n!*(n+1)!).  For example as shown above there are 5 values with 6
-bits, per Catalan(6/2)=5.
+(2w)!/(w!*(w+1)!).  For example w=3 with is 2*3=6 bits and there are
+Catalan(3) = (2*3)!/(3!*4!) = 5 values, being i=4 through i=8 inclusive
+shown above.
 
 =head2 Binary Trees
 
-These values correspond to binary trees where each node may have a left
-and/or right child.  Such a tree can be encoded by writing
+The sequence values correspond to binary trees where each node can have a
+left and/or right child.  Such a tree can be encoded by writing
 
-    0               if no node (empty tree)
-    1,left,right    at a node
+    0                         if no node (empty tree)
+    1,left-tree,right-tree    at a node
 
-The "left" and "right" parts are the left and right legs from the node
-written out recursively.  If those legs are both empty (the node is a leaf)
-then they're empty and are "0" each, otherwise more 1s and 0s.  For example,
+The "left-tree" and "right-tree" parts are the left and right legs from the
+node written out recursively.  If those legs are both empty (ie. the node is
+a leaf) then they're empty trees and are "0" and the node is "100".
+Otherwise the node is 1 followed by various more 1s and 0s.  For example,
 going depth-first,
 
         d  
        /
-  b   c   =>   11001010[0]
+  b   c   =>   11001010 [0]
    \ /         ab  cd   ^-final zero of encoding omitted
     a  
 
-At "a" write 1 and recurse to write its left and right legs.  The left leg
+At "a" write 1 and recurse to write its left then right legs.  The left leg
 is "b" so write 1 and its two legs are empty so write 0,0.  That completes
-the "b" sub-tree so resume at the right leg of "a" which is 1 for "c" and
-descend to the left and right of "c".  The left of "c" is empty so write 0.
-The right of "c" is "d" so write 1 and the two empty legs of "d" are 0,0.
-The very final 0 is dropped.
+the left side of "a" so resume at the right side of "a" which is 1 for "c"
+and descend to the left and right of "c".  The left of "c" is empty so
+write 0.  The right of "c" is "d" so write 1 and the two empty legs of "d"
+are 0,0.  The very final 0 from that right-most leaf "d" is dropped (the
+"[0]" above).
 
 This encoding can be applied breadth-first too by pushing the left and right
 descents onto a queue of pending work, instead of onto a stack by recursing.
 In both cases there's an extra final 0 which is dropped.  This 0 arises
-because in any binary tree with K nodes there are K+1 empty legs, which
+because in any binary tree with K nodes there are K+1 empty legs.  That
 would give K many 1-bits and K+1 many 0-bits.
 
 In this encoding the balanced binary condition "count 1s E<gt>= count 0s"
 corresponds to there being at least one unfinished node at any time in the
-traversal (by whatever node order).
+traversal (by whichever node order).
 
-The code here acts on values as numbers but encodings like this are probably
-better handled as a list or string of bits.
+The C<NumSeq> code here acts on values as numbers but tree encodings like
+this are probably better handled as a string or a list of bits.
 
 =head2 Mountain Ranges
 
@@ -590,10 +594,13 @@ mountain range.  1-bit for up, 0-bit for down.  For example,
     ----------------
      11110001100010
 
-The mountain range must end at its starting level, and cannot descend below
-the starting level.  Numerical order of the values means wider mountain
-ranges are after narrower ones, and that two ranges of equal width and the
-same for some initial distance are ordered by down-slope preceding up-slope.
+The mountain range must end at its starting level and must remain at or
+above its starting level at all times.
+
+The numerical order of the values in the sequence means narrower mountain
+ranges are before wider ones, and two ranges with equal width and the same
+for some initial distance are ordered by down-slope preceding up-slope at
+the first difference.
 
 =head1 FUNCTIONS
 
@@ -637,37 +644,36 @@ Return true if C<$value> is balanced binary.
 
 =head2 Next
 
-When stepping to the next value the number of 1s and 0s does not change,
-within a width 2*w block, only the 1s move to make a numerically higher
-value.  The simplest is an isolated low 1-bit.  It must move up one place.
-For example,
+When stepping to the next value the number of 1s and 0s does not change
+within a width 2*w block of values.  But the 1s move to make a numerically
+higher value.  The simplest is an isolated low 1-bit.  It must move up one
+place.  For example,
 
-    11100100
-    ->
+    11100100             isolated low 1-bit
+    ->                   shifts up
     11101000
 
 If the low 1 has a 1 above it then that bit must move up and the lower one
 goes to the end of the value.  For example
 
-    1110011000
-    ->
+    1110011000           pair of bits
+    ->                   one shifts up, other drops to low end
     1110100010
 
 In general the lowest run of 1-bits is changed to have the highest of them
-move up one place and the rest move down to be a 1010..10 pattern at the low
-end.  For example a low run of 3 bits
+move up one place and the rest move down to be a ...101010 pattern at the
+low end.  For example a low run of 3 bits
 
-    1111100111000000
-    ->
+    1111100111000000     run of bits
+    ->                   one shifts up, rest drop to low end
     1111101000001010
           ^     ^ ^
          up     end
 
-The final value in a 2*w block is all 1s at the top.  It becomes an
-alternating 1010..10 with an extra 1-bit and 0-bit as the first of the next
-bigger block.  For example
+The final value in a 2*w block has all 1s at the high end.  The first of the
+next bigger block of values is an alternating 1010..10.  For example
 
-      111000    last 6-bit value
+      111000    last 6-bit value, all 1-bits at high end
     ->
     10101010    first 8-bit value
 
@@ -675,22 +681,24 @@ bigger block.  For example
 
 As described above there are Catalan(w) many values with 2*w bits.  The
 width of the i'th value can be found by successively subtracting C(1), C(2),
-etc until reaching a remainder S<i E<lt> C(w)>, giving width 2*w with w many
-"1"s and w many "0"s.
+etc until reaching a remainder S<i E<lt> C(w)>, giving width 2*w made up of
+w many "1"s and w many "0"s.
 
-After outputting some bits there will be some number z many "0"s and n many
-"1"s yet to be output.  The choice is then to output either 0 or 1 and
-reduce z or n accordingly.
+In general after outputting some bits of the value (at the high end) there
+will be some number z many "0"s and n many "1"s yet to be output.  The
+choice is then to output either 0 or 1 and reduce z or n accordingly.
 
     numvalues(z,n) = number of sequences of z "0"s and n "1"s
                      with remaining 1s >= remaining 0s at all points
 
-    output
-      0   if i < numvalues(z-1,n)
+    C = numvalues(z-1,n)
+      = how many "0..." combinations
 
-      1   if i >= numvalues(z-1,n)
-            and subtract numvalues(z-1,n)
-            for the "0..." combinations skipped
+    output
+      0   if i < C
+      1   if i >= C
+            and subtract C from i
+            which is the "0..." combinations skipped
 
 numvalues() is the "Catalan table" constructed by
 
@@ -727,7 +735,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2012 Kevin Ryde
+Copyright 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

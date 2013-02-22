@@ -1,4 +1,4 @@
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -24,7 +24,7 @@ use Math::Factor::XS 0.40 'factors'; # version 0.40 for factors() on BigInt
 
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 use Math::NumSeq;
 use List::Util 'min';
 use Math::NumSeq::Base::IteratePred;
@@ -108,7 +108,7 @@ Math::NumSeq::DuffinianNumbers -- no common factor with sum of divisors
 This is the Duffinian numbers which are composites having no common factor
 with their sum of divisors.
 
-    starting i=1
+    # starting i=1
     4, 8, 9, 16, 21, 25, 27, 32, 35, 36, 39, 49, 50, 55, 57, 63, ...
 
 For example 21 has divisors 1,3,7,21 total 32 which has no common factor
@@ -146,7 +146,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2012 Kevin Ryde
+Copyright 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

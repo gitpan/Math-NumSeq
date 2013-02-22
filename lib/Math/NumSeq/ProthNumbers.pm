@@ -1,4 +1,4 @@
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -48,6 +48,8 @@ use constant characteristic_integer => 1;
 #    A002254 5*2^n+1
 #    A032353 7*2^n+1
 #    A002256 9*2^n+1
+#
+#    A086341 - 2^x+/-1 is sqrt of Proth squares
 #
 use constant oeis_anum => 'A080075';
 
@@ -174,7 +176,7 @@ sub value_to_i_estimate {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq ProthNumbers Ith ith 1zxxx 1zxx x's hhxx..xx hxx hh-1 Proth
+=for stopwords Ryde Math-NumSeq ProthNumbers Ith ith 1zxxx 1zxx x's hhxx..xx hxx hh-1 Proth incrementing Incrementing
 
 =head1 NAME
 
@@ -318,7 +320,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2010, 2011, 2012 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

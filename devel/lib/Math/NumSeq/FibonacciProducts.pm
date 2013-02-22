@@ -1,4 +1,4 @@
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
@@ -36,19 +36,21 @@ use Math::NumSeq::Fibonacci;
 
 
 use constant name => Math::NumSeq::__('Fibonacci Products');
-use constant description => Math::NumSeq::__('Numbers which can be written as some set of Fibonacci numbers multiplied together.');
+use constant description => Math::NumSeq::__('Numbers which can be formed by multiplying together some set of Fibonacci numbers.');
 use constant default_i_start => 1;
 use constant characteristic_integer => 1;
 use constant values_min => 1;
 
 #------------------------------------------------------------------------------
-# cf A065105 not products
+# cf A065105 not products     values_type=>'non_products'
 #    A049997 fib product of two
 #    A094563 fib product of three
 #    A178772 fib integers, muls and divs
 #    A049996 diffs
 #    A049998 diffs
 #    A049999 diff index
+#    A065885 triplets of consecutive k,k+1,k+2 all Fibonacci products
+#
 use constant oeis_anum => 'A065108';
 
 
@@ -71,9 +73,9 @@ sub pred {
   my (@value,@i);
   my $limit = $value;
   my $fib = Math::NumSeq::Fibonacci->new;
-  $fib->seek_to_i(3);
-  my ($i, $f);
+  $fib->seek_to_i(3);  # starting from F[3]=2
 
+  my ($i, $f);
   for (;;) {
     ($i, $f) = $fib->next;
     ### $i

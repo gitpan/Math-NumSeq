@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -22,7 +22,7 @@ use strict;
 use warnings;
 use POSIX;
 
-#use Smart::Comments;
+# use Smart::Comments;
 
 use lib 'devel/lib';
 
@@ -48,17 +48,14 @@ $|=1;
   # # $values_class = $gen->values_class('DigitsModulo');
   # $values_class = $gen->values_class('RadixWithoutDigit');
   # $values_class = $gen->values_class('Odd');
-  # $values_class = $gen->values_class('Factorials');
   # $values_class = $gen->values_class('Palindromes');
   # # $values_class = $gen->values_class('MathSequence');
   # $values_class = $gen->values_class('DigitLength');
   # $values_class = $gen->values_class('SumXsq3Ysq');
-  # $values_class = $gen->values_class('DigitSumModulo');
   # $values_class = $gen->values_class('ReverseAddSteps');
   # $values_class = $gen->values_class('Harshad');
   # $values_class = $gen->values_class('TotientPerfect');
   require Math::NumSeq::DigitLength;
-  $values_class = 'Math::NumSeq::SqrtDigits';
   $values_class = 'Math::NumSeq::DigitLength';
   $values_class = 'Math::NumSeq::DigitProduct';
   $values_class = 'Math::NumSeq::Pell';
@@ -69,7 +66,6 @@ $|=1;
   $values_class = 'Math::NumSeq::UlamSequence';
   $values_class = 'Math::NumSeq::ReplicateDigits';
   $values_class = 'Math::NumSeq::SumTwoSquares';
-  $values_class = 'Math::NumSeq::Polygonal';
   $values_class = 'Math::NumSeq::CunninghamChain';
   $values_class = 'Math::NumSeq::CunninghamPrimes';
   $values_class = 'Math::NumSeq::FibbinaryBitCount';
@@ -125,7 +121,6 @@ $|=1;
   $values_class = 'Math::NumSeq::Primorials';
   $values_class = 'Math::NumSeq::Factorials';
   $values_class = 'Math::NumSeq::MoranNumbers';
-  $values_class = 'Math::NumSeq::RadixConversion';
   $values_class = 'Math::NumSeq::CullenNumbers';
   $values_class = 'Math::NumSeq::WoodallNumbers';
   $values_class = 'Math::NumSeq::HypotCount';
@@ -151,7 +146,6 @@ $|=1;
   $values_class = 'Math::NumSeq::Squares';
   $values_class = 'Math::NumSeq::SpiroFibonacci';
   $values_class = 'Math::NumSeq::Aronson';
-  $values_class = 'Math::NumSeq::DigitCountLow';
   $values_class = 'Math::NumSeq::Repdigits';
   $values_class = 'Math::NumSeq::LeastPrimitiveRoot';
   $values_class = 'Math::NumSeq::AllPrimeFactors';
@@ -167,11 +161,9 @@ $|=1;
   $values_class = 'Math::NumSeq::ReRound';
   $values_class = 'Math::NumSeq::SophieGermainPrimes';
   $values_class = 'Math::NumSeq::PrimeSignatureLeast';
-  $values_class = 'Math::NumSeq::FactorialProducts';
   $values_class = 'Math::NumSeq::Fibonacci';
   $values_class = 'Math::NumSeq::FibonacciProducts';
   $values_class = 'Math::NumSeq::Runs';
-  $values_class = 'Math::NumSeq::PlanePathTurn';
   $values_class = 'Math::NumSeq::Pow2Mod10';
   $values_class = 'Math::NumSeq::JacobsthalFunction';
   $values_class = 'Math::NumSeq::GolayRudinShapiro';
@@ -182,31 +174,47 @@ $|=1;
   $values_class = 'Math::NumSeq::Catalan';
   $values_class = 'Math::NumSeq::BalancedBinary';
   $values_class = 'Math::NumSeq::CbrtContinued';
-  $values_class = 'Math::NumSeq::PlanePathN';
   $values_class = 'Math::NumSeq::AlphabeticalLength';
   $values_class = 'Math::NumSeq::AlphabeticalLengthSteps';
   $values_class = 'Math::NumSeq::SevenSegments';
   $values_class = 'Math::NumSeq::AlgebraicContinued';
   $values_class = 'Math::NumSeq::PisanoPeriod';
   $values_class = 'Math::NumSeq::JugglerSteps';
-  $values_class = 'Math::NumSeq::PisanoPeriodSteps';
   $values_class = 'Math::NumSeq::FibonacciWord';
   $values_class = 'Math::NumSeq::LucasSequenceModulo';
+  $values_class = 'Math::NumSeq::Polygonal';
+  $values_class = 'Math::NumSeq::RadixConversion';
+  $values_class = 'Math::NumSeq::SqrtDigits';
+  $values_class = 'Math::NumSeq::PisanoPeriodSteps';
+  $values_class = 'Math::NumSeq::DigitCountHigh';
+  $values_class = 'Math::NumSeq::DigitCountLow';
+  $values_class = 'Math::NumSeq::PlanePathN';
+  $values_class = 'Math::NumSeq::OEIS';
   $values_class = 'Math::NumSeq::PlanePathCoord';
+  $values_class = 'Math::NumSeq::PlanePathTurn';
+  $values_class = 'Math::NumSeq::FactorialProducts';
+  $values_class = 'Math::NumSeq::Products';
+  $values_class = 'Math::NumSeq::DigitSumModulo';
 
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new
     (
+      radix => 3, modulus => 2,
+
+     # of => 'Primorials',
+     # of => 'Fibonacci',
+     # of => 'Catalan',
+     # multiplicity => 'distinct',
      # fibonacci_word_type=>'dense',
      # initial_0 => 1,
      # initial_1 => 0,
-     modulus => 2,
+     # modulus => 2,
      # expression => '5throot 2',
      # expression => 'cbrt 7',
      # i_start => 1,
      # cbrt => 2,
      # conjunctions => 1,
-      values_type => 'log',
+     # values_type => 'log',
      # values_type => 'odd',
      # lang => 'fr',
 
@@ -220,7 +228,6 @@ $|=1;
      # digit => 1,
      # root_type => 'negative',
      # letter => '',
-     # multiplicity => 'distinct',
      # order => 'descending',
      # step_type => 'both',
      # on_values => 'even',
@@ -230,7 +237,7 @@ $|=1;
      # on_values => 'primes',
      # level => 2,
      # level_type => 'exact',
-     # sqrt => 104,
+      sqrt => 4,
      # stage => 1,
 
      # p_or_m => '-',
@@ -243,7 +250,8 @@ $|=1;
 
      # order => 'forward',
      # fraction => '1/14',
-     # to_radix => 100000,
+     # from_radix => 10,
+     #  to_radix => 16,
      # extra_multiples => 1,
      # using_values => 'primes',
      # fibonacci_word_type => 'dense',
@@ -251,14 +259,21 @@ $|=1;
      # offset => 3,
 
      # planepath => 'Diagonals,x_start=1,y_start=1',
-     # planepath => 'ChanTree',
-      planepath => 'LCornerTree',
-     # planepath => 'SierpinskiTriangle',
-     # planepath => 'CellularRule,rule=2',
-     # planepath => 'GcdRationals,pairs_order=rows_reverse',
-      coordinate_type => 'Depth',
-     # coordinate_type => 'GCD',
-     # coordinate_type => 'NumChildren',
+     # planepath => 'MultipleRings,step=4',
+     # planepath => 'RationalsTree,tree_type=AYT',
+     # planepath => 'SurroundOneEight,parts=3mid',
+     # planepath => 'SierpinskiTriangle,align=diagonal',
+      planepath => 'DivisibleColumns,divisor_type=proper,n_start=2',
+     # planepath => 'CoprimeColumns',
+     # planepath => 'DiagonalRationals,direction=up',
+     # planepath => 'SierpinskiTriangle,align=diagonal',
+     # planepath => 'RationalsTree,tree_type=L',
+     # planepath => 'GcdRationals,pairs_order=rows',
+     # planepath => 'ToothpickTreeByCells',
+     # planepath => 'LCornerTree',
+     # coordinate_type => 'IntXY',
+     coordinate_type => 'DiffXY',
+     # coordinate_type => 'BitXor',
 
      # planepath => 'SierpinskiTriangle',
      # planepath => 'RationalsTree',
@@ -266,28 +281,33 @@ $|=1;
      # planepath => 'UlamWarburtonQuarter,n_start=0',
      # planepath => 'TriangleSpiralSkewed',
      # planepath => 'SquareSpiral',
+     # planepath => 'ToothpickUpist',
+      # planepath => 'ToothpickByCells,parts=unwedge_down',
+     # planepath => 'LCornerTree,parts=1',
      #  planepath => 'DigitGroups,radix=2',
      # planepath => 'CellularRule,rule=206',
-     # line_type => 'Depth_start',
+     # planepath => 'QuadricIslands',
+      # line_type => 'Depth_start',
      # line_type => 'X_axis',
+     # line_type => 'Diagonal_SW',
      # i_start => 1,
 
      # planepath => 'GrayCode',
      # planepath => 'PyramidRows,step=1,n_start=0',
      # planepath => 'DragonCurve,arms=4',
-     # planepath => 'SierpinskiCurveStair',
      #planepath => 'RationalsTree,tree_type=L',
      # planepath => 'Rows,width=3',
      # delta_type=>'dY',
 
-     # planepath => 'TerdragonCurve',
-     # turn_type => 'Left',
+     # planepath => 'SierpinskiCurve',
+     # planepath => 'PythagoreanTree,coordinates=BC',
+      planepath => 'ChanTree,k=4',
+      turn_type => 'Right',
 
      # planepath => 'SquareSpiral',
      # planepath => 'ZOrderCurve,radix=10',
      # planepath => 'PythagoreanTree,coordinates=BA',
      # planepath => 'RationalsTree,tree_type=CW',
-     # planepath => 'DivisibleColumns,divisor_type=proper',
      # planepath => 'ArchimedeanChords',
      # planepath => 'SacksSpiral',
      # planepath => 'MultipleRings,step=2',
@@ -297,7 +317,7 @@ $|=1;
      # planepath => 'CellularRule,rule=5',
      # i_start => 1,
 
-     #anum  => 'A160722', # few
+     # anum  => 'A151725',
      # anum  => 'A196199', # bfile
      # anum  => 'A194831', # small bfile
      # anum  => 'A195467',
@@ -309,7 +329,6 @@ $|=1;
 
      # including_one => 1,
      # start => 1,
-     #  radix => 4,
      # pythagorean_type => 'primitive',
      # prime_type => 'twin',
      # round_count => 2,
@@ -337,8 +356,8 @@ $|=1;
      # length => 2,
      # which => 'last',
 
-     # polygonal => 6,
-     # pairs => 'average',
+      polygonal => 18,
+      pairs => 'second',
 
      # including_zero => 1,
      # # divisors_type => 'proper',
@@ -561,6 +580,10 @@ $|=1;
   foreach my $method ('ith','pred') {
     if ($seq->can($method)) {
       require Data::Float;
+      print "$method(0): ";
+      print $seq->$method(0)//'undef',"\n";
+      print "$method(-1): ";
+      print $seq->$method(-1)//'undef',"\n";
       print "$method(pos_infinity): ";
       print $seq->$method(Data::Float::pos_infinity())//'undef',"\n";
       print "$method(neg_infinity): ";

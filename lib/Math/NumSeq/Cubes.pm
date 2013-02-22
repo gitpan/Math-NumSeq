@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -23,7 +23,7 @@ use POSIX 'floor','ceil';
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -79,7 +79,7 @@ use constant 1.02 _UV_I_LIMIT => do {
 
 sub rewind {
   my ($self) = @_;
-  $self->{'i'} = ceil (cbrt (max(0,$self->{'lo'})));
+  $self->{'i'} = $self->i_start;
 }
 sub seek_to_i {
   my ($self, $i) = @_;
@@ -256,7 +256,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2010, 2011, 2012 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

@@ -1,4 +1,4 @@
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 55;
+$VERSION = 56;
 
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IterateIth;
@@ -266,7 +266,7 @@ sub value_to_i_estimate {
 1;
 __END__
 
-=for stopwords Ryde 2nd 4th Flavius ReRound Math-NumSeq
+=for stopwords Math-NumSeq Ryde 2nd 4th Flavius ReRound ok
 
 =head1 NAME
 
@@ -283,7 +283,7 @@ Math::NumSeq::ReRound -- sequence from repeated rounding up
 This is the sequence of values formed by repeatedly rounding up to a
 multiple of i-1, i-2, ..., 2, 1.
 
-    starting i=1
+    # starting i=1
     1, 2, 4, 6, 10, 12, 18, 22, 30, 34, 42, 48, 58, 60, 78, ...
 
 For example i=5 start at 5, round up to a multiple of 4 to give 8, then
@@ -498,7 +498,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2011, 2012 Kevin Ryde
+Copyright 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

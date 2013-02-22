@@ -1,4 +1,4 @@
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -32,7 +32,7 @@ use Math::NumSeq::Base::IterateIth;
 
 
 use constant name => Math::NumSeq::__('Digit Sum of Squares');
-use constant description => Math::NumSeq::__('Sum of the squares of the digits in the given radix.  (For binary this is how many 1 bits.)');
+use constant description => Math::NumSeq::__('Sum of the squares of the digits in the given radix.  (For binary this is how many 1-bits.)');
 use constant values_min => 0;
 use constant characteristic_increasing => 0;
 use constant characteristic_smaller => 1;
@@ -153,7 +153,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2011, 2012 Kevin Ryde
+Copyright 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

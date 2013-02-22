@@ -1,4 +1,4 @@
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -21,7 +21,7 @@ use strict;
 use List::Util 'min';
 
 use vars '$VERSION','@ISA';
-$VERSION = 55;
+$VERSION = 56;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IteratePred;
 @ISA = ('Math::NumSeq::Base::IteratePred',
@@ -225,7 +225,7 @@ sub pred {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq squarefrees squareful
+=for stopwords Ryde Math-NumSeq squarefrees non-squarefrees squareful
 
 =head1 NAME
 
@@ -249,8 +249,8 @@ string) can be
 The default is "some" and power=2, which means there must be some prime
 factor which is a square or higher,
 
-    default powerful_type="some" power=2
-    starting i=1
+    # default powerful_type="some" power=2
+    # starting i=1
     4, 8, 9, 12, 16, 18, 20, ...
 
 These are the non-squarefrees.  The squarefrees have no square factor, and
@@ -296,7 +296,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2011, 2012 Kevin Ryde
+Copyright 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

@@ -33,56 +33,20 @@ use Math::NumSeq::Triangular;
 # uncomment this to run the ### lines
 #use Smart::Comments '###';
 
-
-sub diff_nums {
-  my ($gotaref, $wantaref) = @_;
-  for (my $i = 0; $i < @$gotaref; $i++) {
-    if ($i > @$wantaref) {
-      return "want ends prematurely pos=$i";
-    }
-    my $got = $gotaref->[$i];
-    my $want = $wantaref->[$i];
-    if (! defined $got && ! defined $want) {
-      next;
-    }
-    if (! defined $got || ! defined $want) {
-      return "different pos=$i got=".(defined $got ? $got : '[undef]')
-        ." want=".(defined $want ? $want : '[undef]');
-    }
-    $got =~ /^[0-9.-]+$/
-      or return "not a number pos=$i got='$got'";
-    $want =~ /^[0-9.-]+$/
-      or return "not a number pos=$i want='$want'";
-    if ($got != $want) {
-      return "different pos=$i numbers got=$got want=$want";
-    }
-  }
-  return undef;
-}
-
 #------------------------------------------------------------------------------
 # A010054 - characteristic 0/1 of triangular
 
-{
-  my $anum = 'A010054';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my $diff;
-  if ($bvalues) {
-    my $seq = Math::NumSeq::Triangular->new;
-    my @got;
-    for (my $i = 0; @got < @$bvalues; $i++) {
-      push @got, $seq->pred($i) ? 1 : 0;
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum");
-}
+MyOEIS::compare_values
+  (anum => 'A010054',
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::Triangular->new;
+     my @got;
+     for (my $i = 0; @got < $count; $i++) {
+       push @got, $seq->pred($i) ? 1 : 0;
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 exit 0;

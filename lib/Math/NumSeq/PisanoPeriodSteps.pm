@@ -1,4 +1,4 @@
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -27,7 +27,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -57,7 +57,7 @@ use constant parameter_info_array =>
   [ { name    => 'values_type',
       display => Math::NumSeq::__('Values Type'),
       type    => 'enum',
-      default => 'freq',,
+      default => 'freq',
       choices => ['freq',
                   'log'],
       choices_display => [Math::NumSeq::__('Freq'),
@@ -86,7 +86,7 @@ my %oeis_anum = (freq => 'A001178',
                  log  => 'A001179',
                  # OEIS-Catalogue: A001178
                  # OEIS-Catalogue: A001179 values_type=log
-                );;
+                );
 sub oeis_anum {
   my ($self) = @_;
   ### oeis_anum(): $self
@@ -103,7 +103,10 @@ sub ith {
   if (_is_infinite($i)) {
     return $i;
   }
-  if ($i == 1) {
+  if ($i <= 1) {
+    if ($i < 1) {
+      return undef;
+    }
     return 0;
   }
 
@@ -192,7 +195,7 @@ __END__
 #   }
 # }
 
-=for stopwords Ryde Math-NumSeq
+=for stopwords Ryde Math-NumSeq ie
 
 =head1 NAME
 
@@ -206,10 +209,10 @@ Math::NumSeq::PisanoPeriodSteps -- Fibonacci frequency and Leonardo logarithm
 
 =head1 DESCRIPTION
 
-This is the number of times the PisanoPeriod must be applied before reaching
-an unchanging value.
+This is the number of times the C<PisanoPeriod> must be applied before
+reaching an unchanging value.
 
-    starting i=1
+    # starting i=1
     0, 4, 3, 2, 3, 1, 2, 2, 1, 2, 3, 1, 3, 2, 3, 1, 2, 1, 2, ...
 
 X<Fulton, D.>X<Morris, W.L.>As per Fulton and Morris
@@ -236,7 +239,7 @@ The unchanging period reached is always of the form
 The "l" exponent is the Leonardo logarithm.  Option C<values_type =E<gt>
 "log"> returns that as the sequence values.
 
-    starting i=1
+    # starting i=1
     0, 1, 1, 1, 2, 1, 1, 1, 1, 2, 2, 1, 1, 1, 2, 1, 1, 1, 1, 2, 1, ...
 
 For example the i=5 above ends at m=120=24*5^1 so l-1=1 is l=2 for the
@@ -279,7 +282,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2012 Kevin Ryde
+Copyright 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

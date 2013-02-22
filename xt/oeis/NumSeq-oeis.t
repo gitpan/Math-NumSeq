@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -130,10 +130,10 @@ sub check_class {
   #
   # return unless $class =~ /Pisano/;
   # return unless $class =~ /PrimeIndex/;
-   return unless $class =~ /FibonacciWord/;
+  # return unless $class =~ /FibonacciWord/;
   # return unless $class =~ /Runs/;
   # return unless $class =~ /FactorCount/;
-  # return unless $class =~ /Star/;
+   return unless $class =~ /DigitSumModulo/;
   # return unless $class =~ /Luc|Fib|Cullen|Wood/;
   # return unless $class =~ /Lucas/;
   # return unless $class =~ /RadixWithout/;

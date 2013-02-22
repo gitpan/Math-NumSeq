@@ -1,4 +1,4 @@
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -29,6 +29,10 @@
 #
 # K.S.Brown a(n)/n <= 6 for all n, a(n)=6n iff n=2*5^k.
 #
+# Andreas-Stephan Elsenhans and Jorg Jahnel
+# http://www.uni-math.gwdg.de/tschinkel/gauss/Fibon.pdf
+# through to 10^14
+#
 
 package Math::NumSeq::PisanoPeriod;
 use 5.004;
@@ -36,7 +40,7 @@ use strict;
 use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -86,7 +90,6 @@ sub ith {
   }
 
   my $lcm = Math::NumSeq::_to_bigint(1);
-  my @ret;
   my @primes = prime_factors($i);
   while (@primes) {
     my $prime = shift @primes;
@@ -169,7 +172,7 @@ __END__
   # }
 
 
-=for stopwords Ryde Math-NumSeq
+=for stopwords Ryde Math-NumSeq Fibonaccis Pisano
 
 =head1 NAME
 
@@ -185,7 +188,7 @@ Math::NumSeq::PisanoPeriod -- cycle length of Fibonacci numbers mod i
 
 This is the length cycle of Fibonacci numbers modulo i.
 
-    starting i=1
+    # starting i=1
     1, 3, 8, 6, 20, 24, 16, 12, 24, 60, 10, 24, 28, 48, 40, ...
 
 For example Fibonacci numbers modulo 4 repeat in a cycle of 6 numbers, so
@@ -237,7 +240,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2012 Kevin Ryde
+Copyright 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

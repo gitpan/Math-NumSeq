@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -25,7 +25,7 @@ use URI::Escape;
 use Module::Load;
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+# use Smart::Comments;
 
 {
   open OUT, ">/tmp/find.html" or die;
@@ -50,9 +50,10 @@ HERE
     
     # restricted to ...
     # next unless $module =~ /Aron/;
-    next unless $module =~ /PlanePath/;
-    # next unless $module =~ /AllPr/;
+    # next unless $module =~ /PlanePathTurn/;
+    next unless $module =~ /DigitSum/;
     
+    ### $module
     my $class = App::MathImage::Generator->values_class($module);
     print "$class\n";
     
@@ -65,16 +66,19 @@ HERE
     
   PARAMETERS: foreach my $p (@$parameters) {
       ### $p
-      my $seq = $class->new (hi => 1000, @$p);
+      my $seq = $class->new (@$p);
       next if $seq->oeis_anum;
+      ### $seq
       
       my $values = '';
       my @values;
       my (undef, $first_value) = $seq->next
         or next PARAMETERS;
-      my $target_values_length = 120;
+      ### $first_value
+
+      my $target_values_length = 150;
       if ($class =~ /BinaryUnd/) { $target_values_length = 20; }
-      while (length($values) < 120) {
+      while (length($values) < $target_values_length) {
         my ($i, $value) = $seq->next
           or last;
         if ($module =~ /KaprekarNumbers/ && length($value) > 4) {
@@ -91,6 +95,8 @@ HERE
         push @values, $value;
       }
       next if (@values < 5);
+      ### $values
+      ### @values
       
       my $p_string = '';
       while (@$p) {
@@ -196,7 +202,9 @@ sub special_values {
   my ($i_start, $value_start) = $seq->next;
 
   if (all_same(@$values_aref)) {
-    if ($values_aref->[0] == 0 && $i_start != 0) {
+    if (($seq->{'coordinate_type'}||'') =~ /^Is/) {
+      # don't show non-leaf all of non-tree path
+    } elsif ($values_aref->[0] == 0 && $i_start != 0) {
       # A000004 all zeros starts i=0, ignore other starts
 
     } elsif ($values_aref->[0] == 1 && $i_start != 0) {
@@ -233,6 +241,9 @@ sub special_values {
     grep_for_values("$module $params", join(',',@$values_aref));
   }
 }
+
+# is_squares($value,$value,...)
+# Return true if successive perfect squares.
 sub is_squares {
   my $value = shift;
   return 0 unless $value >= 0;
@@ -240,7 +251,7 @@ sub is_squares {
   return 0 unless $root==int($root);
   while (@_) {
     $value = shift;
-    unless ($value >= 0 && sqrt($value) == ++$root) {
+    unless ($value >= 0 && sqrt($value) == ($root+=1)) {
       return 0;
     }
   }
@@ -269,6 +280,7 @@ sub constant_diff {
 # Return true if all the given numbers are the same value.
 #
 sub all_same {
+  if (! @_) { return 0; }
   my $value = shift;
   while (@_) {
     if ($value != shift) {
@@ -443,6 +455,7 @@ sub first_diff_pos {
 }
 
 
+# ($inforef, $inforef, ...)
 sub parameter_info_list_to_parameters {
   my @parameters = ([]);
   foreach my $info (@_) {
@@ -458,11 +471,15 @@ sub info_extend_parameters {
   if ($info->{'name'} eq 'planepath') {
     my @strings;
     foreach my $choice (@{$info->{'choices'}}) {
+      # next unless $choice =~ /RationalsTree/;
+      # next unless $choice =~ /Chan/;
+       # next unless $choice =~ /Divis|DiagonalRationals|CoprimeCol/;
       # next unless $choice =~ /DiamondSpiral/;
-      # next unless $choice =~ /Gcd/;
-       next unless $choice =~ /LCorn|RationalsTree/;
+      # next unless $choice =~ /LCorner|Tooth/;
+      # next unless $choice =~ /LCorn|RationalsTree/;
+      # next unless $choice =~ /^Corner$/i;
       # next unless $choice =~ /SierpinskiArrowheadC/;
-      # next unless $choice eq 'DiagonalsAlternating';
+      # next unless $choice =~ /Gcd/;
       my $path_class = "Math::PlanePath::$choice";
       Module::Load::load($path_class);
 
@@ -535,10 +552,14 @@ sub info_extend_parameters {
     return;
   }
 
-  if ($info->{'choices'}) {
+  if (my $choices = $info->{'choices'}) {
     my @new_parameters;
     foreach my $p (@$parameters) {
-      foreach my $choice (@{$info->{'choices'}}) {
+      foreach my $choice (@$choices) {
+        # print "$choice\n";
+        # next if ($info->{'name'} eq 'coordinate_type' && $choice !~ /^M/);
+         next if ($info->{'name'} eq 'coordinate_type' && $choice !~ /^IntXY/);
+
         next if ($info->{'name'} eq 'serpentine_type' && $choice eq 'Peano');
         next if ($info->{'name'} eq 'rotation_type' && $choice eq 'custom');
         push @new_parameters, [ @$p, $info->{'name'}, $choice ];
@@ -649,10 +670,53 @@ sub p_radix {
 }
 
 sub grep_for_values {
-  my ($name, $values) = @_;
-  unless (system 'fgrep', '-e', $values, "$ENV{HOME}/OEIS/oeis-grep.txt") {
-    print "  match $values\n";
+  my ($name, $values_str) = @_;
+  # print "grep $values_str\n";
+  # unless (system 'zgrep', '-F', '-e', $values_str, "$ENV{HOME}/OEIS/stripped.gz") {
+  #   print "  match $values_str\n";
+  #   print "  $name\n";
+  #   print "\n"
+  # }
+  # unless (system 'fgrep', '-e', $values_str, "$ENV{HOME}/OEIS/oeis-grep.txt") {
+  #   print "  match $values_str\n";
+  #   print "  $name\n";
+  #   print "\n"
+  # }
+  # unless (system 'fgrep', '-e', $values_str, "$ENV{HOME}/OEIS/stripped") {
+  #   print "  match $values_str\n";
+  #   print "  $name\n";
+  #   print "\n"
+  # }
+  if (my $found = stripped_grep($values_str)) {
+    print "  match $values_str\n";
     print "  $name\n";
+    print $found;
     print "\n"
   }
+}
+
+my $stripped;
+sub stripped_grep {
+  my ($str) = @_;
+  if (! $stripped) {
+    require File::Map;
+    my $filename = "$ENV{HOME}/OEIS/stripped";
+    File::Map::map_file ($stripped, $filename);
+    print "File::Map file length ",length($stripped),"\n";
+  }
+  my $ret = '';
+  my $pos = 0;
+  for (;;) {
+    $pos = index($stripped,$str,$pos);
+    last if $pos < 0;
+    my $start = rindex($stripped,"\n",$pos) + 1;
+    my $end = index($stripped,"\n",$pos);
+    my $line = substr($stripped,$start,$end-$start);
+    $ret .= "$line\n";
+    my ($anum) = ($line =~ /^(A\d+)/);
+    $anum || die "$anum not found";
+    $ret .= `zgrep -e ^$anum $ENV{HOME}/OEIS/names.gz`;
+    $pos = $end;
+  }
+  return $ret;
 }

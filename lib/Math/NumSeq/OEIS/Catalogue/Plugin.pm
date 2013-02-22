@@ -1,4 +1,4 @@
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION';
-$VERSION = 55;
+$VERSION = 56;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -35,7 +35,11 @@ sub anum_to_info_hashref {
 
 sub anum_to_info {
   my ($class, $anum) = @_;
-  return $class->anum_to_info_hashref->{$anum};
+  foreach my $anum ($anum,
+                    # A0123456 shortened to A123456
+                    ($anum =~ /A0(\d{6})/ ? "A$1" : ())) {
+    return ($class->anum_to_info_hashref->{$anum} || next);
+  }
 }
 
 sub anum_after {
@@ -70,13 +74,13 @@ sub anum_first {
 }
 sub anum_last {
   my ($class) = @_;
-  return $class->anum_before('A9999999');
+  return $class->anum_before('A9999999'); # 7-digits
 }
 
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq pluggable
+=for stopwords Ryde Math-NumSeq pluggable arrayref hashref OEIS
 
 =head1 NAME
 
@@ -95,7 +99,7 @@ Math::NumSeq::OEIS::Catalogue::Plugin -- pluggable catalogue extensions
 
 Catalogue plugins are loaded and used by C<Math::NumSeq::OEIS::Catalogue>.
 A plug allows an add-on distribution or semi-independent components to
-declare which OEIS A-numbers they implement and what NumSeq sequence
+declare which OEIS A-numbers they implement and what C<NumSeq> sequence
 parameters can create the sequence.
 
 This is an internal part of C<Math::NumSeq::OEIS::Catalogue> not yet meant
@@ -144,7 +148,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2011, 2012 Kevin Ryde
+Copyright 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

@@ -1,4 +1,4 @@
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -30,21 +30,21 @@ use Symbol 'gensym';
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 55;
+$VERSION = 56;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_to_bigint = \&Math::NumSeq::_to_bigint;
 
 use vars '$VERSION';
-$VERSION = 55;
+$VERSION = 56;
 
 eval q{use Scalar::Util 'weaken'; 1}
   || eval q{sub weaken { $_[0] = undef }; 1 }
   || die "Oops, error making a weaken() fallback: $@";
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+# use Smart::Comments;
 
 
 # use constant name => Math::NumSeq::__('OEIS File');
@@ -87,12 +87,6 @@ sub characteristic {
   return shift->SUPER::characteristic(@_);
 }
 
-my $max_value = POSIX::FLT_RADIX() ** (POSIX::DBL_MANT_DIG()-5);
-if ((~0 >> 1) > $max_value) {
-  $max_value = (~0 >> 1);
-}
-my $min_value = -$max_value;
-
 sub oeis_dir {
   require File::HomeDir;
   return File::Spec->catfile (File::HomeDir->my_home, 'OEIS');
@@ -103,6 +97,11 @@ sub anum_to_bfile {
   $anum =~ s/^A/$prefix/;
   return "$anum.txt";
 }
+
+#------------------------------------------------------------------------------
+# Keep track of all instances which exist and on an ithread CLONE re-open
+# any filehandles in the instances, so they have their own independent file
+# positions in the new thread.
 
 my %instances;
 sub DESTROY {
@@ -126,6 +125,46 @@ sub CLONE {
   }
 }
 
+#------------------------------------------------------------------------------
+
+# The length in decimal digits of the biggest value which fits in a plain
+# Perl integer.  For example on a 32-bit system this is 9 since 9 digit
+# numbers such as "999_999_999" are the biggest which fit a signed IV
+# (+2^31).
+#
+# The IV size is probed rather than using ~0 since under "perl -Minteger"
+# have ~0 as -1 rather than the biggest UV ... except "use integer" is not
+# normally global.
+#
+# The NV size is applied to the limit too since not sure should trust values
+# to stay in IV or UV.  This means on a 64-bit integer with 53-bit NV
+# "double" the limit is 53-bits.
+#
+use constant 1.02 _MAX_DIGIT_LENGTH => do {
+  ### ~0 is: ~0
+
+  my $iv = 0;
+  for (1 .. 256) {
+    my $new = ($iv << 1) | 1;
+    unless ($new > $iv && ($new & 1) == 1) {
+      last;
+    }
+    $iv = $new;
+  }
+  ### $iv
+
+  require POSIX;
+  my $nv = POSIX::FLT_RADIX() ** (POSIX::DBL_MANT_DIG()-5);
+  ### $nv
+
+  my $iv_len = length($iv) - 1;
+  my $nv_len = length($nv) - 1;
+  ($iv_len < $nv_len ? $iv_len : $nv_len)  # smaller of the two lengths;
+};
+### _MAX_DIGIT_LENGTH: _MAX_DIGIT_LENGTH()
+
+
+#------------------------------------------------------------------------------
 
 # special case a000000.txt files to exclude
 #
@@ -338,7 +377,7 @@ sub _tell {
 }
 
 sub rewind {
-  my ($self, $pos) = @_;
+  my ($self) = @_;
   ### OEIS-File rewind() ...
 
   $self->{'i'} = $self->i_start;
@@ -369,8 +408,7 @@ sub next {
 
     # large values as Math::BigInt
     # initially $array has strings, make bigint objects when required
-    if (! ref $value
-        && ($value > $max_value || $value < $min_value)) {
+    if (! ref $value && length($value) > _MAX_DIGIT_LENGTH) {
       $value = $array->[$pos] = _to_bigint($value);
     }
   }
@@ -399,7 +437,7 @@ sub _readline {
                                      [ \t]*
                                      $/x)) {
       ### _readline: "$i  $value"
-      if ($value > $max_value || $value < $min_value) {
+      if (length($value) > _MAX_DIGIT_LENGTH) {
         $value = _to_bigint($value);
       }
       return ($i, $value);
@@ -502,8 +540,7 @@ sub _read_internal {
         }
       }
       _split_sample_values ($self, $filename,
-                            join (', ', @samples),
-                            $offset);
+                            join (', ', @samples)); # multiple lines of samples
     }
 
     # %O "OFFSET" is subscript of first number.
@@ -577,7 +614,7 @@ sub _read_html {
       $contents =~ s{>graph</a>.*}{};
       $contents =~ m{.*<tt>([^<]+)</tt>}i;
       my $list = $1;
-      _split_sample_values ($self, $filename, $list, $offset);
+      _split_sample_values ($self, $filename, $list);
     }
 
     # %O "OFFSET" is subscript of first number, but for digit expansions
@@ -664,7 +701,7 @@ sub _set_characteristics {
 }
 
 sub _split_sample_values {
-  my ($self, $filename, $str, $offset) = @_;
+  my ($self, $filename, $str) = @_;
   ### _split_sample_values(): $str
   unless (defined $str && $str =~ m{^([0-9,-]|\s)+$}) {
     croak "Oops list of sample values not recognised in ",$filename,"\n",
@@ -693,6 +730,89 @@ sub _decode_html_charset {
     return $contents;
   }
 }
+
+#------------------------------------------------------------------------------
+# stripped.gz and names.gz
+# no OFFSET, so i_start would be wrong, in general
+
+# sub _read_stripped {
+#   my ($self, $anum) = @_;
+#   ### _read_stripped(): $anum
+# 
+#   return 0 if $self->{'_dont_use_stripped'};
+#   (my $num = $anum) =~ s/^A//;
+# 
+#   my $filename = File::Spec->catfile (oeis_dir(), "stripped");
+#   ### $filename
+#   my $line;
+#   my $cmpfunc = sub {
+#     my ($line) = @_;
+#     $line =~ /^A(\d+)/ or return -1;
+#     return ($1 <=> $num);
+#   };
+#   if (open FH, "<$filename") {
+#     $line = _bsearch_textfile (\*FH, $cmpfunc);
+#   } else {
+#     require IO::Zlib;
+#     tie *FILE, 'IO::Zlib', $filename, "rb";
+#     $line = _lsearch_textfile (\*FH, $cmpfunc);
+#   }
+#   if (! defined $line) {
+#     return 0;
+#   }
+# 
+#   my %characteristic = (integer => 1);
+#   $self->{'characteristic'} = \%characteristic;
+# 
+#   return 1; # success
+# }
+# 
+# sub _bsearch_textfile {
+#   my ($fh, $cmpfunc) = @_;
+#   my $lo = 0;
+#   my $hi = -s $fh;
+#   for (;;) {
+#     my $mid = ($lo+$hi)/2;
+#     seek $fh, $mid, 0
+#       or last;
+# 
+#     # skip partial line
+#     defined(readline $fh)
+#       or last; # EOF
+# 
+#     # position start of line
+#     $mid = tell($fh);
+#     if ($mid >= $hi) {
+#       last;
+#     }
+# 
+#     my $line = readline $fh;
+#     defined $line
+#       or last; # EOF
+# 
+#     my $cmp = &$cmpfunc ($line);
+#     if ($cmp == 0) {
+#       return $line;
+#     }
+#     if ($cmp < 0) {
+#       $lo = tell($fh);  # after
+#     } else {
+#       $hi = $mid;
+#     }
+#   }
+# 
+#   seek $fh, $lo, 0;
+#   while (defined (my $line = readline $fh)) {
+#     my $cmp = &$cmpfunc($line);
+#     if ($cmp == 0) {
+#       return $line;
+#     }
+#     if ($cmp > 0) {
+#       return undef;
+#     }
+#   }
+#   return undef;
+# }
 
 1;
 __END__

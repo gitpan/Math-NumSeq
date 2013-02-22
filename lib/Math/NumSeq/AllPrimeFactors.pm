@@ -1,4 +1,4 @@
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -22,7 +22,7 @@ use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -178,7 +178,7 @@ This is a list of the prime factors of the integers 2, 3, 4, etc
     2, 3, 2, 2, 5, 2, 3, 7, 2, 2, 2, 3, 3, 2, 5, 11, ...
 
           \--/     \--/     \-----/  \--/  \--/
-           4    5   6    7   8        9     10   11
+           4    5   6    7    8       9     10   11
 
 =head2 Order
 
@@ -188,7 +188,7 @@ primes within each integer,
     "ascending"     the default
     "descending"
 
-For example desending rearranges the values to
+For example "descending" rearranges the values to
 
     # order => "descending"
     2, 3, 2, 2, 5, 3, 2, 7, 2, 2, 2, 3, 3, 5, 2, 11, ...
@@ -196,7 +196,7 @@ For example desending rearranges the values to
           \--/     \--/     \-----/  \--/  \--/
            4    5   6    7   8        9     10   11
 
-The first difference is 3,2 for 6.
+The first difference is 3,2 for 6 (instead of 2,3).
 
 =head2 Multiplicity
 
@@ -259,7 +259,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2012 Kevin Ryde
+Copyright 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

@@ -29,53 +29,66 @@ use MyOEIS;
 
 use Math::NumSeq::Polygonal;
 
-# uncomment this to run the ### lines
-#use Smart::Comments '###';
-
-
-sub numeq_array {
-  my ($a1, $a2) = @_;
-  if (! ref $a1 || ! ref $a2) {
-    return 0;
-  }
-  my $i = 0; 
-  while ($i < @$a1 && $i < @$a2) {
-    if ($a1->[$i] ne $a2->[$i]) {
-      return 0;
-    }
-    $i++;
-  }
-  return (@$a1 == @$a2);
-}
-
 
 #------------------------------------------------------------------------------
-# A183221 - complement 9-gonals
+# A010052 - characteristic 1/0 of squares
 
-{
-  my $anum = 'A183221';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my @got;
-  if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
+MyOEIS::compare_values
+  (anum => 'A010052',
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::Polygonal->new (polygonal => 4);
+     my @got;
+     for (my $i = 0; @got < $count; $i++) {
+       push @got, $seq->pred($i) ? 1 : 0;
+     }
+     return \@got;
+   });
 
-    my $seq  = Math::NumSeq::Polygonal->new (polygonal => 9);
-    for (my $value = 0; @got < @$bvalues; $value++) {
-      if (! $seq->pred($value)) {
-        push @got, $value;
-      }
-    }
-    if (! numeq_array(\@got, $bvalues)) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
-  }
-  skip (! $bvalues,
-        numeq_array(\@got, $bvalues),
-        1, "$anum -- not 9-gonals");
-}
+#------------------------------------------------------------------------------
+# A010054 - characteristic 0/1 of triangular, is also generalized hexagonal
+
+MyOEIS::compare_values
+  (anum => 'A010054',
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::Polygonal->new (polygonal => 3);
+     my @got;
+     for (my $i = 0; @got < $count; $i++) {
+       push @got, $seq->pred($i) ? 1 : 0;
+     }
+     return \@got;
+   });
+
+MyOEIS::compare_values
+  (anum => 'A010054',
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::Polygonal->new (polygonal => 6,
+                                             pairs => 'both');
+     my @got;
+     for (my $i = 0; @got < $count; $i++) {
+       push @got, $seq->pred($i) ? 1 : 0;
+     }
+     return \@got;
+   });
+
+#------------------------------------------------------------------------------
+# A183221 - the not 9-gonals
+
+MyOEIS::compare_values
+  (anum => 'A183221',
+   func => sub {
+     my ($count) = @_;
+     my $seq  = Math::NumSeq::Polygonal->new (polygonal => 9);
+     my @got;
+     for (my $value = 0; @got < $count; $value++) {
+       if (! $seq->pred($value)) {
+         push @got, $value;
+       }
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 exit 0;

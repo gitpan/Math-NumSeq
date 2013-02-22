@@ -6,7 +6,7 @@
 
 
 
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -30,7 +30,7 @@ use POSIX 'ceil';
 use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -75,7 +75,7 @@ use constant oeis_anum => 'A000161'; # with zeros without order
 # sub rewind {
 #   my ($self) = @_;
 #   ### HypotCount rewind()
-#   $self->{'i'} = 0;
+#   $self->{'i'} = $self->i_start;
 #   while ($self->{'i'} < $self->{'lo'}-1) {
 #     $self->next;
 #   }
@@ -304,7 +304,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2011, 2012 Kevin Ryde
+Copyright 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

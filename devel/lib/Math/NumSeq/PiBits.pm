@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -21,7 +21,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -60,7 +60,7 @@ sub _open_fh {
 sub rewind {
   my ($self) = @_;
   $self->{'buf'} = '';
-  $self->{'i'} = 0;
+  $self->{'i'} = $self->i_start;
   $self->{'n'} = 0;
 
   # gzseek() won't go backwards ...
@@ -74,7 +74,7 @@ sub next {
     if ($self->{'gz'}->gzread($self->{'buf'}) <= 0) {
       return;  # EOF
     }
-    $self->{'i'} = 0;
+    $self->{'i'} = $self->i_start;
   }
   my $i = $self->{'i'}++;
   return ($i, $self->{'n'} += ord(substr($self->{'buf'},$i,1)));

@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -281,7 +281,7 @@ sub numeq_array {
 }
 
 #------------------------------------------------------------------------------
-# A023416 - count 0-bits, but treating 0 as a single 0 bit
+# A023416 - count 0-bits, but treating 0 as a single 0-bit
 
 {
   my $anum = 'A023416';
@@ -302,7 +302,7 @@ sub numeq_array {
   }
   skip (! $bvalues,
         numeq_array(\@got, $bvalues),
-        1, "$anum -- count 0-bits, with zero as a single 0 bits");
+        1, "$anum -- count 0-bits, with zero as a single 0-bits");
 }
 
 #------------------------------------------------------------------------------

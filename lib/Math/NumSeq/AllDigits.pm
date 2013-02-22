@@ -1,4 +1,4 @@
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
 
@@ -94,13 +94,17 @@ $oeis_anum{'reverse'}->[0]->[4] = 'A030386'; # base 4, start i=0 value=0
 # OEIS-Catalogue: A030386 radix=4 order=reverse i_start=0
 
 $oeis_anum{'forward'}->[1]->[5] = 'A031219'; # base 5, start i=1 value=1
-$oeis_anum{'reverse'}->[0]->[5] = 'A031235'; # base 4, start i=0 value=0
+$oeis_anum{'reverse'}->[0]->[5] = 'A031235'; # base 5, start i=0 value=0
 # OEIS-Catalogue: A031219 radix=5 i_start=1
 # OEIS-Catalogue: A031235 radix=5 order=reverse i_start=0
+
+$oeis_anum{'reverse'}->[0]->[6] = 'A030567'; # base 6, start i=0 value=0
+# OEIS-Catalogue: A030567 radix=6 order=reverse i_start=0
 
 $oeis_anum{'forward'}->[0]->[7] = 'A030998'; # base 7, start i=0 value=0
 $oeis_anum{'reverse'}->[1]->[7] = 'A031007'; # base 7 LE start i=1 value=1
 # OEIS-Catalogue: A030998 radix=7 i_start=0
+# OEIS-Catalogue: A031007 radix=7 order=reverse i_start=1
 
 $oeis_anum{'forward'}->[0]->[8] = 'A054634'; # base 8, start i=0 value=0
 $oeis_anum{'forward'}->[1]->[8] = 'A031035'; # base 8, start i=1 value=1
@@ -240,7 +244,7 @@ sub ith {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq radix
+=for stopwords Ryde Math-NumSeq radix-1
 
 =head1 NAME
 
@@ -314,7 +318,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2011, 2012 Kevin Ryde
+Copyright 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

@@ -1,4 +1,4 @@
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 55;
+$VERSION = 56;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -384,7 +384,7 @@ sub value_to_i_estimate {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq ie Stirling's
+=for stopwords Ryde Math-NumSeq ie Stirling's num2s
 
 =head1 NAME
 
@@ -400,7 +400,7 @@ Math::NumSeq::Catalan -- factorials i! = 1*2*...*i
 
 The Catalan numbers binomial(2n,n)/(n+1) = (2n)!/(n!*(n+1)!)
 
-    starting i=0
+    # starting i=0
     1, 1, 2, 5, 14, 42, 132, 429, 1430, 4862, 16796, ...
 
 From the factorial expression it can be seen the values grow roughly as a
@@ -476,7 +476,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2012 Kevin Ryde
+Copyright 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

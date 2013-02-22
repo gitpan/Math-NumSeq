@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -15,12 +15,18 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
+
+# Christopher Williamson, "An Overview of the Thue-Morse Sequence",
+# www.math.washington.edu/~morrow/336_12/papers/christopher.pdf
+
+
 package Math::NumSeq::DigitSumModulo;
 use 5.004;
 use strict;
+use List::Util 'sum';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -28,6 +34,8 @@ use Math::NumSeq::Base::IterateIth;
         'Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
+use Math::NumSeq::Repdigits;
+*_digit_split_lowtohigh = \&Math::NumSeq::Repdigits::_digit_split_lowtohigh;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -54,43 +62,86 @@ use constant values_min => 0;
 sub values_max {
   my ($self) = @_;
   if (my $modulus = $self->{'modulus'}) {
-    return $modulus;
+    return $modulus - 1;
   }
   return $self->{'radix'} - 1;
 }
 
 # use constant name => Math::NumSeq::__('Digit Sum Modulo');
-use constant description => Math::NumSeq::__('Sum of the digits in the given radix, modulo that radix or a given modulus.  Eg. for binary this is the bitwise parity.');
+sub description {
+  my ($self) = @_;
+  if (ref $self) {
+    my $radix = $self->{'radix'};
+    my $modulus = ($self->{'modulus'} ? $self->{'modulus'} : $radix);
+    return Math::NumSeq::__('Sum digits of i in base ') . $radix
+      . Math::NumSeq::__(', then that sum taken modulo ') . $modulus
+        . ($radix == 2 && $modulus == 2
+           ? Math::NumSeq::__(", which means bitwise parity.")
+           : Math::NumSeq::__('.'));
+  } else {
+    return Math::NumSeq::__('Sum of the digits in the given radix, modulo that radix or a given modulus.  Eg. for binary this is the bitwise parity.');
+  }
+}
 
-# cf A001969  numbers with even 1s
-#    A026147  numbers with ...
+# cf A001969  "evil" numbers with even 1s
+#    A000069  "odious" numbers with odd 1s
+#    A026147  position of n'th thue-morse parity 1
 #    A001285  thue-morse
-#    A010059  inverse of radix=2 thue-morse
+#    A010059  inverse of radix=2 thue-morse, 1=evil number
 #    A106400  radix=2 Thue-Morse as +/-1
+#    A059448  parity of number of 0 digits when written in binary
 #
-my @oeis_anum = (
-                 # OEIS-Catalogue array begin
-                 undef,
-                 undef,
+my %oeis_anum = ('2,2'   => 'A010060',
+                 '3,3'   => 'A053838',
+                 '4,4'   => 'A053839', # radix=4
+                 '5,5'   => 'A053840', # radix=5
+                 '6,6'   => 'A053841', # radix=6
+                 '7,7'   => 'A053842', # radix=7
+                 '8,8'   => 'A053843', # radix=8
+                 '9,9'   => 'A053844', # radix=9
+                 '10,10' => 'A053837',
+                 # OEIS-Catalogue: A053837
+                 # OEIS-Catalogue: A053844 radix=9
+                 # OEIS-Catalogue: A053843 radix=8
+                 # OEIS-Catalogue: A053842 radix=7
+                 # OEIS-Catalogue: A053841 radix=6
+                 # OEIS-Catalogue: A053840 radix=5
+                 # OEIS-Catalogue: A053839 radix=4
+                 # OEIS-Catalogue: A053838 radix=3
+                 # OEIS-Catalogue: A010060 radix=2  # binary, Thue-Morse
 
-                 'A010060', # radix=2 # binary (Thue-Morse)
-                 'A053838', # radix=3 # ternary
-                 'A053839', # radix=4
-                 'A053840', # radix=5
-                 'A053841', # radix=6
-                 'A053842', # radix=7
-                 'A053843', # radix=8
-                 'A053844', # radix=9
-                 'A053837', # radix=10
+                 '10,2' => 'A179081',
+                 # OEIS-Catalogue: A179081 modulus=2
 
-                 # OEIS-Catalogue array end
+                 '2,3' => 'A071858',
+                 '2,4' => 'A179868',
+                 # OEIS-Catalogue: A071858 radix=2 modulus=3
+                 # OEIS-Catalogue: A179868 radix=2 modulus=4
                 );
 sub oeis_anum {
   my ($self) = @_;
-  if ($self->{'modulus'} == 1) {
+  my $radix = $self->{'radix'};
+  my $modulus = ($self->{'modulus'} || $radix);
+
+  if ($modulus == 1) {
     return 'A000004'; # all zeros
+    # OEIS-Other: A000004 modulus=1
   }
-  return $oeis_anum[$self->{'radix'}];
+
+  # radix==1 modulo M is same as whole modulo M
+  # including radix=odd modulus=2 is 0,1 repeating
+  if (($radix % $modulus) == 1) {
+    ### ENHANCE-ME: modulo a-num without creating object, maybe
+    require Math::NumSeq::Modulo;
+    return Math::NumSeq::Modulo->new(modulus=>$modulus)->oeis_anum;
+
+    # OEIS-Other: A000035 radix=3 modulus=2     # n mod 2, parity
+    # OEIS-Other: A000035 radix=5 modulus=2
+    # OEIS-Other: A000035 radix=37 modulus=2    
+    # OEIS-Other: A010872 radix=4 modulus=3     # n mod 3
+  }
+
+  return $oeis_anum{"$radix,$modulus"};
 }
 
 # ENHANCE-ME:
@@ -116,26 +167,12 @@ sub oeis_anum {
 
 sub ith {
   my ($self, $i) = @_;
-  my $radix = $self->{'radix'};
 
   if (_is_infinite ($i)) {
     return $i;
   }
-
-  # if ($radix == 2) {
-  #   # bit count per example in perlfunc unpack()
-  #   return ($i, unpack('%32b*',pack('I',$i)) & 1);
-  # } else {
-  # }
-
-  my $sum = 0;
-  for (my $rem = $i; $rem; $rem = int($rem/$radix)) {
-    $sum += ($rem % $radix);
-  }
-  if (my $modulus = $self->{'modulus'}) {
-    return $sum % $modulus;
-  }
-  return $sum % $radix;
+  my $radix = $self->{'radix'};
+  return sum(0,_digit_split_lowtohigh($i,$radix)) % ($self->{'modulus'} || $radix);
 }
 
 sub pred {
@@ -170,10 +207,10 @@ Modulus 0, which is the default, means modulo the radix.
 
 =head2 Thue-Morse Sequence
 
-For C<radix=E<gt>2, modulus=E<gt>2> this is the Thue-Morse "parity"
-sequence, being 1 if i has an odd number of 1 bits or 0 if an even number of
-1 bits.  Numbers where it's 1 are sometimes called "odious" numbers and
-where it's 0 called "evil" numbers
+X<Odious numbers>X<Evil numbers>For C<radix=E<gt>2, modulus=E<gt>2> this is
+the Thue-Morse "parity" sequence, being 1 if i has an odd number of 1 bits
+or 0 if an even number of 1 bits.  Numbers where it's 1 are sometimes called
+"odious" numbers and where it's 0 called "evil" numbers.
 
 =head1 FUNCTIONS
 
@@ -216,7 +253,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2011, 2012 Kevin Ryde
+Copyright 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

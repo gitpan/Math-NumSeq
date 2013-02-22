@@ -1,4 +1,4 @@
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IterateIth;
@@ -118,7 +118,7 @@ This is the number of iterations of the HappyNumbers style "sum of squares
 of digits" is required to reach a repeat of a value seen before, and
 therefore to establish whether a number is happy or not.
 
-    starting i=1
+    # starting i=1
     1, 9, 13, 8, 12, 17, 6, 13, 12, 2,
 
 For example i=10 is value 2 because 10-E<gt>1-E<gt>1 is 2 iterations to get
@@ -178,7 +178,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2011, 2012 Kevin Ryde
+Copyright 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

@@ -16,6 +16,9 @@
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
+# https://github.com/hvds/seq/tree/master/jacobsthal
+#
+
 package Math::NumSeq::JacobsthalFunction;
 use 5.004;
 use strict;
@@ -23,7 +26,7 @@ use List::Util 'max';
 use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;

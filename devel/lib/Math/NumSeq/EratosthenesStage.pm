@@ -1,4 +1,4 @@
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 use Math::NumSeq;
 use List::Util 'max';
 @ISA = ('Math::NumSeq');
@@ -87,6 +87,7 @@ sub rewind {
   $self->{'i'} = $self->i_start;
   $self->{'a'} = 2;
   $self->{'size'} = 5;
+  $self->{'lo'} = 0;
   $self->{'hi'} = 0;
 }
 

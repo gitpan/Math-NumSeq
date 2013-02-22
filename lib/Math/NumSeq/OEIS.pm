@@ -1,4 +1,4 @@
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -21,7 +21,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION','@ISA';
-$VERSION = 55;
+$VERSION = 56;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -81,7 +81,7 @@ sub new {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq NumSeq ie OEIS Online ithreads ascii utf eg cofr recognised booleans
+=for stopwords Ryde Math-NumSeq ie OEIS Online ithreads ascii utf eg cofr recognised booleans filename utf-8
 
 =head1 NAME
 
@@ -95,25 +95,25 @@ Math::NumSeq::OEIS -- number sequence by OEIS A-number
 
 =head1 DESCRIPTION
 
-This module selects a NumSeq by its Online Encyclopedia of Integer Sequences
-A-number.
+This module selects a C<NumSeq> by an A-number from Sloane's Online
+Encyclopedia of Integer Sequences.
 
-If there's NumSeq code implementing the sequence then that's used, otherwise
-local files if available.  See L<Math::NumSeq::OEIS::Catalogue> for querying
-available A-numbers.
+If there's C<NumSeq> code implementing the sequence then that's used,
+otherwise local files if available.  See L<Math::NumSeq::OEIS::Catalogue>
+for querying available A-numbers.
 
 =head2 Files
 
-Local files should be in F<~/OEIS>, ie. an F<OEIS> directory in the user's
-home directory (see L<File::HomeDir>).  Files can be HTML, OEIS internal,
-B-file, and/or A-file.
+Local files should be in a F<~/OEIS> direectory, ie. an F<OEIS> directory in
+the user's home directory (see L<File::HomeDir>).  Files can be HTML, OEIS
+internal, B-file, and/or A-file.
 
     ~/OEIS/A000032.html
     ~/OEIS/A000032.internal.html
     ~/OEIS/b000032.txt
     ~/OEIS/a000032.txt
 
-As downloaded from
+As downloaded from for example
 
     http://oeis.org/A000032
     http://oeis.org/A000032/internal
@@ -121,26 +121,27 @@ As downloaded from
     http://oeis.org/A000032/a000032.txt
 
 The "internal" format is more reliable than the HTML for parsing.  It's
-served as HTML, hence F<.internal.html> filename.  The B-file or A-file can
-be used alone, but in that case there's no C<$seq-E<gt>description()> and it
+wrapped in HTML, hence F<.internal.html> filename.  The b-file or a-file can
+be used alone but in that case there's no C<$seq-E<gt>description()> and it
 may limit the C<$seq-E<gt>characteristic()> attributes.
 
-F<b000000.txt> files are long lists of values.  F<a000000.txt> similarly and
-even longer, but sometimes auxiliary info instead (which is ignored).  Some
-sequences don't have these, only the 30 or 40 sample values from the HTML or
-internal page.  Those samples might be enough for fast growing sequences.
+B-files F<b000000.txt> are long lists of values.  A-files F<a000000.txt>
+similarly and even longer, but sometimes are auxiliary info instead (which
+is ignored).  Some sequences don't have these, only the 30 or 40 sample
+values from the HTML or internal page.  Those samples might be enough for
+fast growing sequences.
 
 =head2 Other Notes
 
 Sometimes more than one NumSeq module generates an OEIS sequence.  For
 example A000290 is Squares but also Polygonal k=4.  The catalogue is
-arranged so C<Math::NumSeq::OEIS> is the better, faster, or more specific
-one.
+arranged so C<Math::NumSeq::OEIS> selects the better, faster, or more
+specific one.
 
 Sometimes the OEIS has duplicates, ie. two A-numbers which are the same
 sequence.  Both are catalogued so they both give NumSeq module code, but the
-C<$seq-E<gt>oeis_anum()> method will read back as whichever is the "primary"
-one.
+C<$seq-E<gt>oeis_anum()> method generally reads back as whichever is the
+"primary" one.
 
 =head1 FUNCTIONS
 
@@ -160,12 +161,15 @@ In the current code when reading from a file any values bigger than a usual
 Perl int or float are returned as C<Math::BigInt> objects.  Is that a good
 idea?  It preserves precision.
 
-An F<a000000.txt> or F<b000000.txt> file is read line by line.  In Perl 5.8
+An F<a000000.txt> or F<b000000.txt> file is read line by line.  For Perl 5.8
 ithreads there's a C<CLONE> setup which re-opens the file in a new thread so
-the C<$seq> in each thread has its own position.  But a C<fork()> will still
-have both parent and child with the same open file so care should be taken
-that just one of them uses the C<$seq> in that case.  The same is true of
-all open file handling across a fork.  Is this a good idea?
+the C<$seq> in each thread has its own position.  (See L<perlthrtut> and
+L<perlmod/Making your module threadsafe>).
+
+But a C<fork()> will still have both parent and child with the same open
+file so care should be taken that just one of them uses the C<$seq> in that
+case.  The same is true of all open file handling across a C<fork()>.  Is
+this a good idea?
 
 =item C<$str = $seq-E<gt>description()>
 
@@ -175,8 +179,8 @@ sequence.
 
 A few sequences may have non-ASCII characters in the description.  For Perl
 5.8 and up they're decoded to wide-chars.  Not sure what to do for earlier
-Perl, currently they're left as the bytes from the download, which is
-probably utf-8.
+Perl, currently they're left as the bytes from the download, which
+unfortunately may be utf-8.
 
 =item C<$value = $seq-E<gt>values_min()>
 
@@ -245,7 +249,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2011, 2012 Kevin Ryde
+Copyright 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

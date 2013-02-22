@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 55;
+$VERSION = 56;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -42,7 +42,7 @@ use constant oeis_anum => 'A002378'; # pronic, starting from 0
 
 sub rewind {
   my ($self) = @_;
-  $self->{'i'} = $self->i_start;  # ->value_to_i_floor(max(0,$self->{'lo'}));
+  $self->{'i'} = $self->i_start;
 }
 sub seek_to_i {
   my ($self, $i) = @_;
@@ -123,7 +123,7 @@ Math::NumSeq::Pronic -- pronic numbers
 
 The pronic numbers i*(i+1),
 
-    starting i=0
+    # starting i=0
     0, 2, 6, 12, 20, 30, ...
 
 These are twice the triangular numbers, and half way between the perfect
@@ -192,7 +192,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2010, 2011, 2012 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

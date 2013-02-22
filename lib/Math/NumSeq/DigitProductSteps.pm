@@ -1,4 +1,4 @@
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -25,7 +25,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 use Math::NumSeq;
 use List::Util 'reduce';
 use Math::NumSeq::Base::IterateIth;
@@ -138,7 +138,7 @@ sub pred {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq BigInt
+=for stopwords Ryde Math-NumSeq BigInt repunits Radix
 
 =head1 NAME
 
@@ -156,7 +156,7 @@ This is an iteration taking the product of the digits of a number until
 reaching a single digit value.  The sequence values are the count of steps,
 also called the multiplicative persistence.
 
-    starting i=0
+    # starting i=0
     0,0,..0,0,1,1,..1,1,2,2,2,2,2,1,1,1,1,2,2,2,2,2,3,1,1,1,2,...
 
 For example i=39 goes 3*9=27 -E<gt> 2*7=14 -E<gt> 1*4=4 to reach a single
@@ -225,7 +225,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2012 Kevin Ryde
+Copyright 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

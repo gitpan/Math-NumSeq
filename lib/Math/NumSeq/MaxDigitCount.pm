@@ -1,4 +1,4 @@
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -24,7 +24,7 @@ use Math::NumSeq;
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
@@ -165,7 +165,7 @@ sub pred {
 1;
 __END__
 
-=for stopwords Ryde 
+=for stopwords Ryde Math-NumSeq radix Radix
 
 =head1 NAME
 
@@ -182,7 +182,7 @@ Math::NumSeq::MaxDigitCount -- maximum count of a given digit in any radix
 This is the maximum count of a given digit which occurs when i is written in
 any radix.  The default digit is 0.
 
-    starting i=1
+    # starting i=1
     0, 1, 1, 2, 1, 1, 1, 3, 2, 2, 1, 2, 1, 1, 1, 4, 3, 3, 2, ...
 
 For example i=15 is 1 because 15 = ternary "120" which has 1 zero, and no
@@ -253,7 +253,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2012 Kevin Ryde
+Copyright 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

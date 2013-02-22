@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -70,14 +70,13 @@ sub values_min {
 
 sub rewind {
   my ($self) = @_;
-  my $lo = $self->{'lo'};
 
   my $radix = $self->{'radix'};
 
   $self->{'i'}      = $self->i_start;
   $self->{'target'} = (6*$radix+6)*$radix+6;
   $self->{'cube'}   = $radix*$radix*$radix;
-  $self->{'value'}  = max($lo,$self->{'target'}) - 1;
+  $self->{'value'}  = $self->{'target'} - 1;
 }
 sub next {
   my ($self) = @_;
@@ -186,7 +185,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2010, 2011, 2012 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -21,7 +21,7 @@ use strict;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 55;
+$VERSION = 56;
 use Math::NumSeq::Base::Sparse;  # FIXME: implement pred() directly ...
 @ISA = ('Math::NumSeq::Base::Sparse');
 
@@ -286,8 +286,8 @@ Math::NumSeq::Fibonacci -- Fibonacci numbers
 
 The Fibonacci numbers F(i) = F(i-1) + F(i-2) starting from 0,1,
 
-     starting i=0
-     0, 1, 1, 2, 3, 5, 8, 13, 21, 34, ...
+    # starting i=0
+    0, 1, 1, 2, 3, 5, 8, 13, 21, 34, ...
 
 =head1 FUNCTIONS
 
@@ -413,7 +413,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2010, 2011, 2012 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

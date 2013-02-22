@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -110,7 +110,7 @@ sub check_class {
   # return unless $class =~ /DigitCount/;
   # return unless $class =~ /Plain/;
   # return unless $class =~ /PisanoPeriodSteps/;
-  return unless $class =~ /LucasSeq/;
+  # return unless $class =~ /LucasSeq/;
   # return unless $class =~ /Cbrt/;
   # return unless $class =~ /Slop/;
   # return unless $class =~ /Kap/;
@@ -120,8 +120,8 @@ sub check_class {
   # return unless $class =~ /DigitP/;
   # return unless $class =~ /Kap/;
   # return unless $class =~ /Pier/;
-  # return unless $class =~ /FactorialP/;
-  # return unless $class =~ /Pisano/;
+  return unless $class =~ /FactorialP/;
+  # return unless $class =~ /Products/;
   # return unless $class =~ /FibonacciFreq/;
   # return unless $class =~ /Jacobs/;
   # return unless $anum eq 'A048669';

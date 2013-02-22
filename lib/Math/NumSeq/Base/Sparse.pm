@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -33,22 +33,11 @@ use constant characteristic_sparse => 1;
 
 sub new {
   my $class = shift;
-  ### Sparse new()
-  my $self = $class->SUPER::new (pred_array => [],
-                                 pred_hash  => {},
-                                 pred_value => -1,
-                                 @_);
-  my $lo = $self->{'lo'};
-  ### $lo
-  ### f0: $self->{'f0'}
-
-  if (defined $self->{'f0'}) {
-    while ($self->{'f0'} < $lo) {
-      ### Sparse next() for f0<lo
-      $self->next;
-    }
-  }
-  return $self;
+  ### Sparse new() ...
+  return $class->SUPER::new (pred_array => [],
+                             pred_hash  => {},
+                             pred_value => -1,
+                             @_);
 }
 sub ith {
   my ($self, $i) = @_;
@@ -97,11 +86,9 @@ sub _extend {
   my ($i, $value) = $iter->next;
   ### $i
   ### $value
-  if ($value >= $self->{'lo'}) {
-    $self->{'pred_value'} = $value;
-    $self->{'pred_array'}->[$i] = $value;
-    $self->{'pred_hash'}->{$value} = undef;
-  }
+  $self->{'pred_value'} = $value;
+  $self->{'pred_array'}->[$i] = $value;
+  $self->{'pred_hash'}->{$value} = undef;
 }
 
 1;

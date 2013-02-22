@@ -1,4 +1,4 @@
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -26,7 +26,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 55;
+$VERSION = 56;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -37,7 +37,7 @@ use Math::NumSeq::Base::IterateIth;
 #use Smart::Comments;
 
 # use constant name => Math::NumSeq::__('Baum-Sweet');
-use constant description => Math::NumSeq::__('Baum-Sweet sequence, 1 if i contains no odd-length run of 0 bits, 0 if it does.');
+use constant description => Math::NumSeq::__('Baum-Sweet sequence, 1 if i contains no odd-length run of 0-bits, 0 if it does.');
 use constant values_min => 0;
 use constant values_max => 1;
 use constant i_start => 0;
@@ -95,10 +95,10 @@ Math::NumSeq::BaumSweet -- Baum-Sweet sequence
 
 The Baum-Sweet sequence
 
-    starting i=0
+    # starting i=0
     1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, ...
 
-where each value is 1 if the index i contains no odd-length run of 0 bits,
+where each value is 1 if the index i contains no odd-length run of 0-bits,
 or 0 if it does.
 
 =head1 FUNCTIONS
@@ -120,7 +120,7 @@ Create and return a new sequence object.
 =item C<$value = $seq-E<gt>ith($i)>
 
 Return the C<$i>'th BaumSweet number, ie. 1 or 0 according to whether C<$i>
-is without or with an odd-length run of 0 bits.
+is without or with an odd-length run of 0-bits.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
@@ -140,7 +140,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2011, 2012 Kevin Ryde
+Copyright 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

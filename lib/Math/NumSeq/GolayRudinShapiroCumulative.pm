@@ -1,4 +1,4 @@
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -158,7 +158,7 @@ sub pred {
 1;
 __END__
 
-=for stopwords Ryde OEIS Ith GRS NumSeq
+=for stopwords Ryde Math-NumSeq OEIS Ith GRS NumSeq
 
 =head1 NAME
 
@@ -175,7 +175,7 @@ Math::NumSeq::GolayRudinShapiroCumulative -- cumulative Golay/RudinShapiro seque
 This is the Golay/Rudin/Shapiro sequence values accumulated as
 GRS(0)+...+GRS(i),
 
-    starting from i=0 with value=GRS(0) alone
+    starting from i=0 value=GRS(0)
 
     1, 2, 3, 2, 3, 4, 3, 4, 5, 6, 7, 6, 5, 4, 5, 4, ...
 
@@ -185,9 +185,8 @@ all the places 3 occurs.
 
 This GRS cumulative arises as in the alternate paper folding curve as the
 coordinate sum X+Y.  The way k occurs k many times has a geometric
-interpretation as the points on the diagonal X+Y=k of the curve being
-visited a total of k many times.  See
-L<Math::PlanePath::AlternatePaper/dSum>.
+interpretation as the points on the diagonal X+Y=k of the curve visited a
+total of k many times.  See L<Math::PlanePath::AlternatePaper/dSum>.
 
 =head1 FUNCTIONS
 
@@ -221,8 +220,8 @@ occur, so this simply means integer C<$value E<gt>= 1>.
 
 =head2 Ith
 
-The cumulative total GRS(0)+...+GRS(i-1) can be calculated from the 1 bits
-of i.  Each 1 bit becomes a value 2^floor((pos+1)/2) in the total,
+The cumulative total GRS(0)+...+GRS(i-1) can be calculated from the 1-bits
+of i.  Each 1-bit becomes a value 2^floor((pos+1)/2) in the total,
 
     bit    value
     ---    -----
@@ -250,9 +249,9 @@ For example i=27 is 110011 in binary so
           ----
             5      cumulative value GRS(0)+...+GRS(26)
 
-The second lowest bit is negated as value -2 because there's one 11 bit pair
-above it, and -1 the same because above and not including that bit there's
-just one 11 bit pair.
+The second lowest bit is negated as value -2 because there's one "11" bit
+pair above it, and -1 the same because above and not including that bit
+there's just one "11" bit pair.
 
 Or for example i=31 is 11111 in binary so
 
@@ -268,10 +267,9 @@ Here at bit2 the value is -2 because there's one adjacent 11 above, not
 including bit2 itself.  Then at bit1 there's two 11 pairs above so +2, and
 at bit0 there's three so -1.
 
-The total can be formed either by examining the bits from high to low
-counting adjacent 11 bits on the way down to know whether to add or
-subtract.  Or it can be formed from low to high by negating the total so far
-when a 11 pair is encountered.
+The total can be formed by examining the bits high to low and counting
+adjacent 11 bits on the way down to add or subtract.  Or it can be formed
+from low to high by negating the total so far when a 11 pair is encountered.
 
 For an inclusive sum GRS(0)+...+GRS(i) as per this module, the extra GRS(i)
 can be worked into the calculation by its GRS definition +1 or -1 according
@@ -287,9 +285,9 @@ value 1 below the least significant bit.  For example i=27 inclusive
           ----
             5      cumulative value GRS(0)+...+GRS(27)
 
-For low to high this low value 1 can be handled simply by starting the total
-at 1.  It then becomes +1 or -1 by the negations as 11s are encountered for
-the rest of the bit handling.
+For low to high calculation this lowest +/-1 can be handled simply by
+starting the total at 1.  It then becomes +1 or -1 by the negations as 11s
+are encountered for the rest of the bit handling.
 
     total = 1   # initial value below all bits to be inclusive GRS(i)
     power = 1   # 2^ceil(bitpos/2)
@@ -320,8 +318,15 @@ the rest of the bit handling.
 
 This sort of calculation arises implicitly in the alternate paper folding
 curve to calculate X,Y for a given N point on the curve.  But that
-calculation does X=GRStotal(ceil(N/2)) and Y=GRStotal(floor(N/2))
-simultaneously using the base 4 digits of N.
+calculation does a simultaneous using the base 4 digits of N.
+
+    X=GRStotal(ceil(N/2))
+    Y=GRStotal(floor(N/2))
+
+=cut
+
+# ENHANCE-ME: Cross-ref to AlternatePaper formulas section when its X,Y
+# calculation is described.
 
 =head1 SEE ALSO
 
@@ -336,7 +341,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2012 Kevin Ryde
+Copyright 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

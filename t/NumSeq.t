@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -29,7 +29,8 @@ my $test_count = (tests => 1801)[1];
 plan tests => $test_count;
 
 # uncomment this to run the ### lines
-#use Smart::Comments '###';
+# use Smart::Comments '###';
+
 
 use POSIX ();
 POSIX::setlocale(POSIX::LC_ALL(), 'C'); # no message translations
@@ -124,6 +125,19 @@ foreach my $elem
    # Expression.pm
    # Ln2Bits.pm
    # PiBits.pm
+   
+   [ 'Math::NumSeq::DigitSumModulo',
+     [ 0,  # 00
+       1,  # 01
+       1,  # 10
+       2,  # 11,
+       1,  # 100
+       2,  # 101
+       2,  # 110
+       0,  # 111
+       1,  # 1000
+     ],
+     { radix => 2, modulus => 3 } ],
    
    [ 'Math::NumSeq::AlgebraicContinued',
      [ 1,3,1,5,1,1,4,1,1,8,1,14,1,10,2,1,4,12,2,3,2,1,3 ],
@@ -1482,19 +1496,6 @@ foreach my $elem
    [ 'Math::NumSeq::SternDiatomic',
      [ 0, 1, 1, 2, 1, 3, 2, 3, 1, 4, 3, 5 ],
    ],
-   
-   [ 'Math::NumSeq::DigitSumModulo',
-     [ 0,  # 00
-       1,  # 01
-       1,  # 10
-       2,  # 11,
-       1,  # 100
-       2,  # 101
-       2,  # 110
-       0,  # 111
-       1,  # 1000
-     ],
-     { radix => 2, modulus => 3 } ],
    
    [ 'Math::NumSeq::DigitProduct',
      [ 0,

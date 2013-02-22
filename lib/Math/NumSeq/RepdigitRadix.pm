@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -25,7 +25,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -40,7 +40,7 @@ use Math::Factor::XS 0.40 'factors'; # version 0.40 for factors() on BigInt
 
 
 # use constant name => Math::NumSeq::__('Repdigit Radix');
-use constant description => Math::NumSeq::__('First radix in which i is a repdigit (at most base=i-1 since "11" gives i).');
+use constant description => Math::NumSeq::__('First radix in which i is a repdigit (at most base=i-1 since otherwise "11" would always give i).');
 use constant characteristic_smaller => 1;
 use constant characteristic_increasing => 0;
 use constant characteristic_integer => 1;
@@ -310,7 +310,7 @@ Math::NumSeq::RepdigitRadix -- radix in which i is a repdigit
 
 The radix in which i is a repdigit,
 
-    starting i=0
+    # starting i=0
     2, 0, 0, 2, 3, 4, 5, 2, 3, 8, 4, 10, etc
 
 i=0 is taken to be a repdigit "00" in base 2.  i=1 and i=2 are not repdigits
@@ -416,7 +416,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2010, 2011, 2012 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

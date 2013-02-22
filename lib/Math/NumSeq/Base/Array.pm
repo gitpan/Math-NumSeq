@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -28,18 +28,18 @@ use Math::NumSeq;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-sub new {
-  my $class = shift;
-  my $self = $class->SUPER::new (@_);
-  my $array = $self->{'array'};
-  if ($self->{'lo'}) {
-    while (@$array && (! defined $array->[0] || $array->[0] < $self->{'lo'})) {
-      shift @$array;
-    }
-  }
-  ### shifted to: @$array
-  return $self;
-}
+# sub new {
+#   my $class = shift;
+#   my $self = $class->SUPER::new (@_);
+#   my $array = $self->{'array'};
+#   if ($self->{'lo'}) {
+#     while (@$array && (! defined $array->[0] || $array->[0] < $self->{'lo'})) {
+#       shift @$array;
+#     }
+#   }
+#   ### shifted to: @$array
+#   return $self;
+# }
 sub rewind {
   my ($self) = @_;
   $self->{'i'} = $self->i_start;

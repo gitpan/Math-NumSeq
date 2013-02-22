@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -165,10 +165,14 @@ $oeis_anum{'both'}->[12]   = 'A195162'; # 12-gonal generalized
 # OEIS-Catalogue: A135705 polygonal=12 pairs=second
 # OEIS-Catalogue: A195162 polygonal=12 pairs=both
 
+$oeis_anum{'second'}->[13] = 'A211013'; # 13-gonal second
 $oeis_anum{'both'}->[13]   = 'A195313'; # 13-gonal generalized
+# OEIS-Catalogue: A211013 polygonal=13 pairs=second
 # OEIS-Catalogue: A195313 polygonal=13 pairs=both
 
+$oeis_anum{'second'}->[14] = 'A211014'; # 14-gonal second
 $oeis_anum{'both'}->[14]   = 'A195818'; # 14-gonal generalized
+# OEIS-Catalogue: A211014 polygonal=14 pairs=second
 # OEIS-Catalogue: A195818 polygonal=14 pairs=both
 
 # these in sequence ...
@@ -221,7 +225,9 @@ $oeis_anum{'average'}->[14] = 'A033581'; # (k-2)/2==6 is 6*squares
 $oeis_anum{'average'}->[16] = 'A033582'; # (k-2)/2==7 is 7*squares
 # OEIS-Catalogue: A033582 polygonal=16 pairs=average
 
+$oeis_anum{'second'}->[18] = 'A139278';
 $oeis_anum{'average'}->[18] = 'A139098'; # (k-2)/2==8 is 8*squares
+# OEIS-Catalogue: A139278 polygonal=18 pairs=second
 # OEIS-Catalogue: A139098 polygonal=18 pairs=average
 
 $oeis_anum{'average'}->[20] = 'A016766'; # (k-2)/2==9 is 9*squares
@@ -297,7 +303,6 @@ sub oeis_anum {
 
 sub rewind {
   my ($self) = @_;
-  # my $lo = $self->{'lo'} || 0;
 
   my $k = $self->{'polygonal'} || 2;
   my $add = 4 - $k;
@@ -539,7 +544,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2010, 2011, 2012 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

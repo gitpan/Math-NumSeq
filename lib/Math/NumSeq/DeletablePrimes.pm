@@ -1,4 +1,4 @@
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -26,7 +26,7 @@ use strict;
 use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 
 use Math::NumSeq;
 use Math::NumSeq::Primes;
@@ -165,6 +165,7 @@ Math::NumSeq::DeletablePrimes -- primes deleting a digit repeatedly
 The deletable primes, being primes which can have a digit removed to give
 another prime which in turn is deletable.
 
+    # starting i=0
     2, 3, 5, 7, 13, 17, 23, 29, 31, 37, 43, ...
 
 For example 367 is a deletable prime because it's possible to delete the 6

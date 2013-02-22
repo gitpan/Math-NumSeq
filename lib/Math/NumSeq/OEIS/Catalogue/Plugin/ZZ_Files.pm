@@ -1,4 +1,4 @@
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -30,7 +30,7 @@ use Math::NumSeq::OEIS::Catalogue::Plugin::FractionDigits;
   = \&Math::NumSeq::OEIS::Catalogue::Plugin::FractionDigits::_anum_to_num;
 
 use vars '$VERSION';
-$VERSION = 55;
+$VERSION = 56;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -49,17 +49,21 @@ sub anum_to_info {
   ### Catalogue-ZZ_Files num_to_info(): @_
 
   my $dir = Math::NumSeq::OEIS::File::oeis_dir();
-  foreach my $basename
-    ("$anum.internal",
-     "$anum.internal.html",
-     "$anum.html",
-     "$anum.htm",
-     Math::NumSeq::OEIS::File::anum_to_bfile($anum),
-     Math::NumSeq::OEIS::File::anum_to_bfile($anum,'a')) {
-    my $filename = File::Spec->catfile ($dir, $basename);
-    ### $filename
-    if (-e $filename) {
-      return _make_info($anum);
+  foreach my $anum ($anum,
+                    # A0123456 shortened to A123456
+                    ($anum =~ /A0(\d{6})/ ? "A$1" : ())) {
+    foreach my $basename
+      ("$anum.internal",
+       "$anum.internal.html",
+       "$anum.html",
+       "$anum.htm",
+       Math::NumSeq::OEIS::File::anum_to_bfile($anum),
+       Math::NumSeq::OEIS::File::anum_to_bfile($anum,'a')) {
+      my $filename = File::Spec->catfile ($dir, $basename);
+      ### $filename
+      if (-e $filename) {
+        return _make_info($anum);
+      }
     }
   }
   return undef;
@@ -108,7 +112,7 @@ sub nocache_info_arrayref {
 }
 sub _anum_traverse {
   my ($callback) = @_;
-  
+
   my $dir = Math::NumSeq::OEIS::File::oeis_dir();
   if (! opendir DIR, $dir) {
     ### cannot opendir: $!
@@ -123,7 +127,7 @@ sub _anum_traverse {
     #   ### skip dangling symlink ...
     #   next;
     # }
-    
+
     # Case insensitive for MS-DOS.  But dunno what .internal or
     # .internal.html will be or should be on an 8.3 DOS filesystem.  Maybe
     # "A000000.int", maybe "A000000i.htm" until 7-digit A-numbers.
@@ -133,7 +137,7 @@ sub _anum_traverse {
                                )$}ix;
     my $num = ($2||$5)+0;   # numize
     next if $seen{$num}++;  # uniquify
-    last unless &$callback($num);                           
+    last unless &$callback($num);
   }
   closedir DIR or die "Error closing $dir: $!";
 }
@@ -196,17 +200,17 @@ __END__
 # sub anum_after {
 #   my ($class, $anum) = @_;
 #   ### anum_after(): $anum
-# 
+#
 #   my $dir = Math::NumSeq::OEIS::File::oeis_dir();
-# 
+#
 #   if (! opendir DIR, $dir) {
 #     ### cannot opendir: $!
 #     return undef;
 #   }
-# 
+#
 #   $anum =~ /([0-9]+)/;
 #   my $anum_num = $1 || 0;
-# 
+#
 #   my $after_num;
 #   while (defined (my $basename = readdir DIR)) {
 #     # ### $basename
@@ -221,12 +225,11 @@ __END__
 #     }
 #   }
 #   closedir DIR or die "Error closing $dir: $!";
-# 
+#
 #   if (defined $after_num) {
 #     $after_num = "A$after_num";
 #   }
-# 
+#
 #   ### $after_num
 #   return $after_num;
 # }
-

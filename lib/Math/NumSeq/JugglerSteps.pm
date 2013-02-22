@@ -1,4 +1,4 @@
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -341,7 +341,7 @@ So sqrt if n even, or sqrt(n^3) if n odd, each rounded downwards.  For
 example i=17 goes 17 -> sqrt(17^3)=70 -> sqrt(70)=8 -> sqrt(8)=2 ->
 sqrt(2)=1, for a count of 4 steps.
 
-    starting i=1
+    # starting i=1
     0, 1, 6, 2, 5, 2, 4, 2, 7, 7, 4, 7, 4, 7, 6, 3, 4, 3, 9, 3, ...
 
 The intermediate values in the calculation can become quite large and
@@ -403,7 +403,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2010, 2011, 2012 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

@@ -1,4 +1,4 @@
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -24,19 +24,14 @@ use strict;
 use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 
 use Math::NumSeq;
-use Math::NumSeq::Base::IteratePred;
-@ISA = ('Math::NumSeq',
-        'Math::NumSeq::Base::IteratePred');
+@ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
-use Math::NumSeq::Primes;
-use Math::NumSeq::Squares;
-
 # uncomment this to run the ### lines
-#use Smart::Comments;
+# use Smart::Comments;
 
 
 # use constant name => Math::NumSeq::__('...');
@@ -45,15 +40,111 @@ use constant default_i_start => 1;
 use constant characteristic_integer => 1;
 use constant values_min => 1;
 
+use constant parameter_info_array =>
+  [
+   { name      => 'multiplicity',
+     share_key => 'multiplicity_product',
+     display   => Math::NumSeq::__('Multiplicity'),
+     type      => 'enum',
+     default   => 'repeated',
+     choices   => [ 'repeated',
+                    'distinct',
+                  ],
+     choices_display => [ Math::NumSeq::__('Repeated'),
+                          Math::NumSeq::__('Distinct'),
+                        ],
+     description => Math::NumSeq::__('Whether to allow repeated factorials in the product, or only distinct.'),
+   },
+  ];
+
 #------------------------------------------------------------------------------
-# cf A046523 least with same prime sig as n
-#    A115746 products of p! for any prime p, excluding 1
+# cf A115746 products of p! for any prime p, excluding 1
+#    A001013 Jordan-Polya products of factorials
+#    A034878 n! is product of smaller factorials, with repeats
+#    A075082 n! is product of smaller factorials, no repeats
+#    A058295 products of distinct factorials
+#    A000178 superfactorials, product of first n factorials
+#    A098694 double-superfactorials, product first 2n factorials
+#    A074319 product next n factorials
+#    A000197 (n!)!
 #
-use constant oeis_anum => 'A001013';   # p!
-# use constant oeis_anum => 'A115746';  # n!
+my %oeis_anum = (repeated => 'A001013',
+                 distinct => 'A058295',
+                );
+# OEIS-Catalogue: A001013
+# OEIS-Catalogue: A058295 multiplicity=distinct
+
+sub oeis_anum {
+  my ($self) = @_;
+  return $oeis_anum{$self->{'multiplicity'}};
+}
+
+# use constant oeis_anum => 'A115746';  # p!
 
 
 #------------------------------------------------------------------------------
+
+sub rewind {
+  my ($self) = @_;
+  $self->{'i'} = $self->i_start;
+  $self->{'value'} = 0;
+}
+
+sub next {
+  my ($self) = @_;
+  return ($self->{'i'}++,
+          $self->{'value'} = $self->value_ceil($self->{'value'}+1));
+}  
+
+sub value_ceil {
+  my ($self, $value) = @_;
+  ### FactorialProducts value_ceil(): "$value"
+
+  if ($value < 1) {
+    return 1;
+  }
+  if (_is_infinite($value)) {
+    return $value;
+  }
+  my $distinct = ($self->{'multiplicity'} eq 'distinct');
+  
+  my $found;
+  my $prod = 1;
+  my $limit = 2**31;
+  my (@prod,@limit);
+  my $f = 1;
+  for (;;) {
+    ### at: "f=$f prod=$prod limit=$limit"
+    ### prod: join('',@prod)
+    ### limit: join('',@limit)
+    if ($prod >= $value) {
+      if (! $found || $prod < $found) {
+        ### found: $prod
+        $found = $prod;
+      }
+      $prod = pop @prod || last;
+      $limit = pop @limit;
+      $f = 1;
+      next;
+    }
+    $f++;
+    if ($f > $limit) {
+      if ($limit > 2) {
+        $limit--;
+        $f = 1;
+      } else {
+        $prod = pop @prod || last;
+        $limit = pop @limit;
+        $f = 1;
+      }
+    } else {
+      $prod *= $f;
+      push @prod, $prod;
+      push @limit, $f - $distinct;
+    }
+  }
+  return $found;
+}
 
 sub pred {
   my ($self, $value) = @_;
@@ -69,9 +160,13 @@ sub pred {
     return ($value == 1);
     return 0;
   }
+  my $distinct = ($self->{'multiplicity'} eq 'distinct');
+
+  # The loop divides out a factorial n! by counting $f from 2 upwards.
+  # If $value % $f != 0 then that's a factorial ($f-1)! divided out.
 
   my (@value,@limit);
-  my $limit = 2**64; # infinity
+  my $limit = 2**31;
   my $f = 1;
   for (;;) {
     $f++;
@@ -90,8 +185,8 @@ sub pred {
         return 1;
       }
 
-        push @value, $value;
-        push @limit, $f;
+      push @value, $value;
+      push @limit, $f - $distinct;
       if (is_prime($f)) {
       }
     }

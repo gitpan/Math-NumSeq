@@ -36,7 +36,7 @@ use Math::NumSeq::ReRound;
 # VERSION
 
 {
-  my $want_version = 55;
+  my $want_version = 56;
   ok ($Math::NumSeq::ReRound::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::ReRound->VERSION,  $want_version,

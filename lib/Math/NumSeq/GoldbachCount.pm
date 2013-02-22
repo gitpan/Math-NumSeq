@@ -1,4 +1,4 @@
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -25,7 +25,7 @@ use strict;
 use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
@@ -217,6 +217,7 @@ Math::NumSeq::GoldbachCount -- number of representations as sum of primes P+Q
 The number of ways each i can be represented as a sum of two primes P+Q,
 starting from i=1,
 
+    # starting i=1
     0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 0, 1, 1, 2, 1, 2, 0, ...
 
 For example i=4 can be represented only as 2+2 so just 1 way.  Or i=10 is
@@ -227,6 +228,7 @@ For example i=4 can be represented only as 2+2 so just 1 way.  Or i=10 is
 Option C<on_values =E<gt> 'even'> gives the count on just the even numbers,
 starting i=1 for number of ways "2" can be expressed (none),
 
+    # starting i=1
     0, 1, 1, 1, 2, 1, 2, 2, 2, 2, 3, 3, 3, 2, 3, 2, 4, 4, ...
 
 Goldbach's famous conjecture is that for an even i E<gt>= 4 there's always
@@ -288,7 +290,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2012 Kevin Ryde
+Copyright 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

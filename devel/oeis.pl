@@ -25,6 +25,78 @@ use POSIX;
 use Smart::Comments;
 
 {
+  # no seek() at all in IO::Zlib 1.10, AUTOLOAD error
+  seek STDIN, 0,0
+    or print "STDIN ", $!+0," $!\n";
+
+  use IO::Zlib;
+  {
+    package IO::Zlib;
+
+    # No seek() yet.
+    #
+    # With Compress::Zlib could gzseek() to support forward seeks and
+    # gztell() for current position.
+    #
+    # With external gunzip could read and discard to seek forward.  Might
+    # have to remember the file position explicitly to support TELL.
+    #
+    # POSIX.1 specifies ESPIPE for attempting to seek a pipe.  Maybe could
+    # return that if available, instead of EINVAL.
+    #
+    sub SEEK {
+      require POSIX;
+      $! = POSIX::EINVAL();
+      return 0;
+    }
+    sub TELL {
+      require POSIX;
+      $! = POSIX::EINVAL();
+      return -1;
+    }
+  }
+
+  tie *FH, 'IO::Zlib', "$ENV{HOME}/OEIS/stripped.gz", "rb";
+  seek FH, 0,0
+    or print "tiedFH seek ", $!+0," $!\n";
+
+  { my $tell = tell(FH);
+    print "tiedFH tell $tell, ", $!+0, "$!\n";
+  }
+  # my $fh = \*FH;
+  # my $line = readline $fh;
+  # print $line;
+  #  seek $fh, 0,0 or die $!;
+  exit 0;
+}
+{
+  require IO::Uncompress::Gunzip;
+  my $z = IO::Uncompress::Gunzip->new("$ENV{HOME}/OEIS/stripped.gz");
+  $z->getline;
+  $z->seek(0,0) or die $!;
+  exit 0;
+}
+
+{
+  require Math::NumSeq::OEIS::File;
+  my $anum = 'A000032';
+  my $num = 218181;
+
+  # open my $fh, '<', "$ENV{HOME}/OEIS/stripped" or die $!;
+  # open my $fh, '<:gzip', "$ENV{HOME}/OEIS/stripped.gz" or die $!;
+  open my $fh, '<:gzip', "$ENV{HOME}/OEIS/names.gz" or die $!;
+
+  my $line = Math::NumSeq::OEIS::File::_bsearch_textfile
+    ($fh, sub {
+       my ($line) = @_;
+       $line =~ /^A(\d+)/ or return -1;
+       return ($1 <=> $num);
+     });
+  ### $line
+  exit 0;
+}
+
+{
   require Math::NumSeq::OEIS;
   print "o\n";
   my $info = Math::NumSeq::OEIS->parameter_info_array;

@@ -1,4 +1,4 @@
-# Copyright2011, 2012 Kevin Ryde
+# Copyright2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -21,7 +21,7 @@ use strict;
 use Math::Prime::XS;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -171,8 +171,11 @@ Math::NumSeq::Primorials -- primorials 2*3*...*p[i]
 
 =head1 DESCRIPTION
 
-The sequence of primorials, 1, 2, 6, 30, 210, etc, being the product of the
-first i many primes, 2*3*5*...*p[i].
+The sequence of primorials, being the product of the first i many primes,
+2*3*5*...*p[i].
+
+    # starting i=0
+    1, 2, 6, 30, 210, ...
 
 =head1 FUNCTIONS
 
@@ -220,7 +223,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2010, 2011, 2012 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

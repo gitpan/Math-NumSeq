@@ -1,4 +1,4 @@
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 55;
+$VERSION = 56;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -250,7 +250,7 @@ Math::NumSeq::PowerPart -- largest square root etc divisor
 
 This sequence is the largest integer whose square is a divisor of i,
 
-    starting i=1
+    # starting i=1
     1, 1, 1, 2, 1, 1, 1, 2, 3, ...
 
 For example at i=27 the value is 3 since 3^2=9 is the largest square which
@@ -318,7 +318,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2011, 2012 Kevin Ryde
+Copyright 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

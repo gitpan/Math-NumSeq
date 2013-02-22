@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -242,7 +242,7 @@ sub diff_nums {
 }
 
 #------------------------------------------------------------------------------
-# A035103 - count 0 bits in primes
+# A035103 - count 0-bits in primes
 
 {
   my $anum = 'A035103';

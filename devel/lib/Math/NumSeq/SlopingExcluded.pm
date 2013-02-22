@@ -3,7 +3,7 @@
 
 
 
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -25,7 +25,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -267,7 +267,7 @@ The numbers not occurring in sloping binary,
 
 Sloping binary numbers by David Applegate, Benoit Cloitre, Philippe
 DelE<233>ham and Neil Sloane are defined by writing integers in binary and
-reading on an upwards diagonal slope skipping the high 1 bit.
+reading on an upwards diagonal slope skipping the high 1-bit.
 
     integers   sloping
          0        0
@@ -326,7 +326,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2012 Kevin Ryde
+Copyright 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

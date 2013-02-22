@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -15,6 +15,11 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
+
+# $value = $seq->value_floor($value)
+# $value = $seq->value_ceil($value)
+# $value = $seq->value_next($value)
+# characteristic('distinct')
 
 # ->add ->sub   of sequence or constant
 # ->mul
@@ -38,7 +43,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -165,7 +170,6 @@ use constant characteristic_count => undef; # don't know
 sub new {
   my ($class, %self) = @_;
   ### Sequence new(): $class
-  $self{'lo'} ||= 0;
   my $self = bless \%self, $class;
 
   foreach my $pinfo ($self->parameter_info_list) {
@@ -213,7 +217,7 @@ sub _to_bigint {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq Math-Aronson Math-PlanePath oopery genericness Online OEIS ie arrayref hashref filename enum Aronson bigint NaNs nan radix RepdigitRadix repdigit SqrtContinued NumSeq
+=for stopwords Ryde NumSeq Math-NumSeq Math-NumSeq-Alpha Math-Aronson Math-PlanePath oopery genericness Online OEIS ie arrayref hashref filename enum bigint NaNs nan radix non-radix repdigit
 
 =head1 NAME
 
@@ -229,14 +233,14 @@ Math::NumSeq -- number sequences
 =head1 DESCRIPTION
 
 This is a base class for some number sequences.  Sequence objects can
-iterate through values and some sequences have random access and/or
+iterate through values and some sequences have random access and/or a
 predicate test.
 
 The idea is to generate things like squares or primes in a generic way.
 Some sequences, like squares, are so easy there's no need for a class except
 for the genericness.  Other sequences are trickier and an iterator is a good
-way to go through the values.  The iterating tries to be progressive, not
-calculating too far ahead but doing reasonable size chunks for efficiency.
+way to go through the values.  The iterating tries to be progressive, so not
+calculating too far ahead yet doing reasonable size chunks for efficiency.
 
 Sequence values have an integer index "i" starting either from i=0 or i=1 or
 similar as best suits the sequence.  The values themselves can be anything,
@@ -291,13 +295,14 @@ C<next()> will return.
 
 =item C<$i = $seq-E<gt>i_start()>
 
-Return the first C<$i> in the sequence.  This is the position C<rewind()>
-returns to.
+Return the first index C<$i> in the sequence.  This is the position
+C<rewind()> returns to.
 
 =item C<$str = $seq-E<gt>description()>
 
-A human-readable description of the sequence.  This might be translated into
-the locale language, but there's no message translations yet.
+Return a human-readable description of the sequence.  This might be
+translated into the locale language, but there's no message translations
+yet.
 
 =item C<$value = $seq-E<gt>values_min()>
 
@@ -325,9 +330,9 @@ a sequence can have to describe itself.
     value_is_radix      boolean, value is radix for i
 
 C<value_is_radix> means each value is a radix applying to the i index.  For
-example RepdigitRadix gives a value which is a radix where i is a repdigit.
-These values might also be 0 or 1 or -1 or some such non-radix to indicate
-no radix.
+example C<RepdigitRadix> value is a radix for which i is a repdigit.  These
+values might also be 0 or 1 or -1 or some such non-radix to indicate no
+radix.
 
 =item C<$str = $seq-E<gt>oeis_anum()>
 
@@ -521,7 +526,7 @@ L<Math::NumSeq::FractionDigits>,
 L<Math::NumSeq::SqrtDigits>,
 L<Math::NumSeq::SqrtEngel>,
 L<Math::NumSeq::SqrtContinued>,
-L<Math::NumSeq::SqrtContinuedPeriod>
+L<Math::NumSeq::SqrtContinuedPeriod>,
 L<Math::NumSeq::AlgebraicContinued>
 
 L<Math::NumSeq::DigitCount>,
@@ -535,8 +540,8 @@ L<Math::NumSeq::DigitProduct>,
 L<Math::NumSeq::DigitProductSteps>,
 L<Math::NumSeq::DigitSum>,
 L<Math::NumSeq::DigitSumModulo>,
-L<Math::NumSeq::RadixWithoutDigit>
-L<Math::NumSeq::RadixConversion>
+L<Math::NumSeq::RadixWithoutDigit>,
+L<Math::NumSeq::RadixConversion>,
 L<Math::NumSeq::MaxDigitCount>
 
 L<Math::NumSeq::Palindromes>,
@@ -608,7 +613,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2010, 2011, 2012 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 871 A-numbers in 114 modules
+# total 879 A-numbers in 114 modules
 
 use constant info_arrayref =>
 [
@@ -1023,6 +1023,18 @@ use constant info_arrayref =>
     ]
   },
   {
+    'anum' => 'A030567',
+    'class' => 'Math::NumSeq::AllDigits',
+    'parameters' => [
+      'radix',
+      6,
+      'order',
+      'reverse',
+      'i_start',
+      0
+    ]
+  },
+  {
     'anum' => 'A030998',
     'class' => 'Math::NumSeq::AllDigits',
     'parameters' => [
@@ -1030,6 +1042,18 @@ use constant info_arrayref =>
       7,
       'i_start',
       0
+    ]
+  },
+  {
+    'anum' => 'A031007',
+    'class' => 'Math::NumSeq::AllDigits',
+    'parameters' => [
+      'radix',
+      7,
+      'order',
+      'reverse',
+      'i_start',
+      1
     ]
   },
   {
@@ -1849,51 +1873,15 @@ use constant info_arrayref =>
     ]
   },
   {
-    'anum' => 'A010060',
-    'class' => 'Math::NumSeq::DigitSumModulo',
-    'parameters' => [
-      'radix',
-      2
-    ]
+    'anum' => 'A053837',
+    'class' => 'Math::NumSeq::DigitSumModulo'
   },
   {
-    'anum' => 'A053838',
+    'anum' => 'A053844',
     'class' => 'Math::NumSeq::DigitSumModulo',
     'parameters' => [
       'radix',
-      3
-    ]
-  },
-  {
-    'anum' => 'A053839',
-    'class' => 'Math::NumSeq::DigitSumModulo',
-    'parameters' => [
-      'radix',
-      4
-    ]
-  },
-  {
-    'anum' => 'A053840',
-    'class' => 'Math::NumSeq::DigitSumModulo',
-    'parameters' => [
-      'radix',
-      5
-    ]
-  },
-  {
-    'anum' => 'A053841',
-    'class' => 'Math::NumSeq::DigitSumModulo',
-    'parameters' => [
-      'radix',
-      6
-    ]
-  },
-  {
-    'anum' => 'A053842',
-    'class' => 'Math::NumSeq::DigitSumModulo',
-    'parameters' => [
-      'radix',
-      7
+      9
     ]
   },
   {
@@ -1905,19 +1893,79 @@ use constant info_arrayref =>
     ]
   },
   {
-    'anum' => 'A053844',
+    'anum' => 'A053842',
     'class' => 'Math::NumSeq::DigitSumModulo',
     'parameters' => [
       'radix',
-      9
+      7
     ]
   },
   {
-    'anum' => 'A053837',
+    'anum' => 'A053841',
     'class' => 'Math::NumSeq::DigitSumModulo',
     'parameters' => [
       'radix',
-      10
+      6
+    ]
+  },
+  {
+    'anum' => 'A053840',
+    'class' => 'Math::NumSeq::DigitSumModulo',
+    'parameters' => [
+      'radix',
+      5
+    ]
+  },
+  {
+    'anum' => 'A053839',
+    'class' => 'Math::NumSeq::DigitSumModulo',
+    'parameters' => [
+      'radix',
+      4
+    ]
+  },
+  {
+    'anum' => 'A053838',
+    'class' => 'Math::NumSeq::DigitSumModulo',
+    'parameters' => [
+      'radix',
+      3
+    ]
+  },
+  {
+    'anum' => 'A010060',
+    'class' => 'Math::NumSeq::DigitSumModulo',
+    'parameters' => [
+      'radix',
+      2
+    ]
+  },
+  {
+    'anum' => 'A179081',
+    'class' => 'Math::NumSeq::DigitSumModulo',
+    'parameters' => [
+      'modulus',
+      2
+    ]
+  },
+  {
+    'anum' => 'A071858',
+    'class' => 'Math::NumSeq::DigitSumModulo',
+    'parameters' => [
+      'radix',
+      2,
+      'modulus',
+      3
+    ]
+  },
+  {
+    'anum' => 'A179868',
+    'class' => 'Math::NumSeq::DigitSumModulo',
+    'parameters' => [
+      'radix',
+      2,
+      'modulus',
+      4
     ]
   },
   {
@@ -2985,6 +3033,16 @@ use constant info_arrayref =>
     ]
   },
   {
+    'anum' => 'A211013',
+    'class' => 'Math::NumSeq::Polygonal',
+    'parameters' => [
+      'polygonal',
+      13,
+      'pairs',
+      'second'
+    ]
+  },
+  {
     'anum' => 'A195313',
     'class' => 'Math::NumSeq::Polygonal',
     'parameters' => [
@@ -2992,6 +3050,16 @@ use constant info_arrayref =>
       13,
       'pairs',
       'both'
+    ]
+  },
+  {
+    'anum' => 'A211014',
+    'class' => 'Math::NumSeq::Polygonal',
+    'parameters' => [
+      'polygonal',
+      14,
+      'pairs',
+      'second'
     ]
   },
   {
@@ -3168,6 +3236,16 @@ use constant info_arrayref =>
       16,
       'pairs',
       'average'
+    ]
+  },
+  {
+    'anum' => 'A139278',
+    'class' => 'Math::NumSeq::Polygonal',
+    'parameters' => [
+      'polygonal',
+      18,
+      'pairs',
+      'second'
     ]
   },
   {

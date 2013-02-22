@@ -20,6 +20,7 @@
 use 5.004;
 use strict;
 use Test;
+plan tests => 402;
 
 use lib 't';
 use MyTestHelpers;
@@ -32,16 +33,11 @@ use Math::NumSeq::SqrtContinued;
 #use Smart::Comments;
 
 
-my $test_count = (tests => 402)[1];
-plan tests => $test_count;
-
-
-
 #------------------------------------------------------------------------------
 # VERSION
 
 {
-  my $want_version = 55;
+  my $want_version = 56;
   ok ($Math::NumSeq::SqrtContinued::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::SqrtContinued->VERSION,  $want_version,

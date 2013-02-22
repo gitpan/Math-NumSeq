@@ -1,4 +1,4 @@
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -15,12 +15,19 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
+
+# Fractal turn sequence:
+
+# "Infinite streams", Jorg Endrullis, Clemens Grabmayer, Dimitri Hendriks,
+# Jan Willem Klop, www.phil.uu.nl/~clemens/linkedfiles/NVTI2009.pdf
+
+
 package Math::NumSeq::MephistoWaltz;
 use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -39,7 +46,7 @@ use constant characteristic_integer => 1;
 # cf A189658 - positions of 0
 #    A189659 - positions of 1
 #    A189660 - cumulative 0/1
-#    A156595 - xor diffs, OFFSET=0 so m(n) xor m(n+1)
+#    A156595 - xor diffs, OFFSET=0 so a(n) = m(n) xor m(n+1)
 #
 use constant oeis_anum => 'A064990';  # mephisto waltz 0/1 values
 
@@ -54,7 +61,7 @@ sub rewind {
 my @table = (0,0,1, 0,0,1, 1,1,0,
              0,0,1, 0,0,1, 1,1,0,
              1,1,0, 1,1,0, 0,0,1);
-my @delta = (map {$table[$_]^$table[($_+26)%27]} 0 .. 26);
+my @delta = (map {$table[$_]^$table[($_+26)%27]} 0 .. $#table);
 
 sub next {
   my ($self) = @_;
@@ -77,6 +84,7 @@ sub next {
       }
     }
   }
+
   ### apply: "low=$low delta=$delta[$low]"
   return ($self->{'i'}++,
           ($self->{'value'} ^= $delta[$low]));
@@ -121,7 +129,7 @@ Math::NumSeq::MephistoWaltz -- Mephisto waltz sequence
 
 The Mephisto waltz sequence, being the mod 2 count of ternary digit 2s in i.
 
-    starting i=0
+    # starting i=0
     0,0,1, 0,0,1, 1,1,0, ...
 
 i=0 has no 2s so value=0, and likewise i=1 value=0.  Then i=2 has one 2 so
@@ -191,7 +199,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2011, 2012 Kevin Ryde
+Copyright 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

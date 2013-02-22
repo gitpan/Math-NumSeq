@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -49,6 +49,7 @@ use Math::NumSeq::Base::Digits
 #    A029733 - n where n^2 hex palindrome
 #    A029734 - squares which are hex palindromes
 #    A016038 - not palindrome in any base, up to n-2
+#    A057891 - not a binary palindrome, including if trailing 0-bits stripped
 
 my @oeis_anum = (
                  # OEIS-Catalogue array begin

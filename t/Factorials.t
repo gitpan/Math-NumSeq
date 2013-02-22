@@ -20,6 +20,7 @@
 use 5.004;
 use strict;
 use Test;
+plan tests => 66;
 
 use lib 't';
 use MyTestHelpers;
@@ -27,15 +28,12 @@ BEGIN { MyTestHelpers::nowarnings(); }
 
 use Math::NumSeq::Factorials;
 
-my $test_count = (tests => 66)[1];
-plan tests => $test_count;
-
 
 #------------------------------------------------------------------------------
 # VERSION
 
 {
-  my $want_version = 55;
+  my $want_version = 56;
   ok ($Math::NumSeq::Factorials::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::Factorials->VERSION,  $want_version,

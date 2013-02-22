@@ -1,4 +1,4 @@
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -21,7 +21,7 @@ use strict;
 use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -43,14 +43,15 @@ use constant characteristic_smaller => 1;
 use constant values_min => 1; # at i=1
 
 #------------------------------------------------------------------------------
-# A005117 squarefrees have all exponents 1 so value=1
-# A013929 non-squarefrees have some exponent>1 so value>1
-#
+# cf A005117 squarefrees have all exponents 1 so value=1
+#    A013929 non-squarefrees have some exponent>1 so value>1
+#    A005361 product of exponents of prime factorization
+
 use constant oeis_anum => 'A008477';
 
 #------------------------------------------------------------------------------
 
-use constant _UV_LIMIT => 31**2; # is value=2**31
+use constant 1.02 _UV_LIMIT => 31**2; # is value=2**31
 
 sub ith {
   my ($self, $i) = @_;
@@ -117,7 +118,7 @@ sub pred {
       return 1;
     }
 
-    my $limit = sqrt($value) + 1;
+    $limit = sqrt($value) + 1;
     ### divided out: "$p, new limit $limit"
   }
 
@@ -130,7 +131,7 @@ sub pred {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq
+=for stopwords Ryde Math-NumSeq ie
 
 =head1 NAME
 
@@ -153,7 +154,7 @@ factorization.
 
 which gives
 
-    starting i=1
+    # starting i=1
     1, 1, 1, 4, 1, 1, 1, 9, 8, 1, 1, 4, 1, 1, 1, 16, 1, 8, 1, 4, ...
 
 For example i=1000=2^3*5^3 becomes value=3^2*3^5=3^7=2187.
@@ -205,7 +206,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2012 Kevin Ryde
+Copyright 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

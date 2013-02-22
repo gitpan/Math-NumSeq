@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -25,7 +25,7 @@ use Math::NumSeq;
 *_to_bigint = \&Math::NumSeq::_to_bigint;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
 
@@ -204,8 +204,7 @@ sub next {
   my $num   = $self->{'num'} || return;  # num==0 exact radix frac
   my $den   = $self->{'den'} || return;  # den==0 invalid
   my $radix = $self->{'radix'};
-  my $i = $self->{'i'};
-  ### FractionDigits next(): "$i  $num/$den"
+  ### FractionDigits next(): "$self->{'i'}  $num/$den"
 
   $num *= $radix;
   my $quot = int ($num / $den);
@@ -406,7 +405,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2010, 2011, 2012 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

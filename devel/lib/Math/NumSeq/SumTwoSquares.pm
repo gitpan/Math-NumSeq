@@ -1,7 +1,7 @@
 # multiplicity ?
 
 
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -27,7 +27,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -110,8 +110,8 @@ sub oeis_anum {
 
 sub rewind {
   my ($self) = @_;
-  ### SumTwoSquares rewind()
-  $self->{'i'} = 0;
+  ### SumTwoSquares rewind() ...
+  $self->{'i'} = $self->i_start;
   $self->{'prev_hypot'} = 1;
   if ($self->{'distinct'}) {
     if ($self->{'including_zero'}) {

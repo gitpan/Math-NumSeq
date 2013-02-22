@@ -1,4 +1,4 @@
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max','min';
 
 use vars '$VERSION','@ISA';
-$VERSION = 55;
+$VERSION = 56;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -211,7 +211,7 @@ Math::NumSeq::LiouvilleFunction -- Liouville function sequence
 
 The Liouville function parity of the prime factors of i,
 
-    starting i=1
+    # starting i=1
     1, -1, -1, 1, -1, 1, -1, -1, 1, 1, -1, -1, -1, 1, 1, ...
 
 being
@@ -224,8 +224,8 @@ ie. zero, which is even, hence value 1.  Then i=2 and i=3 are -1 since they
 have one prime factor (they're primes), and i=4 is value 1 because it's 2*2
 which is an even number of prime factors (two 2s).
 
-This parity is similar to the MobiusFunction, but here repeated prime
-factors are included, whereas in MobiusFunction they give a value 0.
+This parity is similar to the C<MobiusFunction>, but here repeated prime
+factors are included, whereas in C<MobiusFunction> they give a value 0.
 
 =head2 Values Type
 
@@ -292,7 +292,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2011, 2012 Kevin Ryde
+Copyright 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

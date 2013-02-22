@@ -1,4 +1,4 @@
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -22,7 +22,7 @@ use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 use Math::NumSeq::Primes;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -192,21 +192,21 @@ Math::NumSeq::ErdosSelfridgeClass -- Erdos-Selfridge classification of primes
 =head1 DESCRIPTION
 
 This is a class number for primes by Erdos and Selfridge, or 0 for
-composites.  The default is "class+" starting i=1,
+composites.  The default is "class+"
 
+    # starting i=1,
     0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 2, 0, 0, 0, 1, 0, 2, 0, 0, ...
 
 A prime p is classified by factorizing p+1 into primes, then on each of
-those factorizing again each q+1, and so on, repeating until reaching
-entirely 2s and 3s.  p=2 or p=3 merely interchange on factorizing p+1 (2+1=3
-and 3+1=2*2).
+those primes q factorizing q+1, and so on, repeating until reaching entirely
+2s and 3s.  p=2 or p=3 interchange on factorizing p+1 (2+1=3 and 3+1=2*2).
 
-A prime p with factors of p+1 all 2 or 3 is class 1.  For example i=11 has
-11+1=12=2*2*3 which is all 2s and 3s so class 1.  2 and 3 themselves are
+A prime p where p+1 factorizes to all 2s or 3s is class 1.  For example i=11
+has 11+1=12=2*2*3 which is all 2s and 3s so class 1.  2 and 3 themselves are
 class 1 too, since their p+1 factorizing gives 2s and 3s.
 
 Further primes are classified by how many iterations of the p+1 factorizing
-is necessary to reach 2s and 3s.  For example p=3847 is iterated as
+is necessary to reach 2s and 3s.  For example prime p=3847 is iterated as
 
     3847+1 = 2*13*37
 
@@ -247,9 +247,19 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =item C<$seq = Math::NumSeq::ErdosSelfridgeClass-E<gt>new ()>
 
-=item C<$seq = Math::NumSeq::ErdosSelfridgeClass-E<gt>new (p_or_m =E<gt> '+', on_values =E<gt> 'all')>
+=item C<$seq = Math::NumSeq::ErdosSelfridgeClass-E<gt>new (p_or_m =E<gt> $str, on_values =E<gt> 'all')>
 
 Create and return a new sequence object.
+
+C<p_or_m> (a string) can be
+
+    "+"    factors of p+1 (the default)
+    "-"    factors of p-1
+
+C<on_values> (a string) can be
+
+    "all"      classify all integers
+    "primes"   classify just the primes
 
 =back
 
@@ -265,8 +275,8 @@ This method is only available for the default C<on_values=E<gt>'all'>.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value> occurs as a classification in the sequence, which
-means any integer C<$value E<gt>= 0>.
+Return true if C<$value> occurs as a classification, which means any integer
+C<$value E<gt>= 0>.
 
 =back
 
@@ -274,5 +284,26 @@ means any integer C<$value E<gt>= 0>.
 
 L<Math::NumSeq>,
 L<Math::NumSeq::Primes>
+
+=head1 HOME PAGE
+
+http://user42.tuxfamily.org/math-numseq/index.html
+
+=head1 LICENSE
+
+Copyright 2012, 2013 Kevin Ryde
+
+Math-NumSeq is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 3, or (at your option) any later
+version.
+
+Math-NumSeq is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+more details.
+
+You should have received a copy of the GNU General Public License along with
+Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 =cut

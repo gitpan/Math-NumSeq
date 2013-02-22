@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 use Math::NumSeq;
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
@@ -33,7 +33,7 @@ use Math::NumSeq::Base::IterateIth;
 #use Smart::Comments;
 
 # use constant name => Math::NumSeq::__('Digit Count');
-use constant description => Math::NumSeq::__('How many of a given digit in each number, in a given radix, for example how many 1 bits in binary.');
+use constant description => Math::NumSeq::__('How many of a given digit in each number, in a given radix, for example how many 1-bits in binary.');
 use constant values_min => 0;
 use constant default_i_start => 0;
 use constant characteristic_count => 1;
@@ -61,8 +61,8 @@ use constant parameter_info_array =>
 # cf A008687 - count 1s in twos-complement -n
 #    A000788 - cumulative count 1-bits in 0 to n
 #    A033093 - total count 0s in all bases 2 to n+1
-#    A059015 - cumulative count 0 bits
-#    A000788 - cumulative count 1 bits
+#    A059015 - cumulative count 0-bits
+#    A000788 - cumulative count 1-bits
 #    A077266 - triangle of count 0s in bases 2 to n+1
 #    A077268 - num bases with at least one 0
 
@@ -208,7 +208,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2010, 2011, 2012 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

@@ -1,4 +1,4 @@
-# Copyright 2010, 2011 Kevin Ryde
+# Copyright 2010, 2011, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -26,7 +26,7 @@ use Math::NumSeq;
 
 
 use constant name => Math::NumSeq::__('Champernowne Sequence LSB First');
-use constant description => Math::NumSeq::__('The 1 bit positions when the integers 1,2,3,4,5 etc are written out concatenated in binary, least significant bit first, 1 01 11 001 101 etc.');
+use constant description => Math::NumSeq::__('The 1-bit positions when the integers 1,2,3,4,5 etc are written out concatenated in binary, least significant bit first, 1 01 11 001 101 etc.');
 use constant characteristic_increasing => 1;
 use constant i_start => 1;
 use constant values_min => 0;

@@ -1,4 +1,4 @@
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -25,7 +25,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -146,8 +146,7 @@ sub rewind {
   my ($self) = @_;
   $self->{'i'} = $self->i_start;
   $self->{'target'} = 1;
-  my $seqs = $self->{'seqs'} = [ map { Math::NumSeq::Primes->new }
-                                 1 .. $self->{'level'} ];
+  $self->{'seqs'} = [ map { Math::NumSeq::Primes->new } 1 .. $self->{'level'} ];
   if ($self->{'level_type'} ne 'minimum') {
     $self->{'initial_seq'} = Math::NumSeq::Primes->new; # pop @$seqs;
     $self->{'initial_prime'} = 0;
@@ -198,7 +197,7 @@ sub value_to_i_estimate {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq
+=for stopwords Ryde Math-NumSeq primeness
 
 =head1 NAME
 
@@ -335,7 +334,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2011, 2012 Kevin Ryde
+Copyright 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

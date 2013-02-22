@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -42,6 +42,7 @@ sub description {
 }
 use constant default_i_start => 0;
 use constant characteristic_integer => 1;
+use constant characteristic_smaller => 1;
 use constant values_min => 0;
 sub values_max {
   my ($self) = @_;
@@ -93,7 +94,7 @@ use constant parameter_info_array =>
 my %oeis_anum
   = (
      # OEIS-Catalogue array begin
-     plain => 'A003849', #
+     plain => 'A003849',                         #
      'dense,i_start=1,i_offset=-1' => 'A143667', # fibonacci_word_type=dense i_start=1 i_offset=-1
      # OEIS-Catalogue array end
     );
@@ -216,7 +217,7 @@ sub pred {
 1;
 __END__
 
-=for stopwords Ryde Fibbinary Zeckendorf Math-NumSeq
+=for stopwords Ryde Math-NumSeq Fibbinary Zeckendorf Morphism
 
 =head1 NAME
 
@@ -232,7 +233,7 @@ Math::NumSeq::FibonacciWord -- 0/1 related to Fibonacci numbers
 
 This is a sequence of 0s and 1s formed from the Fibonacci numbers.
 
-    starting i=0
+    # starting i=0
     0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, ...
 
 The initial values are 0,1 then Fibonacci number F(k) many values are copied
@@ -246,16 +247,31 @@ from the start to extend, so
     0,1,0,0,1,0,1,0,0,1,0,0,1,0,1,0,0,1,0,1,0   append 8 values
     etc
 
+=head2 Morphism
+
 The same sequence is had by starting with 0 and then repeatedly expanding
 
     0 -> 0,1
     1 -> 0
 
-The result is also the Fibbinary numbers modulo 2.  This can be seen most
-easily from the Zeckendorf base interpretation of those numbers since the
-base breakdown there works backwards from the above expansion subtracting
-Fibonacci numbers F(k) until reaching 0 or 1.  (See
+=head2 Fibbinary and Zeckendorf
+
+The result is also the Fibbinary numbers modulo 2, which is the least
+significant bit of the Zeckendorf base representation of i.
+
+The Zeckendorf base breakdown works backwards from the above expansion.  It
+subtracts Fibonacci numbers F(k) until reaching 0 or 1.  (See
 L<Math::NumSeq::Fibbinary/Zeckendorf Base>.)
+
+    start at i
+    until i=0 or i=1 do
+      subtract from i the largest Fibonacci number <= i
+
+    final resulting i=0 or i=1 is Fibonacci word value
+
+For example i=11 has largest Fibonacci E<lt>= 11 is 8, subtract that to
+leave 3.  From 3 the largest Fibonacci E<lt>= 3 is 3 itself, subtract that
+to leave 0 which is the Fibonacci word value for i=11.
 
 =head2 Dense Fibonacci Word
 
@@ -266,14 +282,14 @@ word
 
 This is the above plain word taken two values at a time encoded as
 
-    plain    dense
-     0,0       0    
-     0,1       1
-     1,0       2
+    plain pair   dense value
+        0,0           0
+        0,1           1
+        1,0           2
 
-For example the plain Fibonacci word starts 0,1 so the dense form starts 1.
-Adjacent 1,1 never occurs in the plain Fibonacci word, so there's no value 3
-in the dense form.
+For example the Fibonacci word starts 0,1 so the dense form starts 1.
+A pair 1,1 never occurs in the plain Fibonacci word so there's no value 3 in
+the dense form.
 
 =head1 FUNCTIONS
 
@@ -283,9 +299,13 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =item C<$seq = Math::NumSeq::FibonacciWord-E<gt>new ()>
 
-=item C<$seq = Math::NumSeq::FibonacciWord-E<gt>new (fibonacci_word_type =E<gt> "dense")>
+=item C<$seq = Math::NumSeq::FibonacciWord-E<gt>new (fibonacci_word_type =E<gt> $str)>
 
-Create and return a new sequence object.
+Create and return a new sequence object.  The C<fibonacci_word_type> option
+(a string) can be either
+
+    "plain"   (the default)
+    "dense"
 
 =back
 
@@ -318,7 +338,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2011, 2012 Kevin Ryde
+Copyright 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

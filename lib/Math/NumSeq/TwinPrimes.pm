@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 
 use Math::NumSeq;
 use Math::NumSeq::Primes;
@@ -215,49 +215,6 @@ sub value_to_i_estimate {
 1;
 __END__
 
-
-# use List::Util 'min', 'max';
-
-# sub new {
-#   my ($class, %options) = @_;
-#   my $lo = $options{'lo'} || 0;
-#   my $hi = $options{'hi'};
-#   $lo = max ($lo, 3);  # start from 3
-#   my $pairs = $options{'pairs'} || $class->parameter_default('pairs');
-#
-#   my $primes_lo = $lo - ($pairs eq 'second' ? 2 : 0);
-#   require Math::NumSeq::Primes;
-#   my @array = Math::NumSeq::Primes::_primes_list
-#     ($primes_lo, $hi+2);
-#
-#   my $to = 0;
-#   my $offset = ($pairs eq 'second');
-#   my $inc = ($pairs eq 'average');
-#   ### $pairs
-#   ### $offset
-#
-#   for (my $i = 0; $i < $#array; $i++) {
-#     if ($array[$i]+2 == $array[$i+1]) {
-#       if ($pairs eq 'both') {
-#         $array[$to++] = $array[$i];  # first of pair
-#         do {
-#           $array[$to++] = $array[++$i];
-#         } while ($i < $#array && $array[$i]+2 == $array[$i+1]);
-#       } else {
-#         $array[$to++] = $array[$i+$offset] + $inc;
-#       }
-#     }
-#   }
-#   while ($to > 0 && $array[$to-1] > $hi) {
-#     $to--;
-#   }
-#   $#array = $to - 1;
-#
-#   return $class->SUPER::new (%options,
-#                              array => \@array);
-# }
-
-
 =for stopwords Ryde Math-NumSeq ie Brun Littlewood's
 
 =head1 NAME
@@ -328,7 +285,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2010, 2011, 2012 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

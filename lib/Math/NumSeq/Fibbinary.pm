@@ -1,4 +1,4 @@
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -27,7 +27,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -42,7 +42,7 @@ use Math::NumSeq::Fibonacci;
 
 
 # use constant name => Math::NumSeq::__('Fibbinary Numbers');
-use constant description => Math::NumSeq::__('Fibbinary numbers 0,1,2,4,5,8,9,etc, integers without adjacent 1 bits.');
+use constant description => Math::NumSeq::__('Fibbinary numbers 0,1,2,4,5,8,9,etc, integers without adjacent 1-bits.');
 use constant i_start => 0;
 use constant values_min => 0;
 use constant characteristic_increasing => 1;
@@ -177,7 +177,7 @@ sub value_to_i_floor {
   }
   ### @fibs
 
-  my $prev_bit = shift @bits; # high 1 bit
+  my $prev_bit = shift @bits; # high 1-bit
   my $i = pop @fibs;
 
   ### initial i: $i
@@ -348,7 +348,7 @@ __END__
 
 =head1 NAME
 
-Math::NumSeq::Fibbinary -- without consecutive 1 bits
+Math::NumSeq::Fibbinary -- without consecutive 1-bits
 
 =head1 SYNOPSIS
 
@@ -358,45 +358,48 @@ Math::NumSeq::Fibbinary -- without consecutive 1 bits
 
 =head1 DESCRIPTION
 
-The fibbinary numbers
+This sequence is the fibbinary numbers
 
+     # starting i=0
      0, 1, 2, 4, 5, 8, 9, 10, ...
 
-being integers which have no adjacent 1 bits in binary, in ascending order.
+being integers which have no adjacent 1-bits when written in binary, taken
+in ascending order.
 
     i     fibbinary    fibbinary
           (decimal)    (binary)
    ---    ---------    --------
-    0         0            0
-    1         1            1
-    2         2           10
-    3         4          100
-    4         5          101
-    5         8         1000
-    6         9         1001
-    7        10         1010
-    8        16        10000
-    9        17        10001
+    0         0             0
+    1         1             1
+    2         2            10
+    3         4           100
+    4         5           101
+    5         8          1000
+    6         9          1001
+    7        10          1010
+    8        16         10000
+    9        17         10001
 
-For example at i=4 fibbinary 5 the next fibbinary is not 6 or 7 because they
-have adjacent 1 bits (110 and 111), the next is 8 (100).
+For example at i=4 fibbinary is 5.  The next fibbinary is not 6 or 7 because
+they have adjacent 1-bits (110 and 111), the next without adjacent 1s is 8
+(100).
 
-Since the two highest bits must be "10..." and high "11..." is excluded,
-there's effectively a block of 2^k values (not all of them used) followed by
-a gap of 2^k values, etc.
+The two highest bits must be "10...", they cannot be "11...".  So there's
+effectively a block of 2^k values (not all used) followed by a gap of 2^k
+values, etc.
 
 The least significant bit of each fibbinary is the Fibonacci word sequence,
 per L<Math::NumSeq::FibonacciWord>.
 
-All numbers without adjacent 1 bits can also be generated simply by taking
-the binary expansion and changing each "1" to "01", but this isn't in
-ascending order the way the fibbinary here is.
+All numbers without adjacent 1-bits can also be generated simply by taking
+the binary expansion and changing each "1" to "01", but that doesn't given
+them in ascending order the way the fibbinary here does.
 
 =head2 Zeckendorf Base
 
-The bits of the fibbinary numbers encode Fibonacci numbers used to represent
-i in Zeckendorf style Fibonacci base.  In this system an integer i is a sum
-of Fibonacci numbers,
+The bits of the fibbinary values encode Fibonacci numbers used to represent
+i in Zeckendorf style Fibonacci base.  In the Zeckendorf base system an
+integer i is a sum of Fibonacci numbers,
 
     i = F(k1) + F(k2) + ... F(kn)         k1 > k2 > ... > kn
 
@@ -405,14 +408,14 @@ point.  For example, reckoning the Fibonaccis as F(0)=1, F(1)=2, etc,
 
     20 = 13+5+1 = F(5)+F(3)+F(0)
 
-The k's are then assembled as 1 bits in binary to encode this sum in an
+The k's are then assembled as 1-bits in binary to encode this sum in an
 integer,
 
     fibbinary(20) = 2^5 + 2^3 + 2^0 = 41
 
 The gaps between Fibonacci numbers means that after subtracting F(k) the
 next cannot be F(k-1), it must be F(k-2) or less.  For that reason there's
-no adjacent 1 bits in the fibbinary numbers.
+no adjacent 1-bits in the fibbinary numbers.
 
 The connection between no adjacent 1s and the Fibonacci sequence can be seen
 by considering values with high bit 2^k.  The further bits in it cannot have
@@ -444,7 +447,7 @@ Return the C<$i>'th fibbinary number.
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> is a fibbinary number, which means that in binary
-it doesn't have any consecutive 1 bits.
+it doesn't have any consecutive 1-bits.
 
 =item C<$i = $seq-E<gt>value_to_i_floor($value)>
 
@@ -514,7 +517,7 @@ Testing for a fibbinary value can be done by a shift and AND,
 
     is_fibbinary = ((value & (value >> 1)) == 0)
 
-Any adjacent 1 bits overlap in the shift+AND and come through as non-zero.
+Any adjacent 1-bits overlap in the shift+AND and come through as non-zero.
 
 In Perl C<&> converts NV float to UV integer.  If a value in an NV mantissa
 is an integer but bigger than a UV then bits will be lost to the C<&>.
@@ -545,7 +548,7 @@ fibbinary no-adjacent-1s which is 10xxx.
 
 If working downwards adding F[k] values then it's easy enough to notice an
 adjacent 11 pair.  An alternative would be to find all 11 pairs per
-L</Predicate> above and the highest 1 bit (if any) is the place to mangle.
+L</Predicate> above and the highest 1-bit (if any) is the place to mangle.
 
 =head2 Value to i Estimate
 
@@ -584,7 +587,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2011, 2012 Kevin Ryde
+Copyright 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

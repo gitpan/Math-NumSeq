@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -21,7 +21,7 @@ use strict;
 use List::Util 'min','max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 55;
+$VERSION = 56;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -61,11 +61,6 @@ sub rewind {
   my ($self) = @_;
   $self->{'i'} = $self->i_start;
   _restart_sieve ($self, 500);
-
-  # my $lo = $options{'lo'} || 0;
-  # while ($self->{'i'} < $lo) {
-  #   $self->next;
-  # }
 }
 sub _restart_sieve {
   my ($self, $hi) = @_;
@@ -202,7 +197,7 @@ Math::NumSeq::MobiusFunction -- Mobius function sequence
 
 The sequence of the Mobius function,
 
-    starting i=1
+    # starting i=1
     1, -1, -1, 0, -1, 1, ...
 
 Each value is
@@ -212,9 +207,9 @@ Each value is
     0   if i has a repeated prime factor
 
 The sequence starts from i=1 and it's reckoned as no prime factors, ie. 0
-factors, which is considered even, hence Mobius function 1.  Then i=2 and
-i=3 are value -1 since they have one prime factor (they're primes), and i=4
-is value 0 because it's 2*2 which is a repeated prime 2.
+factors, which is considered even, hence value=1.  Then i=2 and i=3 are
+value=-1 since they have one prime factor (they're primes), and i=4 is
+value=0 because it's 2*2 which is a repeated prime 2.
 
 =head1 FUNCTIONS
 
@@ -260,7 +255,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2010, 2011, 2012 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

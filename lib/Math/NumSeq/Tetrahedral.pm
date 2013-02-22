@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 55;
+$VERSION = 56;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -59,13 +59,6 @@ use constant oeis_anum => 'A000292'; # tetrahedrals
 
 sub rewind {
   my ($self) = @_;
-
-  # # maybe cbrt() inverse to set i from requested $lo
-  # my $i = 0;
-  # while ($self->ith($i) < $self->{'lo'}) {
-  #   $i++;
-  # }
-
   $self->{'i'} = $self->i_start;
 }
 sub _UNTESTED__seek_to_value {
@@ -285,7 +278,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2010, 2011, 2012 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

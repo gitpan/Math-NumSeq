@@ -25,6 +25,22 @@ use Math::NumSeq::Fibbinary;
 #use Smart::Comments;
 
 {
+  # value_to_i_floor()
+  # value=2^31  at i=3,524,578
+  # value=2^32  at i=5,702,887
+  # value=2^64  at i=27,777,890,035,288
+
+  require Math::BigInt;
+  my $seq = Math::NumSeq::Fibbinary->new;
+  foreach my $k (0 .. 64) {
+    my $value = Math::BigInt->new(2)**$k;
+    my $i = $seq->value_to_i_floor($value);
+    printf "%d  i=%d value=%b\n", $k, $i, $value;
+  }
+  exit 0;
+}
+
+{
   # value_to_i_estimate()
 
   my $seq = Math::NumSeq::Fibbinary->new;
@@ -51,17 +67,6 @@ use Math::NumSeq::Fibbinary;
     }
 
     $prev_value = $value;
-  }
-  exit 0;
-}
-
-{
-  # value_to_i_floor()
-  my $seq = Math::NumSeq::Fibbinary->new;
-  foreach my $k (0 .. 10) {
-    my $value = 2**$k;
-    my $i = $seq->value_to_i_floor($value);
-    printf "%d  i=%d value=%b\n", $k, $i, $value;
   }
   exit 0;
 }

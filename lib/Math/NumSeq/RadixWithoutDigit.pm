@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -135,49 +135,49 @@ sub oeis_anum {
 
 #------------------------------------------------------------------------------
 
-sub rewind {
-  my ($self) = @_;
-
-  my $radix = $self->{'radix'};
-  my $digit = $self->{'digit'};
-  if ($digit == -1) { $digit = $radix - 1; }
-  $digit = $digit % $radix;
-  my $lo = $self->{'lo'} || 0;
-  my $n = abs($lo);
-
-  my $i = $self->i_start;
-  if ($radix == 2) {
-    if ($digit == 1) {
-      my $n = 1;
-      while ($n < $lo) {
-        $i++;
-      }
-    }
-  } else {
-    # look at the $radix digits of $n, build $i by treating as $radix-1,
-    # increment any $digit to go to the next without that
-    my $power = 1;
-    while ($n) {
-      my $rem = $n % $radix;
-      if ($rem >= $digit) {
-        $n++;
-      } else {
-        $i += $rem * $power;
-      }
-      $n = int ($n / $radix);
-      $power *= ($radix-1);
-    }
-
-    if ($lo < 0) {
-      $i = -$i;
-      if ($n == $lo) {
-        $i--;
-      }
-    }
-  }
-
-  $self->Math::NumSeq::Base::IterateIth::rewind;
-}
+# sub rewind {
+#   my ($self) = @_;
+# 
+#   my $radix = $self->{'radix'};
+#   my $digit = $self->{'digit'};
+#   if ($digit == -1) { $digit = $radix - 1; }
+#   $digit = $digit % $radix;
+# 
+#   # my $lo = 0;
+#   # my $n = 0;
+#   # my $i = $self->i_start;
+#   # if ($radix == 2) {
+#   #   if ($digit == 1) {
+#   #     my $n = 1;
+#   #     while ($n < $lo) {
+#   #       $i++;
+#   #     }
+#   #   }
+#   # } else {
+#   #   # look at the $radix digits of $n, build $i by treating as $radix-1,
+#   #   # increment any $digit to go to the next without that
+#   #   my $power = 1;
+#   #   while ($n) {
+#   #     my $rem = $n % $radix;
+#   #     if ($rem >= $digit) {
+#   #       $n++;
+#   #     } else {
+#   #       $i += $rem * $power;
+#   #     }
+#   #     $n = int ($n / $radix);
+#   #     $power *= ($radix-1);
+#   #   }
+#   # 
+#   #   if ($lo < 0) {
+#   #     $i = -$i;
+#   #     if ($n == $lo) {
+#   #       $i--;
+#   #     }
+#   #   }
+#   # }
+# 
+#   $self->Math::NumSeq::Base::IterateIth::rewind();
+# }
 
 # without 0
 #     1-9 1-9 ... 1-9 for len digits
@@ -372,7 +372,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2010, 2011, 2012 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

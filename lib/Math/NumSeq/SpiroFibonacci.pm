@@ -1,4 +1,4 @@
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -26,7 +26,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 55;
+$VERSION = 56;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_to_bigint = \&Math::NumSeq::_to_bigint;
@@ -71,6 +71,10 @@ sub characteristic_integer {
   my ($self) = @_;
   return (_is_integer($self->{'initial_0'})
           && _is_integer($self->{'initial_1'}));
+}
+sub characteristic_smaller {
+  my ($self) = @_;
+  return ($self->{'recurrence_type'} eq 'absdiff');
 }
 sub _is_integer {
   my ($n) = @_;
@@ -152,6 +156,7 @@ sub oeis_anum {
 
 #------------------------------------------------------------------------------
 
+use constant 1.02;
 use constant _UV_LIMIT => (~0 >> 1);
 use constant _IV_NEG_LIMIT => - (_UV_LIMIT >> 1);
 
@@ -289,7 +294,7 @@ sub next {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq BigInt
+=for stopwords Ryde Math-NumSeq BigInt spiro-Fibonacci
 
 =head1 NAME
 
@@ -313,7 +318,7 @@ recurrence
 where the offset k is the closest point on the on the preceding loop of a
 square spiral.  The initial values are
 
-    starting i=0
+    # starting i=0
     0, 1, 1, ..., 1, 2, 3, 4, ... 61, 69, 78, 88, 98, 108, ...
 
 On the square spiral this is
@@ -408,7 +413,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2012 Kevin Ryde
+Copyright 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free
