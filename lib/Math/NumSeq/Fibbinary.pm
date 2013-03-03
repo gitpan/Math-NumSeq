@@ -25,9 +25,10 @@
 package Math::NumSeq::Fibbinary;
 use 5.004;
 use strict;
+use Carp;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 56;
+$VERSION = 57;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -38,15 +39,19 @@ use Math::NumSeq::Fibonacci;
 *_blog2_estimate = \&Math::NumSeq::Fibonacci::_blog2_estimate;
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+# use Smart::Comments;
 
 
 # use constant name => Math::NumSeq::__('Fibbinary Numbers');
 use constant description => Math::NumSeq::__('Fibbinary numbers 0,1,2,4,5,8,9,etc, integers without adjacent 1-bits.');
-use constant i_start => 0;
-use constant values_min => 0;
+use constant default_i_start => 0;
 use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
+
+sub values_min {
+  my ($self) = @_;
+  return $self->ith($self->i_start);
+}
 
 #------------------------------------------------------------------------------
 # cf A000119 - number of fibonacci sums forms
@@ -58,16 +63,23 @@ use constant characteristic_integer => 1;
 use constant oeis_anum => 'A003714';  # Fibbinary, OFFSET=0 start value=0
 
 #------------------------------------------------------------------------------
+# $self->{'i'}, $self->{'value'} are the next $i,$value to return.
+# next() increments 'i' and steps 'value'.
+# So the next value is calculated ahead of its actually being needed,
+# but doing so 
 
 sub rewind {
   my ($self) = @_;
   $self->{'i'} = $self->i_start;
   $self->{'value'} = 0;
 }
-sub _UNTESTED__seek_to_i {
+sub seek_to_i {
   my ($self, $i) = @_;
+  if ($i < 0) {
+    croak "Cannot seek to ",$i,", sequence begins at i=0";
+  }
   $self->{'i'} = $i;
-  $self->{'value'} = $self->ith($i-1);
+  $self->{'value'} = $self->ith($i);
 }
 
 sub next {
@@ -75,17 +87,22 @@ sub next {
   ### Fibbinary next() ...
 
   my $v = $self->{'value'};
-  my $filled = ($v >> 1) | $v;
-  my $mask = (($filled+1) ^ $filled) >> 1;
-  $self->{'value'} = ($v | $mask) + 1;
+  $self->{'value'} = _value_next($self,$v);
+  return ($self->{'i'}++, $v);
+}
 
-  ### value : sprintf('0b %6b',$v)
+sub _value_next {
+  my ($self, $value) = @_;
+  my $filled = ($value >> 1) | $value;
+  my $mask = (($filled+1) ^ $filled) >> 1;
+
+  ### value : sprintf('0b %6b',$value)
   ### filled: sprintf('0b %6b',$filled)
   ### mask  : sprintf('0b %6b',$mask)
   ### bit   : sprintf('0b %6b',$mask+1)
-  ### newv  : sprintf('0b %6b',$self->{'value'})
+  ### newv  : sprintf('0b %6b',($value | $mask))
 
-  return ($self->{'i'}++, $v);
+  return ($value | $mask) + 1;
 }
 
 sub ith {
@@ -361,7 +378,7 @@ Math::NumSeq::Fibbinary -- without consecutive 1-bits
 This sequence is the fibbinary numbers
 
      # starting i=0
-     0, 1, 2, 4, 5, 8, 9, 10, ...
+     0, 1, 2, 4, 5, 8, 9, 10, 16, 17, 18, 20, 21, 32, 33, 34, ...
 
 being integers which have no adjacent 1-bits when written in binary, taken
 in ascending order.
@@ -433,6 +450,17 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 =item C<$seq = Math::NumSeq::Fibbinary-E<gt>new ()>
 
 Create and return a new sequence object.
+
+=back
+
+=head2 Iterating
+
+=over
+
+=item C<$seq-E<gt>seek_to_i($i)>
+
+Move the current sequence position to C<$i>.  The next call to C<next()>
+will return C<$i> and corresponding value.
 
 =back
 

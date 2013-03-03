@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -35,7 +35,7 @@ plan tests => $test_count;
 # VERSION
 
 {
-  my $want_version = 56;
+  my $want_version = 57;
   ok ($Math::NumSeq::Repdigits::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::Repdigits->VERSION,  $want_version,

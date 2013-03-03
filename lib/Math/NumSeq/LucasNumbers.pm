@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 56;
+$VERSION = 57;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
 
@@ -281,8 +281,9 @@ Math::NumSeq::LucasNumbers -- Lucas numbers
 
 =head1 DESCRIPTION
 
-The Lucas numbers, L(i) = L(i-1) + L(i-2) starting from 1,3
+The Lucas numbers, L(i) = L(i-1) + L(i-2) starting from values 1,3.
 
+    # starting i=1
     1, 3, 4, 7, 11, 18, 29, 47, 76, 123, 199, 322, 521, 843, 1364,...
 
 This is the same recurrence as the Fibonacci numbers

@@ -17,6 +17,10 @@ with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 57, March 2013
+     - Fibbinary new seek_to_i()
+     - FibbinaryBitCount new option digit=>"0","00"
+
 Version 56, February 2013
      - DigitSumModulo fixes for values_max() and oeis_anum() when modulus!=radix
 

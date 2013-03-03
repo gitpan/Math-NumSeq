@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -79,117 +79,81 @@ sub diff_nums {
 #------------------------------------------------------------------------------
 # A057520 - without low 0-bit, including 0
 
-{
-  my $anum = 'A057520';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my $diff;
-  if ($bvalues) {
-    require Math::BigInt;
-    require Math::NumSeq::DigitLength;
-    my $dlen = Math::NumSeq::DigitLength->new (radix => 2);
-    my $seq = Math::NumSeq::BalancedBinary->new;
-    my @got = (0);
-    while (@got < @$bvalues) {
-      my ($i, $value) = $seq->next;
-      $value /= 2;                                 # strip low bit
-      push @got, $value;
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum");
-}
+MyOEIS::compare_values
+  (anum => 'A057520',
+   func => sub {
+     my ($count) = @_;
+     require Math::BigInt;
+     require Math::NumSeq::DigitLength;
+     my $dlen = Math::NumSeq::DigitLength->new (radix => 2);
+     my $seq = Math::NumSeq::BalancedBinary->new;
+     my @got = (0);
+     while (@got < $count) {
+       my ($i, $value) = $seq->next;
+       $value /= 2;                                 # strip low 0-bit
+       push @got, $value;
+     }
+     return \@got;
+   });
 
 
 #------------------------------------------------------------------------------
 # A085183,A085184 - without high,low 1,0 bits
 
-{
-  my $anum = 'A085183';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my $diff;
-  if ($bvalues) {
-    require Math::BigInt;
-    require Math::NumSeq::DigitLength;
-    my $dlen = Math::NumSeq::DigitLength->new (radix => 2);
-    my $seq = Math::NumSeq::BalancedBinary->new;
-    my @got;
-    while (@got < @$bvalues) {
-      my ($i, $value) = $seq->next;
-      $value /= 2;                                 # strip low bit
-      my $pos = $dlen->ith($value);
-      $value -= Math::BigInt->new(1) << ($pos-1);  # strip high bit
-      push @got, $value;
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum");
-}
-{
-  my $anum = 'A085184';  # in base4
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my $diff;
-  if ($bvalues) {
-    require Math::BigInt;
-    require Math::NumSeq::DigitLength;
-    my $dlen = Math::NumSeq::DigitLength->new (radix => 2);
-    my $seq = Math::NumSeq::BalancedBinary->new;
-    my @got;
-    while (@got < @$bvalues) {
-      my ($i, $value) = $seq->next;
-      $value /= 2;                                 # strip low bit
-      my $pos = $dlen->ith($value);
-      $value -= Math::BigInt->new(1) << ($pos-1);  # strip high bit
-      push @got, to_base4_str($value);
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum");
-}
+MyOEIS::compare_values
+  (anum => 'A085183',
+   func => sub {
+     my ($count) = @_;
+     require Math::BigInt;
+     require Math::NumSeq::DigitLength;
+     my $dlen = Math::NumSeq::DigitLength->new (radix => 2);
+     my $seq = Math::NumSeq::BalancedBinary->new;
+     my @got;
+     while (@got < $count) {
+       my ($i, $value) = $seq->next;
+       $value /= 2;                                 # strip low 0-bit
+       my $pos = $dlen->ith($value);
+       $value -= Math::BigInt->new(1) << ($pos-1);  # strip high 1-bit
+       push @got, $value;
+     }
+     return \@got;
+   });
+
+# same in base4
+MyOEIS::compare_values
+  (anum => 'A085184',
+   func => sub {
+     my ($count) = @_;
+     require Math::BigInt;
+     require Math::NumSeq::DigitLength;
+     my $dlen = Math::NumSeq::DigitLength->new (radix => 2);
+     my $seq = Math::NumSeq::BalancedBinary->new;
+     my @got;
+     while (@got < $count) {
+       my ($i, $value) = $seq->next;
+       $value /= 2;                                 # strip low 0-bit
+       my $pos = $dlen->ith($value);
+       $value -= Math::BigInt->new(1) << ($pos-1);  # strip high 1-bit
+       push @got, to_base4_str($value);
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 # A085185 - in base4, including 0
 
-{
-  my $anum = 'A085185';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my $diff;
-  if ($bvalues) {
-    my $seq = Math::NumSeq::BalancedBinary->new;
-    my @got = (0);
-    while (@got < @$bvalues) {
-      my ($i, $value) = $seq->next;
-      push @got, to_base4_str($value);
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum");
-}
-
-
+MyOEIS::compare_values
+  (anum => 'A085185',
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::BalancedBinary->new;
+     my @got = (0);
+     while (@got < $count) {
+       my ($i, $value) = $seq->next;
+       push @got, to_base4_str($value);
+     }
+     return \@got;
+   });
 
 sub to_base4_str {
   my ($n) = @_;
@@ -210,69 +174,51 @@ sub to_base4_str {
 # cf A038776 -
 #    A070041  # df->bf 1-based
 
-{
-  my $anum = 'A057117';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my $diff;
-  if ($bvalues) {
-    my $seq = Math::NumSeq::BalancedBinary->new;
-    my @got = (0);
-    while (@got < @$bvalues) {
-      my ($i, $value) = $seq->next;
-      my @bits = bit_split_hightolow($value);
-      @bits = bits_breadth_to_depth(@bits);
-      my $pvalue = bit_join_hightolow(\@bits);
-      ### dtob: @bits
-      ### $pvalue
-      my $pi = $seq->value_to_i($pvalue);
-      if (! defined $pi) {
-        ### @bits
-        die "Oops, bad pvalue $pvalue: ",join('',@bits);
-      }
-      push @got, $pi;
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..10]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..10]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum");
-}
+MyOEIS::compare_values
+  (anum => 'A057117',
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::BalancedBinary->new;
+     my @got = (0);
+     while (@got < $count) {
+       my ($i, $value) = $seq->next;
+       my @bits = bit_split_hightolow($value);
+       @bits = bits_breadth_to_depth(@bits);
+       my $pvalue = bit_join_hightolow(\@bits);
+       ### dtob: @bits
+       ### $pvalue
+       my $pi = $seq->value_to_i($pvalue);
+       if (! defined $pi) {
+         ### @bits
+         die "Oops, bad pvalue $pvalue: ",join('',@bits);
+       }
+       push @got, $pi;
+     }
+     return \@got;
+   });
 
-{
-  my $anum = 'A057118';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my $diff;
-  if ($bvalues) {
-    my $seq = Math::NumSeq::BalancedBinary->new;
-    my @got = (0);
-    while (@got < @$bvalues) {
-      my ($i, $value) = $seq->next;
-      my @bits = bit_split_hightolow($value);
-      @bits = bits_depth_to_breadth(@bits);
-      my $pvalue = bit_join_hightolow(\@bits);
-      ### dtob: @bits
-      ### $pvalue
-      my $pi = $seq->value_to_i($pvalue);
-      if (! defined $pi) {
-        ### @bits
-        die "Oops, bad pvalue $pvalue: ",join('',@bits);
-      }
-      push @got, $pi;
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..10]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..10]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum");
-}
+MyOEIS::compare_values
+  (anum => 'A057118',
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::BalancedBinary->new;
+     my @got = (0);
+     while (@got < $count) {
+       my ($i, $value) = $seq->next;
+       my @bits = bit_split_hightolow($value);
+       @bits = bits_depth_to_breadth(@bits);
+       my $pvalue = bit_join_hightolow(\@bits);
+       ### dtob: @bits
+       ### $pvalue
+       my $pi = $seq->value_to_i($pvalue);
+       if (! defined $pi) {
+         ### @bits
+         die "Oops, bad pvalue $pvalue: ",join('',@bits);
+       }
+       push @got, $pi;
+     }
+     return \@got;
+   });
 
 sub bit_split_hightolow {
   my ($n) = @_;

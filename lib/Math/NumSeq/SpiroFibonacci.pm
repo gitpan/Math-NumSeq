@@ -16,6 +16,12 @@
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
+# cf
+# A092360 Spiro-tribonacci numbers: a(n) = sum of three previous terms that are nearest when terms arranged in a spiral.
+# A092369 Spiro-tetranacci numbers: a(n) = sum of four previous terms that are nearest when terms arranged in a spiral.
+# A094769 Square spiral of sums of selected preceding terms, starting at 0 followed by 1 (a spiral Fibonacci-like sequence).
+
+
 # math-image --values=SpiroFibonacci --output=numbers --size=78
 #
 # math-image --values=SpiroFibonacci,recurrence_type=absdiff --output=text --size=60x15
@@ -26,7 +32,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 56;
+$VERSION = 57;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_to_bigint = \&Math::NumSeq::_to_bigint;

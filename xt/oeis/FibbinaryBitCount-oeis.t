@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use Test;
-plan tests => 5;
+plan tests => 35;
 
 use lib 't','xt';
 use MyTestHelpers;
@@ -34,162 +34,246 @@ use Math::NumSeq::FibbinaryBitCount;
 #use Smart::Comments '###';
 
 
-sub diff_nums {
-  my ($gotaref, $wantaref) = @_;
-  for (my $i = 0; $i < @$gotaref; $i++) {
-    if ($i > @$wantaref) {
-      return "want ends prematurely pos=$i";
-    }
-    my $got = $gotaref->[$i];
-    my $want = $wantaref->[$i];
-    if (! defined $got && ! defined $want) {
-      next;
-    }
-    if (! defined $got || ! defined $want) {
-      return "different pos=$i got=".(defined $got ? $got : '[undef]')
-        ." want=".(defined $want ? $want : '[undef]');
-    }
-    $got =~ /^[0-9.-]+$/
-      or return "not a number pos=$i got='$got'";
-    $want =~ /^[0-9.-]+$/
-      or return "not a number pos=$i want='$want'";
-    if ($got != $want) {
-      return "different pos=$i numbers got=$got want=$want";
-    }
-  }
-  return undef;
+#------------------------------------------------------------------------------
+# A182578 Number of ones in Zeckendorf representation of n^n.
+
+MyOEIS::compare_values
+  (anum => 'A182578',
+   func => sub {
+     my ($count) = @_;
+     require Math::BigInt;
+     my $seq  = Math::NumSeq::FibbinaryBitCount->new;
+     my @got;
+     for (my $i = Math::BigInt->new(0); @got < $count; $i++) {
+       push @got, $seq->ith($i**$i);
+     }
+     return \@got;
+   });
+
+#------------------------------------------------------------------------------
+# A182575 - primes with equal number of Zeck 1-bits and 0-bits
+
+MyOEIS::compare_values
+  (anum => 'A182575',
+   max_value => 100_000,
+   func => sub {
+     my ($count) = @_;
+     require Math::NumSeq::Primes;
+     my $cnt1 = Math::NumSeq::FibbinaryBitCount->new;
+     my $cnt0 = Math::NumSeq::FibbinaryBitCount->new (digit => 0);
+     my $primes = Math::NumSeq::Primes->new;
+     my @got;
+     while (@got < $count) {
+       my ($i, $value) = $primes->next;
+       if ($cnt0->ith($value) == $cnt1->ith($value)) {
+         push @got, $value;
+       }
+     }
+     return \@got;
+   });
+
+#------------------------------------------------------------------------------
+# A182569 - primes with 2 etc terms in Zeckendorf base
+
+foreach my $elem ([ 2, 'A182569'],
+                  [ 3, 'A182570'],
+                  [ 4, 'A182571'],
+                  [ 5, 'A182572'],
+                  [ 6, 'A182573'],
+                  [ 7, 'A182574'],
+                 ) {
+  my ($want_terms, $anum) = @$elem;
+
+  MyOEIS::compare_values
+      (anum => $anum,
+       max_value => 1_000_000,
+       func => sub {
+         my ($count) = @_;
+         require Math::NumSeq::Primes;
+         my $primes = Math::NumSeq::Primes->new;
+         my $fibcnt = Math::NumSeq::FibbinaryBitCount->new;
+         my @got;
+         while (@got < $count) {
+           my ($i, $value) = $primes->next;
+           if ($fibcnt->ith($value) == $want_terms) {
+             push @got, $value;
+           }
+         }
+         return \@got;
+       }
+      );
 }
 
 #------------------------------------------------------------------------------
-# A020908 - number of 1-bits in Zeckendorf of i=2^k
+# A179242 - numbers with 2 etc terms in Zeckendorf base
 
-{
-  my $anum = 'A020908';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my $diff;
-  if ($bvalues) {
-    require Math::BigInt;
-    my $seq  = Math::NumSeq::FibbinaryBitCount->new;
-    my @got;
-    for (my $i = Math::BigInt->new(1); @got < @$bvalues; $i *= 2) {
-      push @got, $seq->ith($i);
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum");
+foreach my $elem ([ 2, 'A179242'],
+                  [ 3, 'A179243'],
+                  [ 4, 'A179244'],
+                  [ 5, 'A179245'],
+                  [ 6, 'A179246'],
+                  [ 7, 'A179247'],
+                  [ 8, 'A179248'],
+                  [ 9, 'A179249'],
+                  [10, 'A179250'],
+                  [11, 'A179251'],
+                  [12, 'A179252'],
+                  [13, 'A179253'],
+                 ) {
+  my ($want_terms, $anum) = @$elem;
+
+  MyOEIS::compare_values
+      (anum => $anum,
+       func => sub {
+         my ($count) = @_;
+         my $seq  = Math::NumSeq::FibbinaryBitCount->new;
+         my @got;
+         while (@got < $count) {
+           my ($i, $value) = $seq->next;
+           if ($value == $want_terms) {
+             push @got, $i;
+           }
+         }
+         return \@got;
+       });
 }
 
 #------------------------------------------------------------------------------
-# A020910 - number of 1-bits in Zeckendorf of i=3^k
+# A182535 - number of Zeck 1-bits in each prime
 
-{
-  my $anum = 'A020910';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my $diff;
-  if ($bvalues) {
-    require Math::BigInt;
-    my $seq  = Math::NumSeq::FibbinaryBitCount->new;
-    my @got;
-    for (my $i = Math::BigInt->new(1); @got < @$bvalues; $i *= 3) {
-      push @got, $seq->ith($i);
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum");
+MyOEIS::compare_values
+  (anum => 'A182535',
+   func => sub {
+     my ($count) = @_;
+     require Math::NumSeq::Primes;
+     my $fibcnt = Math::NumSeq::FibbinaryBitCount->new;
+     my $primes = Math::NumSeq::Primes->new;
+     my @got;
+     while (@got < $count) {
+       my ($i, $value) = $primes->next;
+       push @got, $fibcnt->ith($value);
+     }
+     return \@got;
+   });
+
+#------------------------------------------------------------------------------
+# A182577 - number of 1-bits in Zeckendorf of i=n!
+
+MyOEIS::compare_values
+  (anum => 'A182577',
+   func => sub {
+     my ($count) = @_;
+     require Math::NumSeq::Factorials;
+     my $fibcnt = Math::NumSeq::FibbinaryBitCount->new;
+     my $fact = Math::NumSeq::Factorials->new;
+     my @got;
+     while (@got < $count) {
+       my ($i, $value) = $fact->next;
+       push @got, $fibcnt->ith($value);
+     }
+     return \@got;
+   });
+
+#------------------------------------------------------------------------------
+# A182576 - number of 1-bits in Zeckendorf of i=n^2
+
+MyOEIS::compare_values
+  (anum => 'A182576',
+   func => sub {
+     my ($count) = @_;
+     my $seq  = Math::NumSeq::FibbinaryBitCount->new;
+     my @got;
+     for (my $i = 0; @got < $count; $i++) {
+       push @got, $seq->ith($i*$i);
+     }
+     return \@got;
+   });
+
+#------------------------------------------------------------------------------
+# A020908 - number of 1-bits in Zeckendorf of i=2^k etc
+
+foreach my $elem ([ 2, 'A020908'],
+                  [ 3, 'A020910'],
+                  [ 4, 'A025496'],
+                  [ 5, 'A025497'],
+                  [ 6, 'A025498'],
+                  [ 7, 'A025499'],
+                  [ 8, 'A025500'],
+                  [ 9, 'A025501'],
+                  [10, 'A025502'],
+                 ) {
+  my ($base, $anum) = @$elem;
+
+  MyOEIS::compare_values
+      (anum => $anum,
+       func => sub {
+         my ($count) = @_;
+         require Math::BigInt;
+         my $seq  = Math::NumSeq::FibbinaryBitCount->new;
+         my @got;
+         my $i = Math::NumSeq::_to_bigint(1);
+         while (@got < $count) {
+           push @got, $seq->ith($i);
+           $i *= $base;
+         }
+         return \@got;
+       });
 }
 
 #------------------------------------------------------------------------------
-# A025500 - 8^k fib bit count
+# A020899 - numbers with odd num 1-bits in Zeckendorf
 
-{
-  my $anum = 'A025500';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my $diff;
-  if ($bvalues) {
-    my $seq = Math::NumSeq::FibbinaryBitCount->new;
-    my @got;
-    my $i = Math::NumSeq::_to_bigint(1);
-    while (@got < @$bvalues) {
-      push @got, $seq->ith($i);
-      $i *= 8;
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum");
-}
+MyOEIS::compare_values
+  (anum => 'A020899',
+   func => sub {
+     my ($count) = @_;
+     my $seq  = Math::NumSeq::FibbinaryBitCount->new;
+     my @got;
+     while (@got < $count) {
+       my ($i, $value) = $seq->next;
+       if ($value % 2) {
+         push @got, $i;
+       }
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 # A095111 - fibbinary bit count parity, flipped 0 <-> 1
 
-{
-  my $anum = 'A095111';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my $diff;
-  if ($bvalues) {
-    my $seq = Math::NumSeq::FibbinaryBitCount->new;
-    my @got;
-    while (@got < @$bvalues) {
-      my ($i, $value) = $seq->next;
-      push @got, ($value % 2) ^ 1;
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum - fibbinary bit count parity");
-}
+MyOEIS::compare_values
+  (anum => 'A095111',
+   func => sub {
+     my ($count) = @_;
+     my $seq  = Math::NumSeq::FibbinaryBitCount->new;
+     my @got;
+     while (@got < $count) {
+       my ($i, $value) = $seq->next;
+       push @got, ($value % 2) ^ 1;
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 # A027941 - new high bit count, being Fibonacci(2i+1)-1
 
-{
-  my $anum = 'A027941';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum,
-                                                      max_value => 100000);
-  my $diff;
-  if ($bvalues) {
-    my $seq = Math::NumSeq::FibbinaryBitCount->new;
-    my $target = 0;
-    my @got;
-    while (@got < @$bvalues) {
-      my ($i, $value) = $seq->next;
-      if ($value >= $target) {
-        push @got, $i;
-        $target++;
-      }
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum - new high bit count");
-}
+MyOEIS::compare_values
+  (anum => 'A027941',
+   max_value => 100_000,
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::FibbinaryBitCount->new;
+     my $target = 0;
+     my @got;
+     while (@got < $count) {
+       my ($i, $value) = $seq->next;
+       if ($value >= $target) {
+         push @got, $i;
+         $target++;
+       }
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 exit 0;

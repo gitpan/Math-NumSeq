@@ -26,7 +26,7 @@ use strict;
 use List::Util 'sum';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 56;
+$VERSION = 57;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -86,10 +86,19 @@ sub description {
 # cf A001969  "evil" numbers with even 1s
 #    A000069  "odious" numbers with odd 1s
 #    A026147  position of n'th thue-morse parity 1
-#    A001285  thue-morse
-#    A010059  inverse of radix=2 thue-morse, 1=evil number
-#    A106400  radix=2 Thue-Morse as +/-1
-#    A059448  parity of number of 0 digits when written in binary
+#    A059448  1,0 parity of number of 0 digits when written in binary
+#    A001285  Thue-Morse as 1,2
+#    A010059  Thue-Morse as 1,0
+#    A010060  Thue-Morse as 0,1
+#    A106400  Thue-Morse as 1,-1            1, -1, -1,  1, -1,  1
+#    A186032  Thue-Morse as -1,1 offset one     1,  1, -1,  1, -1
+#    A108784  Thue-Morse as -1,1                1, 1,  -1,  1, -1
+#    A076826  Thue-Morse as 0,2 with a(2n+1)=1 in between
+#    A080813  lexico is 1,1,0,1,1,0 then thue-morse 0,1 thue-morse
+#
+# A143579 alternately odious and evil, permutation of the integers
+# A143580 alternately, modulo 2
+# seems A143580 == A010059 thue-morse 1,0
 #
 my %oeis_anum = ('2,2'   => 'A010060',
                  '3,3'   => 'A053838',
@@ -117,6 +126,9 @@ my %oeis_anum = ('2,2'   => 'A010060',
                  '2,4' => 'A179868',
                  # OEIS-Catalogue: A071858 radix=2 modulus=3
                  # OEIS-Catalogue: A179868 radix=2 modulus=4
+
+                 '3,4' => 'A051329', # ternary modulo 4
+                 # OEIS-Catalogue: A051329 radix=3 modulus=4
                 );
 sub oeis_anum {
   my ($self) = @_;
@@ -128,10 +140,10 @@ sub oeis_anum {
     # OEIS-Other: A000004 modulus=1
   }
 
-  # radix==1 modulo M is same as whole modulo M
-  # including radix=odd modulus=2 is 0,1 repeating
+  # radix==M+1, 2M+1 etc any radix==1modM is same as whole modulo M.
+  # Including radix=odd modulus=2 is 0,1 repeating.
   if (($radix % $modulus) == 1) {
-    ### ENHANCE-ME: modulo a-num without creating object, maybe
+    ### ENHANCE-ME: Modulo a-num without creating object, maybe
     require Math::NumSeq::Modulo;
     return Math::NumSeq::Modulo->new(modulus=>$modulus)->oeis_anum;
 

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 56;
+$VERSION = 57;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -58,7 +58,7 @@ use constant parameter_info_array =>
 # cf A010888 repeat DigitSum until single digit, is (n mod 9)+1, so 1 to 9
 #    A179083 even with an odd sum of digits
 #    A052018 digit sum occurs in the number
-#
+#    A054868 sum-of-bits then sum-of-bits again
 
 my @oeis_anum;
 

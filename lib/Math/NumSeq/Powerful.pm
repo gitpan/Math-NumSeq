@@ -21,7 +21,7 @@ use strict;
 use List::Util 'min';
 
 use vars '$VERSION','@ISA';
-$VERSION = 56;
+$VERSION = 57;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IteratePred;
 @ISA = ('Math::NumSeq::Base::IteratePred',
@@ -33,10 +33,22 @@ use Math::NumSeq::Base::IteratePred;
 
 
 # use constant name => Math::NumSeq::__('Powerful Numbers');
-use constant description => Math::NumSeq::__('Integers with either some or all primes squared or higher.');
 use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
 use constant i_start => 1;
+
+sub description {
+  my ($self) = @_;
+  if (ref $self) {
+    return ("Integers with $self->{'powerful_type'} prime factors "
+            . ($self->{'power'} == 2 ? "squared"
+               : $self->{'power'} == 3 ? "cubed"
+               : "$self->{'power'}th power")
+            . " or higher.");
+  } else {
+    return Math::NumSeq::__('Integers which some prime factors squared or higher.');
+  }
+}
 
 use constant parameter_info_array =>
   [

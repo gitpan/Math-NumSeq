@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 56;
+$VERSION = 57;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -187,6 +187,12 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 =item C<$seq = Math::NumSeq::Squares-E<gt>new ()>
 
 Create and return a new sequence object.
+
+=back
+
+=head2 Iterating
+
+=over
 
 =item C<$seq-E<gt>seek_to_i($i)>
 

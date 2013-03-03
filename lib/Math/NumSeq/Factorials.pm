@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 56;
+$VERSION = 57;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -168,13 +168,13 @@ sub ith {
     return $i;
   }
 
-  my $value;
   if (! ref $i && $i >= _UV_I_LIMIT) {
-    $value = Math::NumSeq::_to_bigint(1);
-  } else {
-    $value = ($i*0) + 1;   # inherit bignum 1
+    # Plain index $i automatically use Math::BigInt when UV limit reached.
+    # Maybe should check if BigInt new enough to have bfac(), circa vers 1.60
+    return Math::NumSeq::_bigint()->bfac($i);
   }
 
+  my $value = ($i*0) + 1;   # inherit bignum 1
   while ($i >= 2) {
     $value *= $i;
     $i -= 1;
@@ -372,6 +372,12 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 Create and return a new sequence object.
 
+=back
+
+=head2 Iterating
+
+=over
+
 =item C<$seq-E<gt>seek_to_i($i)>
 
 Move the current sequence position to C<$i>.  The next call to C<next()>
@@ -439,6 +445,11 @@ Just two iterations is quite close
 
 L<Math::NumSeq>,
 L<Math::NumSeq::Primorials>
+
+L<Math::BigInt> (C<bfac()>),
+L<Math::Combinatorics> (C<factorial()>,
+L<Math::NumberCruncher> (C<Factorial()>
+L<Math::BigApprox> (C<Fact()>
 
 =head1 HOME PAGE
 

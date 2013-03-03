@@ -50,8 +50,8 @@ HERE
     
     # restricted to ...
     # next unless $module =~ /Aron/;
-    # next unless $module =~ /PlanePathTurn/;
-    next unless $module =~ /DigitSum/;
+    next unless $module =~ /PlanePath/;
+    # next unless $module =~ /DigitSum/;
     
     ### $module
     my $class = App::MathImage::Generator->values_class($module);
@@ -472,7 +472,7 @@ sub info_extend_parameters {
     my @strings;
     foreach my $choice (@{$info->{'choices'}}) {
       # next unless $choice =~ /RationalsTree/;
-      # next unless $choice =~ /Chan/;
+       next unless $choice =~ /WythoffT/;
        # next unless $choice =~ /Divis|DiagonalRationals|CoprimeCol/;
       # next unless $choice =~ /DiamondSpiral/;
       # next unless $choice =~ /LCorner|Tooth/;
@@ -558,7 +558,8 @@ sub info_extend_parameters {
       foreach my $choice (@$choices) {
         # print "$choice\n";
         # next if ($info->{'name'} eq 'coordinate_type' && $choice !~ /^M/);
-         next if ($info->{'name'} eq 'coordinate_type' && $choice !~ /^IntXY/);
+        # next if ($info->{'name'} eq 'coordinate_type' && $choice !~ /^IntXY/);
+         next if ($info->{'name'} eq 'delta_type' && $choice !~ /Diff/);
 
         next if ($info->{'name'} eq 'serpentine_type' && $choice eq 'Peano');
         next if ($info->{'name'} eq 'rotation_type' && $choice eq 'custom');

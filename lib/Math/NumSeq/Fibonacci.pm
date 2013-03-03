@@ -21,7 +21,7 @@ use strict;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 56;
+$VERSION = 57;
 use Math::NumSeq::Base::Sparse;  # FIXME: implement pred() directly ...
 @ISA = ('Math::NumSeq::Base::Sparse');
 
@@ -298,6 +298,12 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 =item C<$seq = Math::NumSeq::Fibonacci-E<gt>new ()>
 
 Create and return a new sequence object.
+
+=back
+
+=head2 Iterating
+
+=over
 
 =item C<($i, $value) = $seq-E<gt>next()>
 

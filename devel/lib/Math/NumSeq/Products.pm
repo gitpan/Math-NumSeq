@@ -24,7 +24,7 @@ use strict;
 use Module::Load;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 56;
+$VERSION = 57;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -95,6 +95,7 @@ sub description {
 #    A098694 double-superfactorials, product first 2n factorials
 #    A074319 product next n factorials
 #    A000197 (n!)!
+#    A160009 fib prod distinct primorials A129912
 #
 # Factorials repeated   1,2,4,6,8,12,16,24,32,36,48,64,72,96,120,128,144,192
 # Factorials distinct   1,2,6,12,24,48,120,144,240,288,720,1440,2880,4320,5040

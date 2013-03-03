@@ -61,15 +61,12 @@ $|=1;
   $values_class = 'Math::NumSeq::Pell';
   $values_class = 'Math::NumSeq::KlarnerRado';
   $values_class = 'Math::NumSeq::DivisorCount';
-  $values_class = 'Math::NumSeq::DigitCount';
   $values_class = 'Math::NumSeq::Kolakoski';
   $values_class = 'Math::NumSeq::UlamSequence';
   $values_class = 'Math::NumSeq::ReplicateDigits';
   $values_class = 'Math::NumSeq::SumTwoSquares';
   $values_class = 'Math::NumSeq::CunninghamChain';
   $values_class = 'Math::NumSeq::CunninghamPrimes';
-  $values_class = 'Math::NumSeq::FibbinaryBitCount';
-  $values_class = 'Math::NumSeq::Fibbinary';
   $values_class = 'Math::NumSeq::AlmostPrimes';
   $values_class = 'Math::NumSeq::DigitMiddle';
   $values_class = 'Math::NumSeq::SqrtEngel';
@@ -94,7 +91,6 @@ $|=1;
   $values_class = 'Math::NumSeq::PythagoreanHypots';
   $values_class = 'Math::NumSeq::AbsCubicDiff';
   $values_class = 'Math::NumSeq::RepdigitAny';
-  $values_class = 'Math::NumSeq::PlanePathDelta';
   $values_class = 'Math::NumSeq::Loeschian';
   $values_class = 'Math::NumSeq::UndulatingNumbers';
   $values_class = 'Math::NumSeq::HofstadterFigure';
@@ -169,9 +165,7 @@ $|=1;
   $values_class = 'Math::NumSeq::GolayRudinShapiro';
   $values_class = 'Math::NumSeq::PrimeFactorCount';
   $values_class = 'Math::NumSeq::MobiusFunction';
-  $values_class = 'Math::NumSeq::PlanePathDelta';
   $values_class = 'Math::NumSeq::LiouvilleFunction';
-  $values_class = 'Math::NumSeq::Catalan';
   $values_class = 'Math::NumSeq::BalancedBinary';
   $values_class = 'Math::NumSeq::CbrtContinued';
   $values_class = 'Math::NumSeq::AlphabeticalLength';
@@ -188,18 +182,26 @@ $|=1;
   $values_class = 'Math::NumSeq::PisanoPeriodSteps';
   $values_class = 'Math::NumSeq::DigitCountHigh';
   $values_class = 'Math::NumSeq::DigitCountLow';
-  $values_class = 'Math::NumSeq::PlanePathN';
   $values_class = 'Math::NumSeq::OEIS';
   $values_class = 'Math::NumSeq::PlanePathCoord';
-  $values_class = 'Math::NumSeq::PlanePathTurn';
   $values_class = 'Math::NumSeq::FactorialProducts';
   $values_class = 'Math::NumSeq::Products';
   $values_class = 'Math::NumSeq::DigitSumModulo';
+  $values_class = 'Math::NumSeq::Catalan';
+  $values_class = 'Math::NumSeq::Fibbinary';
+  $values_class = 'Math::NumSeq::PlanePathTurn';
+  $values_class = 'Math::NumSeq::PlanePathN';
+  $values_class = 'Math::NumSeq::PlanePathDelta';
+  $values_class = 'Math::NumSeq::DigitCount';
+  $values_class = 'Math::NumSeq::FibbinaryBitCount';
 
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new
     (
-      radix => 3, modulus => 2,
+
+     digit => '00',
+     # radix => 2,
+     # modulus => 2,
 
      # of => 'Primorials',
      # of => 'Fibonacci',
@@ -218,7 +220,7 @@ $|=1;
      # values_type => 'odd',
      # lang => 'fr',
 
-      # runs_type => '1to2N',
+     # runs_type => '1to2N',
      # values_type => 'mod2',
 
      # extra_multiples => 0,
@@ -237,11 +239,9 @@ $|=1;
      # on_values => 'primes',
      # level => 2,
      # level_type => 'exact',
-      sqrt => 4,
      # stage => 1,
 
      # p_or_m => '-',
-     # digit => 1,
      # using_values => 'primes',
      # values_type => 'radix',
      # concat_count => 3,
@@ -263,7 +263,7 @@ $|=1;
      # planepath => 'RationalsTree,tree_type=AYT',
      # planepath => 'SurroundOneEight,parts=3mid',
      # planepath => 'SierpinskiTriangle,align=diagonal',
-      planepath => 'DivisibleColumns,divisor_type=proper,n_start=2',
+     # planepath => 'DivisibleColumns,divisor_type=proper,n_start=2',
      # planepath => 'CoprimeColumns',
      # planepath => 'DiagonalRationals,direction=up',
      # planepath => 'SierpinskiTriangle,align=diagonal',
@@ -272,7 +272,7 @@ $|=1;
      # planepath => 'ToothpickTreeByCells',
      # planepath => 'LCornerTree',
      # coordinate_type => 'IntXY',
-     coordinate_type => 'DiffXY',
+     # coordinate_type => 'DiffXY',
      # coordinate_type => 'BitXor',
 
      # planepath => 'SierpinskiTriangle',
@@ -282,40 +282,28 @@ $|=1;
      # planepath => 'TriangleSpiralSkewed',
      # planepath => 'SquareSpiral',
      # planepath => 'ToothpickUpist',
-      # planepath => 'ToothpickByCells,parts=unwedge_down',
+     # planepath => 'ToothpickByCells,parts=unwedge_down',
      # planepath => 'LCornerTree,parts=1',
      #  planepath => 'DigitGroups,radix=2',
      # planepath => 'CellularRule,rule=206',
      # planepath => 'QuadricIslands',
-      # line_type => 'Depth_start',
-     # line_type => 'X_axis',
+     # line_type => 'Depth_start',
+     # planepath => 'WythoffArray,x_start=1,y_start=1',
+     #  line_type => 'Y_axis',
      # line_type => 'Diagonal_SW',
      # i_start => 1,
 
-     # planepath => 'GrayCode',
+     # planepath => 'PythagoreanTree,coordinates=AC',
      # planepath => 'PyramidRows,step=1,n_start=0',
-     # planepath => 'DragonCurve,arms=4',
+     planepath => 'MultipleRings,step=7,ring_shape=polygon',
      #planepath => 'RationalsTree,tree_type=L',
      # planepath => 'Rows,width=3',
-     # delta_type=>'dY',
+     delta_type=>'Dir4',
 
-     # planepath => 'SierpinskiCurve',
+     # planepath => 'Diagonals',
      # planepath => 'PythagoreanTree,coordinates=BC',
-      planepath => 'ChanTree,k=4',
-      turn_type => 'Right',
-
-     # planepath => 'SquareSpiral',
-     # planepath => 'ZOrderCurve,radix=10',
-     # planepath => 'PythagoreanTree,coordinates=BA',
-     # planepath => 'RationalsTree,tree_type=CW',
-     # planepath => 'ArchimedeanChords',
-     # planepath => 'SacksSpiral',
-     # planepath => 'MultipleRings,step=2',
-     # planepath => 'DragonCurve',
-     # planepath => 'MultipleRings,step=1',
-     # planepath => 'FibonacciWordFractal',
-     # planepath => 'CellularRule,rule=5',
-     # i_start => 1,
+     # planepath => 'ChanTree,k=4',
+     # turn_type => 'LSR',
 
      # anum  => 'A151725',
      # anum  => 'A196199', # bfile
@@ -356,8 +344,8 @@ $|=1;
      # length => 2,
      # which => 'last',
 
-      polygonal => 18,
-      pairs => 'second',
+     polygonal => 18,
+     pairs => 'second',
 
      # including_zero => 1,
      # # divisors_type => 'proper',
@@ -417,11 +405,11 @@ $|=1;
       }
       if (defined $value) {
         print "$value,";
-        if (defined $values_min && $value < $values_min) {
-          print " oops, value < values_min=$values_min\n";
+        if (defined $values_min && $value < $values_min - 0.00000001) {
+          print " oops i=$i, value < values_min=$values_min\n";
         }
-        if (defined $values_max && $value > $values_max) {
-          print " oops, value > values_max=$values_max\n";
+        if (defined $values_max && $value > $values_max + 0.00000001) {
+          print " oops i=$i, value > values_max=$values_max\n";
         }
         if (! defined $saw_values_min || $value < $saw_values_min) {
           $saw_values_min = $value;

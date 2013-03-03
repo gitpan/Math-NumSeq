@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION';
-$VERSION = 56;
+$VERSION = 57;
 
 sub rewind {
   my ($self) = @_;

@@ -16,10 +16,15 @@
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
+# value_to_i() giving i or undef
 # $value = $seq->value_floor($value)
 # $value = $seq->value_ceil($value)
 # $value = $seq->value_next($value)
 # characteristic('distinct')
+# characteristic('geometric')   geometric progression constant multipler
+# characteristic('arithmetic')  arithmetic progression constant add
+# characteristic('primitive')   no term divisible by any other
+# characteristic('mult_prev')   each term multiple of previous
 
 # ->add ->sub   of sequence or constant
 # ->mul
@@ -43,7 +48,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 56;
+$VERSION = 57;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;

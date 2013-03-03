@@ -130,10 +130,10 @@ sub check_class {
   #
   # return unless $class =~ /Pisano/;
   # return unless $class =~ /PrimeIndex/;
-  # return unless $class =~ /FibonacciWord/;
+  return unless $class =~ /FibbinaryBit/;
   # return unless $class =~ /Runs/;
   # return unless $class =~ /FactorCount/;
-   return unless $class =~ /DigitSumModulo/;
+  # return unless $class =~ /DigitSumModulo/;
   # return unless $class =~ /Luc|Fib|Cullen|Wood/;
   # return unless $class =~ /Lucas/;
   # return unless $class =~ /RadixWithout/;

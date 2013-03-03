@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 56;
+$VERSION = 57;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -129,6 +129,12 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 =item C<$seq = Math::NumSeq::Odd-E<gt>new ()>
 
 Create and return a new sequence object.
+
+=back
+
+=head2 Iterating
+
+=over
 
 =item C<$seq-E<gt>seek_to_i($i)>
 

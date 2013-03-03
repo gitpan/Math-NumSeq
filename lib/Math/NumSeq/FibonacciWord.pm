@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 56;
+$VERSION = 57;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -36,9 +36,10 @@ use Math::NumSeq::Fibbinary;
 
 sub description {
   my ($self) = @_;
-  return (ref $self && $self->{'fibonacci_word_type'} eq 'dense'
-          ? Math::NumSeq::__('0/1/2 dense Fibonacci word taking pairs from the plain word.')
-          : Math::NumSeq::__('0/1 values related to Fibonacci numbers, 0,1,0,0,1,0,1,0,etc.'));
+  if (ref $self && $self->{'fibonacci_word_type'} eq 'dense') {
+    return Math::NumSeq::__('0/1/2 dense Fibonacci word taking pairs from the plain word.');
+  }
+  return Math::NumSeq::__('0/1 values related to Fibonacci numbers, 0,1,0,0,1,0,1,0,etc.');
 }
 use constant default_i_start => 0;
 use constant characteristic_integer => 1;

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 56;
+$VERSION = 57;
 use Math::NumSeq;
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
@@ -166,6 +166,25 @@ Math::NumSeq::DigitCount -- count of a given digit
 
 The count of how many of a given digit is in C<$i> when written out in a
 given radix.  The default is to count how many 9s in decimal.
+
+    # starting i=0
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, ...
+
+For example i=19 has a single "9" so value=1.
+
+The C<radix> and C<digit> options can select a different number base or
+different digit to count.  For example to count the 0-bits in binary,
+
+    # radix=>2, digit=>0
+    # starting i=0
+    0, 0, 1, 0, 2, 1, 1, 0, 3, 2, 2, 1, 2, 1, 1, 0, 4, 3, 3, 2, ...
+
+i=0 is treated as no digits at all, so it has value=0 for the count of
+0-bits, and similarly in other bases counting 0 digits.
+
+Option C<digit =E<gt> -1> gives the highest digit in the radix, ie. radix-1.
+This is the default, so if C<radix> is given the count is of its biggest
+digit.
 
 =head1 FUNCTIONS
 

@@ -1,4 +1,4 @@
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -24,7 +24,7 @@ use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 use Math::Factor::XS 0.39 'factors', 'prime_factors';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 56;
+$VERSION = 57;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -59,51 +59,6 @@ use constant i_start => 1;
 # if n non-totient and 2n+1 composite then 2n also non-totient
 #
 use constant oeis_anum => 'A000010';
-
-sub rewind {
-  my ($self) = @_;
-  $self->{'i'} = $self->i_start;
-}
-sub next {
-  my ($self) = @_;
-  my $i = $self->{'i'}++;
-  return ($i, _totient_by_sieve($self,$i));
-}
-
-sub _totient_by_sieve {
-  my ($self, $i) = @_;
-  ### _totient_by_sieve(): $i
-
-  if ($i < 2) {
-    return $i;
-  }
-
-  my $array = $self->{'array'};
-  if (! $array || $i > $#$array) {
-    $array = $self->{'array'} = [ 0 .. 2*$i ];
-    $self->{'sieve_done'} = 1;
-  }
-  if ($self->{'sieve_done'} < $i) {
-    ### extend past done: $self->{'sieve_done'}
-
-    my $done = $self->{'sieve_done'};
-    do {
-      $done++;
-      if ($array->[$done] == $done) {
-        ### prime: $done
-        for (my $m = $done; $m <= $#$array; $m += $done) {
-          ### array change: $m.' from '.$array->[$m].' to '.($array->[$m] / $done) * ($done-1)
-          ($array->[$m] /= $done) *= $done-1;
-        }
-      }
-    } while ($done < $i);
-    $self->{'sieve_done'} = $done;
-    ### done now: $done
-    ### array now: $array
-  }
-  my $ret = $self->{'array'}->[$i];
-  return $ret - ($ret == $i);  # 1 less if a prime
-}
 
 sub ith {
   my ($self, $i) = @_;
@@ -241,8 +196,56 @@ sub _pred_f {
 #   }
 # }
 
+
+sub _totient_by_sieve {
+  my ($self, $i) = @_;
+  ### _totient_by_sieve(): $i
+
+  if ($i < 2) {
+    return $i;
+  }
+
+  my $array = $self->{'array'};
+  if (! $array || $i > $#$array) {
+    $array = $self->{'array'} = [ 0 .. 2*$i ];
+    $self->{'sieve_done'} = 1;
+  }
+  if ($self->{'sieve_done'} < $i) {
+    ### extend past done: $self->{'sieve_done'}
+
+    my $done = $self->{'sieve_done'};
+    do {
+      $done++;
+      if ($array->[$done] == $done) {
+        ### prime: $done
+        for (my $m = $done; $m <= $#$array; $m += $done) {
+          ### array change: $m.' from '.$array->[$m].' to '.($array->[$m] / $done) * ($done-1)
+          ($array->[$m] /= $done) *= $done-1;
+        }
+      }
+    } while ($done < $i);
+    $self->{'sieve_done'} = $done;
+    ### done now: $done
+    ### array now: $array
+  }
+  my $ret = $self->{'array'}->[$i];
+  return $ret - ($ret == $i);  # 1 less if a prime
+}
+
 1;
 __END__
+
+# sub rewind {
+#   my ($self) = @_;
+#   $self->{'i'} = $self->i_start;
+# }
+# sub next {
+#   my ($self) = @_;
+#   my $i = $self->{'i'}++;
+#   return ($i, _totient_by_sieve($self,$i));
+# }
+# 
+
 
 =for stopwords Ryde Math-NumSeq Euler's totient totients coprime coprimes ie recursing maxdivisor
 
@@ -258,9 +261,9 @@ Math::NumSeq::Totient -- Euler's totient function, count of coprimes
 
 =head1 DESCRIPTION
 
-Euler's totient function, being the count of integers coprime to i, starting
-i=1,
+Euler's totient function, being the count of integers coprime to i,
 
+    # starting i=1
     1, 1, 2, 2, 4, 2, 6, 4, etc
 
 For example i=6 has no common factor with 1 or 5, so the totient is 2.
@@ -353,7 +356,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2011, 2012 Kevin Ryde
+Copyright 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

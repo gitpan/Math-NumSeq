@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 12;
+plan tests => 38;
 
 use lib 't';
 use MyTestHelpers;
@@ -36,7 +36,7 @@ use Math::NumSeq::Fibbinary;
 # VERSION
 
 {
-  my $want_version = 56;
+  my $want_version = 57;
   ok ($Math::NumSeq::Fibbinary::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::Fibbinary->VERSION,  $want_version,
@@ -58,6 +58,19 @@ use Math::NumSeq::Fibbinary;
 {
   my $seq = Math::NumSeq::Fibbinary->new;
   ok ($seq->characteristic('integer'), 1, 'characteristic(integer)');
+}
+
+#------------------------------------------------------------------------------
+# seek_to_i()
+
+{
+  my $seq = Math::NumSeq::Fibbinary->new;
+  foreach my $i (0 .. 10, 20, 30) {
+    $seq->seek_to_i($i);
+    my ($got_i, $got_value) = $seq->next;
+    ok ($got_i, $i);
+    ok ($got_value, $seq->ith($i));
+  }
 }
 
 #------------------------------------------------------------------------------

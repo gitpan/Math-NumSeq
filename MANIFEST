@@ -281,6 +281,7 @@ t/All.t
 t/AsciiSelf.t
 t/BalancedBinary.t
 t/bigint-preload.t
+t/Catalan.t
 t/CollatzSteps.t
 t/Cubes.t
 t/DeletablePrimes.t

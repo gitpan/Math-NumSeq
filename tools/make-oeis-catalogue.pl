@@ -1,6 +1,6 @@
 #!perl -w
 
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -30,7 +30,7 @@ use Cwd;
 use File::Path;
 
 use vars '$VERSION';
-$VERSION = 56;
+$VERSION = 57;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -160,7 +160,10 @@ foreach my $filename (@filenames) {
 my $dump = Data::Dumper->new([\@info_arrayref])->Sortkeys(1)->Terse(1)->Indent(1)->Dump;
 # $dump =~ s/^{\n//;
 # $dump =~ s/}.*\n//;
-$dump =~ s/'(\d+)'/$1/g;
+
+# mangle digit strings '123' to number literals 123
+# but not '00' or similar strings with leading zeros
+$dump =~ s/'(0|[1-9]\d*)'/$1/g;
 
 my $part='part';
 File::Path::make_path ($outdirname);

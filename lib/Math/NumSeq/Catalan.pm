@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 56;
+$VERSION = 57;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -35,7 +35,7 @@ use Math::NumSeq::Fibonacci;
 
 # use constant name => Math::NumSeq::__('Catalan Numbers');
 use constant values_min => 1;
-use constant i_start => 0;
+use constant default_i_start => 0;
 use constant characteristic_integer => 1;
 use constant characteristic_non_decreasing => 1;
 {
@@ -48,7 +48,6 @@ use constant characteristic_non_decreasing => 1;
 }
 {
   my %description = (C   => Math::NumSeq::__('The Catalan numbers 1, 1, 2, 5, 14, 42, ... (2n)!/(n!*(n+1)!).'),
-
                      odd => Math::NumSeq::__('The odd part of the Catalan numbers 1, 1, 2, 5, 14, 42, ... (2n)!/(n!*(n+1)!).'),);
   sub description {
     my ($self) = @_;
@@ -68,7 +67,7 @@ use constant parameter_info_array =>
      choices_display => [Math::NumSeq::__('C'),
                          Math::NumSeq::__('Odd'),
                         ],
-     description => Math::NumSeq::__('The plain Catalan, or just the odd part.'),
+     description => Math::NumSeq::__('The Catalan numbers, or just the odd part.'),
     },
   ];
 
@@ -78,13 +77,10 @@ use constant parameter_info_array =>
 # A014137 Catalans cumulative
 # A094639 Catalans squared cumulative
 # A000984 central binomial coeff (2n)! / n!^2
-# A098597 odd part of Catalan, divide out powers-of-2
-# A014486 balanced binary
 # A048881 trailing zeros a(n) = A000120(n+1) - 1 = onebits(n+1) - 1
 #
 my %oeis_anum = (C   => 'A000108',
-                 odd => 'A098597',
-
+                 odd => 'A098597', # Catalan odd part, divide out powers-of-2
                  # OEIS-Catalogue: A000108
                  # OEIS-Catalogue: A098597 values_type=odd
                 );
@@ -230,6 +226,8 @@ sub ith {
 #           2     3     4     5     6
 #     C=1  C=1   C=2   C=5   C=14   C=42
 #                             =2*7   =14*3
+#
+# C(5) = 42 = 14 * 2*(2*5-1)/6
 #
 # sub pred {
 #   my ($self, $value) = @_;
@@ -384,11 +382,11 @@ sub value_to_i_estimate {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq ie Stirling's num2s
+=for stopwords Ryde Math-NumSeq ie num2s
 
 =head1 NAME
 
-Math::NumSeq::Catalan -- factorials i! = 1*2*...*i
+Math::NumSeq::Catalan -- Catalan numbers (2n)! / (n!*(n+1)!)
 
 =head1 SYNOPSIS
 
@@ -398,15 +396,16 @@ Math::NumSeq::Catalan -- factorials i! = 1*2*...*i
 
 =head1 DESCRIPTION
 
-The Catalan numbers binomial(2n,n)/(n+1) = (2n)!/(n!*(n+1)!)
+The Catalan numbers
+
+    C(n) = binomial(2n,n) / (n+1)
+         = (2n)! / (n!*(n+1)!)
 
     # starting i=0
     1, 1, 2, 5, 14, 42, 132, 429, 1430, 4862, 16796, ...
 
 From the factorial expression it can be seen the values grow roughly as a
 power-of-4,
-
-C(5) = 42 = 14 * 2*(2*5-1)/6
 
     C(i) = C(i-1) * (2i)*(2i-1) / (i*(i+1))
     C(i) = C(i-1) * 2*(2i-1)/(i+1)
@@ -417,15 +416,21 @@ C(5) = 42 = 14 * 2*(2*5-1)/6
 Option C<values_type =E<gt> "odd"> can give just the odd part of each
 number, ie. with factors of 2 divided out,
 
+    values_type => "odd"
+    # starting i=0
     1, 1, 1, 5, 7, 21, 33, 429, 715, 2431, 4199, ...
 
 The number of 2s in C(i) is
 
-    num2s = (count 1-bits of i+1) - 1
+    num2s = (count-1-bits of i+1) - 1
 
-When i increments this num2s increases by at most 1, which can eat the "2*"
-factor shown in the C(i) formula above.  But because num2s doesn't increase
-by more than that the OddC(i) values are monotonically increasing.
+The odd part is always monotonically increasing.  When i increments num2s
+increases by at most 1, ie. a single factor of 2.  In the formula above
+
+    C(i) = C(i-1) * 2*(2i-1)/(i+1)
+
+it can be seen that C(i) gains at least 1 factor of 2, so after dividing out
+2^num2s it's still greater than C(i-1).
 
 =head1 FUNCTIONS
 
@@ -439,10 +444,16 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 Create and return a new sequence object.
 
+=back
+
+=head2 Iterating
+
+=over
+
 =item C<$seq-E<gt>seek_to_i($i)>
 
 Move the current sequence position to C<$i>.  The next call to C<next()>
-will return C<$i> and corresponding value.
+will return C<$i> and its corresponding value.
 
 =back
 
@@ -458,9 +469,9 @@ Return the C<$i>'th value.
 
 Return an estimate of the i corresponding to C<$value>.
 
-The current code is based on C(n) ~= 4^n / (sqrt(pi*n)*(n+1)), but just
-estimating i=log4(value) since the 4^n term dominates for medium to large
-C<$value> (for both plain and "odd").
+The current code is based on C(n) ~= 4^n / (sqrt(pi*n)*(n+1)), but
+estimating simply i=log4(value) since the 4^n term dominates for medium to
+large C<$value> (for both plain and "odd").
 
 =back
 

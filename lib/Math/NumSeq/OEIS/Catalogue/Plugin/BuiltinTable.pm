@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 56;
+$VERSION = 57;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 879 A-numbers in 114 modules
+# total 883 A-numbers in 114 modules
 
 use constant info_arrayref =>
 [
@@ -1969,6 +1969,16 @@ use constant info_arrayref =>
     ]
   },
   {
+    'anum' => 'A051329',
+    'class' => 'Math::NumSeq::DigitSumModulo',
+    'parameters' => [
+      'radix',
+      3,
+      'modulus',
+      4
+    ]
+  },
+  {
     'anum' => 'A000005',
     'class' => 'Math::NumSeq::DivisorCount'
   },
@@ -2081,6 +2091,32 @@ use constant info_arrayref =>
   {
     'anum' => 'A007895',
     'class' => 'Math::NumSeq::FibbinaryBitCount'
+  },
+  {
+    'anum' => 'A102364',
+    'class' => 'Math::NumSeq::FibbinaryBitCount',
+    'parameters' => [
+      'digit',
+      0
+    ]
+  },
+  {
+    'anum' => 'A212278',
+    'class' => 'Math::NumSeq::FibbinaryBitCount',
+    'parameters' => [
+      'digit',
+      '00'
+    ]
+  },
+  {
+    'anum' => 'A072649',
+    'class' => 'Math::NumSeq::FibbinaryBitCount',
+    'parameters' => [
+      'digit',
+      'all',
+      'i_start',
+      1
+    ]
   },
   {
     'anum' => 'A000045',
