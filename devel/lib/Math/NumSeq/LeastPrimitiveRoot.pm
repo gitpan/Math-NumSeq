@@ -18,25 +18,27 @@
 package Math::NumSeq::LeastPrimitiveRoot;
 use 5.004;
 use strict;
-use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 57;
+$VERSION = 58;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
-use Math::NumSeq::Primes;
-use Math::NumSeq::Squares;
+use Math::NumSeq::PrimeFactorCount;;
+*_prime_factors = \&Math::NumSeq::PrimeFactorCount::_prime_factors;
+
+use Math::NumSeq::DuffinianNumbers;
+*_coprime = \&Math::NumSeq::DuffinianNumbers::_coprime;
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+# use Smart::Comments;
 
 
 # use constant name => Math::NumSeq::__('...');
 use constant description => Math::NumSeq::__('The first primitive root modulo i.');
-use constant default_i_start => 3;
+use constant default_i_start => 1;
 use constant characteristic_smaller => 1;
 use constant characteristic_integer => 1;
 
@@ -45,23 +47,39 @@ use constant parameter_info_array =>
       type        => 'enum',
       display     => Math::NumSeq::__('Negative'),
       default     => 'positive',
-      choices     => ['positive','negative'],
+      choices     => ['positive',
+                      'negative',
+                     ],
+      choices_display => [Math::NumSeq::__('Positive'),
+                          Math::NumSeq::__('Negative'),
+                         ],
       description => Math::NumSeq::__('Which primitive root to return, the least positive or the least negative.'),
     },
   ];
 
 
-my %values_min = (positive => 2);
 sub values_min {
   my ($self) = @_;
-  return $values_min{$self->{'root_type'}};
+  if ($self->{'root_type'} eq 'negative') {
+    return undef;  # negative values, no minimum
+  }
+  my $i_start = $self->i_start;
+  if ($i_start <= 2) {
+    return ($i_start == 2 ? 1 : 0);
+  }
+  return 2;
 }
-my %values_max = (negative => -1);
 sub values_max {
   my ($self) = @_;
-  return $values_max{$self->{'root_type'}};
+  if ($self->{'root_type'} eq 'positive') {
+    return undef;  # positive values, no maximum
+  }
+  my $i_start = $self->i_start;
+  if ($i_start <= 2) {
+    return ($i_start == 2 ? -1 : 0);
+  }
+  return -2;
 }
-
 
 #------------------------------------------------------------------------------
 # cf A001918 - least primitive root of prime
@@ -87,7 +105,7 @@ sub values_max {
 #    A006559 - primes 1/p has 0 < period < p-1, so not max length
 #    A001914 - cyclic 10 is a quad residue mod p and mantissa class 2
 
-# use constant oeis_anum => '';
+use constant oeis_anum => 'A111076';
 
 
 #------------------------------------------------------------------------------
@@ -99,25 +117,32 @@ sub ith {
   if (_is_infinite($i)) {
     return undef;
   }
-  if ($i < 0 || $i > 0xFFFF_FFFF) {
+  if ($i < 0) {
     return undef;
   }
 
   if ($self->{'root_type'} eq 'positive') {
+    if ($i < 2) {
+      return 0; # nothing ==1 modulo 0 or 1
+    }
     for (my $root = 2; $root < $i; $root++) {
-      if (_is_primitive_root ($root, $i)) {
-        return $root;
-      }
+      my $bool = _is_primitive_root ($root, $i);
+      if (! defined $bool) { return undef; }
+      if ($bool) { return $root; }
     }
+    return 1;
   } else {
-    for (my $root = -1; $root > -$i; $root--) {
-      ### try: $root
-      if (_is_primitive_root ($root, $i)) {
-        return $root;
-      }
+    if ($i < 2) {
+      return 0; # nothing ==1 modulo 0 or 1
     }
+    for (my $root = -2; $root > -$i; $root--) {
+      ### try root: $root
+      my $bool = _is_primitive_root ($root, $i);
+      if (! defined $bool) { return undef; }
+      if ($bool) { return $root; }
+    }
+    return -1;
   }
-  return 1;
 }
 
 # sub pred {
@@ -133,12 +158,19 @@ sub _is_primitive_root {
   if (_is_infinite($modulus)) {
     return undef;
   }
-  if ($modulus < 2) {
+  if ($modulus < 2 || ! _coprime(abs($base),$modulus)) {
+    ### not coprime ...
     return 0;
   }
 
-  my $exponent = $modulus - 1;
-  my @primes = prime_factors($exponent);
+  my $exponent = _lambda($modulus);
+  if (! defined $exponent) {
+    return undef;  # too big to factorize
+  }
+  my ($good, @primes) = _prime_factors($exponent);
+  if (! $good) {
+    return undef;  # too big to factorize
+  }
   my $prev_p = 0;
   while (defined (my $p = shift @primes)) {
     next if $p == $prev_p;
@@ -164,6 +196,86 @@ sub _is_primitive_root {
   # }
 
   return 1;
+}
+
+# lambda(2^n * p1^n1 * p2^n2 * ...) = LCM lambda(2^n), lambda(p1^n1), ...
+# lambda(2^n) = totient(2^n)    if n=0,1,2
+#             = totient(2^n)/2  if n>2
+# lambda(p^n) = totient(p^n) = (p-1)*p^(n-1)
+#
+# lambda(18=2*3*3) = lcm 2-1=1, 2*3=6 = 6
+#
+sub _lambda {
+  my ($n) = @_;
+  ### _lambda(): $n
+
+  my ($good, @primes) = _prime_factors($n);
+  if (! $good) {
+    return undef;  # too big to factorize
+  }
+  ### @primes
+
+  if (@primes >= 3 && $primes[2] == 2) {
+    # 2^n with n>2, drop one factor of 2 to give totient(2^n)/2
+    shift @primes;
+  }
+  my $prev = shift @primes || return 1;
+  my $totient = $prev-1;
+  my $ret = 1;
+  ### initial ...
+  ### $prev
+  ### $totient
+
+  foreach my $p (@primes) {
+    ### $p
+    if ($p == $prev) {
+      $totient *= $p;
+    } else {
+      $ret = _lcm($ret, $totient);
+      $totient = $p-1;
+      $prev = $p;
+    }
+  }
+
+  ### final ...
+  ### $ret
+  ### $totient
+  return _lcm($ret, $totient);
+}
+
+sub _lcm {
+  my $ret = shift;
+  while (@_) {
+    my $value = shift;
+    $ret *= $value / _gcd($ret, $value);
+  }
+  return $ret;
+}
+
+sub _gcd {
+  my ($x, $y) = @_;
+  #### _gcd(): "$x,$y"
+
+  # bgcd() available in even the earliest Math::BigInt
+  if ((ref $x && $x->isa('Math::BigInt'))
+      || (ref $y && $y->isa('Math::BigInt'))) {
+    return Math::BigInt::bgcd($x,$y);
+  }
+
+  $x = abs(int($x));
+  $y = abs(int($y));
+  unless ($x > 0) {
+    return $y;
+  }
+  if ($y > $x) {
+    $y %= $x;
+  }
+  for (;;) {
+    if ($y <= 1) {
+      return ($y == 0 ? $x : 1);
+    }
+    ($x,$y) = ($y, $x % $y);
+  }
 }
 
 sub _powmod {
@@ -224,10 +336,29 @@ Math::NumSeq::LeastPrimitiveRoot -- smallest primitive root
 
 I<In progress ...>
 
-This is ...
+This is the least primitive root modulo i,
 
-    # starting i=1
     3, 3, 5, 4, 4, 3, 5, 5, 4, 3, 6, 6, 8, 8, 7, 7, 9, 8, 8, ...
+    starting i=1
+
+A primitive root is a base b for which
+
+    b^totient(i) == 1 modulo i
+    and all smaller exponents b^e != 1 modulo i
+
+The powers of a base b taken modulo i are a multiplicative group
+
+     b^0, b^1, b^2, b^3, etc  modulo i
+
+Eventually a power b^k == 1 modulo i is reached.  The k where that happens
+is called the multiplicative order.  The multiplicative order can be at most
+totient(i).  For some bases b it's smaller.  A base b for which the
+multiplicative order is the full totient(i) is a primitive root.  The
+sequence here gives the first base b with that maximum multiplicative order.
+
+For i prime totient(i)=i-1 and the set of powers of a primitive root gives
+all the integers 1 to i-1.  For i composite totient(i) is smaller and the
+powers aren't consecutive integers.
 
 =head1 FUNCTIONS
 
@@ -257,8 +388,7 @@ Return 1, the first term in the sequence being at i=1.
 
 =head1 SEE ALSO
 
-L<Math::NumSeq>,
-L<Math::NumSeq::LongFractionPrimes>
+L<Math::NumSeq>
 
 =head1 HOME PAGE
 

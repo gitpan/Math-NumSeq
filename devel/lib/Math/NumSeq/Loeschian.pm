@@ -23,13 +23,15 @@
 package Math::NumSeq::Loeschian;
 use 5.004;
 use strict;
-use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 57;
+$VERSION = 58;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
+
+use Math::NumSeq::PrimeFactorCount;;
+*_prime_factors = \&Math::NumSeq::PrimeFactorCount::_prime_factors;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -114,11 +116,11 @@ sub pred {
     return 0;
   }
 
-  unless ($value <= 0xFFFF_FFFF) {
-    return undef;
+  my ($good, @primes) = _prime_factors($value);
+  if (! $good) {
+    return undef;  # too big to factorize
   }
 
-  my @primes = prime_factors($value);
   while (@primes) {
     my $p = shift @primes;
     next if ($p % 3) != 2;

@@ -18,10 +18,9 @@
 package Math::NumSeq::TotientPerfect;
 use 5.004;
 use strict;
-use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 57;
+$VERSION = 58;
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
 @ISA = ('Math::NumSeq::Base::IteratePred',
@@ -29,7 +28,10 @@ use Math::NumSeq::Base::IteratePred;
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
 use Math::NumSeq::Totient;
-*_totient_by_sieve = \&Math::NumSeq::Totient::_totient_by_sieve;
+*_totient = \&Math::NumSeq::Totient::_totient;
+
+use Math::NumSeq::PrimeFactorCount;;
+*_prime_factors = \&Math::NumSeq::PrimeFactorCount::_prime_factors;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -55,9 +57,9 @@ sub next {
  OUTER: for (;;) {
     my $value = ($self->{'upto'} += 2);
 
-    my $sum = my $p = _totient_by_sieve($self,$value);
+    my $sum = my $p = _totient($value);
     while ($p > 1) {
-      $sum += ($p = _totient_by_sieve($self,$p));
+      $sum += ($p = _totient($p));
       if ($sum > $value) {
         next OUTER;
       }
@@ -77,16 +79,20 @@ sub pred {
       || ($value % 2) == 0) {  # even numbers not perfect
     return 0;
   }
-  if ($value < 0 || $value > 0xFFFF_FFFF) {
+  if ($value < 0) {
     return undef;
   }
 
-  my %factors;
+  my ($good, @primes) = _prime_factors($value);
+  if (! $good) {
+    return undef;  # too big to factorize
+  }
   my %primes;
-  foreach my $p (prime_factors($value)) {
+  foreach my $p (@primes) {
     $primes{$p}++;
   }
 
+  my %factors;
   my $sum = 0;
   while (%primes) {
     ### %primes
@@ -96,7 +102,14 @@ sub pred {
       if (--$e) {
         $next{$p} += $e;
       }
-      foreach my $f (@{ $factors{$p} ||= [ prime_factors($p-1) ] }) {
+      my $factors_aref = ($factors{$p} ||= do {
+        my ($good, @primes) = _prime_factors($p-1);
+        if (! $good) {
+          return undef;  # too big to factorize
+        }
+        \@primes
+      });
+      foreach my $f (@$factors_aref) {
         $next{$f}++;
       }
     }

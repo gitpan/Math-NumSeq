@@ -20,17 +20,19 @@ package Math::NumSeq::Totient;
 use 5.004;
 use strict;
 use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
-# version 0.39 for prime_factors()
-use Math::Factor::XS 0.39 'factors', 'prime_factors';
+use Math::Factor::XS 'factors';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 57;
+$VERSION = 58;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
+
+use Math::NumSeq::PrimeFactorCount;;
+*_prime_factors = \&Math::NumSeq::PrimeFactorCount::_prime_factors;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -42,7 +44,7 @@ use constant characteristic_count => 1;
 use constant characteristic_smaller => 1;
 use constant characteristic_increasing => 0;
 use constant values_min => 1;
-use constant i_start => 1;
+use constant default_i_start => 1;
 
 #------------------------------------------------------------------------------
 # cf A007617 non-totients, all odds, plus evens per A005277
@@ -62,18 +64,26 @@ use constant oeis_anum => 'A000010';
 
 sub ith {
   my ($self, $i) = @_;
-  ### Totient ith(): $i
+  return _totient($i);
+}
+sub _totient {
+  my ($n) = @_;
+  ### _totient(): $n
 
-  if (_is_infinite($i)) {
-    return $i;
+  if (_is_infinite($n)) {
+    return $n;
   }
-  if ($i < 0 || $i > 0xFFFF_FFFF) {
-    return undef;
+  if ($n == 0) {
+    return 0;
+  }
+  my ($good, @primes) = _prime_factors($n);
+  if (! $good) {
+    return undef; # too big to factorize
   }
 
   my $prev = 0;
   my $ret = 1;
-  foreach my $p (prime_factors($i)) {
+  foreach my $p (@primes) {
     if ($p == $prev) {
       $ret *= $p;
     } else {
@@ -169,7 +179,6 @@ sub _pred_f {
 }
 
 
-
 # sub _totient {
 #   my ($x) = @_;
 #   my $count = (($x >= 1)                    # y=1 always
@@ -197,55 +206,8 @@ sub _pred_f {
 # }
 
 
-sub _totient_by_sieve {
-  my ($self, $i) = @_;
-  ### _totient_by_sieve(): $i
-
-  if ($i < 2) {
-    return $i;
-  }
-
-  my $array = $self->{'array'};
-  if (! $array || $i > $#$array) {
-    $array = $self->{'array'} = [ 0 .. 2*$i ];
-    $self->{'sieve_done'} = 1;
-  }
-  if ($self->{'sieve_done'} < $i) {
-    ### extend past done: $self->{'sieve_done'}
-
-    my $done = $self->{'sieve_done'};
-    do {
-      $done++;
-      if ($array->[$done] == $done) {
-        ### prime: $done
-        for (my $m = $done; $m <= $#$array; $m += $done) {
-          ### array change: $m.' from '.$array->[$m].' to '.($array->[$m] / $done) * ($done-1)
-          ($array->[$m] /= $done) *= $done-1;
-        }
-      }
-    } while ($done < $i);
-    $self->{'sieve_done'} = $done;
-    ### done now: $done
-    ### array now: $array
-  }
-  my $ret = $self->{'array'}->[$i];
-  return $ret - ($ret == $i);  # 1 less if a prime
-}
-
 1;
 __END__
-
-# sub rewind {
-#   my ($self) = @_;
-#   $self->{'i'} = $self->i_start;
-# }
-# sub next {
-#   my ($self) = @_;
-#   my $i = $self->{'i'}++;
-#   return ($i, _totient_by_sieve($self,$i));
-# }
-# 
-
 
 =for stopwords Ryde Math-NumSeq Euler's totient totients coprime coprimes ie recursing maxdivisor
 

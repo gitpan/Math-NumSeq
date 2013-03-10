@@ -24,7 +24,7 @@ use strict;
 use Module::Load;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 57;
+$VERSION = 58;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -110,13 +110,13 @@ my %oeis_anum = ('Factorials,repeated' => 'A001013',
 
                  'Primorials,repeated' => 'A025487',
                  'Primorials,repeated' => 'A129912',
-                 # OEIS-Catalogue: of=Primorials A025487
-                 # OEIS-Catalogue: of=Primorials A129912 multiplicity=distinct
+                 # OEIS-Catalogue: A025487 of=Primorials
+                 # OEIS-Catalogue: A129912 of=Primorials multiplicity=distinct
 
                  'Fibonacci,repeated' => 'A065108',
                  'Fibonacci,distinct' => 'A160009',
-                 # OEIS-Catalogue: of=Fibonacci A065108
-                 # OEIS-Catalogue: of=Fibonacci A160009 multiplicity=distinct
+                 # OEIS-Catalogue: A065108 of=Fibonacci
+                 # OEIS-Catalogue: A160009 of=Fibonacci multiplicity=distinct
                 );
 
 sub oeis_anum {

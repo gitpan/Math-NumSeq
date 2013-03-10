@@ -27,10 +27,10 @@ package Math::NumSeq::PrimeFactorExtract;
 use 5.004;
 use strict;
 use List::Util qw(min max sum reduce);
-use Math::Factor::XS 'prime_factors';
+use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 57;
+$VERSION = 58;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;

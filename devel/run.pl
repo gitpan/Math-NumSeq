@@ -21,6 +21,7 @@ use 5.010;
 use strict;
 use warnings;
 use POSIX;
+use Math::PlanePath::Base::Generic 'is_infinite';
 
 # use Smart::Comments;
 
@@ -70,14 +71,12 @@ $|=1;
   $values_class = 'Math::NumSeq::AlmostPrimes';
   $values_class = 'Math::NumSeq::DigitMiddle';
   $values_class = 'Math::NumSeq::SqrtEngel';
-  $values_class = 'Math::NumSeq::HappySteps';
   $values_class = 'Math::NumSeq::RepdigitRadix';
   $values_class = 'Math::NumSeq::KolakoskiMajority';
   $values_class = 'Math::NumSeq::StarNumbers';
   $values_class = 'Math::NumSeq::ReverseAddSteps';
   $values_class = 'Math::NumSeq::Expression';
   $values_class = 'Math::NumSeq::PiDigits';
-  $values_class = 'Math::NumSeq::RadixWithoutDigit';
   $values_class = 'Math::NumSeq::AsciiSelf';
   $values_class = 'Math::NumSeq::Squareful';
   $values_class = 'Math::NumSeq::SquareFreeKernel';
@@ -96,7 +95,6 @@ $|=1;
   $values_class = 'Math::NumSeq::HofstadterFigure';
   $values_class = 'Math::NumSeq::TwinPrimes';
   $values_class = 'Math::NumSeq::PierpontPrimes';
-  $values_class = 'Math::NumSeq::DedekindPsiCumulative';
   $values_class = 'Math::NumSeq::DedekindPsiSteps';
   $values_class = 'Math::NumSeq::TotientPerfect';
   $values_class = 'Math::NumSeq::TotientSteps';
@@ -143,7 +141,6 @@ $|=1;
   $values_class = 'Math::NumSeq::SpiroFibonacci';
   $values_class = 'Math::NumSeq::Aronson';
   $values_class = 'Math::NumSeq::Repdigits';
-  $values_class = 'Math::NumSeq::LeastPrimitiveRoot';
   $values_class = 'Math::NumSeq::AllPrimeFactors';
   $values_class = 'Math::NumSeq::MaxDigitCount';
   $values_class = 'Math::NumSeq::Palindromes';
@@ -183,7 +180,6 @@ $|=1;
   $values_class = 'Math::NumSeq::DigitCountHigh';
   $values_class = 'Math::NumSeq::DigitCountLow';
   $values_class = 'Math::NumSeq::OEIS';
-  $values_class = 'Math::NumSeq::PlanePathCoord';
   $values_class = 'Math::NumSeq::FactorialProducts';
   $values_class = 'Math::NumSeq::Products';
   $values_class = 'Math::NumSeq::DigitSumModulo';
@@ -191,16 +187,22 @@ $|=1;
   $values_class = 'Math::NumSeq::Fibbinary';
   $values_class = 'Math::NumSeq::PlanePathTurn';
   $values_class = 'Math::NumSeq::PlanePathN';
-  $values_class = 'Math::NumSeq::PlanePathDelta';
   $values_class = 'Math::NumSeq::DigitCount';
   $values_class = 'Math::NumSeq::FibbinaryBitCount';
+  $values_class = 'Math::NumSeq::HappyNumbers';
+  $values_class = 'Math::NumSeq::RadixWithoutDigit';
+  $values_class = 'Math::NumSeq::LeastPrimitiveRoot';
+  $values_class = 'Math::NumSeq::DedekindPsiCumulative';
+  $values_class = 'Math::NumSeq::PlanePathDelta';
+  $values_class = 'Math::NumSeq::PlanePathCoord';
 
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new
     (
-
-     digit => '00',
+     # root_type => 'negative',
+     # digit => 0,
      # radix => 2,
+     # i_start => 0,
      # modulus => 2,
 
      # of => 'Primorials',
@@ -258,10 +260,11 @@ $|=1;
      # including_self => 0,
      # offset => 3,
 
-     # planepath => 'Diagonals,x_start=1,y_start=1',
+     # planepath => 'Diagonals,x_start=1,y_start=1,direction=up',
+      planepath => 'PyramidRows,step=1',
      # planepath => 'MultipleRings,step=4',
      # planepath => 'RationalsTree,tree_type=AYT',
-     # planepath => 'SurroundOneEight,parts=3mid',
+     # planepath => 'UlamWarburtonQuarter',
      # planepath => 'SierpinskiTriangle,align=diagonal',
      # planepath => 'DivisibleColumns,divisor_type=proper,n_start=2',
      # planepath => 'CoprimeColumns',
@@ -269,11 +272,11 @@ $|=1;
      # planepath => 'SierpinskiTriangle,align=diagonal',
      # planepath => 'RationalsTree,tree_type=L',
      # planepath => 'GcdRationals,pairs_order=rows',
-     # planepath => 'ToothpickTreeByCells',
      # planepath => 'LCornerTree',
-     # coordinate_type => 'IntXY',
+     #coordinate_type => 'Numerator',
+     coordinate_type => 'Denominator',
      # coordinate_type => 'DiffXY',
-     # coordinate_type => 'BitXor',
+     # coordinate_type => 'Height',
 
      # planepath => 'SierpinskiTriangle',
      # planepath => 'RationalsTree',
@@ -295,10 +298,10 @@ $|=1;
 
      # planepath => 'PythagoreanTree,coordinates=AC',
      # planepath => 'PyramidRows,step=1,n_start=0',
-     planepath => 'MultipleRings,step=7,ring_shape=polygon',
-     #planepath => 'RationalsTree,tree_type=L',
+     # planepath => 'MultipleRings,step=7,ring_shape=circle',
+     # planepath => 'RationalsTree,tree_type=L',
      # planepath => 'Rows,width=3',
-     delta_type=>'Dir4',
+     # delta_type=>'Dir4',
 
      # planepath => 'Diagonals',
      # planepath => 'PythagoreanTree,coordinates=BC',
@@ -484,10 +487,10 @@ $|=1;
         }
       }
       if ($seq->can('ith')) {
-        if ($value >= 2**50) {
+        if (! is_infinite($value) && $value >= 2**50) {
+        }
           require Math::BigInt;
           $i = Math::BigInt->new($i);
-        }
         my $ith_value = $seq->ith($i);
         unless ((defined $value == defined $ith_value)
                 && (! defined $value

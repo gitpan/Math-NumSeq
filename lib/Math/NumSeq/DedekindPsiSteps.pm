@@ -18,16 +18,18 @@
 package Math::NumSeq::DedekindPsiSteps;
 use 5.004;
 use strict;
-use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 57;
+$VERSION = 58;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
+
+use Math::NumSeq::PrimeFactorCount;;
+*_prime_factors = \&Math::NumSeq::PrimeFactorCount::_prime_factors;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -55,17 +57,22 @@ sub ith {
   if (_is_infinite($i)) {
     return $i;
   }
-  if ($i < 0 || $i > 0xFFFF_FFFF) {
+  if ($i < 0) {
     return undef;
   }
 
-  my %factors;
+  my ($good, @primes) = _prime_factors($i);
+  if (! $good) {
+    return undef;  # too big to factorize
+  }
+
   my %primes;
-  foreach my $p (prime_factors($i)) {
+  foreach my $p (@primes) {
     $primes{$p}++;
   }
   my $count = 0;
 
+  my %prime_factors;
   for (;;) {
     delete $primes{'2'};
     delete $primes{'3'};
@@ -73,16 +80,23 @@ sub ith {
 
     ### %primes
     $count++;
-    my %next;
+    my %next_primes;
     while (my ($p, $e) = each %primes) {
       if (--$e) {
-        $next{$p} += $e;
+        $next_primes{$p} += $e;
       }
-      foreach my $f (@{ $factors{$p} ||= [ prime_factors($p+1) ] }) {
-        $next{$f}++;
+      my $prime_factors_aref = ($prime_factors{$p} ||= do {
+        my ($good, @primes) = _prime_factors($p+1);
+        if (! $good) {
+          return undef;  # too big to factorize
+        }
+        \@primes
+      });
+      foreach my $f (@$prime_factors_aref) {
+        $next_primes{$f}++;
       }
     }
-    %primes = %next;
+    %primes = %next_primes;
   }
   return $count;
 }

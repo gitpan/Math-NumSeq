@@ -28,13 +28,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 57;
+$VERSION = 58;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
 use Math::NumSeq::Totient;
-*_totient_by_sieve = \&Math::NumSeq::Totient::_totient_by_sieve;
+*_totient = \&Math::NumSeq::Totient::_totient;
 
 
 # uncomment this to run the ### lines
@@ -58,7 +58,7 @@ sub rewind {
 sub next {
   my ($self) = @_;
   my $i = $self->{'i'}++;
-  return ($i, $self->{'sum'} += _totient_by_sieve($self,$i));
+  return ($i, $self->{'sum'} += _totient($i));
 }
 
 sub ith {
@@ -70,7 +70,7 @@ sub ith {
   }
   my $sum = 0;
   foreach my $n (1 .. $i) {
-    $sum += _totient_by_sieve($self,$n);
+    $sum += _totient($n);
   }
   return $sum;
 }
@@ -90,7 +90,7 @@ sub pred {
     if ($sum > $value) {
       return 0;
     }
-    $sum += _totient_by_sieve($self,$n);
+    $sum += _totient($n);
   }
 }
 

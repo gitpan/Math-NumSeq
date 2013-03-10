@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max','min';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 57;
+$VERSION = 58;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;

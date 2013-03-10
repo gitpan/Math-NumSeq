@@ -48,7 +48,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 57;
+$VERSION = 58;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -518,7 +518,7 @@ L<Math::NumSeq::FibonacciWord>,
 L<Math::NumSeq::PisanoPeriod>,
 L<Math::NumSeq::PisanoPeriodSteps>,
 L<Math::NumSeq::Fibbinary>,
-L<Math::NumSeq::FibbinaryBitCount>,
+L<Math::NumSeq::FibbinaryBitCount>
 
 L<Math::NumSeq::Catalan>,
 L<Math::NumSeq::BalancedBinary>,
@@ -558,7 +558,7 @@ L<Math::NumSeq::UndulatingNumbers>,
 L<Math::NumSeq::HarshadNumbers>,
 L<Math::NumSeq::MoranNumbers>,
 L<Math::NumSeq::HappyNumbers>,
-L<Math::NumSeq::HappySteps>,
+L<Math::NumSeq::HappySteps>
 
 L<Math::NumSeq::CullenNumbers>,
 L<Math::NumSeq::ProthNumbers>,

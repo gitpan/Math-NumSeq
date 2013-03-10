@@ -23,10 +23,9 @@
 package Math::NumSeq::PrimeSignatureLeast;
 use 5.004;
 use strict;
-use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 57;
+$VERSION = 58;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
@@ -50,7 +49,7 @@ use constant values_min => 1;
 #------------------------------------------------------------------------------
 # cf A046523 least with same prime sig as n
 #
-use constant oeis_anum => 'A025487';
+# use constant oeis_anum => undef;
 
 
 #------------------------------------------------------------------------------

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 57;
+$VERSION = 58;
 
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IterateIth;
@@ -114,12 +114,12 @@ Math::NumSeq::HappySteps -- number of sum of squares of digits iterations to rea
 
 =head1 DESCRIPTION
 
-This is the number of iterations of the HappyNumbers style "sum of squares
-of digits" is required to reach a repeat of a value seen before, and
-therefore to establish whether a number is happy or not.
+This is the number of iterations of the C<HappyNumbers> style "sum of
+squares of digits" is required to reach a repeat of a value seen before, and
+therefore to establish whether a number is a happy number or not.
 
-    # starting i=1
     1, 9, 13, 8, 12, 17, 6, 13, 12, 2,
+    starting i=1
 
 For example i=10 is value 2 because 10-E<gt>1-E<gt>1 is 2 iterations to get
 to a repeat (a repeat of 1).  At i=1 itself the value is 1 since 1 iteration
@@ -138,7 +138,7 @@ might fall into.  For example base 20 has a cycle
     10 -> 100 -> 25 -> 26 -> ... -> 61 -> 10
     total 26 elements
 
-When a non-happy falls into such a cycle its HappySteps count here is at
+When a non-happy falls into such a cycle its C<HappySteps> count here is at
 least 26 (or whatever amount) to reach a repeat.
 
 =head1 FUNCTIONS

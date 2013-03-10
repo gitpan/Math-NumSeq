@@ -19,15 +19,20 @@
 package Math::NumSeq::DigitProduct;
 use 5.004;
 use strict;
+use List::Util 'reduce';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 57;
+$VERSION = 58;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
+
+use Math::NumSeq::Repdigits;
+*_digit_split_lowtohigh = \&Math::NumSeq::Repdigits::_digit_split_lowtohigh;
+
 
 use constant name => Math::NumSeq::__('Digit Product');
 use constant description => Math::NumSeq::__('Product of digits a given radix.');
@@ -49,7 +54,8 @@ sub values_max {
 # apparently no ternary or base 4 ...
 
 my @oeis_anum;
-# cf A036987 binary, but takes i=0 to be an empty product equal to 1
+# A036987 binary, being 0 if any 0-bits and 1 if all 1-bits,
+# but it takes i=0 to be an empty product value=1
 
 $oeis_anum[10] = 'A007954'; # 10 decimal, starting from 0
 # OEIS-Catalogue: A007954 radix=10
@@ -67,13 +73,10 @@ sub ith {
   if (_is_infinite ($i)) {
     return $i;
   }
-  my $radix = $self->{'radix'};
-  my $product = ($i % $radix);  # low digit
-  for (;;) {
-    $i = int($i/$radix) || last;
-    ($product *= ($i % $radix)) || last;
+  if ($i == 0) {
+    return 0;
   }
-  return $product;
+  return reduce {$a * $b} _digit_split_lowtohigh($i, $self->{'radix'})
 }
 
 sub pred {

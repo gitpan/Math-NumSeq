@@ -30,7 +30,7 @@ use Carp;
 use POSIX ();
 
 use vars '$VERSION', '@ISA';
-$VERSION = 57;
+$VERSION = 58;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -136,9 +136,9 @@ numbers in NumSeq style.
 
 The intention is to be flexible about the file format and to auto-detect as
 far as possible.  Currently the only format is plain text, either a single
-value per line, or a pair i index and value.
+value per line, or a pair i and value.
 
-    123                   # one value per line
+    123                   # value per line
     456
 
     1  123                # i and value per line

@@ -17,12 +17,17 @@ with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 58, March 2013
+     - Totient etc use prime_factors() rather than sieve, since the
+       sieve is no faster and uses a lot of memory.  As reported by
+       Dana Jacobsen RT#83578.
+
 Version 57, March 2013
      - Fibbinary new seek_to_i()
      - FibbinaryBitCount new option digit=>"0","00"
 
 Version 56, February 2013
-     - DigitSumModulo fixes for values_max() and oeis_anum() when modulus!=radix
+     - DigitSumModulo fixes for values_max() and oeis_anum() if modulus!=radix
 
 Version 55, October 2012
      - tests Fibbinary don't assume sprintf NV is exact

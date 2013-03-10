@@ -20,12 +20,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 57;
+$VERSION = 58;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
-use Math::Factor::XS 'prime_factors';
+use Math::NumSeq::PrimeFactorCount;;
+*_prime_factors = \&Math::NumSeq::PrimeFactorCount::_prime_factors;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -140,13 +141,17 @@ sub ith {
   if ($power < 2) {
     return $i;
   }
-  unless ($i >= 0 && $i <= 0xFFFF_FFFF) {
+  unless ($i >= 0) {
     return undef;
+  }
+  my ($good, @primes) = _prime_factors($i);
+  if (! $good) {
+    return undef;  # too big to factorize
   }
   my $prev = 0;
   my $count = 0;
   my $ret = 1;
-  foreach my $p (prime_factors($i)) {
+  foreach my $p (@primes) {
     ### $p
     if ($p == $prev) {
       ### same ...

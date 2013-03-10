@@ -27,21 +27,23 @@ package Math::NumSeq::HypotCount;
 use 5.004;
 use strict;
 use POSIX 'ceil';
-use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 57;
+$VERSION = 58;
 use Math::NumSeq;
-@ISA = ('Math::NumSeq');
+@ISA = ('Math::NumSeq::Base::IterateIth',
+        'Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
+use Math::NumSeq::PrimeFactorCount;;
+*_prime_factors = \&Math::NumSeq::PrimeFactorCount::_prime_factors;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
 use constant name => Math::NumSeq::__('Count Hypotenuses');
 use constant description => Math::NumSeq::__('Count of ways to be a sum of two squares, A^2+B^2 for integer A,B >=0.');
-use constant i_start => 0;
+use constant default_i_start => 0;
 use constant characteristic_count => 1;
 use constant characteristic_smaller => 1;
 use constant characteristic_increasing => 0;
@@ -60,10 +62,10 @@ use constant oeis_anum => 'A000161'; # with zeros without order
 # sub new {
 #   my ($class, %options) = @_;
 #   ### HypotCount new()
-# 
+#
 #   $options{'lo'} = max (0, $options{'lo'}||0);
 #   my $hi = $options{'hi'} = max (0, $options{'hi'});
-# 
+#
 #   my $str = "\0\0\0\0" x ($options{'hi'}+1);
 #   for (my $j = 2; $j <= $hi; $j += 2) {
 #     vec($str, $j,8) = 2*1-1;
@@ -71,7 +73,7 @@ use constant oeis_anum => 'A000161'; # with zeros without order
 #   return $class->SUPER::new (%options,
 #                              string => $str);
 # }
-# 
+#
 # sub rewind {
 #   my ($self) = @_;
 #   ### HypotCount rewind()
@@ -80,18 +82,18 @@ use constant oeis_anum => 'A000161'; # with zeros without order
 #     $self->next;
 #   }
 # }
-# 
+#
 # sub next {
 #   my ($self) = @_;
 #   ### HypotCount next() from: $self->{'i'}
-# 
+#
 #   my $i = $self->{'i'}++;
 #   my $hi = $self->{'hi'};
 #   if ($i > $hi) {
 #     return;
 #   }
 #   my $cref = \$self->{'string'};
-# 
+#
 #   my $ret = vec ($$cref, $i,8);
 #   if ($ret == 0 && $i >= 3 && ($i&3) == 1) {
 #     ### prime 4k+1: $i
@@ -99,7 +101,7 @@ use constant oeis_anum => 'A000161'; # with zeros without order
 #     for (my $j = $i; $j <= $hi; $j += $i) {
 #       vec($$cref, $j,8) ++;
 #     }
-# 
+#
 #     # print "applied: $i\n";
 #     # for (my $j = 0; $j < $hi; $j++) {
 #     #   printf "  %2d %2d\n", $j, vec($$cref, $j,8);
@@ -107,24 +109,13 @@ use constant oeis_anum => 'A000161'; # with zeros without order
 #   }
 #   return ($i, $ret);
 # }
-# 
+#
 # sub pred {
 #   my ($self, $n) = @_;
 #   ### HypotCount pred(): $n
 #   return 1;
 # }
 
-
-
-sub rewind {
-  my ($self) = @_;
-  $self->{'i'} = $self->i_start;
-}
-sub next {
-  my ($self) = @_;
-  my $i = $self->{'i'}++;
-  return ($i, $self->ith($i));
-}
 
 # 25 = 0^2+5^2 = 3^2+4^2
 # 25 = 5^2  b1=2 B=(2+1)=3 a0=0 B-(-1)^a0=3-1=2 so 2/2=1
@@ -141,10 +132,6 @@ sub ith {
     ### nothing for negatives ...
     return 0;
   }
-  unless ($i <= 0xFFFF_FFFF) {
-    return undef;
-  }
-
   if ($i < 2) {
     return 1;
   }
@@ -160,7 +147,10 @@ sub ith {
   #   return $count;
   # }
 
-  my @primes = prime_factors($i);
+  my ($good, @primes) = _prime_factors($value);
+  if (! $good) {
+    return undef;  # too big to factorize
+  }
 
   my $pow2 = 1;
   while (@primes && $primes[0] == 2) {

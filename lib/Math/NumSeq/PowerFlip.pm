@@ -18,10 +18,9 @@
 package Math::NumSeq::PowerFlip;
 use 5.004;
 use strict;
-use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 57;
+$VERSION = 58;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -30,8 +29,12 @@ use Math::NumSeq::Base::IterateIth;
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 *_to_bigint = \&Math::NumSeq::_to_bigint;
 
+use Math::NumSeq::PrimeFactorCount;;
+*_prime_factors = \&Math::NumSeq::PrimeFactorCount::_prime_factors;
+
 # uncomment this to run the ### lines
 #use Smart::Comments;
+
 
 use constant name => Math::NumSeq::__('Prime Exponent Flip');
 use constant description => Math::NumSeq::__('Flip each prime and its exponent, so for example 3^8 -> 8^3');
@@ -41,6 +44,7 @@ use constant characteristic_non_decreasing => 0;
 use constant characteristic_integer => 1;
 use constant characteristic_smaller => 1;
 use constant values_min => 1; # at i=1
+
 
 #------------------------------------------------------------------------------
 # cf A005117 squarefrees have all exponents 1 so value=1
@@ -60,14 +64,15 @@ sub ith {
   if (_is_infinite($i)) {
     return $i;
   }
-  if ($i > 0xFFFF_FFFF) {
-    ### too big ...
-    return undef;
-  }
   $i = abs($i);
 
-  my @primes = prime_factors($i)
-    or return $i;  # 0,1 unchanged
+  my ($good, @primes) = _prime_factors($i);
+  if (! $good) {
+    return undef;  # too big to factorize
+  }
+  if (! @primes) {
+    return $i;  # 0,1 unchanged
+  }
 
   my $value = 1;
   my $log = 0;

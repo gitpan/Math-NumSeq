@@ -24,7 +24,7 @@ use File::Temp;
 use Math::NumSeq::Base::File;
 
 use vars '$VERSION';
-$VERSION = 57;
+$VERSION = 58;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;

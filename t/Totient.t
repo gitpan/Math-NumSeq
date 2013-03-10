@@ -35,7 +35,7 @@ use Math::NumSeq::Totient;
 # VERSION
 
 {
-  my $want_version = 57;
+  my $want_version = 58;
   ok ($Math::NumSeq::Totient::VERSION, $want_version, 'VERSION variable');
   ok (Math::NumSeq::Totient->VERSION,  $want_version, 'VERSION class method');
 
@@ -78,7 +78,7 @@ use Math::NumSeq::Totient;
 # }
 
 #------------------------------------------------------------------------------
-# _totient_by_sieve()
+# _totient()
 
 {
   my $seq = Math::NumSeq::Totient->new;
@@ -94,8 +94,8 @@ use Math::NumSeq::Totient;
                     [11, 10],
                    ) {
     my ($i, $want) = @$elem;
-    my $got = Math::NumSeq::Totient::_totient_by_sieve($seq,$i);
-    ok ($got, $want, "_totient_by_sieve() i=$i got $got want $want");
+    my $got = Math::NumSeq::Totient::_totient($i);
+    ok ($got, $want, "_totient() i=$i got $got want $want");
   }
 }
 

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 57;
+$VERSION = 58;
 use Math::NumSeq;
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
@@ -29,8 +29,12 @@ use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
 
+use Math::NumSeq::Repdigits;
+*_digit_split_lowtohigh = \&Math::NumSeq::Repdigits::_digit_split_lowtohigh;
+
 # uncomment this to run the ### lines
 #use Smart::Comments;
+
 
 # use constant name => Math::NumSeq::__('Digit Count');
 use constant description => Math::NumSeq::__('How many of a given digit in each number, in a given radix, for example how many 1-bits in binary.');
@@ -123,19 +127,9 @@ sub ith {
   if ($digit == -1) { $digit = $radix - 1; }
 
   my $count = 0;
-  if ($radix == 2) {
-    while ($i) {
-      if (($i & 1) == $digit) {
-        $count++;
-      }
-      $i >>= 1;
-    }
-  } else {
-    while ($i) {
-      if (($i % $radix) == $digit) {
-        $count++;
-      }
-      $i = int($i/$radix);
+  foreach my $got_digit (_digit_split_lowtohigh($i, $radix)) {
+    if ($got_digit == $digit) {
+      $count++;
     }
   }
   return $count;

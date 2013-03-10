@@ -18,16 +18,18 @@
 package Math::NumSeq::ErdosSelfridgeClass;
 use 5.004;
 use strict;
-use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 use Math::NumSeq::Primes;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 57;
+$VERSION = 58;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
+
+use Math::NumSeq::PrimeFactorCount;;
+*_prime_factors = \&Math::NumSeq::PrimeFactorCount::_prime_factors;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -160,7 +162,11 @@ sub _classify {
     $ret++;
     my %next;
     foreach my $prime (@this) {
-      @next{prime_factors($prime + $offset)} = ();  # hash slice, for uniq
+      my ($good, @primes) = _prime_factors($prime + $offset);
+      if (! $good) {
+        return undef;  # too big to factorize
+      }
+      @next{@primes} = ();  # hash slice, for uniq
     }
     delete @next{2,3}; # hash slice, not 2 or 3
     @this = keys %next;

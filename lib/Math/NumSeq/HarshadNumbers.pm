@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 57;
+$VERSION = 58;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
@@ -32,7 +32,7 @@ use Math::NumSeq::Base::IteratePred;
 
 # use constant name => Math::NumSeq::__('Harshad Numbers');
 use constant description => Math::NumSeq::__('Harshad numbers, divisible by the sum of their digits.');
-use constant i_start => 1;
+use constant default_i_start => 1;
 use constant values_min => 1;
 use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
@@ -49,7 +49,7 @@ $oeis_anum[4]  = 'A064438';  # base 4              OFFSET=1
 $oeis_anum[5]  = 'A064481';  # base 5              OFFSET=1
 $oeis_anum[10] = 'A005349';  # decimal sum digits divide N  OFFSET=1
 # OEIS-Catalogue: A049445 radix=2
-# OEIS-Catalogue: A064150 radix=3
+# OEIS-Catalogue: A064150 radix=3 i_start=0
 # OEIS-Catalogue: A064438 radix=4
 # OEIS-Catalogue: A064481 radix=5
 # OEIS-Catalogue: A005349

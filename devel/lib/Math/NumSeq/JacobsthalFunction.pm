@@ -23,10 +23,9 @@ package Math::NumSeq::JacobsthalFunction;
 use 5.004;
 use strict;
 use List::Util 'max';
-use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 57;
+$VERSION = 58;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -103,7 +102,11 @@ sub ith {
 
   {
     my $prev = 0;
-    foreach my $prime (prime_factors($i)) {
+    my ($good, @primes) = _prime_factors($i);
+    if (! $good) {
+      return undef;  # too big to factorize
+    }
+    foreach my $prime (@primes) {
       next if $prime == $prev;
       for (my $g = $prime; $g <= $limit; $g += $prime) {
         vec($vec,$g,1) = 1;  # flag common factor

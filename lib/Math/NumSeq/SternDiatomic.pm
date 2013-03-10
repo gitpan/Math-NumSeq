@@ -30,7 +30,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 57;
+$VERSION = 58;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -114,10 +114,17 @@ Math::NumSeq::SternDiatomic -- Stern's diatomic sequence
 This is Moritz Stern's diatomic sequence
 
     0, 1, 1, 2, 1, 3, 2, 3, ...
+    starting i=0
 
-It's constructed by successive levels as D(2*i)=D(i) and
-D(2*i+1)=D(i)+D(i+1), so effectively the sequence is extended by
-interleaving the previous level with sums of adjacent terms,
+It's constructed by successive levels as
+
+    D(0)     = 0
+    D(1)     = 1
+    D(2*i)   = D(i)
+    D(2*i+1) = D(i) + D(i+1)
+
+so effectively the sequence is extended by copying the previous level to the
+even indices of the next, and at the odd indices the sum of adjacent terms,
 
    0,                i=0
    1,                i=1
@@ -125,9 +132,10 @@ interleaving the previous level with sums of adjacent terms,
    1,  3,  2,  3,    i=4,5,6,7
    1,4,3,5,2,5,3,4,  i=8,9,...,15
 
-For example the i=4 row is a copy of the preceding 1,2 with sums 1+2 and 2+1
-interleaved.  The new entry at the end of each row is the sum of the last of
-the previous row and the first of the current row (which is always 1).
+For example the i=4 row is a copy of the preceding values 1,2 with sums 1+2
+and 2+1 interleaved.  The value at the end of each row is the sum of the
+last of the previous row and the first of the current row (which is
+always 1).
 
 =head1 FUNCTIONS
 

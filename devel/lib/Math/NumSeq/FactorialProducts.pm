@@ -24,7 +24,7 @@ use strict;
 use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 57;
+$VERSION = 58;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -71,8 +71,8 @@ use constant parameter_info_array =>
 my %oeis_anum = (repeated => 'A001013',
                  distinct => 'A058295',
                 );
-# OEIS-Catalogue: A001013
-# OEIS-Catalogue: A058295 multiplicity=distinct
+# # OEIS-Catalogue: A001013
+# # OEIS-Catalogue: A058295 multiplicity=distinct
 
 sub oeis_anum {
   my ($self) = @_;

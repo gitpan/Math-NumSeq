@@ -65,6 +65,7 @@ devel/lib/Math/NumSeq/KaprekarRoutineSteps.pm
 devel/lib/Math/NumSeq/KolakoskiMajority.pm
 devel/lib/Math/NumSeq/LeastPrimitiveRoot-oeis.t
 devel/lib/Math/NumSeq/LeastPrimitiveRoot.pm
+devel/lib/Math/NumSeq/LeastPrimitiveRoot.t
 devel/lib/Math/NumSeq/LipschitzClass.pm
 devel/lib/Math/NumSeq/ln2.gz
 devel/lib/Math/NumSeq/Ln2Bits.pm

@@ -18,9 +18,10 @@
 package Math::NumSeq::HappyNumbers;
 use 5.004;
 use strict;
+use List::Util 'sum';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 57;
+$VERSION = 58;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
@@ -28,12 +29,16 @@ use Math::NumSeq::Base::IteratePred;
         'Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
+use Math::NumSeq::Repdigits;
+*_digit_split_lowtohigh = \&Math::NumSeq::Repdigits::_digit_split_lowtohigh;
+
 # uncomment this to run the ### lines
-#use Devel::Comments;
+# use Smart::Comments;
+
 
 # use constant name => Math::NumSeq::__('Happy Numbers');
 use constant description => Math::NumSeq::__('Happy numbers 1,7,10,13,19,23,etc, reaching 1 under iterating sum of squares of digits.');
-use constant i_start => 1;
+use constant default_i_start => 1;
 use constant values_min => 1;
 use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
@@ -86,7 +91,6 @@ sub pred {
   my %seen;
   for (;;) {
     ### $value
-    my $sum = 0;
     if ($value == 1) {
       return 1;
     }
@@ -94,16 +98,12 @@ sub pred {
       return 0;  # inf loop
     }
     $seen{$value} = 1;
-    while ($value) {
-      my $digit = ($value % $radix);
-      $sum += $digit * $digit;
-      $value = int($value/$radix);
-    }
-    # if ($value == $sum) {
-    #   return 0;
-    # }
-    $value = $sum;
+    $value = _sum_of_squares_of_digits($value,$radix);
   }
+}
+sub _sum_of_squares_of_digits {
+  my ($n, $radix) = @_;
+  return sum (map {$_ * $_} _digit_split_lowtohigh($n,$radix));
 }
 
 1;
@@ -123,9 +123,11 @@ Math::NumSeq::HappyNumbers -- reaching 1 under repeated sum of squares of digits
 
 =head1 DESCRIPTION
 
-This sequence is the happy numbers 1,7,10,13,19,23,etc, which are the
-numbers eventually reaching 1 on repeatedly taking the sum of the squares of
-the digits.
+This sequence is the happy numbers which are the numbers eventually reaching
+1 on repeatedly taking the sum of the squares of the digits.
+
+    1, 7, 10, 13, 19, 23, ...
+    starting i=1
 
 For example 23 is a happy number because the sum of squares of its digits
 (ie. 2 and 3) is 2*2+3*3=13, then the same sum of squares again 1*1+3*3=10,

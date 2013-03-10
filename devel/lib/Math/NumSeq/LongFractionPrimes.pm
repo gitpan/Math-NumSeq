@@ -18,13 +18,15 @@
 package Math::NumSeq::LongFractionPrimes;
 use 5.004;
 use strict;
-use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 57;
+$VERSION = 58;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
+
+use Math::NumSeq::PrimeFactorCount;;
+*_prime_factors = \&Math::NumSeq::PrimeFactorCount::_prime_factors;
 
 use Math::NumSeq::Primes;
 use Math::NumSeq::Squares;
@@ -124,7 +126,11 @@ sub _is_primitive_root {
   }
 
   my $exponent = $modulus - 1;
-  my @primes = prime_factors($exponent);
+  my ($good, @primes) = _prime_factors($exponent);
+  if (! $good) {
+    return undef;  # too big to factorize
+  }
+
   my $prev_p = 0;
   while (defined (my $p = shift @primes)) {
     next if $p == $prev_p;

@@ -18,14 +18,16 @@
 package Math::NumSeq::DedekindPsiCumulative;
 use 5.004;
 use strict;
-use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 use Math::NumSeq::Primes;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 57;
+$VERSION = 58;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
+
+use Math::NumSeq::PrimeFactorCount;;
+*_prime_factors = \&Math::NumSeq::PrimeFactorCount::_prime_factors;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -62,8 +64,12 @@ sub next {
 sub _psi {
   my ($n) = @_;
   ### _psi(): $n
+  my ($good, @primes) = _prime_factors($n);
+  if (! $good) {
+    return undef;  # too big to factorize
+  }
   my $prev = 0;
-  foreach my $p (prime_factors($n)) {
+  foreach my $p (@primes) {
     if ($p != $prev) {
       $n /= $p;
       $n *= $p+1;
@@ -87,10 +93,9 @@ use constant 1.02 _PI => 4*atan2(1,1); # similar to Math::Complex pi()
 #
 # very close even neglecting n*log(n)
 #
-#
-#
 sub value_to_i_estimate {
   my ($self, $value) = @_;
+  if ($value <= 1) { return 1; }
   return int (sqrt(int($value)) * 39/34);
 }
 
@@ -113,7 +118,10 @@ Math::NumSeq::DedekindPsiCumulative -- cumulative Psi function
 
 The cumulative Dedekind Psi function,
 
-    1,4,8,14,20,32,40,52,64,82,94,118,...
+    1, 4, 8, 14, 20, 32, 40, 52, 64, 82, 94, 118, ...
+    starting i=1
+
+    value = sum n=1 to n=i of Psi(n)
 
 where the Psi function is
 

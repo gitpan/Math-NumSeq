@@ -27,6 +27,7 @@ use Module::Load;
 # uncomment this to run the ### lines
 # use Smart::Comments;
 
+my $module;
 {
   open OUT, ">/tmp/find.html" or die;
   print OUT <<HERE or die;
@@ -41,7 +42,8 @@ HERE
   
   my $count = 0;
   require App::MathImage::Generator;
-  foreach my $module (App::MathImage::Generator->values_choices) {
+  foreach (App::MathImage::Generator->values_choices) {
+    $module = $_;
     next if $module eq 'File';
     next if $module eq 'Expression';
     next if $module eq 'OEIS';
@@ -50,8 +52,8 @@ HERE
     
     # restricted to ...
     # next unless $module =~ /Aron/;
-    next unless $module =~ /PlanePath/;
-    # next unless $module =~ /DigitSum/;
+     next unless $module =~ /PlanePathCoord/;
+    # next unless $module =~ /DigitProduct/;
     
     ### $module
     my $class = App::MathImage::Generator->values_class($module);
@@ -472,8 +474,8 @@ sub info_extend_parameters {
     my @strings;
     foreach my $choice (@{$info->{'choices'}}) {
       # next unless $choice =~ /RationalsTree/;
-       next unless $choice =~ /WythoffT/;
-       # next unless $choice =~ /Divis|DiagonalRationals|CoprimeCol/;
+      # next unless $choice =~ /Wythoff/;
+      # next unless $choice =~ /Divis|DiagonalRationals|CoprimeCol/;
       # next unless $choice =~ /DiamondSpiral/;
       # next unless $choice =~ /LCorner|Tooth/;
       # next unless $choice =~ /LCorn|RationalsTree/;
@@ -544,7 +546,9 @@ sub info_extend_parameters {
   if ($info->{'name'} eq 'n_start') {
     my @new_parameters;
     foreach my $p (@$parameters) {
-      foreach my $n_start (0, 1, 2) {
+      foreach my $n_start ($module =~ /PlanePath(Delta|Coord|Turn)/
+                           ? $info->{'default'}
+                           : (0, 1, 2)) {
         push @new_parameters, [ @$p, $info->{'name'}, $n_start ];
       }
     }
@@ -557,9 +561,9 @@ sub info_extend_parameters {
     foreach my $p (@$parameters) {
       foreach my $choice (@$choices) {
         # print "$choice\n";
-        # next if ($info->{'name'} eq 'coordinate_type' && $choice !~ /^M/);
+        next if ($info->{'name'} eq 'coordinate_type' && $choice !~ /^Numer|Denomin/);
         # next if ($info->{'name'} eq 'coordinate_type' && $choice !~ /^IntXY/);
-         next if ($info->{'name'} eq 'delta_type' && $choice !~ /Diff/);
+        # next if ($info->{'name'} eq 'delta_type' && $choice !~ /Diff/);
 
         next if ($info->{'name'} eq 'serpentine_type' && $choice eq 'Peano');
         next if ($info->{'name'} eq 'rotation_type' && $choice eq 'custom');
@@ -598,6 +602,14 @@ sub info_extend_parameters {
     if ($info->{'name'} eq 'straight_spacing') { $max = 2; }
     if ($info->{'name'} eq 'diagonal_spacing') { $max = 2; }
     if ($info->{'name'} eq 'radix') { $max = 17; }
+    if ($info->{'name'} eq 'x_start' || $info->{'name'} eq 'y_start') {
+      if ($module =~ /PlanePathDelta/) {
+        $min = $max = 0;
+      } else {
+        $min = 0;
+        $max = 2;
+      }
+    }
     if ($info->{'name'} eq 'realpart') { $max = 3; }
     if ($info->{'name'} eq 'wider') { $max = 3; }
     if ($info->{'name'} eq 'modulus') { $max = 32; }

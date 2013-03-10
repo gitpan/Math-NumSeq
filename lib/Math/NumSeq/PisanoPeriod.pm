@@ -37,20 +37,22 @@
 package Math::NumSeq::PisanoPeriod;
 use 5.004;
 use strict;
-use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
+use Math::Prime::XS 'is_prime';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 57;
+$VERSION = 58;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
+*_is_infinite = \&Math::NumSeq::_is_infinite;
 
 use Math::NumSeq::Base::Cache
   'cache_hash';
 
-*_is_infinite = \&Math::NumSeq::_is_infinite;
+use Math::NumSeq::PrimeFactorCount;;
+*_prime_factors = \&Math::NumSeq::PrimeFactorCount::_prime_factors;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -85,12 +87,13 @@ sub ith {
   if (_is_infinite($i)) {
     return $i;
   }
-  unless ($i <= 0xFFFF_FFFF) { # too big
-    return undef;
+
+  my ($good, @primes) = _prime_factors($i);
+  if (! $good) {
+    return undef;  # too big to factorize
   }
 
   my $lcm = Math::NumSeq::_to_bigint(1);
-  my @primes = prime_factors($i);
   while (@primes) {
     my $prime = shift @primes;
 

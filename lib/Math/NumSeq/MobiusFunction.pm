@@ -21,7 +21,7 @@ use strict;
 use List::Util 'min','max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 57;
+$VERSION = 58;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;

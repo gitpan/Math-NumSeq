@@ -130,8 +130,8 @@ sub check_class {
   #
   # return unless $class =~ /Pisano/;
   # return unless $class =~ /PrimeIndex/;
-  return unless $class =~ /FibbinaryBit/;
-  # return unless $class =~ /Runs/;
+  # return unless $class =~ /FibbinaryBit/;
+  # return unless $class =~ /RadixWithout/;
   # return unless $class =~ /FactorCount/;
   # return unless $class =~ /DigitSumModulo/;
   # return unless $class =~ /Luc|Fib|Cullen|Wood/;
@@ -143,7 +143,7 @@ sub check_class {
   # return unless $class =~ /Repdigit/;
   # return unless $class =~ /PowerF/;
   # return unless $class =~ /PrimesD/;
-  # return unless $class =~ /Golay/;
+  # return unless $class =~ /LeastP/;
   # return unless $class =~ /Bal/;
   # return unless $anum eq 'A000108';
 
@@ -193,10 +193,10 @@ sub check_class {
     # Math::NumSeq::Happy bit slow, not B-file 140,000 ...
     $max_count = 20000;
 
-  # } elsif ($anum eq 'A002945'   # CbrtContinued
-  #          || $anum eq 'A002946'
-  #          || $anum eq 'A010239') {
-  #   $max_count = 400;
+    # } elsif ($anum eq 'A002945'   # CbrtContinued
+    #          || $anum eq 'A002946'
+    #          || $anum eq 'A010239') {
+    #   $max_count = 400;
 
   } elsif ($anum eq 'A000959') { # LuckyNumbers
     $max_value = 20_000;
@@ -375,15 +375,18 @@ sub check_class {
 
   {
     my $got_i_start = $seq->i_start;
-    if ($got_i_start != $want_i_start
-        && $anum ne 'A000004' # offset=0, but allow other i_start here
-        && $anum ne 'A000012' # offset=0, but allow other i_start here
-        && $anum ne 'A010171' # SqrtContinued 103
-        && $anum ne 'A010172' # SqrtContinued 106
-        && $anum ne 'A010173' # SqrtContinued 107
-        && $anum ne 'A010174' # SqrtContinued 108
-        && $anum ne 'A010175' # SqrtContinued 109
-       ) {
+    if (! defined $want_i_start) {
+      MyTestHelpers::diag ("skip i_start check: \"stripped\" values only");
+
+    } elsif ($got_i_start != $want_i_start
+             && $anum ne 'A000004' # offset=0, but allow other i_start here
+             && $anum ne 'A000012' # offset=0, but allow other i_start here
+             && $anum ne 'A010171' # SqrtContinued 103
+             && $anum ne 'A010172' # SqrtContinued 106
+             && $anum ne 'A010173' # SqrtContinued 107
+             && $anum ne 'A010174' # SqrtContinued 108
+             && $anum ne 'A010175' # SqrtContinued 109
+            ) {
       if ($class =~ /RadixWithout/  # FIXME
           || $class =~ /SqrtDigits/ # FIXME
           || $anum eq 'A064150'    # harshad base 3

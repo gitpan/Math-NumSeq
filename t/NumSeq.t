@@ -25,7 +25,7 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
-my $test_count = (tests => 1801)[1];
+my $test_count = (tests => 1818)[1];
 plan tests => $test_count;
 
 # uncomment this to run the ### lines
@@ -125,7 +125,44 @@ foreach my $elem
    # Expression.pm
    # Ln2Bits.pm
    # PiBits.pm
+
+   [ 'Math::NumSeq::DedekindPsiCumulative',
+     [ 1, 4, 8, 14, 20, 32, 40, 52, 64, 82, 94, 118 ], # values in the POD
+   ],
    
+   [ 'Math::NumSeq::DedekindPsiSteps',
+     [ 0,0,0,0,
+       1, # 5 -> 5+1=6=2*3
+       0, # 6 = 2*3
+       1, # 7 -> 7+1=8
+       0, # 8 = 2*2*2
+       0, # 9 = 3*3
+       1, # 10 = 2*5 -> 3*6 = 2*3*3
+     ],
+   ],
+   
+
+   [ 'Math::NumSeq::HappyNumbers',
+     [ 1, 7, 10, 13, 19, 23 ], # per POD
+   ],
+  
+   [ 'Math::NumSeq::HappySteps',
+     [ 1, 9, 13, 8, 12, 17, 6, 13, 12, 2, ], # per POD
+   ],
+   [ 'Math::NumSeq::HappySteps',
+     [ 1,  #    1
+       2,  #   10
+       3,  #   11
+       2,  #  100
+       3,  #  101
+       3,  #  110
+       4,  #  111
+       2,  # 1000
+     ],
+     { radix => 2 },
+   ],
+   
+ 
    [ 'Math::NumSeq::DigitSumModulo',
      [ 0,  # 00
        1,  # 01
@@ -803,17 +840,6 @@ foreach my $elem
      },
    ],
    
-   [ 'Math::NumSeq::DedekindPsiSteps',
-     [ 0,0,0,0,
-       1, # 5 -> 5+1=6=2*3
-       0, # 6 = 2*3
-       1, # 7 -> 7+1=8
-       0, # 8 = 2*2*2
-       0, # 9 = 3*3
-       1, # 10 = 2*5 -> 3*6 = 2*3*3
-     ],
-   ],
-   
    [ 'Math::NumSeq::ConcatNumbers',
      [ 1, 12, 23, 34, 45, 56, 67, 78, 89, 910, 1011, 1112, 1213 ],
    ],
@@ -1206,22 +1232,6 @@ foreach my $elem
      ],
    ],
    
-   
-   [ 'Math::NumSeq::HappySteps',
-     [ 1, 9, 13, 8, 12, 17, 6, 13, 12, 2, ], # per POD
-   ],
-   [ 'Math::NumSeq::HappySteps',
-     [ 1,  #    1
-       2,  #   10
-       3,  #   11
-       2,  #  100
-       3,  #  101
-       3,  #  110
-       4,  #  111
-       2,  # 1000
-     ],
-     { radix => 2 },
-   ],
    
    [ 'Math::NumSeq::SqrtEngel',
      [ 1, 3, 5, 5, 16, ],

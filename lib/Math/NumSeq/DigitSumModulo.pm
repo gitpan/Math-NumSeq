@@ -26,7 +26,7 @@ use strict;
 use List::Util 'sum';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 57;
+$VERSION = 58;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -149,7 +149,7 @@ sub oeis_anum {
 
     # OEIS-Other: A000035 radix=3 modulus=2     # n mod 2, parity
     # OEIS-Other: A000035 radix=5 modulus=2
-    # OEIS-Other: A000035 radix=37 modulus=2    
+    # OEIS-Other: A000035 radix=37 modulus=2
     # OEIS-Other: A010872 radix=4 modulus=3     # n mod 3
   }
 
@@ -184,7 +184,8 @@ sub ith {
     return $i;
   }
   my $radix = $self->{'radix'};
-  return sum(0,_digit_split_lowtohigh($i,$radix)) % ($self->{'modulus'} || $radix);
+  return sum(0,_digit_split_lowtohigh($i,$radix))
+    % ($self->{'modulus'} || $radix);
 }
 
 sub pred {

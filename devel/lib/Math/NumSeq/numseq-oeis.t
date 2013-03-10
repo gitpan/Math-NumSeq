@@ -118,9 +118,9 @@ sub check_class {
   # return unless $class =~ /HypotC/;
   # return unless $class =~ /Loe/;
   # return unless $class =~ /DigitP/;
-  # return unless $class =~ /Kap/;
+  return unless $class =~ /LeastP/;
   # return unless $class =~ /Pier/;
-  return unless $class =~ /FactorialP/;
+  # return unless $class =~ /FactorialP/;
   # return unless $class =~ /Products/;
   # return unless $class =~ /FibonacciFreq/;
   # return unless $class =~ /Jacobs/;
@@ -221,10 +221,13 @@ sub check_class {
 
   {
     my $got_i_start = $seq->i_start;
-    if ($got_i_start != $want_i_start
-        && $anum ne 'A000004' # offset=0, but allow other i_start here
-        && $anum ne 'A000012' # offset=0, but allow other i_start here
-       ) {
+    if (! defined $want_i_start) {
+      MyTestHelpers::diag ("skip i_start check: \"stripped\" values only");
+
+    } elsif ($got_i_start != $want_i_start
+             && $anum ne 'A000004' # offset=0, but allow other i_start here
+             && $anum ne 'A000012' # offset=0, but allow other i_start here
+            ) {
       $good = 0;
       MyTestHelpers::diag ("bad: $name");
       MyTestHelpers::diag ("got  i_start  $got_i_start");

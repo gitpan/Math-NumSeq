@@ -19,16 +19,18 @@ package Math::NumSeq::LipschitzClass;
 use 5.004;
 use strict;
 use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
-use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 57;
+$VERSION = 58;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
+
+use Math::NumSeq::PrimeFactorCount;;
+*_prime_factors = \&Math::NumSeq::PrimeFactorCount::_prime_factors;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -62,7 +64,7 @@ use constant parameter_info_array =>
 sub ith {
   my ($self, $i) = @_;
 
-  if (_is_infinite($i) || $i > 0xFFFF_FFFF) {
+  if (_is_infinite($i)) {
     return undef;
   }
   $i = "$i"; # numize Math::BigInt for speed
@@ -91,7 +93,11 @@ sub ith {
   while (@this) {
     my %next;
     foreach my $v (@this) {
-      @next{prime_factors($v)} = ();  # hash slice, distinct primes
+      my ($good, @primes) = _prime_factors($v);
+      if (! $good) {
+        return undef;  # too big to factorize
+      }
+      @next{@primes} = ();  # hash slice, distinct primes
     }
     $ret++;
 

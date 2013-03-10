@@ -18,15 +18,17 @@
 package Math::NumSeq::PrimesDigits;
 use 5.004;
 use strict;
-use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 57;
+$VERSION = 58;
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
 
 use Math::NumSeq 7; # v.7 for _is_infinite()
 *_is_infinite = \&Math::NumSeq::_is_infinite;
+
+use Math::NumSeq::Repdigits;
+*_digit_split_lowtohigh = \&Math::NumSeq::Repdigits::_digit_split_lowtohigh;
 
 use Math::NumSeq::Primes;
 
@@ -84,11 +86,8 @@ sub next {
     my $pending = $self->{'pending'};
     (undef, my $n) = $self->{'primes'}->next
       or return;
-    my $radix = $self->{'radix'};
-    while ($n) {
-      push @$pending, $n % $radix;
-      $n = int($n/$radix);
-    }
+
+    push @$pending, _digit_split_lowtohigh($n, $self->{'radix'});
     my $order = $self->{'order'};
     if ($order eq 'forward') {
       @$pending = reverse @$pending;

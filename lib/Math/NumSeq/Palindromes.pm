@@ -21,14 +21,17 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 57;
+$VERSION = 58;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
+use Math::NumSeq::Repdigits;
+*_digit_split_lowtohigh = \&Math::NumSeq::Repdigits::_digit_split_lowtohigh;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
+
 
 # use constant name => Math::NumSeq::__('Palindromes');
 use constant description => Math::NumSeq::__('Numbers which are "palindromes" reading the same backwards or forwards, like 153351.  Default is decimal, or select a radix.');
@@ -165,14 +168,9 @@ sub pred {
     return 0;
   }
 
-  my $radix = $self->{'radix'};
-  my @digits;
-  while ($value) {
-    push @digits, $value % $radix;
-    $value = int ($value / $radix);
-  }
+  my @digits = _digit_split_lowtohigh($value, $self->{'radix'});
   for my $i (0 .. int(@digits/2)-1) {
-    if ($digits[$i] != $digits[-$i-1]) {
+    if ($digits[$i] != $digits[-1-$i]) {
       return 0;
     }
   }

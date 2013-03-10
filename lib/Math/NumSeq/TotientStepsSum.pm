@@ -18,10 +18,9 @@
 package Math::NumSeq::TotientStepsSum;
 use 5.004;
 use strict;
-use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 57;
+$VERSION = 58;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -29,7 +28,10 @@ use Math::NumSeq::Base::IterateIth;
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
 use Math::NumSeq::Totient 13;
-*_totient_by_sieve = \&Math::NumSeq::Totient::_totient_by_sieve;
+*_totient = \&Math::NumSeq::Totient::_totient;
+
+use Math::NumSeq::PrimeFactorCount;;
+*_prime_factors = \&Math::NumSeq::PrimeFactorCount::_prime_factors;
 
 # uncomment this to run the ### lines
 #use Devel::Comments;
@@ -72,7 +74,7 @@ sub next {
   my $sum = ($self->{'including_self'} ? $i : 0);
   my $v = $i;
   while ($v > 1) {
-    $sum += ($v = _totient_by_sieve($self,$v));
+    $sum += ($v = _totient($v));
   }
   return ($i, $sum);
 }
@@ -84,12 +86,16 @@ sub ith {
     return $i;
   }
 
-  my %factors;
+  my ($good, @primes) = _prime_factors($i);
+  if (! $good) {
+    return undef;  # too big to factorize
+  }
   my %primes;
-  foreach my $p (prime_factors($i)) {
+  foreach my $p (@primes) {
     $primes{$p}++;
   }
 
+  my %factors;
   my $sum = ($self->{'including_self'} ? $i : $i*0);
   while (%primes) {
     ### %primes
@@ -99,7 +105,11 @@ sub ith {
       if (--$e) {
         $next{$p} += $e;
       }
-      foreach my $f (@{ $factors{$p} ||= [ prime_factors($p-1) ] }) {
+      ($good, @primes) = _prime_factors($p-1);
+      if (! $good) {
+        return undef;  # too big to factorize
+      }
+      foreach my $f (@{ $factors{$p} ||= [ @primes ] }) {
         $next{$f}++;
       }
     }

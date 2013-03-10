@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 57;
+$VERSION = 58;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
@@ -51,7 +51,7 @@ use constant values_min => 1;
 #    A049999 diff index
 #    A065885 triplets of consecutive k,k+1,k+2 all Fibonacci products
 #
-use constant oeis_anum => 'A065108';
+# use constant oeis_anum => 'A065108';
 
 
 #------------------------------------------------------------------------------
