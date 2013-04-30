@@ -33,7 +33,7 @@ use Math::NumSeq::Factorials;
 # VERSION
 
 {
-  my $want_version = 58;
+  my $want_version = 59;
   ok ($Math::NumSeq::Factorials::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::Factorials->VERSION,  $want_version,
@@ -88,21 +88,21 @@ use Math::NumSeq::Factorials;
   ok (! $seq->pred(1.5), 1);
 
   ok ($seq->pred(2), 1);  # 1*2=6
-  ok ($seq->pred(3), 0);
+  ok (! $seq->pred(3), 1);
 
-  ok ($seq->pred(5), 0);
+  ok (! $seq->pred(5), 1);
   ok ($seq->pred(6), 1);  # 1*2*3=6
-  ok ($seq->pred(7), 0);
+  ok (! $seq->pred(7), 1);
 
-  ok ($seq->pred(23), 0);
+  ok (! $seq->pred(23), 1);
   ok ($seq->pred(24), 1);  # 1*2*3*4=24
-  ok ($seq->pred(24.5), 0);
-  ok ($seq->pred(25), 0);
+  ok (! $seq->pred(24.5), 1);
+  ok (! $seq->pred(25), 1);
 
-  ok ($seq->pred(119), 0);
+  ok (! $seq->pred(119), 1);
   ok ($seq->pred(120), 1);  # 1*2*3*4*5=120
-  ok ($seq->pred(120.25), 0);
-  ok ($seq->pred(121), 0);
+  ok (! $seq->pred(120.25), 1);
+  ok (! $seq->pred(121), 1);
 }
 
 #------------------------------------------------------------------------------

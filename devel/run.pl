@@ -106,7 +106,7 @@ $|=1;
   $values_class = 'Math::NumSeq::ProthNumbers';
   $values_class = 'Math::NumSeq::BinaryUndulants';
   $values_class = 'Math::NumSeq::FractionDigits';
-  $values_class = 'Math::NumSeq::LuckySieve';
+  $values_class = 'Math::NumSeq::LuckyNumbers';
   $values_class = 'Math::NumSeq::Tribonacci';
   $values_class = 'Math::NumSeq::SelfLengthCumulative';
   $values_class = 'Math::NumSeq::Tetrahedral';
@@ -186,7 +186,6 @@ $|=1;
   $values_class = 'Math::NumSeq::Catalan';
   $values_class = 'Math::NumSeq::Fibbinary';
   $values_class = 'Math::NumSeq::PlanePathTurn';
-  $values_class = 'Math::NumSeq::PlanePathN';
   $values_class = 'Math::NumSeq::DigitCount';
   $values_class = 'Math::NumSeq::FibbinaryBitCount';
   $values_class = 'Math::NumSeq::HappyNumbers';
@@ -194,14 +193,16 @@ $|=1;
   $values_class = 'Math::NumSeq::LeastPrimitiveRoot';
   $values_class = 'Math::NumSeq::DedekindPsiCumulative';
   $values_class = 'Math::NumSeq::PlanePathDelta';
+  $values_class = 'Math::NumSeq::PlanePathN';
   $values_class = 'Math::NumSeq::PlanePathCoord';
+  $values_class = 'Math::NumSeq::SumPowSub1';
 
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new
     (
      # root_type => 'negative',
      # digit => 0,
-     # radix => 2,
+      radix => 3,
      # i_start => 0,
      # modulus => 2,
 
@@ -261,52 +262,55 @@ $|=1;
      # offset => 3,
 
      # planepath => 'Diagonals,x_start=1,y_start=1,direction=up',
-      planepath => 'PyramidRows,step=1',
-     # planepath => 'MultipleRings,step=4',
+     # planepath => 'PyramidRows,step=1',
+     # planepath => 'MultipleRings,step=6,ring_shape=polygon',
      # planepath => 'RationalsTree,tree_type=AYT',
      # planepath => 'UlamWarburtonQuarter',
      # planepath => 'SierpinskiTriangle,align=diagonal',
      # planepath => 'DivisibleColumns,divisor_type=proper,n_start=2',
-     # planepath => 'CoprimeColumns',
+     # planepath => 'CellularRule,rule=2,n_start=0',
      # planepath => 'DiagonalRationals,direction=up',
      # planepath => 'SierpinskiTriangle,align=diagonal',
      # planepath => 'RationalsTree,tree_type=L',
-     # planepath => 'GcdRationals,pairs_order=rows',
+     # planepath => 'PyramidRows,step=3',
      # planepath => 'LCornerTree',
-     #coordinate_type => 'Numerator',
-     coordinate_type => 'Denominator',
+     # coordinate_type => 'Sum',
+     # coordinate_type => 'TRSquared',
      # coordinate_type => 'DiffXY',
      # coordinate_type => 'Height',
 
-     # planepath => 'SierpinskiTriangle',
+     # planepath => 'PythagoreanTree,coordinates=AC',
+      # planepath => 'HIndexing',
+     # planepath => 'MultipleRings,step=7,ring_shape=circle',
+     # planepath => 'RationalsTree,tree_type=L',
+     # planepath => 'TerdragonCurve,arms=1',
+     # planepath => 'CellularRule,rule=14',
+     # planepath => 'PyramidRows,step=2',
+      # planepath => 'SquareSpiral',
+     # delta_type=>'dSumAbs',
+
+     # planepath => 'Diagonals',
+     # planepath => 'PythagoreanTree,coordinates=BC',
+     # planepath => 'ChanTree,k=4',
+     # turn_type => 'LSR',
+
+     # planepath => 'CfracDigits',
      # planepath => 'RationalsTree',
      # planepath => 'UlamWarburton,n_start=1',
      # planepath => 'UlamWarburtonQuarter,n_start=0',
      # planepath => 'TriangleSpiralSkewed',
-     # planepath => 'SquareSpiral',
+     # planepath => 'SierpinskiCurve,arms=2',
      # planepath => 'ToothpickUpist',
-     # planepath => 'ToothpickByCells,parts=unwedge_down',
+     # planepath => 'ToothpickTree,parts=octant',
      # planepath => 'LCornerTree,parts=1',
      #  planepath => 'DigitGroups,radix=2',
      # planepath => 'CellularRule,rule=206',
      # planepath => 'QuadricIslands',
      # line_type => 'Depth_start',
      # planepath => 'WythoffArray,x_start=1,y_start=1',
-     #  line_type => 'Y_axis',
-     # line_type => 'Diagonal_SW',
+     # line_type => 'X_axis',
+     # line_type => 'Depth_start',
      # i_start => 1,
-
-     # planepath => 'PythagoreanTree,coordinates=AC',
-     # planepath => 'PyramidRows,step=1,n_start=0',
-     # planepath => 'MultipleRings,step=7,ring_shape=circle',
-     # planepath => 'RationalsTree,tree_type=L',
-     # planepath => 'Rows,width=3',
-     # delta_type=>'Dir4',
-
-     # planepath => 'Diagonals',
-     # planepath => 'PythagoreanTree,coordinates=BC',
-     # planepath => 'ChanTree,k=4',
-     # turn_type => 'LSR',
 
      # anum  => 'A151725',
      # anum  => 'A196199', # bfile
@@ -489,8 +493,8 @@ $|=1;
       if ($seq->can('ith')) {
         if (! is_infinite($value) && $value >= 2**50) {
         }
-          require Math::BigInt;
-          $i = Math::BigInt->new($i);
+        require Math::BigInt;
+        $i = Math::BigInt->new($i);
         my $ith_value = $seq->ith($i);
         unless ((defined $value == defined $ith_value)
                 && (! defined $value

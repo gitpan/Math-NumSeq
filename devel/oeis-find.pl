@@ -27,6 +27,37 @@ use Module::Load;
 # uncomment this to run the ### lines
 # use Smart::Comments;
 
+
+sub want_module {
+  my ($module) = @_;
+  # return 1 if $module =~ /Aron/;
+  return 0 unless $module =~ /PlanePath/;
+  # return 1 if $module =~ /DigitProduct/;
+  return 1;
+}
+sub want_planepath {
+  my ($planepath) = @_;
+  # return 0 unless $planepath =~ /CellularRule/;
+  # return 0 unless $planepath =~ /Diamond/;
+  # return 0 unless $planepath =~ /Divis|DiagonalRationals|CoprimeCol/;
+  # return 0 unless $planepath =~ /DiamondSpiral/;
+  # return 0 unless $planepath =~ /LCornerTree$/;
+  # return 0 unless $planepath =~ /LCorn|RationalsTree/;
+  # return 0 unless $planepath =~ /^Corner$/i;
+  # return 0 unless $planepath =~ /SierpinskiArrowheadC/;
+  # return 0 unless $planepath =~ /TriangleSpiralSkewed/;
+  # return 0 unless $planepath =~ /^Rows/;
+  # return 0 unless $planepath =~ /DiagonalRationals/;
+  return 1;
+}
+sub want_coordinate {
+  my ($type) = @_;
+  # return 0 unless $type =~ /IntXY/;
+  return 0 unless $type =~ /dSum/;
+  return 1;
+}
+
+
 my $module;
 {
   open OUT, ">/tmp/find.html" or die;
@@ -49,11 +80,7 @@ HERE
     next if $module eq 'OEIS';
     next if $module =~ 'CunninghamPrimes'; # broken
     next if $module =~ /KaprekarNumbers/; # bit slow yet
-    
-    # restricted to ...
-    # next unless $module =~ /Aron/;
-     next unless $module =~ /PlanePathCoord/;
-    # next unless $module =~ /DigitProduct/;
+    next unless want_module($module);
     
     ### $module
     my $class = App::MathImage::Generator->values_class($module);
@@ -473,15 +500,7 @@ sub info_extend_parameters {
   if ($info->{'name'} eq 'planepath') {
     my @strings;
     foreach my $choice (@{$info->{'choices'}}) {
-      # next unless $choice =~ /RationalsTree/;
-      # next unless $choice =~ /Wythoff/;
-      # next unless $choice =~ /Divis|DiagonalRationals|CoprimeCol/;
-      # next unless $choice =~ /DiamondSpiral/;
-      # next unless $choice =~ /LCorner|Tooth/;
-      # next unless $choice =~ /LCorn|RationalsTree/;
-      # next unless $choice =~ /^Corner$/i;
-      # next unless $choice =~ /SierpinskiArrowheadC/;
-      # next unless $choice =~ /Gcd/;
+      next unless want_planepath($choice);
       my $path_class = "Math::PlanePath::$choice";
       Module::Load::load($path_class);
 
@@ -561,10 +580,12 @@ sub info_extend_parameters {
     foreach my $p (@$parameters) {
       foreach my $choice (@$choices) {
         # print "$choice\n";
-        next if ($info->{'name'} eq 'coordinate_type' && $choice !~ /^Numer|Denomin/);
-        # next if ($info->{'name'} eq 'coordinate_type' && $choice !~ /^IntXY/);
-        # next if ($info->{'name'} eq 'delta_type' && $choice !~ /Diff/);
-
+        if ($info->{'name'} eq 'coordinate_type'
+            || $info->{'name'} eq 'delta_type'
+            || $info->{'name'} eq 'turn_type'
+            || $info->{'name'} eq 'line_type') {
+          next unless want_coordinate($choice);
+        }
         next if ($info->{'name'} eq 'serpentine_type' && $choice eq 'Peano');
         next if ($info->{'name'} eq 'rotation_type' && $choice eq 'custom');
         push @new_parameters, [ @$p, $info->{'name'}, $choice ];

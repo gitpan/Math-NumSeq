@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012, 2013 Kevin Ryde
+# Copyright 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -17,58 +17,39 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
+
 use 5.004;
 use strict;
 use Test;
-plan tests => 6;
+plan tests => 29;
 
-use lib 't';
+use lib 't','xt';
 use MyTestHelpers;
 MyTestHelpers::nowarnings();
+use MyOEIS;
 
-use Math::NumSeq::OEIS;
+use Math::NumSeq::Factorials;
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+# use Smart::Comments '###';
 
 
 #------------------------------------------------------------------------------
-# VERSION
+# A205509 Hamming distance between (n-1)! and n!
 
-{
-  my $want_version = 59;
-  ok ($Math::NumSeq::OEIS::VERSION, $want_version,
-      'VERSION variable');
-  ok (Math::NumSeq::OEIS->VERSION, $want_version,
-      'VERSION class method');
-
-  ok (eval { Math::NumSeq::OEIS->VERSION($want_version); 1 },
-      1,
-      "VERSION class check $want_version");
-  my $check_version = $want_version + 1000;
-  ok (! eval { Math::NumSeq::OEIS->VERSION($check_version); 1 },
-      1,
-      "VERSION class check $check_version");
-}
-
-
-#------------------------------------------------------------------------------
-
-{
-  # 6-digits
-  my $seq = Math::NumSeq::OEIS->new (anum => 'A000002');
-  ok ($seq->isa('Math::NumSeq::Kolakoski') ? 1 : 0,
-      1);
-}
-
-{
-  # 7-digits
-  my $seq = Math::NumSeq::OEIS->new (anum => 'A0000040');
-  ok ($seq->isa('Math::NumSeq::Primes') ? 1 : 0,
-      1);
-}
+MyOEIS::compare_values
+  (anum => 'A205509',
+   func => sub {
+     my ($count) = @_;
+     require Math::NumSeq::DigitCount;
+     my $cnt = Math::NumSeq::DigitCount->new (radix => 2);
+     my $seq = Math::NumSeq::Factorials->new;
+     my @got;
+     for (my $i = 0; @got < $count; $i++) {
+       push @got, $cnt->ith($seq->ith($i) ^ $seq->ith($i+1));
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 exit 0;
-
-

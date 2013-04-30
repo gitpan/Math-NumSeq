@@ -35,6 +35,98 @@ use Math::NumSeq::FibbinaryBitCount;
 
 
 #------------------------------------------------------------------------------
+# A111458 fibbinary bit count > 3
+
+MyOEIS::compare_values
+  (anum => 'A111458',
+   func => sub {
+     my ($count) = @_;
+     my $seq  = Math::NumSeq::FibbinaryBitCount->new;
+     my @got;
+     $seq->seek_to_i(2);  # not 0 or 1
+     while (@got < $count) {
+       my ($i, $value) = $seq->next;
+       if ($value > 3) {
+         push @got, $i;
+       }
+     }
+     return \@got;
+   });
+
+#------------------------------------------------------------------------------
+# A059389 fibbinary bit count <= 2
+#   two distinct non-zero Fibs not necessarily the biggest
+
+MyOEIS::compare_values
+  (anum => 'A059389',
+   max_value => 100000,
+   func => sub {
+     my ($count) = @_;
+     my $seq  = Math::NumSeq::FibbinaryBitCount->new;
+     my @got;
+     $seq->seek_to_i(2);  # not 0 or 1
+     while (@got < $count) {
+       my ($i, $value) = $seq->next;
+       if ($value <= 2) {
+         push @got, $i;
+       }
+     }
+     return \@got;
+   });
+
+# A059390 fibbinary bit count > 2
+MyOEIS::compare_values
+  (anum => 'A059390',
+   max_value => 100000,
+   func => sub {
+     my ($count) = @_;
+     my $seq  = Math::NumSeq::FibbinaryBitCount->new;
+     my @got = (1);
+     while (@got < $count) {
+       my ($i, $value) = $seq->next;
+       if ($value > 2) {
+         push @got, $i;
+       }
+     }
+     return \@got;
+   });
+
+#------------------------------------------------------------------------------
+# A095096 numbers with even num Zeck 1-bits
+
+MyOEIS::compare_values
+  (anum => 'A095096',
+   func => sub {
+     my ($count) = @_;
+     my $seq  = Math::NumSeq::FibbinaryBitCount->new;
+     my @got;
+     while (@got < $count) {
+       my ($i, $value) = $seq->next;
+       if ($value % 2 == 0) {
+         push @got, $i;
+       }
+     }
+     return \@got;
+   });
+
+#------------------------------------------------------------------------------
+# A095076 fibbinary bit count mod 2
+
+MyOEIS::compare_values
+  (anum => 'A095076',
+   func => sub {
+     my ($count) = @_;
+     require Math::BigInt;
+     my $seq  = Math::NumSeq::FibbinaryBitCount->new;
+     my @got;
+     while (@got < $count) {
+       my ($i, $value) = $seq->next;
+       push @got, $value % 2;
+     }
+     return \@got;
+   });
+
+#------------------------------------------------------------------------------
 # A182578 Number of ones in Zeckendorf representation of n^n.
 
 MyOEIS::compare_values

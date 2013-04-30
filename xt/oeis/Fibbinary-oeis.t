@@ -18,9 +18,16 @@
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# cf A095734 least 0<->1 flips to make Zeck into palindrome
-#            A037888 least 0<->1 to make binary palindrome
+# cf Lucas representation
 #
+# A130310 lucas rep minimal (greedy), not both 2,3 in sum
+# A130311 lucas rep maximal
+# A131343 lucas num bits (maximal)
+# A116543 lucas num bits (greedy)
+# A214974 lucas bits == zeck bits for A116543 greedy form
+# A214975 lucas bits < zeck bits
+# A214976 lucas bits > zeck bits
+
 
 use 5.004;
 use strict;
@@ -37,6 +44,53 @@ use Math::NumSeq::Fibbinary;
 
 # uncomment this to run the ### lines
 # use Smart::Comments '###';
+
+
+#------------------------------------------------------------------------------
+# A095734 least 0<->1 flips to make Zeck into palindrome
+
+MyOEIS::compare_values
+  (anum => 'A095734',
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::Fibbinary->new;
+     my @got;
+     while (@got < $count) {
+       my ($i, $value) = $seq->next;
+       push @got, asymmetry_index($value);
+     }
+     return \@got;
+   });
+
+# A037888 least 0<->1 to make binary palindrome
+MyOEIS::compare_values
+  (anum => 'A037888',
+   func => sub {
+     my ($count) = @_;
+     my @got;
+     for (my $n = 1; @got < $count; $n++) {
+       push @got, asymmetry_index($n);
+     }
+     return \@got;
+   });
+
+# Return count number of bits in $n which must be changed to make it a
+# palindrome.  Being how many bits differ in top half and bottom half.
+use Math::NumSeq::Repdigits;
+sub asymmetry_index {
+  my ($n) = @_;
+  my @bits = Math::NumSeq::Repdigits::_digit_split_lowtohigh($n,2)
+    or return 0;
+  my $numbits = scalar(@bits);
+  my $count = 0;
+  # numbits=5 run i=0,1
+  # numbits=6 run i=0,1,2
+  # numbits=7 run i=0,1,2
+  foreach my $i (0 .. ($numbits >> 1)-1) {
+    $count += ($bits[$i] ^ $bits[-1-$i]);
+  }
+  return $count;
+}
 
 
 #------------------------------------------------------------------------------

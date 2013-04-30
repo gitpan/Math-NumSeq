@@ -16,6 +16,7 @@ devel/bits.pl
 devel/cbrt-continued.pl
 devel/cbrt.pl
 devel/concat.pl
+devel/digit-count.pl
 devel/digit-length-cumulative.pl
 devel/engel.pl
 devel/erdos-selfridge.pl
@@ -95,6 +96,7 @@ devel/lib/Math/NumSeq/SlopingBinaryExcluded-oeis.t
 devel/lib/Math/NumSeq/SlopingExcluded.pm
 devel/lib/Math/NumSeq/Spectrum.pm
 devel/lib/Math/NumSeq/StoehrSequence.pm
+devel/lib/Math/NumSeq/SumPowSub1.pm
 devel/lib/Math/NumSeq/SumTwoSquares.pm
 devel/lib/Math/NumSeq/SumXsq3Ysq.pm
 devel/lib/Math/NumSeq/Xenodromes-slow.t
@@ -363,6 +365,7 @@ xt/oeis/DigitProductSteps-oeis.t
 xt/oeis/DigitSum-oeis.t
 xt/oeis/DivisorCount-oeis.t
 xt/oeis/ErdosSelfridgeClass-oeis.t
+xt/oeis/Factorials-oeis.t
 xt/oeis/Fibbinary-oeis.t
 xt/oeis/FibbinaryBitCount-oeis.t
 xt/oeis/Fibonacci-oeis.t

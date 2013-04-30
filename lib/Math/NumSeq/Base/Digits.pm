@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 58;
+$VERSION = 59;
 
 use Exporter;
 use Math::NumSeq;

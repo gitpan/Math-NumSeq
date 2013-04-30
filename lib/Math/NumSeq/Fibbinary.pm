@@ -28,7 +28,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 58;
+$VERSION = 59;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -495,8 +495,8 @@ Return an estimate of the i corresponding to C<$value>.
 For a given fibbinary number, the next fibbinary is +1 if the lowest bit is
 2^2=4 or more.  If however the low bit is 2^1=2 or 2^0=1 then the run of low
 alternating ...101 or ...1010 must be cleared and the bit above set.  For
-example 1001010 becomes 1010000.  All cases can be handled quite easily with
-some bit twiddling
+example 1001010 becomes 1010000.  All cases can be handled by some bit
+twiddling
 
     # value=fibbinary
     filled = (value >> 1) | value
@@ -510,16 +510,15 @@ For example
     mask   =    1111
     next   = 1010000
 
-"filled" means any trailing ...01010 has the zeros filled in to ...01111.
-Then those low ones can be extracted with +1 and XOR (the usual trick for
-getting low ones).  +1 means the bit above the filled part is included
-...11111 but a shift drops back to "mask" just 01111.  OR-ing and
-incrementing then clears those low bits and sets the next higher bit to make
-...10000.
+"filled" means trailing ...01010 has the zeros filled in to ...01111.  Then
+those low ones can be extracted with +1 and XOR (the usual trick for getting
+low ones).  +1 means the bit above the filled part is included so 11111, but
+a shift drops back to "mask" just 01111.  OR-ing and incrementing then
+clears those low bits and sets the next higher bit to make ...10000.
 
-This works for any fibbinary input, both "...10101" and "...1010" endings
-and also zeros "...0000" ending.  In the zeros case the result is just a +1
-for "...0001" and that includes input value=0 giving next=1.
+This works for any fibbinary input, both odd "...10101" and even "...1010"
+endings and also zeros "...0000".  In the zeros case the result is just a +1
+for "...0001", and that includes input value=0 giving next=1.
 
 =head2 Ith Value
 
@@ -535,7 +534,7 @@ etc,
 To find each F(k)E<lt>=i either just work downwards through the Fibonacci
 numbers, or the Fibonaccis grow as (phi^k)/sqrt(5) with phi=(sqrt(5)+1)/2
 the golden ratio, so an F(k) could be found by a log base phi of i.  Or
-taking log2 of i (the highest bit in i) might give 2 or 3 candidates for k.
+taking log2 of i (the bit length of i) might give 2 or 3 candidates for k.
 Calculating log base phi is unlikely to be faster, but log 2 high bit might
 quickly go to a nearly-correct place in a table.
 
@@ -547,15 +546,16 @@ Testing for a fibbinary value can be done by a shift and AND,
 
 Any adjacent 1-bits overlap in the shift+AND and come through as non-zero.
 
-In Perl C<&> converts NV float to UV integer.  If a value in an NV mantissa
-is an integer but bigger than a UV then bits will be lost to the C<&>.
-Conversion to C<Math::BigInt> or similar is necessary to preserve the full
-value.  Floats which are integers but bigger than an UV might be of
-interest, or it might be thought any float means rounded-off and therefore
-inaccurate and not of interest.  The current code has some experimental
-automatic BigInt conversion which works for floats and for BigFloat or
-BigRat integers too, but don't rely on this quite yet.  (A BigInt input
-directly is fine of course.)
+In Perl C<&> converts NV float to UV integer.  If a value in an NV is an
+integer but bigger than a UV then bits will be lost to the C<&>.  Conversion
+to C<Math::BigInt> or similar is necessary to preserve the full value.
+
+Floats which are integers but bigger than an UV might be of interest, or it
+might be thought any float means rounded-off and therefore inaccurate and
+not of interest.  The current code has some experimental automatic BigInt
+conversion which works for floats and for BigFloat or BigRat integers too,
+but don't rely on this quite yet.  (A BigInt input directly is fine of
+course.)
 
 =head2 Value to i Floor
 
@@ -575,8 +575,9 @@ fibbinary no-adjacent-1s which is 10xxx.
         else i += F[k]
 
 If working downwards adding F[k] values then it's easy enough to notice an
-adjacent 11 pair.  An alternative would be to find all 11 pairs per
-L</Predicate> above and the highest 1-bit (if any) is the place to mangle.
+adjacent 11 pair.  An alternative would be to find all 11 pairs by
+bit-twiddling per L</Predicate> above and the highest 1-bit (if any) of
+those is the place to mangle.
 
 =head2 Value to i Estimate
 
@@ -585,18 +586,18 @@ of 2.  So an estimate can be had from
 
     value = 2^k
     i = F[k+1]
-      ~= phi^(k+1) / (phi+1/phi)
+      ~= phi^(k+1) / (phi + 1/phi)
       ~= C * phi^k
-    where C=phi/(phi+1/phi)
+    where C=phi/(phi + 1/phi)
 
     log(i/C)/log(phi) ~= log(value)/log(2)
 
-    i_estimate = C * value ^ (log(phi)/log(2))
+    i_estimate = C * value^(log(phi)/log(2))
 
-The power log(phi)/log(2)=0.694 reduces to give an i approximation.  That
-power can also be approximated by shifting off the least significant
-1-0.694=0.306 of the bits of the value.  This is fast and may be enough
-accuracy for a bigint.
+The power log(phi)/log(2)=0.694 reduces the value to give an i
+approximation.  That power can also be approximated by shifting off the
+least significant 1-0.694=0.306 of the bits of the value.  This is fast and
+may be enough accuracy for a bigint.
 
     highbitpos of value
     i_estimate = value >> floor(highbitpos * 0.306)
@@ -608,6 +609,8 @@ L<Math::NumSeq::Fibonacci>,
 L<Math::NumSeq::FibonacciWord>,
 L<Math::NumSeq::GolayRudinShapiro>,
 L<Math::NumSeq::BaumSweet>
+
+L<Math::Fibonacci> C<decompose()>
 
 =head1 HOME PAGE
 

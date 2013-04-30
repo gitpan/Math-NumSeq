@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 58;
+$VERSION = 59;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -184,7 +184,10 @@ sub ith {
 
 sub pred {
   my ($self, $value) = @_;
-  ### Factorials pred(): $value
+  return defined($self->value_to_i($value));
+}
+sub value_to_i {
+  my ($self, $value) = @_;
 
   # NV inf or nan gets $value%$i=nan and nan==0 is false,
   # but Math::BigInt binf()%$i=0 so would go into infinite loop
@@ -194,37 +197,23 @@ sub pred {
     return undef;
   }
 
-  my $i = 2;
-  for (;; $i++) {
-    if ($value <= 1) {
-      return ($value == 1);
-    }
-    if (($value % $i) == 0) {
-      $value /= $i;
-    } else {
-      return 0;
-    }
+  if ($value == 1) {
+    return 0;
   }
-}
 
-sub _UNTESTED__value_to_i {
-  my ($self, $value) = @_;
-
-  if (_is_infinite($value)) {
-    return undef;
-  }
   my $i = 1;
   for (;;) {
     if ($value <= 1) {
-      return $i;
+      return ($value == 1 ? $i : undef);
     }
     $i++;
     if (($value % $i) == 0) {
       $value /= $i;
     } else {
-      return 0;
+      return undef;
     }
   }
+  return $i;
 }
 
 sub value_to_i_floor {
@@ -238,7 +227,7 @@ sub value_to_i_floor {
 
   # "/" operator converts 64-bit UV to an NV and so loses bits, making the
   # result come out 1 too small sometimes.  Experimental switch to BigInt to
-  # keep precision.
+  # keep precision.  ENHANCE-ME: Maybe better _divrem().
   #
   if (! ref $value && $value > _NV_LIMIT) {
     $value = Math::NumSeq::_to_bigint($value);
@@ -399,10 +388,13 @@ the return is 1.
 Return true if C<$value> is a factorial, ie. equal to C<1*2*...*i> for
 some i.
 
+=item C<$i = $seq-E<gt>value_to_i($value)>
+
 =item C<$i = $seq-E<gt>value_to_i_floor($value)>
 
-Return the index i of C<$value> or if it's not a factorial then the next
-below C<$value>.
+Return the index i of C<$value>.  If C<$value> is not a factorial then
+C<value_to_i()> returns C<undef>, or C<value_to_i_floor()> the i of the next
+lower value which is or C<undef> if C<$value E<lt> 1>.
 
 =item C<$i = $seq-E<gt>value_to_i_estimate($value)>
 

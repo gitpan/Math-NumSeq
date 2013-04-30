@@ -17,6 +17,11 @@ with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 59, March 2013
+     - new value_to_i()
+     - BalancedBinary fix value_to_i_ceil() on non-integer
+     - docs typo tell_i() doesn't take any parameters
+
 Version 58, March 2013
      - Totient etc use prime_factors() rather than sieve, since the
        sieve is no faster and uses a lot of memory.  As reported by

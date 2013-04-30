@@ -23,7 +23,7 @@ use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 use Math::Factor::XS 'factors';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 58;
+$VERSION = 59;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -311,6 +311,8 @@ L<Math::NumSeq>,
 L<Math::NumSeq::TotientCumulative>,
 L<Math::NumSeq::TotientPerfect>,
 L<Math::NumSeq::TotientSteps>
+
+L<Math::Prime::Util/euler_phi>
 
 =head1 HOME PAGE
 

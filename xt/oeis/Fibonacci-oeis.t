@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -38,7 +38,7 @@ sub numeq_array {
   if (! ref $a1 || ! ref $a2) {
     return 0;
   }
-  my $i = 0; 
+  my $i = 0;
   while ($i < @$a1 && $i < @$a2) {
     if ($a1->[$i] ne $a2->[$i]) {
       return 0;
@@ -48,6 +48,29 @@ sub numeq_array {
   return (@$a1 == @$a2);
 }
 
+
+#------------------------------------------------------------------------------
+# A114477 smallest Fibonacci with n 1-bits, or -1 if no such
+
+MyOEIS::compare_values
+  (anum => 'A114477',
+   func => sub {
+     my ($count) = @_;
+     require Math::NumSeq::DigitCount;
+     my $cnt = Math::NumSeq::DigitCount->new(radix=>2);
+     my $seq = Math::NumSeq::Fibonacci->new;
+     my @got = (0);
+     my $got_count = 0;
+     while ($got_count < $count) {
+       my ($i, $value) = $seq->next;
+       my $c = $cnt->ith($value);
+       if ($c < $count && ! $got[$c]) {
+         $got_count++;
+         $got[$c] = $value;
+       }
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 # A020909 - length in bits of F[n]

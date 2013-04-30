@@ -21,7 +21,7 @@ use strict;
 use Math::NumSeq::Primes;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 58;
+$VERSION = 59;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;

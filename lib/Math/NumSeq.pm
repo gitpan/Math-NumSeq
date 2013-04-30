@@ -48,7 +48,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 58;
+$VERSION = 59;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -244,12 +244,12 @@ predicate test.
 The idea is to generate things like squares or primes in a generic way.
 Some sequences, like squares, are so easy there's no need for a class except
 for the genericness.  Other sequences are trickier and an iterator is a good
-way to go through the values.  The iterating tries to be progressive, so not
+way to go through values.  The iterating tries to be progressive, so not
 calculating too far ahead yet doing reasonable size chunks for efficiency.
 
 Sequence values have an integer index "i" starting either from i=0 or i=1 or
-similar as best suits the sequence.  The values themselves can be anything,
-positive, negative, fractional, etc.
+whatever best suits the sequence.  The values can be anything, positive,
+negative, fractional, etc.
 
 The intention is that all modules C<Math::NumSeq::Foo> are sequence classes,
 and that supporting things are deeper, such as under
@@ -260,8 +260,8 @@ C<Math::NumSeq::Something::Helper> or C<Math::NumSeq::Base::SharedStuff>.
 The various methods try to support C<Math::BigInt> and similar overloaded
 number types.  So for instance C<pred()> might be applied to test a big
 value, or C<ith()> on a bigint to preserve precision from some rapidly
-growing sequence.  Infinities and NaNs give nan or infinite returns of some
-kind (some unspecified kind as yet).
+growing sequence.  Infinities and NaNs give some kind of NaN or infinite
+return (some unspecified kind as yet).
 
 =head1 FUNCTIONS
 
@@ -287,7 +287,9 @@ Return the next index and value in the sequence.
 
 Rewind the sequence to its starting point.
 
-=item C<$i = $seq-E<gt>tell_i($i)>
+See L</Optional Methods> below for possible arbitrary "seeks".
+
+=item C<$i = $seq-E<gt>tell_i()>
 
 Return the current i position.  This is the i which the next call to
 C<next()> will return.
@@ -306,7 +308,7 @@ C<rewind()> returns to.
 =item C<$str = $seq-E<gt>description()>
 
 Return a human-readable description of the sequence.  This might be
-translated into the locale language, but there's no message translations
+translated into the locale language, though there's no message translations
 yet.
 
 =item C<$value = $seq-E<gt>values_min()>
@@ -318,7 +320,7 @@ C<undef> if unknown or infinity.
 
 =item C<$ret = $seq-E<gt>characteristic($key)>
 
-Return something if the sequence has a C<$key> (a string) characteristic, or
+Return something if the sequence has C<$key> (a string) characteristic, or
 C<undef> if not.  This is intended as a loose set of features or properties
 a sequence can have to describe itself.
 
@@ -327,12 +329,12 @@ a sequence can have to describe itself.
     smaller           boolean, true if value[i] < i generally
     integer           boolean, true if all values are integers
 
-    increasing        boolean, true if v[i+1] > v[i] always
-    non_decreasing    boolean, true if v[i+1] >= v[i] always
-    increasing_from_i     integer, i for which v[i+1] > v[i]
-    non_decreasing_from_i integer, i for which v[i+1] >= v[i]
+    increasing        boolean, true if value[i+1] > value[i] always
+    non_decreasing    boolean, true if value[i+1] >= value[i] always
+    increasing_from_i     integer, i for which value[i+1] > value[i]
+    non_decreasing_from_i integer, i for which value[i+1] >= value[i]
 
-    value_is_radix      boolean, value is radix for i
+    value_is_radix    boolean, value is radix for i
 
 C<value_is_radix> means each value is a radix applying to the i index.  For
 example C<RepdigitRadix> value is a radix for which i is a repdigit.  These
@@ -347,7 +349,7 @@ For example
 
     my $seq = Math::NumSeq::Squares->new;
     my $anum = $seq->oeis_anum;
-    # gives "A000290"
+    # gives $anum = "A000290"
 
 The web page for that is then
 
@@ -427,6 +429,9 @@ Move the current i so C<next()> will return C<$i> or C<$value> on the next
 call.  If C<$value> is not in the sequence then move so as to return the
 next higher value which is.
 
+Usually C<seek_to_value()> only makes sense for sequences where all values
+are distinct, so that a value is an unambiguous location.
+
 =item C<$value = $seq-E<gt>ith($i)>
 
 Return the C<$i>'th value in the sequence.  Only some sequence classes
@@ -437,14 +442,19 @@ implement this method.
 Return true if C<$value> occurs in the sequence.  For example for the
 squares this returns true if C<$value> is a square or false if not.
 
+=item C<$i = $seq-E<gt>value_to_i($value)>
+
 =item C<$i = $seq-E<gt>value_to_i_ceil($value)>
 
 =item C<$i = $seq-E<gt>value_to_i_floor($value)>
 
-Return the index i of C<$value>, or if C<$value> is not in the sequence then
-the i of the next higher or lower value which is.  These methods usually
-only make sense for monotonic increasing sequences, or perhaps with some
-repeating values so non-decreasing.
+Return the index i of C<$value>.  If C<$value> is not in the sequence then
+C<value_to_i()> returns C<undef>, or C<value_to_i_ceil()> returns the i of
+the next higher value which is, C<value_to_i_floor()> the i of the next
+lower value.
+
+These methods usually only make sense for monotonic increasing sequences, or
+perhaps non-decreasing so with some repeating values.
 
 =item C<$i = $seq-E<gt>value_to_i_estimate($value)>
 

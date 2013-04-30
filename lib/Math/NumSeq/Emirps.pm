@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 58;
+$VERSION = 59;
 use Math::NumSeq;
 use Math::NumSeq::Primes;
 @ISA = ('Math::NumSeq');

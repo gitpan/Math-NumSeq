@@ -21,7 +21,7 @@ use strict;
 use List::Util 'min','max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 58;
+$VERSION = 59;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -248,6 +248,8 @@ or -1.
 L<Math::NumSeq>,
 L<Math::NumSeq::LiouvilleFunction>,
 L<Math::NumSeq::PrimeFactorCount>
+
+L<Math::Prime::Util/moebius>
 
 =head1 HOME PAGE
 

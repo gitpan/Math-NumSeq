@@ -30,7 +30,7 @@ use Math::NumSeq::BalancedBinary;
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-my $test_count = (tests => 9)[1];
+my $test_count = (tests => 11)[1];
 plan tests => $test_count;
 
 
@@ -38,7 +38,7 @@ plan tests => $test_count;
 # VERSION
 
 {
-  my $want_version = 58;
+  my $want_version = 59;
   ok ($Math::NumSeq::BalancedBinary::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::BalancedBinary->VERSION,  $want_version,
@@ -71,6 +71,29 @@ plan tests => $test_count;
 
 
 #------------------------------------------------------------------------------
+# value_to_i_ceil()
+
+{
+  my $seq = Math::NumSeq::BalancedBinary->new;
+
+  ok ($seq->value_to_i_ceil(1.75), 1);
+  ok ($seq->value_to_i_ceil(2.25), 2);
+
+  my ($want_i_ceil, $target_value) = $seq->next;
+  my $value = -5;
+  for (1 .. 50) {
+    for ( ; $value <= $target_value; $value++) {
+      my $got_i_ceil = $seq->value_to_i_ceil($value);
+      unless (equal($got_i_ceil,$want_i_ceil)) {
+        die "value_to_i_ceil()";
+      }
+    }
+    ($want_i_ceil, $target_value) = $seq->next;
+  }
+}
+
+
+#------------------------------------------------------------------------------
 # value_to_i_floor()
 
 {
@@ -93,25 +116,6 @@ sub equal {
   my ($x,$y) = @_;
   return ((defined $x && defined $y && $x == $y)
           || (! defined $x && ! defined $y));
-}
-
-
-#------------------------------------------------------------------------------
-# value_to_i_ceil()
-
-{
-  my $seq = Math::NumSeq::BalancedBinary->new;
-  my ($want_i_ceil, $target_value) = $seq->next;
-  my $value = -5;
-  for (1 .. 50) {
-    for ( ; $value <= $target_value; $value++) {
-      my $got_i_ceil = $seq->value_to_i_ceil($value);
-      unless (equal($got_i_ceil,$want_i_ceil)) {
-        die "value_to_i_ceil()";
-      }
-    }
-    ($want_i_ceil, $target_value) = $seq->next;
-  }
 }
 
 

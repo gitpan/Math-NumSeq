@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 58;
+$VERSION = 59;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -36,7 +36,7 @@ use Math::NumSeq::Base::Digits
 
 
 use vars '$VERSION';
-$VERSION = 58;
+$VERSION = 59;
 
 # use constant name => Math::NumSeq::__('Digit Length Cumulative');
 use constant description => Math::NumSeq::__('Cumulative length of numbers 0,1,2,3,etc written out in the given radix.  For example binary 1,2,4,6,9,12,15,18,22,etc, 2 steps by 2, then 4 steps by 3, then 8 steps by 4, then 16 steps by 5, etc.');
@@ -175,6 +175,14 @@ sub pred {
   }
 }
 
+sub value_to_i {
+  my ($self, $value) = @_;
+  my $i = $self->value_to_i_floor($value);
+  if ($value == $self->ith($i)) {
+    return $i;
+  }
+  return undef;
+}
 sub value_to_i_floor {
   my ($self, $value) = @_;
 

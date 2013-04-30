@@ -125,7 +125,7 @@ foreach my $elem
    # Expression.pm
    # Ln2Bits.pm
    # PiBits.pm
-
+   
    [ 'Math::NumSeq::DedekindPsiCumulative',
      [ 1, 4, 8, 14, 20, 32, 40, 52, 64, 82, 94, 118 ], # values in the POD
    ],
@@ -141,11 +141,11 @@ foreach my $elem
      ],
    ],
    
-
+   
    [ 'Math::NumSeq::HappyNumbers',
      [ 1, 7, 10, 13, 19, 23 ], # per POD
    ],
-  
+   
    [ 'Math::NumSeq::HappySteps',
      [ 1, 9, 13, 8, 12, 17, 6, 13, 12, 2, ], # per POD
    ],
@@ -162,7 +162,7 @@ foreach my $elem
      { radix => 2 },
    ],
    
- 
+   
    [ 'Math::NumSeq::DigitSumModulo',
      [ 0,  # 00
        1,  # 01
@@ -187,11 +187,11 @@ foreach my $elem
    [ 'Math::NumSeq::MobiusFunction',
      [ 1, -1, -1, 0, -1, 1, ],
    ],
-
+   
    [ 'Math::NumSeq::BalancedBinary',
      [ 2, 10, 12, 42, 44, 50, 52, 56, 170, 172, 178, ],
    ],
-
+   
    [ 'Math::NumSeq::Catalan',
      [ 1, 1, 2, 5, 14, 42, 132, 429, 1430, 4862, 16796, 58786, 208012,
        742900, ],
@@ -200,7 +200,7 @@ foreach my $elem
      [ 1, 1, 1, 5, 7, 21, 33, 429, 715, 2431, 4199, ],
      { values_type => 'odd' },
    ],
-
+   
    [ 'Math::NumSeq::LiouvilleFunction',
      [ 1,  # 1
        -1, # 2
@@ -236,7 +236,7 @@ foreach my $elem
      ],
      { values_type => '1,0' },
    ],
-
+   
    [ 'Math::NumSeq::GolayRudinShapiro',
      [ 1,   # 0
        1,   # 1
@@ -313,7 +313,7 @@ foreach my $elem
        4,5,6,7,8,9,10,11,12,13, ],
      { from_radix => 10, to_radix => 2 },
    ],
-
+   
    # [ 'Math::NumSeq::PrimesDigits',
    #   [ 2, 3, 5, 7, 1, 1, 1, 3, 1, 7, 1, 9, 2, 3, 2, 9, ],
    # ],
@@ -1777,13 +1777,13 @@ foreach my $elem
        digit => 3,
      },
    ],
-
+   
    [ 'Math::NumSeq::StarNumbers',
      [ 1, 13, 37, 73, 121, ],
      {},
      { value_to_i_floor_below_first => 0 },
    ],
-
+   
    [ 'Math::NumSeq::Polygonal', # triangular
      [ 0, 1, 3, 6, 10, 15, 21 ],
      { polygonal => 3 },
@@ -1834,13 +1834,13 @@ foreach my $elem
      [ 0, 1, 14, 39, 76, 125, 186, ],
      { polygonal => 14 },
    ],
-
-
+   
+   
    [ 'Math::NumSeq::Tetrahedral',
      [ 0, 1, 4, 10, 20, 35, 56, 84, 120 ],
      {},
      { value_to_i_floor_below_first => -3 } ],
-
+   
    [ 'Math::NumSeq::Emirps',
      [ 13, 17, 31, 37, 71, 73, 79, 97, 107, 113, 149, 157,
        167, 179, 199, 311, 337, 347, 359, 389, 701, 709,
@@ -1848,30 +1848,30 @@ foreach my $elem
        967, 971, 983, 991, 1009, 1021, 1031, 1033, 1061,
        1069, 1091, 1097, 1103, 1109, 1151, 1153, 1181, 1193
      ] ],
-
+   
    [ 'Math::NumSeq::Squares',
      [ 0, 1, 4, 9, 16, 25 ] ],
    # [ 'Math::NumSeq::Squares', 3,
    #   [ 4, 9, 16, 25 ] ],
-
+   
    [ 'Math::NumSeq::Triangular',
      [ 0, 1, 3, 6, 10, 15, 21 ] ],
-
+   
    [ 'Math::NumSeq::Pronic',
      [ 0, 2, 6, 12, 20, 30, 42 ] ],
-
+   
    [ 'Math::NumSeq::Perrin',
      [ 3, 0, 2, 3, 2, 5, 5, 7, 10, 12, 17 ] ],
    # [ 'Math::NumSeq::Padovan',
    #   [ 1, 1, 1, 2, 2, 3, 4, 5, 7, 9, 12 ],
    #   undef,
    #   { bfile_offset => 5 } ],
-
+   
    [ 'Math::NumSeq::Primes',
      [ 2, 3, 5, 7, 11, 13, 17 ] ],
    # [ 'Math::NumSeq::Primes', 10,
    #   [ 11, 13, 17 ] ],
-
+   
    [ 'Math::NumSeq::TwinPrimes',
      [ 3, 5, 7, 11, 13, 17, 19, 29, 31 ],
      { pairs => 'both' },
@@ -1880,7 +1880,7 @@ foreach my $elem
    #   [ 11, 13, 17, 19, 29, 31 ],
    #   { pairs => 'both' },
    # ],
-
+   
    [ 'Math::NumSeq::TwinPrimes',
      [ 3, 5, 11, 17, 29 ],
      { pairs => 'first' },
@@ -1889,7 +1889,7 @@ foreach my $elem
    #   [ 5, 11, 17, 29 ],
    #   { pairs => 'first' },
    # ],
-
+   
    [ 'Math::NumSeq::TwinPrimes',
      [ 5, 7, 13, 19, 31 ],
      { pairs => 'second' },
@@ -1898,7 +1898,7 @@ foreach my $elem
    #   [ 7, 13, 19, 31 ],
    #   { pairs => 'second' },
    # ],
-
+   
    # [ 'Math::NumSeq::ThueMorseEvil',
    #   [ 0, 3, 5, 6, 9, 10, 12, 15, 17, 18, 20, 23, 24, 27,
    #     29, 30, 33, 34, 36, 39, 40, 43, 45, 46, 48, 51, 53,
@@ -1924,7 +1924,7 @@ foreach my $elem
    # [ 'Math::NumSeq::ThueMorseOdious', 3, [ 4, 7, ] ],
    # [ 'Math::NumSeq::ThueMorseOdious', 4, [ 4, 7, ] ],
    # [ 'Math::NumSeq::ThueMorseOdious', 5, [ 7, ] ],
-
+   
    [ 'Math::NumSeq::Beastly',
      [ 666,
        1666, 2666, 3666, 4666, 5666,
@@ -1952,14 +1952,14 @@ foreach my $elem
        027666,
      ],
      { radix => 8 } ],
-
+   
    # [ 'Math::NumSeq::PrimeQuadraticEuler',
    #   [ 41, 43, 47, 53, 61, 71, 83, 97, 113, 131, 151 ] ],
    # [ 'Math::NumSeq::PrimeQuadraticLegendre',
    #   [ 29, 31, 37, 47, 61, 79, 101, 127, 157, 191, 229 ] ],
    # [ 'Math::NumSeq::PrimeQuadraticHonaker',
    #   [ 59, 67, 83, 107, 139, 179, 227, 283, 347, 419, 499 ] ],
-
+   
    # # [ 'Math::NumSeq::GolayRudinShapiro',
    # #   [ 0,1,2,4,5,7 ] ],
    # # http://oeis.org/A022155
@@ -1972,32 +1972,32 @@ foreach my $elem
    #     96, 97, 98, 100, 101, 103, 104, 105,
    #     106, 110, 115, 118, 120, 121, 122, 126,
    #     131, 134, 139, 140 ] ],
-
+   
   ) {
   my ($class, $want, $values_options, $test_options) = @$elem;
   $values_options ||= {};
   my $good = 1;
   my $lo = $want->[0];
-
+  
   ref $want eq 'ARRAY' or die "$class, oops, want array is not an array";
-
+  
   my $name = join (' ',
                    $class,
                    map {"$_=$values_options->{$_}"} keys %$values_options);
-
+  
   ### $class
   eval "require $class; 1" or die $@;
   my $seq = $class->new (%$values_options);
-
+  
   $seq->oeis_anum;
   $seq->description;
   $class->description;
-
-
+  
+  
   #### $want
   my $hi = $want->[-1];
   # MyTestHelpers::diag ("$name $lo to ",$hi);
-
+  
   # SKIP: {
   #    require Module::Load;
   #    if (! eval { Module::Load::load ($class);
@@ -2073,8 +2073,7 @@ foreach my $elem
     skip ($skip, $got_str, $want_str, "$name by ith(), lo=$lo hi=$hi");
   }
 
-  ### value_to_i() ...
-  # value_to_i_floor()
+  ### value_to_i() etc ...
   {
     ### $want
     my $skip;
@@ -2106,6 +2105,13 @@ foreach my $elem
             $bad++
           }
         }
+        if ($seq->can('value_to_i_ceil')) {
+          my $got_i = $seq->value_to_i_ceil($value);
+          if (! defined $got_i || $got_i != $want_i) {
+            MyTestHelpers::diag ("$name value_to_i_ceil($value) want $want_i got $got_i");
+            $bad++
+          }
+        }
       }
 
       if ($p < $#$want && $value+1 < $want->[$p+1]) {
@@ -2126,6 +2132,14 @@ foreach my $elem
               $bad++
             }
           }
+          if ($seq->can('value_to_i_ceil')) {
+            my $got_i = $seq->value_to_i_ceil($try_value);
+            my $want_i = $i+1;
+            if ($got_i != $want_i) {
+              MyTestHelpers::diag ("$name value_to_i_ceil($value+0.25=$try_value) want $want_i got $got_i");
+              $bad++
+            }
+          }
         }
         {
           my $try_value = $value+1;
@@ -2141,6 +2155,14 @@ foreach my $elem
             my $got_i = $seq->value_to_i_floor($try_value);
             if ($got_i != $i) {
               MyTestHelpers::diag ("$name value_to_i_floor($value+1=$try_value) want $i got $got_i");
+              $bad++
+            }
+          }
+          if ($seq->can('value_to_i_ceil')) {
+            my $got_i = $seq->value_to_i_ceil($try_value);
+            my $want_i = $i+1;
+            if ($got_i != $want_i) {
+              MyTestHelpers::diag ("$name value_to_i_ceil($value+1=$try_value) want $want_i got $got_i");
               $bad++
             }
           }
@@ -2172,6 +2194,13 @@ foreach my $elem
               $bad++
             }
           }
+          if ($seq->can('value_to_i_ceil')) {
+            my $got_i = $seq->value_to_i_ceil($value);
+            if (! defined $got_i || $got_i != $i) {
+              MyTestHelpers::diag ("$name value_to_i_ceil($value-0.25=$try_value) want $i got $got_i");
+              $bad++
+            }
+          }
         }
         {
           my $try_value = $value-1;
@@ -2187,6 +2216,13 @@ foreach my $elem
             my $got_i = $seq->value_to_i_floor($try_value);
             if ($got_i != $want_i) {
               MyTestHelpers::diag ("$name value_to_i_floor($value-1=$try_value) want $want_i got $got_i");
+              $bad++
+            }
+          }
+          if ($seq->can('value_to_i_ceil')) {
+            my $got_i = $seq->value_to_i_ceil($value);
+            if (! defined $got_i || $got_i != $i) {
+              MyTestHelpers::diag ("$name value_to_i_ceil($value) want $i got $got_i");
               $bad++
             }
           }
@@ -2219,7 +2255,8 @@ foreach my $elem
   }
 
   # infinities and fractions
-  foreach my $method ('ith', 'value_to_i_floor', 'value_to_i_estimate') {
+  foreach my $method ('ith',
+                      'value_to_i', 'value_to_i_floor', 'value_to_i_estimate') {
     if (! $seq->can($method)) {
       # skip "no $method() for $seq", 1;
     } else {

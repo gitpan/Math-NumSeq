@@ -26,7 +26,7 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 58;
+$VERSION = 59;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -40,7 +40,7 @@ use Math::NumSeq::Fibonacci;
 *_blog2_estimate = \&Math::NumSeq::Fibonacci::_blog2_estimate;
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+# use Smart::Comments;
 
 
 # use constant name => Math::NumSeq::__('Balanced Binary');
@@ -337,6 +337,12 @@ sub _value_to_i_round {
     return $value;
   }
 
+  {
+    my $int = int($value);
+    if ($value != $int) {
+      $value = $int + $ceil;  # +1 if not integer and want ceil
+    }
+  }
   my @bits = reverse _digit_split_lowtohigh($value,2);
 
   if (scalar(@bits) & 1) {
@@ -536,10 +542,10 @@ high to low has count(1s) E<gt>= count(0s) at all times, ie. no closing ")"
 without a preceding matching open "(".
 
 Because the number of 1s and 0s are equal the width is always an even 2*w.
-The number of values with a given width is the Catalan number
-(2w)!/(w!*(w+1)!).  For example w=3 with is 2*3=6 bits and there are
-Catalan(3) = (2*3)!/(3!*4!) = 5 values, being i=4 through i=8 inclusive
-shown above.
+The number of values with a given width is the Catalan number C(w) =
+(2w)!/(w!*(w+1)!).  For example 6-bit values are w=6/2=3 and there are C(3)
+= (2*3)!/(3!*4!) = 5 such values, being i=4 through i=8 inclusive shown
+above.
 
 =head2 Binary Trees
 
@@ -551,9 +557,8 @@ left and/or right child.  Such a tree can be encoded by writing
 
 The "left-tree" and "right-tree" parts are the left and right legs from the
 node written out recursively.  If those legs are both empty (ie. the node is
-a leaf) then they're empty trees and are "0" and the node is "100".
-Otherwise the node is 1 followed by various more 1s and 0s.  For example,
-going depth-first,
+a leaf) then they're empty trees and are "0" giving node "100".  Otherwise
+the node is 1 followed by various more 1s and 0s.  For example,
 
         d  
        /
@@ -562,12 +567,12 @@ going depth-first,
     a  
 
 At "a" write 1 and recurse to write its left then right legs.  The left leg
-is "b" so write 1 and its two legs are empty so write 0,0.  That completes
-the left side of "a" so resume at the right side of "a" which is 1 for "c"
-and descend to the left and right of "c".  The left of "c" is empty so
-write 0.  The right of "c" is "d" so write 1 and the two empty legs of "d"
-are 0,0.  The very final 0 from that right-most leaf "d" is dropped (the
-"[0]" above).
+is "b" so write 1 and the two legs of "b" are empty so write 0,0.  That
+completes the left side of "a" so resume at the right side of "a" which is 1
+for "c" and descend to the left and right of "c".  The left of "c" is empty
+so write 0.  The right of "c" is "d" so write 1 and the two empty legs of
+"d" are 0,0.  The very final 0 from that right-most leaf "d" is dropped
+(shown "[0]" above).
 
 This encoding can be applied breadth-first too by pushing the left and right
 descents onto a queue of pending work, instead of onto a stack by recursing.
@@ -579,8 +584,8 @@ In this encoding the balanced binary condition "count 1s E<gt>= count 0s"
 corresponds to there being at least one unfinished node at any time in the
 traversal (by whichever node order).
 
-The C<NumSeq> code here acts on values as numbers but tree encodings like
-this are probably better handled as a string or a list of bits.
+The C<NumSeq> code here acts on values as numbers.  Tree encodings like this
+are probably better handled as a string or list of bits.
 
 =head2 Mountain Ranges
 
@@ -597,10 +602,9 @@ mountain range.  1-bit for up, 0-bit for down.  For example,
 The mountain range must end at its starting level and must remain at or
 above its starting level at all times.
 
-The numerical order of the values in the sequence means narrower mountain
-ranges are before wider ones, and two ranges with equal width and the same
-for some initial distance are ordered by down-slope preceding up-slope at
-the first difference.
+Numerical order of the values means narrower mountain ranges are before
+wider ones, and two ranges with equal width are ordered by down-slope
+preceding up-slope at the first bit difference.
 
 =head1 FUNCTIONS
 
@@ -622,6 +626,10 @@ Create and return a new sequence object.
 
 Return the C<$i>'th balanced binary number.
 
+=item C<$bool = $seq-E<gt>pred($value)>
+
+Return true if C<$value> is balanced binary.
+
 =item C<$i = $seq-E<gt>value_to_i($value)>
 
 If C<$value> is balanced binary then return its index i.  If C<$value> is
@@ -633,10 +641,6 @@ not balanced binary then return C<undef>.
 
 Return the index i of C<$value> or if C<$value> is not a balanced binary
 integer then return the i of the next higher or lower value, respectively.
-
-=item C<$bool = $seq-E<gt>pred($value)>
-
-Return true if C<$value> is balanced binary.
 
 =back
 

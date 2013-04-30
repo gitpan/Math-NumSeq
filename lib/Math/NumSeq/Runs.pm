@@ -18,8 +18,8 @@
 
 
 # cf A165162 - Nto1,N-1to1 cf A057058 making fracs A165200
-#    A010751 - runs incr then decr
-#    A055087 - runs 0toNtwice
+#    A010751 - runs incr then decr, up=1,down=2,up=3,down=4
+#    A055087 - runs 0toNtwice  each 0 .. N, 0 .. N,
 #    A055086 - n repeat floor(n/2)+1 times, DiagonalsOctant X+Y
 #    A082375 - k to 0 by 2s
 #    A122196 - count down by 2s
@@ -28,7 +28,7 @@
 #    A111651 - n repeated 3n times
 #    A111652 - 3n repeated n times
 #    A121997 - 1toN repeated N times
-#    A079944 - 2^n 0s then 2^n 1s
+#    A079944 - 2^n 0s then 2^n, is second highest bit of n
 #    A004525 - 1 even then 3 odd, OFFSET=0
 #    A007001 - 1toN repeating 1toN
 #
@@ -45,7 +45,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION','@ISA';
-$VERSION = 58;
+$VERSION = 59;
 
 use Math::NumSeq 21; # v.21 for oeis_anum field
 use Math::NumSeq::Base::IterateIth;

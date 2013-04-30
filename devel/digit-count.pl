@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012, 2013 Kevin Ryde
+# Copyright 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,42 +20,18 @@
 use 5.010;
 use strict;
 use warnings;
-use POSIX;
-use List::Util 'max','min';
+use Math::NumSeq::DigitCountLow;
 
-# uncomment this to run the ### lines
-use Smart::Comments;
-
-
+#use Smart::Comments;
 
 {
-  # speed
-  require Math::NumSeq::LuckyNumbers;
-  my $seq = Math::NumSeq::LuckyNumbers->new;
+  # count mod 2
 
-  require Devel::TimeThis;
-  my $t = Devel::TimeThis->new('x');
-
-  foreach (1 .. 5000) {
-    $seq->next;
-  }
-  ### $seq
-  exit 0;
-}
-
-{
-  # sieve stages
-  my @sieve = (map { 2*$_+1} 0 .. 100); # odd 1,3,5,7 etc
-  for (my $upto = 1; $upto <= $#sieve; $upto++) {
-    my $str = join(',',@sieve);
-    $str = substr($str,0,70);
-    print "$str\n";
-
-    my $step = $sieve[$upto];
-    ### $step
-    for (my $i = $step-1; $i <= $#sieve; $i += $step-1) {
-      splice @sieve, $i, 1;
-    }
+  my $seq = Math::NumSeq::DigitCountLow->new (radix => 4);
+  for (my $i = 1; $i < 40; $i++) {
+    my $value = $seq->ith($i);
+    $value %= 2;
+    print "$value,";
   }
   exit 0;
 }

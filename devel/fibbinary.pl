@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -23,6 +23,40 @@ use Math::NumSeq::Fibbinary;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
+
+{
+  # Fibbinary ith() vs Math::Fibonacci decompose()
+
+  require Math::Fibonacci;
+  {
+    require Math::NumSeq::Fibonacci;
+   my $fibonacci = Math::NumSeq::Fibonacci->new;
+    my $fibbinary = Math::NumSeq::Fibbinary->new;
+  my @fib;
+    sub my_decompose {
+      my ($n) = @_;
+      $n = $fibbinary->ith($n) || return 0;
+      my @ret;
+      for (my $i = 2; $n; $i++,$n>>=1) {
+        if ($n & 1) {
+          push @ret, ($fib[$i] ||= $fibonacci->ith($i));
+        }
+      }
+      return reverse @ret;
+    }
+  }
+  foreach my $n (0 .. 10000000) {
+    my @sum = Math::Fibonacci::decompose($n);
+    my @fff = my_decompose($n);
+    my $sum = join(',',@sum);
+    my $fff = join(',',@fff);
+    if ($sum ne $fff) {
+      print "$n  $sum $fff\n";
+      die;
+    }
+  }
+  exit 0;
+}
 
 {
   # value_to_i_floor()
