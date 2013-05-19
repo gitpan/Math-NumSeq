@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -177,8 +177,8 @@ Math::NumSeq::FibbinaryBitCount -- number of bits in each fibbinary number
 
 The number of 1 bits in the i'th fibbinary number.
 
-    # starting i=0
     0, 1, 1, 1, 2, 1, 2, 2, 1, 2, 2, 2, 3, 1, 2, 2, 2, 3, 2, ...
+    starting i=0
 
 For example i=9 is Fibbinary "1001" so value=2 for 2 1-bits.
 

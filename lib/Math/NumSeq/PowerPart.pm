@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 59;
+$VERSION = 60;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -255,8 +255,8 @@ Math::NumSeq::PowerPart -- largest square root etc divisor
 
 This sequence is the largest integer whose square is a divisor of i,
 
-    # starting i=1
     1, 1, 1, 2, 1, 1, 1, 2, 3, ...
+    starting i=1
 
 For example at i=27 the value is 3 since 3^2=9 is the largest square which
 is a divisor of 27.  Notice the sequence value is the root, ie. 3, of the

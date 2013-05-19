@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 59;
+$VERSION = 60;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -401,8 +401,8 @@ The Catalan numbers
     C(n) = binomial(2n,n) / (n+1)
          = (2n)! / (n!*(n+1)!)
 
-    # starting i=0
     1, 1, 2, 5, 14, 42, 132, 429, 1430, 4862, 16796, ...
+    starting i=0
 
 From the factorial expression it can be seen the values grow roughly as a
 power-of-4,
@@ -417,8 +417,9 @@ Option C<values_type =E<gt> "odd"> can give just the odd part of each
 number, ie. with factors of 2 divided out,
 
     values_type => "odd"
-    # starting i=0
+
     1, 1, 1, 5, 7, 21, 33, 429, 715, 2431, 4199, ...
+    starting i=0
 
 The number of 2s in C(i) is
 

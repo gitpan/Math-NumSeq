@@ -23,7 +23,7 @@ use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 use Math::Factor::XS 'factors';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -225,8 +225,8 @@ Math::NumSeq::Totient -- Euler's totient function, count of coprimes
 
 Euler's totient function, being the count of integers coprime to i,
 
-    # starting i=1
     1, 1, 2, 2, 4, 2, 6, 4, etc
+    starting i=1
 
 For example i=6 has no common factor with 1 or 5, so the totient is 2.
 

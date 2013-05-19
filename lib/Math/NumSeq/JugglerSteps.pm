@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -341,8 +341,8 @@ So sqrt if n even, or sqrt(n^3) if n odd, each rounded downwards.  For
 example i=17 goes 17 -> sqrt(17^3)=70 -> sqrt(70)=8 -> sqrt(8)=2 ->
 sqrt(2)=1, for a count of 4 steps.
 
-    # starting i=1
     0, 1, 6, 2, 5, 2, 4, 2, 7, 7, 4, 7, 4, 7, 6, 3, 4, 3, 9, 3, ...
+    starting i=1
 
 The intermediate values in the calculation can become quite large and
 C<Math::BigInt> is used if necessary.  There's some secret experimental

@@ -35,7 +35,7 @@ use Math::NumSeq::TwinPrimes;
 # VERSION
 
 {
-  my $want_version = 59;
+  my $want_version = 60;
   ok ($Math::NumSeq::TwinPrimes::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::TwinPrimes->VERSION,  $want_version,

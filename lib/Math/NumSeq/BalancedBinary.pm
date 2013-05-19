@@ -26,7 +26,7 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -518,8 +518,8 @@ Math::NumSeq::BalancedBinary -- balanced 1,0 bits
 This sequence is integers with 1-bits and 0-bits balanced like opening and
 closing parentheses.
 
-    # starting i=1
     2, 10, 12, 42, 44, 50, 52, 56, 170, 172, 178, ...
+    starting i=1
 
 Written in binary a 1-bit is an opening "(" and a 0-bit is a closing ")".
 

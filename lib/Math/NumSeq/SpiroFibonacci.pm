@@ -32,7 +32,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_to_bigint = \&Math::NumSeq::_to_bigint;
@@ -324,8 +324,8 @@ recurrence
 where the offset k is the closest point on the on the preceding loop of a
 square spiral.  The initial values are
 
-    # starting i=0
     0, 1, 1, ..., 1, 2, 3, 4, ... 61, 69, 78, 88, 98, 108, ...
+    starting i=0
 
 On the square spiral this is
 

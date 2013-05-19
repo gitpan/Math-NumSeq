@@ -22,7 +22,7 @@ use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -174,7 +174,7 @@ Math::NumSeq::AllPrimeFactors -- prime factors of the integers
 
 This is a list of the prime factors of the integers 2, 3, 4, etc
 
-    # starting i=1
+    starting i=1
     2, 3, 2, 2, 5, 2, 3, 7, 2, 2, 2, 3, 3, 2, 5, 11, ...
 
           \--/     \--/     \-----/  \--/  \--/

@@ -21,7 +21,7 @@ use strict;
 use Math::NumSeq::Primes;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -200,8 +200,8 @@ Math::NumSeq::ErdosSelfridgeClass -- Erdos-Selfridge classification of primes
 This is a class number for primes by Erdos and Selfridge, or 0 for
 composites.  The default is "class+"
 
-    # starting i=1,
     0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 2, 0, 0, 0, 1, 0, 2, 0, 0, ...
+    starting i=1,
 
 A prime p is classified by factorizing p+1 into primes, then on each of
 those primes q factorizing q+1, and so on, repeating until reaching entirely

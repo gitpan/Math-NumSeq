@@ -21,7 +21,7 @@ use strict;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 59;
+$VERSION = 60;
 use Math::NumSeq::Base::Sparse;  # FIXME: implement pred() directly ...
 @ISA = ('Math::NumSeq::Base::Sparse');
 
@@ -41,9 +41,14 @@ use constant i_start => 0;
 use constant characteristic_increasing => 1;
 use constant characteristic_integer => 1;
 
+#------------------------------------------------------------------------------
 # cf A105527 - index when n-nacci exceeds Fibonacci
-#
+#    A020695 - Pisot 2,3,5,8,etc starting OFFSET=0
+#    A212804 - starting 1,0 OFFSET=0
+
 use constant oeis_anum => 'A000045'; # fibonacci starting at i=0 0,1,1,2,3
+
+#------------------------------------------------------------------------------
 
 # the biggest f0 for which both f0 and f1 fit into a UV, and which therefore
 # for the next step will require BigInt
@@ -136,6 +141,12 @@ sub ith {
     return $i;
   }
 
+  my $neg;
+  if ($i < 0) {
+    $i = -$i;
+    $neg = ($i % 2 == 0);
+  }
+
   my @bits = _bits_high_to_low($i);
   ### @bits
 
@@ -188,10 +199,13 @@ sub ith {
   #
   if (shift @bits) {
     $Fk *= 2;
-    return ($Fk + $Fk1)*($Fk - $Fk1) + $add;
+    $Fk = ($Fk + $Fk1)*($Fk - $Fk1) + $add;
   } else {
-    return $Fk * ($Fk + 2*$Fk1);
+    $Fk *= ($Fk + 2*$Fk1);
   }
+
+  if ($neg) { $Fk = -$Fk; }
+  return $Fk;
 }
 
 sub _bits_high_to_low {
@@ -286,8 +300,8 @@ Math::NumSeq::Fibonacci -- Fibonacci numbers
 
 The Fibonacci numbers F(i) = F(i-1) + F(i-2) starting from 0,1,
 
-    # starting i=0
     0, 1, 1, 2, 3, 5, 8, 13, 21, 34, ...
+    starting i=0
 
 =head1 FUNCTIONS
 
@@ -387,8 +401,8 @@ F[i] increases as a power of phi, the golden ratio,
 
     F[i] = (phi^i - beta^i) / (phi - beta)    # exactly
 
-    phi = (1+sqrt(5))/2
-    beta = -1/phi =-0.618
+    phi = (1+sqrt(5))/2 = 1.618
+    beta = -1/phi = -0.618
 
 So taking a log (natural logarithm) to get i and ignoring beta^i which
 quickly becomes small
@@ -408,6 +422,7 @@ L<Math::NumSeq>,
 L<Math::NumSeq::LucasNumbers>,
 L<Math::NumSeq::Fibbinary>,
 L<Math::NumSeq::FibonacciWord>,
+L<Math::NumSeq::Pell>,
 L<Math::NumSeq::Tribonacci>
 
 L<Math::Fibonacci>,

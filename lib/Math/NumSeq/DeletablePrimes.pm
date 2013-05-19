@@ -26,7 +26,7 @@ use strict;
 use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 
 use Math::NumSeq;
 use Math::NumSeq::Primes;
@@ -165,8 +165,8 @@ Math::NumSeq::DeletablePrimes -- primes deleting a digit repeatedly
 The deletable primes, being primes which can have a digit removed to give
 another prime which in turn is deletable.
 
-    # starting i=0
     2, 3, 5, 7, 13, 17, 23, 29, 31, 37, 43, ...
+    starting i=0
 
 For example 367 is a deletable prime because it's possible to delete the 6
 giving prime 37 then from that delete the 3 giving prime 7.

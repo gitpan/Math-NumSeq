@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -87,7 +87,7 @@ sub _extend {
   ### $i
   ### $value
   $self->{'pred_value'} = $value;
-  $self->{'pred_array'}->[$i] = $value;
+  $self->{'pred_array'}->[$i - $self->i_start] = $value;
   $self->{'pred_hash'}->{$value} = undef;
 }
 

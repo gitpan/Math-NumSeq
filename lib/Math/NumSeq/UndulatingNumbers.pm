@@ -23,13 +23,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+# use Smart::Comments;
 
 
 # use constant name => Math::NumSeq::__('Undulating Numbers');
@@ -272,9 +272,11 @@ sub value_to_i_floor {
   ### $b
   ### $including_repdigits
   ### digit count: scalar(@digits)
+  ### $radix
+  ### $rdec
 
   my $i = $a * ($including_repdigits ? $radix : $rdec) + $b
-    + ($including_repdigits ? 0 : $a >= $b)
+    + ($including_repdigits || $a < $b ? 0 : 1)
     + scalar(@digits) * $rdec*($including_repdigits ? $radix : $rdec);
   ### $i
 
@@ -291,7 +293,8 @@ sub value_to_i_floor {
 
     while (@digits) {
       if ((my $c = pop @digits) != $a) {  # found different than ABABAB...
-        return $i - ($c < $a);
+        if ($c < $a) { $i -= 1; }
+        return $i;
       }
       ($a,$b) = ($b,$a);
     }

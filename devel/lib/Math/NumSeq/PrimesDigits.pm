@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
 
@@ -118,7 +118,7 @@ Math::NumSeq::PrimesDigits -- digits of the primes
 
 This is the digits of the primes,
 
-    # starting i=1 (for prime=2)
+    starting i=1 (for prime=2)
     2, 3, 5, 7, 1, 1, 1, 3, 1, 7, 1, 9, 2, 3, 2, 9, ...
 
                 \--/  \--/  \--/  \--/  \--/  \--/

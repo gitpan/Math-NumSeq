@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max','min';
 
 use vars '$VERSION','@ISA';
-$VERSION = 59;
+$VERSION = 60;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -211,8 +211,8 @@ Math::NumSeq::LiouvilleFunction -- Liouville function sequence
 
 The Liouville function parity of the prime factors of i,
 
-    # starting i=1
     1, -1, -1, 1, -1, 1, -1, -1, 1, 1, -1, -1, -1, 1, 1, ...
+    starting i=1
 
 being
 

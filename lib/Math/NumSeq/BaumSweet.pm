@@ -26,7 +26,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 59;
+$VERSION = 60;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -95,8 +95,8 @@ Math::NumSeq::BaumSweet -- Baum-Sweet sequence
 
 The Baum-Sweet sequence
 
-    # starting i=0
     1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, ...
+    starting i=0
 
 where each value is 1 if the index i contains no odd-length run of 0-bits,
 or 0 if it does.

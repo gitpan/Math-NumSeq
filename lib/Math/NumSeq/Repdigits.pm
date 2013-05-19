@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -341,8 +341,8 @@ Math::NumSeq::Repdigits -- repdigits 11, 22, 33, etc
 
 The sequence of repdigit numbers,
 
-    # starting i=0
     0, 1 ... 9, 11, 22, 33, ... 99, 111, 222, 333, ..., 999, etc
+    starting i=0
 
 comprising repetitions of a single digit.  The default is decimal or a
 C<radix> parameter can be given.

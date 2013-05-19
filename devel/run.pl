@@ -148,13 +148,11 @@ $|=1;
   $values_class = 'Math::NumSeq::PrimesDigits';
   $values_class = 'Math::NumSeq::PowerPart';
   $values_class = 'Math::NumSeq::Plaindromes';
-  $values_class = 'Math::NumSeq::LucasNumbers';
   $values_class = 'Math::NumSeq::Xenodromes';
   $values_class = 'Math::NumSeq::DuffinianNumbers';
   $values_class = 'Math::NumSeq::ReRound';
   $values_class = 'Math::NumSeq::SophieGermainPrimes';
   $values_class = 'Math::NumSeq::PrimeSignatureLeast';
-  $values_class = 'Math::NumSeq::Fibonacci';
   $values_class = 'Math::NumSeq::FibonacciProducts';
   $values_class = 'Math::NumSeq::Runs';
   $values_class = 'Math::NumSeq::Pow2Mod10';
@@ -185,7 +183,6 @@ $|=1;
   $values_class = 'Math::NumSeq::DigitSumModulo';
   $values_class = 'Math::NumSeq::Catalan';
   $values_class = 'Math::NumSeq::Fibbinary';
-  $values_class = 'Math::NumSeq::PlanePathTurn';
   $values_class = 'Math::NumSeq::DigitCount';
   $values_class = 'Math::NumSeq::FibbinaryBitCount';
   $values_class = 'Math::NumSeq::HappyNumbers';
@@ -193,17 +190,20 @@ $|=1;
   $values_class = 'Math::NumSeq::LeastPrimitiveRoot';
   $values_class = 'Math::NumSeq::DedekindPsiCumulative';
   $values_class = 'Math::NumSeq::PlanePathDelta';
-  $values_class = 'Math::NumSeq::PlanePathN';
-  $values_class = 'Math::NumSeq::PlanePathCoord';
   $values_class = 'Math::NumSeq::SumPowSub1';
+  $values_class = 'Math::NumSeq::PlanePathCoord';
+  $values_class = 'Math::NumSeq::PlanePathN';
+  $values_class = 'Math::NumSeq::Fibonacci';
+  $values_class = 'Math::NumSeq::LucasNumbers';
+  $values_class = 'Math::NumSeq::PlanePathTurn';
 
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new
     (
      # root_type => 'negative',
      # digit => 0,
-      radix => 3,
-     # i_start => 0,
+     # radix => 3,
+      i_start => 1,
      # modulus => 2,
 
      # of => 'Primorials',
@@ -273,11 +273,12 @@ $|=1;
      # planepath => 'SierpinskiTriangle,align=diagonal',
      # planepath => 'RationalsTree,tree_type=L',
      # planepath => 'PyramidRows,step=3',
-     # planepath => 'LCornerTree',
+     # planepath => 'LCornerTree,parts=diagonal-1',
+     # planepath => 'UlamWarburton,parts=4',
      # coordinate_type => 'Sum',
      # coordinate_type => 'TRSquared',
      # coordinate_type => 'DiffXY',
-     # coordinate_type => 'Height',
+     # coordinate_type => 'Parity',
 
      # planepath => 'PythagoreanTree,coordinates=AC',
       # planepath => 'HIndexing',
@@ -286,13 +287,13 @@ $|=1;
      # planepath => 'TerdragonCurve,arms=1',
      # planepath => 'CellularRule,rule=14',
      # planepath => 'PyramidRows,step=2',
-      # planepath => 'SquareSpiral',
      # delta_type=>'dSumAbs',
 
      # planepath => 'Diagonals',
      # planepath => 'PythagoreanTree,coordinates=BC',
      # planepath => 'ChanTree,k=4',
-     # turn_type => 'LSR',
+      planepath => 'SquareSpiral',
+      turn_type => 'Turn4',
 
      # planepath => 'CfracDigits',
      # planepath => 'RationalsTree',
@@ -302,7 +303,7 @@ $|=1;
      # planepath => 'SierpinskiCurve,arms=2',
      # planepath => 'ToothpickUpist',
      # planepath => 'ToothpickTree,parts=octant',
-     # planepath => 'LCornerTree,parts=1',
+     # planepath => 'LCornerTree,parts=diagonal-1',
      #  planepath => 'DigitGroups,radix=2',
      # planepath => 'CellularRule,rule=206',
      # planepath => 'QuadricIslands',

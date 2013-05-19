@@ -25,7 +25,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 use Math::NumSeq;
 use List::Util 'reduce';
 use Math::NumSeq::Base::IterateIth;
@@ -156,8 +156,8 @@ This is an iteration taking the product of the digits of a number until
 reaching a single digit value.  The sequence values are the count of steps,
 also called the multiplicative persistence.
 
-    # starting i=0
     0,0,..0,0,1,1,..1,1,2,2,2,2,2,1,1,1,1,2,2,2,2,2,3,1,1,1,2,...
+    starting i=0
 
 For example i=39 goes 3*9=27 -E<gt> 2*7=14 -E<gt> 1*4=4 to reach a single
 digit, so value=3 iterations.

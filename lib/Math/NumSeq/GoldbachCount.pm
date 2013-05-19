@@ -25,7 +25,7 @@ use strict;
 use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
@@ -217,8 +217,8 @@ Math::NumSeq::GoldbachCount -- number of representations as sum of primes P+Q
 The number of ways each i can be represented as a sum of two primes P+Q,
 starting from i=1,
 
-    # starting i=1
     0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 0, 1, 1, 2, 1, 2, 0, ...
+    starting i=1
 
 For example i=4 can be represented only as 2+2 so just 1 way.  Or i=10 is
 3+7 and 5+5 so 2 ways.
@@ -228,8 +228,8 @@ For example i=4 can be represented only as 2+2 so just 1 way.  Or i=10 is
 Option C<on_values =E<gt> 'even'> gives the count on just the even numbers,
 starting i=1 for number of ways "2" can be expressed (none),
 
-    # starting i=1
     0, 1, 1, 1, 2, 1, 2, 2, 2, 2, 3, 3, 3, 2, 3, 2, 4, 4, ...
+    starting i=1
 
 Goldbach's famous conjecture is that for an even i E<gt>= 4 there's always
 at least one P+Q=i, which would be a count here always E<gt>= 1.

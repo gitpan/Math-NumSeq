@@ -16,7 +16,6 @@
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# value_to_i() giving i or undef
 # $value = $seq->value_floor($value)
 # $value = $seq->value_ceil($value)
 # $value = $seq->value_next($value)
@@ -25,6 +24,10 @@
 # characteristic('arithmetic')  arithmetic progression constant add
 # characteristic('primitive')   no term divisible by any other
 # characteristic('mult_prev')   each term multiple of previous
+
+# $seq->i_end last i if finite, and if known ??
+# characteristic('i_end')
+# characteristic('i_finite') boolean
 
 # ->add ->sub   of sequence or constant
 # ->mul
@@ -48,7 +51,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -283,9 +286,18 @@ Create and return a new sequence object.
 
 Return the next index and value in the sequence.
 
+Most sequences are infinite and for them there's always a next value.  But
+if C<$seq> is finite then at the end the return is no values.  So for
+example
+
+    while (my ($i, $value) = $seq->next) {
+      print "$i $value\n";
+    }
+
 =item C<$seq-E<gt>rewind()>
 
-Rewind the sequence to its starting point.
+Rewind the sequence to its starting point.  The next call to C<next()> will
+be the initial C<$i,$value> again.
 
 See L</Optional Methods> below for possible arbitrary "seeks".
 
@@ -376,8 +388,8 @@ element is a hashref
       minimum         => number, or undef
       maximum         => number, or undef
       width           => integer, suggested display size
-      choices         => for enum, an arrayref     
-      choices_display => for enum, an arrayref     
+      choices         => for enum, an arrayref
+      choices_display => for enum, an arrayref
     }
 
 C<type> is a string, one of

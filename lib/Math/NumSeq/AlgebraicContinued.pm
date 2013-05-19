@@ -21,7 +21,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -430,8 +430,8 @@ Math::NumSeq::AlgebraicContinued -- continued fraction expansion of algebraic nu
 This is terms in the continued fraction expansion of an algebraic number
 such as a cube root or Nth root.  For example cbrt(2),
 
-    # starting i=0
     1, 3, 1, 5, 1, 1, 4, 1, 1, 8, 1, 14, 1, 10, 2, 1, 4, 12, 2, ...
+    starting i=0
 
 A continued fraction approaches the root by a form
 

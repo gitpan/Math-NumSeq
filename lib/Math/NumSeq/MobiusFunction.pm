@@ -21,7 +21,7 @@ use strict;
 use List::Util 'min','max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 59;
+$VERSION = 60;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -197,8 +197,8 @@ Math::NumSeq::MobiusFunction -- Mobius function sequence
 
 The sequence of the Mobius function,
 
-    # starting i=1
     1, -1, -1, 0, -1, 1, ...
+    starting i=1
 
 Each value is
 

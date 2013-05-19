@@ -24,7 +24,7 @@ use Math::Factor::XS 0.40 'factors'; # version 0.40 for factors() on BigInt
 
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 use Math::NumSeq;
 use List::Util 'min';
 use Math::NumSeq::Base::IteratePred;
@@ -108,8 +108,8 @@ Math::NumSeq::DuffinianNumbers -- no common factor with sum of divisors
 This is the Duffinian numbers which are composites having no common factor
 with their sum of divisors.
 
-    # starting i=1
     4, 8, 9, 16, 21, 25, 27, 32, 35, 36, 39, 49, 50, 55, 57, 63, ...
+    starting i=1
 
 For example 21 has divisors 1,3,7,21 total 32 which has no common factor
 with 21.  Only composites are included since primes would not be

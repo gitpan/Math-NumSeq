@@ -30,7 +30,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -116,26 +116,50 @@ This is Moritz Stern's diatomic sequence
     0, 1, 1, 2, 1, 3, 2, 3, ...
     starting i=0
 
-It's constructed by successive levels as
+It's constructed by successive levels with a recurrence
 
     D(0)     = 0
     D(1)     = 1
     D(2*i)   = D(i)
     D(2*i+1) = D(i) + D(i+1)
 
-so effectively the sequence is extended by copying the previous level to the
-even indices of the next, and at the odd indices the sum of adjacent terms,
+So the sequence is extended by copying the previous level to the even
+indices of the next, and at the odd indices the sum of adjacent terms,
 
-   0,                i=0
-   1,                i=1
-   1,      2,        i=2,3
-   1,  3,  2,  3,    i=4,5,6,7
-   1,4,3,5,2,5,3,4,  i=8,9,...,15
+   0,                    i=0
+   1,                    i=1
+   1,      2,            i=2 to 3
+   1,  3,  2,  3,        i=4 to 7
+   1,4,3,5,2,5,3,4,      i=8 to 15
 
 For example the i=4 row is a copy of the preceding values 1,2 with sums 1+2
 and 2+1 interleaved.  The value at the end of each row is the sum of the
 last of the previous row and the first of the current row (which is
 always 1).
+
+=head2 Odd and Even
+
+The sequence makes a repeating pattern even,odd,odd,
+
+    0, 1, 1, 2, 1, 3, 2, 3
+    E  O  O  E  O  O  E ...
+
+This can be seen from the copying in the recurrence above.  For example the
+i=8 to 15 row copying to i=16 to 31,
+
+    O . E . O . O . E . O . O . E .      spread
+      O   O   E   O   O   E   O   O      sum adjacent
+
+Adding adjacent terms odd+even and even+odd are both odd and odd+odd gives
+even, so the pattern EOO in the original row spread and added gives EOO
+again in the next row.
+
+=cut
+
+# OEOOEO
+#  O O E O E
+
+=pod
 
 =head1 FUNCTIONS
 

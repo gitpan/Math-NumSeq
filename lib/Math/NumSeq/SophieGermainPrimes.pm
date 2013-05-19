@@ -21,7 +21,7 @@ use strict;
 use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 
 use Math::NumSeq;
 use Math::NumSeq::Primes;
@@ -110,8 +110,8 @@ Math::NumSeq::SophieGermainPrimes -- Sophie Germain primes p and 2*p+1 prime
 
 The primes P for which 2*P+1 is also prime,
 
-    # starting i=1
     2, 3, 5, 11, 23, 29, 41, 53, 83, 89, 113, 131, 173, 179, ...
+    starting i=1
 
 =cut
 

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
 
@@ -52,6 +52,8 @@ use constant characteristic_integer => 1;
 #
 use constant oeis_anum => 'A000129'; # pell
 
+
+#------------------------------------------------------------------------------
 # the biggest f0 for which both f0 and f1 fit into a UV, and which therefore
 # for the next step will require BigInt
 #
@@ -178,8 +180,13 @@ Math::NumSeq::Pell -- Pell numbers
 The Pell numbers
 
     0, 1, 2, 5, 12, 29, 70, ...
+    starting i=0
 
-where P(k)=2*P(k-1)+P(k-2), starting from i=0 values P(0)=0 and P(1)=1.
+where
+
+    P(k) = 2*P(k-1) + P(k-2)
+
+starting from i=0 values P(0)=0 and P(1)=1.
 
 =head1 FUNCTIONS
 
@@ -217,6 +224,23 @@ Return true if C<$value> is a Pell number.
 Return an estimate of the i corresponding to C<$value>.
 
 =back
+
+=head1 FORMULAS
+
+=head2 Value to i Estimate
+
+The Pell numbers are a Lucas sequence and are a power
+
+           (1+sqrt(2))^i - (1-sqrt(2))^i
+    P(i) = -----------------------------      exactly
+                   2*sqrt(2)
+
+Since abs(1-sqrt(2)) E<lt> 1 that term approaches zero, so taking logs the
+rest gives i roughly
+
+         log(value) + log(2*sqrt(2))
+    i ~= ---------------------------
+              log(1+sqrt(2))
 
 =head1 SEE ALSO
 

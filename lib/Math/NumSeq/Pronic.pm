@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 59;
+$VERSION = 60;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -123,8 +123,8 @@ Math::NumSeq::Pronic -- pronic numbers
 
 The pronic numbers i*(i+1),
 
-    # starting i=0
     0, 2, 6, 12, 20, 30, ...
+    starting i=0
 
 These are twice the triangular numbers, and half way between the perfect
 squares.

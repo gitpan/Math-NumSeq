@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012, 2013 Kevin Ryde
+# Copyright 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,13 +20,13 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 16;
+plan tests => 42;
 
 use lib 't';
 use MyTestHelpers;
 MyTestHelpers::nowarnings();
 
-use Math::NumSeq::ErdosSelfridgeClass;
+use Math::NumSeq::LucasNumbers;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -37,16 +37,16 @@ use Math::NumSeq::ErdosSelfridgeClass;
 
 {
   my $want_version = 60;
-  ok ($Math::NumSeq::ErdosSelfridgeClass::VERSION, $want_version,
+  ok ($Math::NumSeq::LucasNumbers::VERSION, $want_version,
       'VERSION variable');
-  ok (Math::NumSeq::ErdosSelfridgeClass->VERSION,  $want_version,
+  ok (Math::NumSeq::LucasNumbers->VERSION,  $want_version,
       'VERSION class method');
 
-  ok (eval { Math::NumSeq::ErdosSelfridgeClass->VERSION($want_version); 1 },
+  ok (eval { Math::NumSeq::LucasNumbers->VERSION($want_version); 1 },
       1,
       "VERSION class check $want_version");
   my $check_version = $want_version + 1000;
-  ok (! eval { Math::NumSeq::ErdosSelfridgeClass->VERSION($check_version); 1 },
+  ok (! eval { Math::NumSeq::LucasNumbers->VERSION($check_version); 1 },
       1,
       "VERSION class check $check_version");
 }
@@ -56,37 +56,64 @@ use Math::NumSeq::ErdosSelfridgeClass;
 # characteristic(), i_start(), parameters
 
 {
-  my $seq = Math::NumSeq::ErdosSelfridgeClass->new;
-  ok ($seq->i_start, 1, 'i_start()');
-
+  my $seq = Math::NumSeq::LucasNumbers->new;
   ok ($seq->characteristic('digits'), undef, 'characteristic(digits)');
-  ok ($seq->characteristic('smaller'), 1, 'characteristic(smaller)');
+  ok (! $seq->characteristic('smaller'), 1, 'characteristic(smaller)');
   ok (! $seq->characteristic('count'), 1, 'characteristic(count)');
   ok ($seq->characteristic('integer'), 1, 'characteristic(integer)');
 
-  ok (! $seq->characteristic('increasing'), 1,
+  ok ($seq->characteristic('increasing'), 1,
       'characteristic(increasing)');
-  ok (! $seq->characteristic('non_decreasing'), 1,
+  ok ($seq->characteristic('non_decreasing'), 1,
       'characteristic(non_decreasing)');
 
-  ok ($seq->characteristic('increasing_from_i'), undef,
+  ok ($seq->characteristic('increasing_from_i'), $seq->i_start,
       'characteristic(increasing_from_i)');
-  ok ($seq->characteristic('non_decreasing_from_i'), undef,
+  ok ($seq->characteristic('non_decreasing_from_i'), $seq->i_start,
       'characteristic(non_decreasing_from_i)');
+
+  ok ($seq->i_start, 1, 'i_start()');
 
   my @pnames = map {$_->{'name'}} $seq->parameter_info_list;
   ok (join(',',@pnames),
-      'p_or_m,on_values');
+      '');
+}
+
+#------------------------------------------------------------------------------
+# negative ith()
+
+{
+  my $seq = Math::NumSeq::LucasNumbers->new;
+  my $l1 = $seq->ith(2);
+  my $l0 = $seq->ith(1);
+  for (my $i = 0; $i > -10; $i--) {
+    my $l = $seq->ith($i);
+    ok ($l + $l0, $l1);
+    $l1 = $l0;
+    $l0 = $l;
+  }
 }
 
 
 #------------------------------------------------------------------------------
-# ith()
+# docs claim L[i] = F[i+1] + F[i-1]
+#                 = F[i+2] - F[i-2]
 
 {
-  my $seq = Math::NumSeq::ErdosSelfridgeClass->new;
-  ok ($seq->ith(2677), 4, 'POD docs p=2677');
-  ok ($seq->ith(3847), 4, 'POD docs p=3847');
+  require Math::NumSeq::Fibonacci;
+  my $fib = Math::NumSeq::Fibonacci->new;
+  my $luc = Math::NumSeq::LucasNumbers->new;
+  for (my $i = 3; $i < 12; $i++) {
+    my $l = $luc->ith($i);
+    {
+      my $fsum = $fib->ith($i+1) + $fib->ith($i-1);
+      ok ($fsum, $l);
+    }
+    if ($i >= 2) {
+      my $fdiff = $fib->ith($i+2) - $fib->ith($i-2);
+      ok ($fdiff, $l);
+    }
+  }
 }
 
 exit 0;

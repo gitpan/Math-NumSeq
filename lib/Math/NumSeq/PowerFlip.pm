@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -159,8 +159,8 @@ factorization.
 
 which gives
 
-    # starting i=1
     1, 1, 1, 4, 1, 1, 1, 9, 8, 1, 1, 4, 1, 1, 1, 16, 1, 8, 1, 4, ...
+    starting i=1
 
 For example i=1000=2^3*5^3 becomes value=3^2*3^5=3^7=2187.
 

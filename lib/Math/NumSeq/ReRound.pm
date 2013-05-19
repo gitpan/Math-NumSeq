@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 59;
+$VERSION = 60;
 
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IterateIth;
@@ -283,8 +283,8 @@ Math::NumSeq::ReRound -- sequence from repeated rounding up
 This is the sequence of values formed by repeatedly rounding up to a
 multiple of i-1, i-2, ..., 2, 1.
 
-    # starting i=1
     1, 2, 4, 6, 10, 12, 18, 22, 30, 34, 42, 48, 58, 60, 78, ...
+    starting i=1
 
 For example i=5 start at 5, round up to a multiple of 4 to give 8, then
 round up to a multiple of 3 to give 9, then round up to a multiple of 2 to

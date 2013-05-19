@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -40,7 +40,10 @@ WriteMakefile
 
                     'Module::Util' => 0,
                     'Module::Load' => 0,
-                    'Module::Pluggable' => 0,
+
+                    # 4.7 no core removal warns, which was a ridiculous way
+                    # to communicate to developers
+                    'Module::Pluggable' => 4.7,
 
                     # only for testing
                     'Test' => 0,

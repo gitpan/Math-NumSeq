@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 59;
+$VERSION = 60;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -348,8 +348,8 @@ Math::NumSeq::Factorials -- factorials i! = 1*2*...*i
 
 The factorials being product 1*2*3*...*i, 1 to i inclusive.
 
-    # starting i=1
-    1, 2, 6, 24, 120, ...
+    1, 2, 6, 24, 120, 720, ...
+    starting i=1
 
 =head1 FUNCTIONS
 

@@ -27,7 +27,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -129,8 +129,8 @@ Math::NumSeq::MephistoWaltz -- Mephisto waltz sequence
 
 The Mephisto waltz sequence, being the mod 2 count of ternary digit 2s in i.
 
-    # starting i=0
     0,0,1, 0,0,1, 1,1,0, ...
+    starting i=0
 
 i=0 has no 2s so value=0, and likewise i=1 value=0.  Then i=2 has one 2 so
 value=1.

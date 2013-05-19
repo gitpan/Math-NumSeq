@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 15;
+plan tests => 16;
 
 use lib 't','xt';
 use MyTestHelpers;
@@ -30,8 +30,65 @@ use MyOEIS;
 use Math::NumSeq::FibonacciWord;
 
 # uncomment this to run the ### lines
-#use Smart::Comments '###';
+# use Smart::Comments '###';
 
+
+#------------------------------------------------------------------------------
+# cf A178992 - fib word sub-strings which occur, written in decimal
+
+#    0, 1, 2, 3, 5, 6, 10, 11, 13, 21, 22, 26, 27, 43, 45, 53, 54, 86, 90,
+# 0 1 10 11
+# 101
+# 110
+# 1010
+# 1011
+# 1101
+# 10101
+# 10110
+# 11010
+# 11011
+# 101011
+# 101101
+# 110110
+# 1010110
+#     1 0 1 1 0 1 0 1 1 0 1 1 0 1 0 1 1 0 1 0 1 1 0 1
+
+MyOEIS::compare_values
+  (anum => 'A178992',
+   func => sub {
+     my ($count) = @_;
+     my $seq  = Math::NumSeq::FibonacciWord->new;
+     my @got = (0);
+     for (my $len = 1; @got < $count; $len++) {
+       my %seen;
+       my $seen = 0;
+       $seq->rewind;
+       my $str = '';
+       foreach (1 .. $len) {
+         my ($i, $value) = $seq->next;
+         $value ^= 1;
+         $str .= $value;
+       }
+       foreach (1 .. 2*$len+10) {
+         my $decimal = Math::BigInt->new("0b$str")->bstr;
+         if ($str =~ /^1/) {
+           $seen{$decimal} = 1;
+         }
+         my ($i, $value) = $seq->next;
+         $value ^= 1;
+         $str .= $value;
+         $str = substr($str,1,$len);
+         ### $value
+         ### $str
+       }
+       foreach my $decimal (sort {$a<=>$b} keys %seen) {
+         push @got, $decimal;
+         last unless @got < $count;
+         ### push: "len=$len decimal=$decimal"
+       }
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 # A089910 - positions of 1,1 in inverse, which is 0,0 in plain

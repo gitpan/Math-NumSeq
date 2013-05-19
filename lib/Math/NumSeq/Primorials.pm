@@ -21,7 +21,7 @@ use strict;
 use Math::Prime::XS;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -174,8 +174,8 @@ Math::NumSeq::Primorials -- primorials 2*3*...*p[i]
 The sequence of primorials, being the product of the first i many primes,
 2*3*5*...*p[i].
 
-    # starting i=0
     1, 2, 6, 30, 210, ...
+    starting i=0
 
 =head1 FUNCTIONS
 

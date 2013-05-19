@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 883 A-numbers in 114 modules
+# total 884 A-numbers in 114 modules
 
 use constant info_arrayref =>
 [
@@ -2513,6 +2513,14 @@ use constant info_arrayref =>
   {
     'anum' => 'A000204',
     'class' => 'Math::NumSeq::LucasNumbers'
+  },
+  {
+    'anum' => 'A000032',
+    'class' => 'Math::NumSeq::LucasNumbers',
+    'parameters' => [
+      'i_start',
+      0
+    ]
   },
   {
     'anum' => 'A000959',

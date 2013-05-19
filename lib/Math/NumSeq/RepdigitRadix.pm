@@ -25,7 +25,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -310,8 +310,8 @@ Math::NumSeq::RepdigitRadix -- radix in which i is a repdigit
 
 The radix in which i is a repdigit,
 
-    # starting i=0
     2, 0, 0, 2, 3, 4, 5, 2, 3, 8, 4, 10, etc
+    starting i=0
 
 i=0 is taken to be a repdigit "00" in base 2.  i=1 and i=2 are not repdigits
 in any radix.  Then i=3 is repdigit "11" in base 2.  Any iE<gt>=3 is at

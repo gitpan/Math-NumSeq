@@ -40,7 +40,7 @@ use strict;
 use Math::Prime::XS 'is_prime';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -191,8 +191,8 @@ Math::NumSeq::PisanoPeriod -- cycle length of Fibonacci numbers mod i
 
 This is the length cycle of Fibonacci numbers modulo i.
 
-    # starting i=1
     1, 3, 8, 6, 20, 24, 16, 12, 24, 60, 10, 24, 28, 48, 40, ...
+    starting i=1
 
 For example Fibonacci numbers modulo 4 repeat in a cycle of 6 numbers, so
 value=6.

@@ -45,6 +45,22 @@ POSIX::setlocale(POSIX::LC_ALL(), 'C'); # no message translations
 #use Smart::Comments '###';
 
 
+sub want_anum {
+  my ($anum) = @_;
+  # return 0 unless $anum =~ /A183148/;
+  # return 0 unless $anum =~ /A151922|A183060/;
+  # return 0 unless $anum =~ /A177702|A102283|A131756/;
+  return 1;
+}
+sub want_module {
+  my ($module) = @_;
+   return 0 unless $module =~ /Lucas/;
+  return 1;
+}
+
+
+#------------------------------------------------------------------------------
+
 use constant DBL_INT_MAX => (POSIX::FLT_RADIX() ** POSIX::DBL_MANT_DIG());
 use constant MY_MAX => (POSIX::FLT_RADIX() ** (POSIX::DBL_MANT_DIG()-5));
 
@@ -127,25 +143,8 @@ sub check_class {
 
 
   # skip all except ...
-  #
-  # return unless $class =~ /Pisano/;
-  # return unless $class =~ /PrimeIndex/;
-  # return unless $class =~ /FibbinaryBit/;
-  # return unless $class =~ /RadixWithout/;
-  # return unless $class =~ /FactorCount/;
-  # return unless $class =~ /DigitSumModulo/;
-  # return unless $class =~ /Luc|Fib|Cullen|Wood/;
-  # return unless $class =~ /Lucas/;
-  # return unless $class =~ /RadixWithout/;
-  # return unless $class =~ /Duf/;
-  # return unless $class =~ /SqrtD/;
-  # return unless $class =~ /Power/;
-  # return unless $class =~ /Repdigit/;
-  # return unless $class =~ /PowerF/;
-  # return unless $class =~ /PrimesD/;
-  # return unless $class =~ /LeastP/;
-  # return unless $class =~ /Bal/;
-  # return unless $anum eq 'A000108';
+  return unless want_module($class);
+  return unless want_anum($anum);
 
   eval "require $class" or die;
 

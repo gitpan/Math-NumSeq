@@ -24,7 +24,7 @@ use Math::NumSeq;
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
@@ -182,8 +182,8 @@ Math::NumSeq::MaxDigitCount -- maximum count of a given digit in any radix
 This is the maximum count of a given digit which occurs when i is written in
 any radix.  The default digit is 0.
 
-    # starting i=1
     0, 1, 1, 2, 1, 1, 1, 3, 2, 2, 1, 2, 1, 1, 1, 4, 3, 3, 2, ...
+    starting i=1
 
 For example i=15 is 1 because 15 = ternary "120" which has 1 zero, and no
 other base has more than that.  i is "10" in base i itself so there's always

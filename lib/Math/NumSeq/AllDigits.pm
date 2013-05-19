@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
 
@@ -260,9 +260,8 @@ Math::NumSeq::AllDigits -- digits of the integers
 
 This sequence is the digits of the integers 0, 1, 2, etc,
 
-    # starting i=0
-    0,1,2,3,4,5,6,7,8,9,
-    1,0, 1,1, 1,2, 1,3, 1,4, 1,5, 1,6,...
+    0,1,2,3,4,5,6,7,8,9, 1,0, 1,1, 1,2, 1,3, 1,4, 1,5, 1,6,...
+    starting i=0
 
 The default is decimal, or the C<radix> parameter can select another base.
 
@@ -281,7 +280,7 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =item C<$seq = Math::NumSeq::Digit-E<gt>new ()>
 
-=item C<$seq = Math::NumSeq::Digit-E<gt>new (radix =E<gt> $r, order =E<gt> $o)>
+=item C<$seq = Math::NumSeq::Digit-E<gt>new (radix =E<gt> $radix, order =E<gt> $str)>
 
 Create and return a new sequence object.
 

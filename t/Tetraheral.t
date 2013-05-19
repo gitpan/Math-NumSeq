@@ -33,7 +33,7 @@ use Math::NumSeq::Tetrahedral;
 # VERSION
 
 {
-  my $want_version = 59;
+  my $want_version = 60;
   ok ($Math::NumSeq::Tetrahedral::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::Tetrahedral->VERSION,  $want_version,

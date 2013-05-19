@@ -36,7 +36,7 @@ use Math::NumSeq::OEIS;
 # VERSION
 
 {
-  my $want_version = 59;
+  my $want_version = 60;
   ok ($Math::NumSeq::OEIS::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::OEIS->VERSION, $want_version,

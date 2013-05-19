@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -234,11 +234,11 @@ Math::NumSeq::FibonacciWord -- 0/1 related to Fibonacci numbers
 
 This is a sequence of 0s and 1s formed from the Fibonacci numbers.
 
-    # starting i=0
     0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, ...
+    starting i=0
 
-The initial values are 0,1 then Fibonacci number F(k) many values are copied
-from the start to extend, so
+The initial values are 0,1.  Then Fibonacci number F(k) many values are
+copied from the start to extend, repeatedly.
 
     0,1                                         initial
     0,1,0                                       append 1 value
@@ -260,9 +260,9 @@ The same sequence is had by starting with 0 and then repeatedly expanding
 The result is also the Fibbinary numbers modulo 2, which is the least
 significant bit of the Zeckendorf base representation of i.
 
-The Zeckendorf base breakdown works backwards from the above expansion.  It
-subtracts Fibonacci numbers F(k) until reaching 0 or 1.  (See
-L<Math::NumSeq::Fibbinary/Zeckendorf Base>.)
+The Zeckendorf base breakdown subtracts Fibonacci numbers F(k) until
+reaching 0 or 1.  This effectively undoes the above append to expand
+procedure.  (See L<Math::NumSeq::Fibbinary/Zeckendorf Base>.)
 
     start at i
     until i=0 or i=1 do
@@ -270,9 +270,9 @@ L<Math::NumSeq::Fibbinary/Zeckendorf Base>.)
 
     final resulting i=0 or i=1 is Fibonacci word value
 
-For example i=11 has largest Fibonacci E<lt>= 11 is 8, subtract that to
-leave 3.  From 3 the largest Fibonacci E<lt>= 3 is 3 itself, subtract that
-to leave 0 which is the Fibonacci word value for i=11.
+For example i=11 has largest FibonacciE<lt>=11 is 8, subtract that to
+leave 3.  From 3 the largest FibonacciE<lt>=3 is 3 itself, subtract that to
+leave 0 which is the Fibonacci word value for i=11.
 
 =head2 Dense Fibonacci Word
 
@@ -281,7 +281,8 @@ word
 
     1,0,2,2,1,0,2,2,1,1,0,2,1,1,...
 
-This is the above plain word taken two values at a time encoded as
+This is the above plain word with each two values (not overlapping) encoded
+in a binary style as
 
     plain pair   dense value
         0,0           0
@@ -320,8 +321,8 @@ Return the C<$i>'th value in the sequence.  The first value is at i=0.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value> occurs in the sequence, which simply means 0 or 1,
-or for the dense Fibonacci word 0, 1 or 2.
+Return true if C<$value> occurs in the sequence, which simply means 0 or 1.
+Or for the dense Fibonacci word 0, 1 or 2.
 
 =back
 

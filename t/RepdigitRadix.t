@@ -36,7 +36,7 @@ use Math::NumSeq::RepdigitRadix;
 # VERSION
 
 {
-  my $want_version = 59;
+  my $want_version = 60;
   ok ($Math::NumSeq::RepdigitRadix::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::RepdigitRadix->VERSION,  $want_version,

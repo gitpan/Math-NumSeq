@@ -28,7 +28,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -377,8 +377,8 @@ Math::NumSeq::Fibbinary -- without consecutive 1-bits
 
 This sequence is the fibbinary numbers
 
-     # starting i=0
      0, 1, 2, 4, 5, 8, 9, 10, 16, 17, 18, 20, 21, 32, 33, 34, ...
+     starting i=0
 
 being integers which have no adjacent 1-bits when written in binary, taken
 in ascending order.

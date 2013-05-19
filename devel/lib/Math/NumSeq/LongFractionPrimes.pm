@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -219,8 +219,8 @@ I<In progress ...>
 This is the primes for which fraction 1/p written out in decimal has digits
 repeating in period p-1.
 
-    # starting i=1 for prime=2
     2, 3, 7, 17, 19, 23, 29, 47, 59, 61, 97, 109, 113, 131, ...
+    starting i=1 for prime=2
 
 For example 1/7=0.142857142857142857... is runs of 7-1=6 repeating digits
 "142857", so 7 is in the sequence.  On the other hand 1/11=0.09090909... is

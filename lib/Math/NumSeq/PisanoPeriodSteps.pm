@@ -27,7 +27,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -212,8 +212,8 @@ Math::NumSeq::PisanoPeriodSteps -- Fibonacci frequency and Leonardo logarithm
 This is the number of times the C<PisanoPeriod> must be applied before
 reaching an unchanging value.
 
-    # starting i=1
     0, 4, 3, 2, 3, 1, 2, 2, 1, 2, 3, 1, 3, 2, 3, 1, 2, 1, 2, ...
+    starting i=1
 
 X<Fulton, D.>X<Morris, W.L.>As per Fulton and Morris
 
@@ -239,8 +239,8 @@ The unchanging period reached is always of the form
 The "l" exponent is the Leonardo logarithm.  Option C<values_type =E<gt>
 "log"> returns that as the sequence values.
 
-    # starting i=1
     0, 1, 1, 1, 2, 1, 1, 1, 1, 2, 2, 1, 1, 1, 2, 1, 1, 1, 1, 2, 1, ...
+    starting i=1
 
 For example the i=5 above ends at m=120=24*5^1 so l-1=1 is l=2 for the
 sequence value.

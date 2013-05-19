@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -118,7 +118,10 @@ Math::NumSeq::Odd -- odd integers
 
 =head1 DESCRIPTION
 
-The odd integers 1, 3, 5, 7, etc.
+The odd integers
+
+    1, 3, 5, 7, 9, 11, ...
+    starting i=0
 
 =head1 FUNCTIONS
 

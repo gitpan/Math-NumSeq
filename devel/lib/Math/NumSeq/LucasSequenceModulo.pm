@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -162,8 +162,8 @@ Math::NumSeq::LucasSequenceModulo -- number of applications of the PisanoPeriod 
 This is the number of times the PisanoPeriod must be applied before reaching
 an unchanging value.
 
-    # starting i=1
     0, 4, 3, 2, 3, 1, 2, 2, 1, 2, 3, 1, 3, 2, 3, 1, 2, 1, 2, ...
+    starting i=1
 
 Per Fulton and Morris, repeatedly applying the PisanoPeriod eventually
 reaches a value m which has PisanoPeriod(m)==m.  For example i=5 goes

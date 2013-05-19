@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 111;
+plan tests => 121;
 
 use lib 't';
 use MyTestHelpers;
@@ -35,7 +35,7 @@ use Math::NumSeq::Fibonacci;
 # VERSION
 
 {
-  my $want_version = 59;
+  my $want_version = 60;
   ok ($Math::NumSeq::Fibonacci::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::Fibonacci->VERSION,  $want_version,
@@ -48,6 +48,22 @@ use Math::NumSeq::Fibonacci;
   ok (! eval { Math::NumSeq::Fibonacci->VERSION($check_version); 1 },
       1,
       "VERSION class check $check_version");
+}
+
+
+#------------------------------------------------------------------------------
+# negative ith()
+
+{
+  my $seq = Math::NumSeq::Fibonacci->new;
+  my $f1 = $seq->ith(2);
+  my $f0 = $seq->ith(1);
+  for (my $i = 0; $i > -10; $i--) {
+    my $f = $seq->ith($i);
+    ok ($f + $f0, $f1, "i=$i  $f+$f0 should be $f1");
+    $f1 = $f0;
+    $f0 = $f;
+  }
 }
 
 

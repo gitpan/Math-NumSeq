@@ -21,7 +21,7 @@ use strict;
 use List::Util 'min';
 
 use vars '$VERSION','@ISA';
-$VERSION = 59;
+$VERSION = 60;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IteratePred;
 @ISA = ('Math::NumSeq::Base::IteratePred',
@@ -262,8 +262,9 @@ The default is "some" and power=2, which means there must be some prime
 factor which is a square or higher,
 
     # default powerful_type="some" power=2
-    # starting i=1
+
     4, 8, 9, 12, 16, 18, 20, ...
+    starting i=1
 
 These are the non-squarefrees.  The squarefrees have no square factor, and
 these non-squarefrees have at least one square factor.  (Sometimes this is

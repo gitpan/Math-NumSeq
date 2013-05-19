@@ -22,7 +22,7 @@ use POSIX ();
 use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -217,8 +217,8 @@ Math::NumSeq::Primes -- prime numbers
 
 The prime numbers, not divisible by anything except themselves and 1.
 
-    # starting i=1
     2, 3, 5, 7, 11, 13, 17, 19, ...
+    starting i=1
 
 Currently this is implemented with C<Math::Prime::XS> generating blocks of
 primes with a sieve of Eratosthenes.  The result is reasonably progressive.

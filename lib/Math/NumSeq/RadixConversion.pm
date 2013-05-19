@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -285,8 +285,8 @@ Math::NumSeq::RadixConversion -- radix conversion
 This sequence is the index i converted from one radix to another.  The
 default is from binary to decimal,
 
-    # starting i=0
     0, 1, 10, 11, 100, 101, 110, 111, 1000, 1001, 1010, 1011, ...
+    starting i=0
 
 For example i=3 in binary is 0b11 which is interpreted as decimal for value
 11, ie. eleven.

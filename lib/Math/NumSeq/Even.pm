@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -119,7 +119,10 @@ Math::NumSeq::Even -- even integers
 
 =head1 DESCRIPTION
 
-The even integers 0,2,4,6,8, etc.
+The even integers,
+
+    0, 2, 4, 6, 8, 10, ...
+    starting i=0
 
 =head1 FUNCTIONS
 

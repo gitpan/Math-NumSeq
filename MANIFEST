@@ -305,6 +305,7 @@ t/FractionDigits.t
 t/GolayRudinShapiroCumulative.t
 t/GolombSequence.t
 t/HofstadterFigure.t
+t/LucasNumbers.t
 t/LuckyNumbers.t
 t/MephistoWaltz.t
 t/MobiusFunction.t

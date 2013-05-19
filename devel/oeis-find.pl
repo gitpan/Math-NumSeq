@@ -47,13 +47,17 @@ sub want_planepath {
   # return 0 unless $planepath =~ /SierpinskiArrowheadC/;
   # return 0 unless $planepath =~ /TriangleSpiralSkewed/;
   # return 0 unless $planepath =~ /^Rows/;
-  # return 0 unless $planepath =~ /DiagonalRationals/;
+  # return 0 unless $planepath =~ /Pythag/;
+  # return 0 unless $planepath =~ /Ulam/;
+
+  return 0 if $planepath =~ /ByCells/; # exclude
   return 1;
 }
 sub want_coordinate {
   my ($type) = @_;
-  # return 0 unless $type =~ /IntXY/;
-  return 0 unless $type =~ /dSum/;
+  # return 0 unless $type =~ /Parity/;
+  # return 0 unless $type =~ /Depth/;
+   return 0 unless $type =~ /Surround/;
   return 1;
 }
 

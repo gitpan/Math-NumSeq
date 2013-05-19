@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 59;
+$VERSION = 60;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -132,8 +132,8 @@ Math::NumSeq::Triangular -- triangular numbers
 
 The triangular numbers i*(i+1)/2,
 
-    # starting i=0
     0, 1, 3, 6, 10, 15, 21, 28, ...
+    starting i=0
 
 The numbers are how many points are in an equilateral triangle of side i,
 

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 59;
+$VERSION = 60;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -242,11 +242,12 @@ The sequence values are each successive a[i].  For example sqrt(2)
 
 is
 
-    # starting i=1
     1, 3, 5, 5, 16, etc
+    starting i=1
 
-For a perfect square the expansion is a finite 1s sequence adding up to the
-root.  This works, but is unlikely to be interesting.
+For a perfect square the expansion is a finite sequence of 1s adding up to
+the root.  This is unlikely to be interesting, but works as a C<$seq>
+sequence..
 
     sqrt(perfect square) = 1/1 + 1/1 + ... + 1/1
 
