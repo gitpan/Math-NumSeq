@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -33,58 +33,26 @@ use Math::NumSeq::Beastly;
 #use Smart::Comments '###';
 
 
-sub numeq_array {
-  my ($a1, $a2) = @_;
-  if (! ref $a1 || ! ref $a2) {
-    return 0;
-  }
-  my $i = 0;
-  while ($i < @$a1 && $i < @$a2) {
-    if ($a1->[$i] ne $a2->[$i]) {
-      return 0;
-    }
-    $i++;
-  }
-  return (@$a1 == @$a2);
-}
-
-
 #------------------------------------------------------------------------------
 # A131645 beastly primes (decimal)
 
-{
-  my $anum = 'A131645';
-
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my @got;
-  if ($bvalues) {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-    if ($#$bvalues > 1000) {
-      $#$bvalues = 1000;
-      MyTestHelpers::diag ("  shorten to ",scalar(@$bvalues)," values");
-    }
-
-    my $beastly = Math::NumSeq::Beastly->new;
-    require Math::NumSeq::Primes;
-    my $primes  = Math::NumSeq::Primes->new;
-
-    while (@got < @$bvalues) {
-      my ($i, $value) = $primes->next;
-      if ($beastly->pred($value)) {
-        push @got, $value;
-      }
-    }
-    if (! numeq_array(\@got, $bvalues)) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..10]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..10]));
-    }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
-  }
-  skip (! $bvalues,
-        numeq_array(\@got, $bvalues),
-        1, "$anum -- beastly primes");
-}
+MyOEIS::compare_values
+  (anum => 'A131645',
+   max_value => 1_000_000,
+   func => sub {
+     my ($count) = @_;
+     my $beastly = Math::NumSeq::Beastly->new;
+     require Math::NumSeq::Primes;
+     my $primes  = Math::NumSeq::Primes->new;
+     my @got;
+     while (@got < $count) {
+       my ($i, $value) = $primes->next;
+       if ($beastly->pred($value)) {
+         push @got, $value;
+       }
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 exit 0;

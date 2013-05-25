@@ -26,7 +26,7 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 60;
+$VERSION = 61;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -219,7 +219,7 @@ sub ith {
     ### assert: $z >= $o
 
     if ($z > $o) {
-      ### compare: "z=".($z-1).",o=$o  num=".($num[$z-1][$o]//'undef')
+      ### compare: "z=".($z-1).",o=$o  num=".($num[$z-1][$o]||'undef')
       my $znum = $num[$z-1][$o];
       if ($i < $znum) {
         ### 0 ...
@@ -494,6 +494,13 @@ sub value_to_i_estimate {
     $log2 = log($value) * (1/log(2));
   }
   $log2 = max($log2,1);
+
+  if (ref $value && $value->isa('Math::BigInt')) {
+    # oldish BigInt doesn't like to divide BigInt/NV
+    require Math::BigFloat;
+    $value = Math::BigFloat->new($value);
+  }
+
   return max(1,
              int($value / (sqrt((3.141592/8)*$log2) * ($log2+1))));
 }
@@ -537,15 +544,15 @@ Written in binary a 1-bit is an opening "(" and a 0-bit is a closing ")".
      9   10101010   () () () ()
     10   10101100   () () (())
 
-Balanced means the total number of 1s and 0s are the same, and reading from
-high to low has count(1s) E<gt>= count(0s) at all times, ie. no closing ")"
-without a preceding matching open "(".
+Balanced means the total number of 1s and 0s are the same and reading from
+high to low has count(1s) E<gt>= count(0s) at all times, ie. any closing ")"
+must have a preceding matching open "(".
 
 Because the number of 1s and 0s are equal the width is always an even 2*w.
 The number of values with a given width is the Catalan number C(w) =
-(2w)!/(w!*(w+1)!).  For example 6-bit values are w=6/2=3 and there are C(3)
-= (2*3)!/(3!*4!) = 5 such values, being i=4 through i=8 inclusive shown
-above.
+(2w)!/(w!*(w+1)!).  For example 6-bit values w=6/2=3 gives C(3) =
+(2*3)!/(3!*4!) = 5 many such values, being i=4 through i=8 inclusive as
+shown above.
 
 =head2 Binary Trees
 
@@ -563,7 +570,7 @@ the node is 1 followed by various more 1s and 0s.  For example,
         d  
        /
   b   c   =>   11001010 [0]
-   \ /         ab  cd   ^-final zero of encoding omitted
+   \ /         ab  c d   ^-final zero of encoding omitted
     a  
 
 At "a" write 1 and recurse to write its left then right legs.  The left leg
@@ -575,7 +582,7 @@ so write 0.  The right of "c" is "d" so write 1 and the two empty legs of
 (shown "[0]" above).
 
 This encoding can be applied breadth-first too by pushing the left and right
-descents onto a queue of pending work, instead of onto a stack by recursing.
+descents onto a queue of pending work instead of onto a stack by recursing.
 In both cases there's an extra final 0 which is dropped.  This 0 arises
 because in any binary tree with K nodes there are K+1 empty legs.  That
 would give K many 1-bits and K+1 many 0-bits.

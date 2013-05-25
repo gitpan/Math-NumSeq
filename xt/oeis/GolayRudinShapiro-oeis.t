@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -72,6 +72,36 @@ sub diff_nums {
   }
   return undef;
 }
+
+#------------------------------------------------------------------------------
+# A005943 - number of subwords length n
+
+MyOEIS::compare_values
+  (anum => 'A005943',
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::GolayRudinShapiro->new (values_type => '0,1');
+     my @got;
+     for (my $len = 1; @got < $count; $len++) {
+       my $str = '';
+       my %seen;
+       foreach (1 .. $len-1) {
+         my ($i, $value) = $seq->next;
+         $str .= $value;
+       }
+       # ENHANCE-ME: how long does it take to see all the possible $len
+       # length subwords?  1000 is enough for $len=14.
+       foreach (1 .. 1000) {
+         my ($i, $value) = $seq->next;
+         $str .= $value;
+         $str = substr($str,1);
+         $seen{$str} = 1;
+       }
+       push @got, scalar(keys %seen);
+     }
+     return \@got;
+   });
+
 
 #------------------------------------------------------------------------------
 # A203531 GRS run lengths

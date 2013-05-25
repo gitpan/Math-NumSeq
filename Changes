@@ -17,6 +17,9 @@ with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 61, May 2013
+     - BalancedBinary fix value_to_i_estimate() on oldish Math::BigInt
+
 Version 60, May 2013
      - UndulatingNumbers value_to_i_floor() fixes for Math::BigInt
      - LucasNumbers new seek_to_i();

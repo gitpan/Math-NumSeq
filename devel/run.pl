@@ -192,10 +192,10 @@ $|=1;
   $values_class = 'Math::NumSeq::PlanePathDelta';
   $values_class = 'Math::NumSeq::SumPowSub1';
   $values_class = 'Math::NumSeq::PlanePathCoord';
-  $values_class = 'Math::NumSeq::PlanePathN';
   $values_class = 'Math::NumSeq::Fibonacci';
   $values_class = 'Math::NumSeq::LucasNumbers';
   $values_class = 'Math::NumSeq::PlanePathTurn';
+  $values_class = 'Math::NumSeq::PlanePathN';
 
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new
@@ -203,7 +203,7 @@ $|=1;
      # root_type => 'negative',
      # digit => 0,
      # radix => 3,
-      i_start => 1,
+     # i_start => 1,
      # modulus => 2,
 
      # of => 'Primorials',
@@ -292,8 +292,8 @@ $|=1;
      # planepath => 'Diagonals',
      # planepath => 'PythagoreanTree,coordinates=BC',
      # planepath => 'ChanTree,k=4',
-      planepath => 'SquareSpiral',
-      turn_type => 'Turn4',
+      # planepath => 'SquareSpiral',
+      # turn_type => 'Turn4',
 
      # planepath => 'CfracDigits',
      # planepath => 'RationalsTree',
@@ -302,12 +302,12 @@ $|=1;
      # planepath => 'TriangleSpiralSkewed',
      # planepath => 'SierpinskiCurve,arms=2',
      # planepath => 'ToothpickUpist',
-     # planepath => 'ToothpickTree,parts=octant',
-     # planepath => 'LCornerTree,parts=diagonal-1',
+     #planepath => 'ToothpickTreeByCells,parts=octant',
+     planepath => 'LCornerTreeByCells,parts=wedge+1',
      #  planepath => 'DigitGroups,radix=2',
      # planepath => 'CellularRule,rule=206',
      # planepath => 'QuadricIslands',
-     # line_type => 'Depth_start',
+     line_type => 'Depth_start',
      # planepath => 'WythoffArray,x_start=1,y_start=1',
      # line_type => 'X_axis',
      # line_type => 'Depth_start',

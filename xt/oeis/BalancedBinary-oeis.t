@@ -77,6 +77,23 @@ sub diff_nums {
 
 
 #------------------------------------------------------------------------------
+# A080300 - ranking, value -> i or if no such then 0
+
+MyOEIS::compare_values
+  (anum => 'A080300',
+   func => sub {
+     my ($count) = @_;
+    my $seq = Math::NumSeq::BalancedBinary->new;
+    my @got;
+
+    for (my $value = 0; @got < $count; $value++) {
+      my $i = $seq->value_to_i($value);
+      push @got, $i || 0;
+    }
+     return \@got;
+   });
+
+#------------------------------------------------------------------------------
 # A057520 - without low 0-bit, including 0
 
 MyOEIS::compare_values
@@ -492,31 +509,6 @@ sub bits_is_oneonly {
 #         $diff, undef,
 #         "$anum");
 # }
-
-#------------------------------------------------------------------------------
-# A080300 - ranking, value -> i or if no such then 0
-
-{
-  my $anum = 'A080300';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my $diff;
-  if ($bvalues) {
-    my $seq = Math::NumSeq::BalancedBinary->new;
-    my @got;
-    for (my $value = 0; @got < @$bvalues; $value++) {
-      my $i = $seq->value_to_i($value);
-      push @got, $i || 0;
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum");
-}
 
 #------------------------------------------------------------------------------
 # A085192 first diffs

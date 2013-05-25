@@ -48,7 +48,7 @@ POSIX::setlocale(POSIX::LC_ALL(), 'C'); # no message translations
 sub want_anum {
   my ($anum) = @_;
   # return 0 unless $anum =~ /A183148/;
-  # return 0 unless $anum =~ /A151922|A183060/;
+   return 0 unless $anum =~ /A005228|A030124/;
   # return 0 unless $anum =~ /A177702|A102283|A131756/;
   return 1;
 }

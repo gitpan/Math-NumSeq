@@ -41,10 +41,6 @@ WriteMakefile
                     'Module::Util' => 0,
                     'Module::Load' => 0,
 
-                    # 4.7 no core removal warns, which was a ridiculous way
-                    # to communicate to developers
-                    'Module::Pluggable' => 4.7,
-
                     # only for testing
                     'Test' => 0,
                    },
@@ -62,6 +58,10 @@ WriteMakefile
 
      recommends =>
      { 'Math::Prime::XS'  => '0.26', # v.26 for faster is_prime()
+
+       # 4.7 no core removal warns, which was a ridiculous way to
+       # communicate to developers
+       'Module::Pluggable' => 4.7,
      },
      optional_features =>
      { maximum_interoperation =>

@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -17,17 +17,52 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
-use 5.010;
+use 5.008;
 use strict;
 use warnings;
 use POSIX;
 use List::Util 'max','min';
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+# use Smart::Comments;
 
 
 
+
+{
+  # value_to_i_estimate()
+
+  # require Math::NumSeq::Catalan;
+  # # my $seq = Math::NumSeq::Catalan->new;
+  # my $seq = Math::NumSeq::Catalan->new (values_type => 'odd');
+
+  require Math::NumSeq::BalancedBinary;
+  my $seq = Math::NumSeq::BalancedBinary->new;
+
+  my $target = 2;
+  for (;;) {
+    my ($i, $value) = $seq->next;
+    if ($i >= $target) {
+      $target *= 1.1;
+
+      require Math::BigInt;
+      $value = Math::BigInt->new($value);
+
+      # require Math::BigRat;
+      # $value = Math::BigRat->new($value);
+
+      # require Math::BigFloat;
+      # $value = Math::BigFloat->new($value);
+
+      my $est_i = $seq->value_to_i_estimate($value);
+      my $factor = (ref $est_i ? $est_i->numify / $i
+                    : $est_i / $i);
+      printf "%d i_est=%d   v=%.10s  factor=%.3f\n",
+        $i, $est_i, $value, $factor;
+    }
+  }
+  exit 0;
+}
 {
   # ith()
   require Math::NumSeq::BalancedBinary;
@@ -60,36 +95,6 @@ use List::Util 'max','min';
   exit 0;
 }
 
-{
-  # value_to_i_estimate()
-
-  # require Math::NumSeq::Catalan;
-  # # my $seq = Math::NumSeq::Catalan->new;
-  # my $seq = Math::NumSeq::Catalan->new (values_type => 'odd');
-
-  require Math::NumSeq::BalancedBinary;
-  my $seq = Math::NumSeq::BalancedBinary->new;
-
-  my $target = 2;
-  for (;;) {
-    my ($i, $value) = $seq->next;
-    if ($i >= $target) {
-      $target *= 1.1;
-
-      # require Math::BigRat;
-      # $value = Math::BigRat->new($value);
-
-      # require Math::BigFloat;
-      # $value = Math::BigFloat->new($value);
-
-      my $est_i = $seq->value_to_i_estimate($value);
-      my $factor = $est_i / $i;
-      printf "%d i_est=%d   v=%.10s  factor=%.3f\n",
-        $i, $est_i, $value, $factor;
-    }
-  }
-  exit 0;
-}
 
 {
   # value_to_i_floor()
@@ -137,7 +142,7 @@ use List::Util 'max','min';
   my $count = 0;
   foreach my $aref (@num) {
     next unless $aref;
-    print join(' ',map {$count++; $_//'_'} @$aref),"\n";
+    print join(' ',map {$count++; $_||'_'} @$aref),"\n";
   }
   print "count $count\n";
   exit 0;
@@ -159,7 +164,7 @@ use List::Util 'max','min';
 
   foreach my $aref (@num) {
     next unless $aref;
-    print join(' ',map {$_//'_'} @$aref),"\n";
+    print join(' ',map {$_||'_'} @$aref),"\n";
   }
   exit 0;
 }
@@ -207,7 +212,7 @@ use List::Util 'max','min';
 
   foreach my $aref (@num) {
     next unless $aref;
-    print join(' ',map {$_//'_'} @$aref),"\n";
+    print join(' ',map {$_||'_'} @$aref),"\n";
   }
   exit 0;
 }
