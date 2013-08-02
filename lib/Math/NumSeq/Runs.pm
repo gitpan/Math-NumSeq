@@ -16,7 +16,7 @@
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
-
+#    A053615 - Nto0toN
 # cf A165162 - Nto1,N-1to1 cf A057058 making fracs A165200
 #    A010751 - runs incr then decr, up=1,down=2,up=3,down=4
 #    A055087 - runs 0toNtwice  each 0 .. N, 0 .. N,
@@ -45,7 +45,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION','@ISA';
-$VERSION = 61;
+$VERSION = 62;
 
 use Math::NumSeq 21; # v.21 for oeis_anum field
 use Math::NumSeq::Base::IterateIth;

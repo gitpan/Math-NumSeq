@@ -35,7 +35,7 @@ use Math::NumSeq::TotientCumulative;
 # VERSION
 
 {
-  my $want_version = 61;
+  my $want_version = 62;
   ok ($Math::NumSeq::TotientCumulative::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::TotientCumulative->VERSION,  $want_version,

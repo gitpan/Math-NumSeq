@@ -21,7 +21,7 @@ use strict;
 use List::Util 'sum';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 61;
+$VERSION = 62;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;

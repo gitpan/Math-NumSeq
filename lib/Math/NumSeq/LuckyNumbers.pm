@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 61;
+$VERSION = 62;
 
 use Math::NumSeq 7; # v.7 for _is_infinite()
 @ISA = ('Math::NumSeq');

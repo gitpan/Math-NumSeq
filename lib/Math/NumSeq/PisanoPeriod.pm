@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
+
 # Mark Renault
 # http://www.math.temple.edu/~renault/fibonacci/fib.html
 # http://www.math.temple.edu/~renault/fibonacci/thesis.ps
@@ -32,7 +33,7 @@
 # Andreas-Stephan Elsenhans and Jorg Jahnel
 # http://www.uni-math.gwdg.de/tschinkel/gauss/Fibon.pdf
 # through to 10^14
-#
+
 
 package Math::NumSeq::PisanoPeriod;
 use 5.004;
@@ -40,7 +41,7 @@ use strict;
 use Math::Prime::XS 'is_prime';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 61;
+$VERSION = 62;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;

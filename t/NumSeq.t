@@ -127,6 +127,10 @@ foreach my $elem
    # Ln2Bits.pm
    # PiBits.pm
 
+   [ 'Math::NumSeq::BalancedBinary',
+     [ 2, 10, 12, 42, 44, 50, 52, 56, 170, 172, 178, ],
+   ],
+
    [ 'Math::NumSeq::UndulatingNumbers', # with a!=b
      [ ternary(0),ternary(1),ternary(2),
        ternary(10),            ternary(12),
@@ -258,10 +262,6 @@ foreach my $elem
 
    [ 'Math::NumSeq::MobiusFunction',
      [ 1, -1, -1, 0, -1, 1, ],
-   ],
-
-   [ 'Math::NumSeq::BalancedBinary',
-     [ 2, 10, 12, 42, 44, 50, 52, 56, 170, 172, 178, ],
    ],
 
    [ 'Math::NumSeq::Catalan',

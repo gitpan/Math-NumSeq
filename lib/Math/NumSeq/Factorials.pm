@@ -15,12 +15,17 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
+
+# http://www.luschny.de/math/factorial/approx/SimpleCases.html
+#
+
+
 package Math::NumSeq::Factorials;
 use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 61;
+$VERSION = 62;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -262,6 +267,7 @@ sub _UNTESTED__value_to_i_ceil {
 #--------
 # Stirling
 # n! ~= sqrt(2pi*n) * binomial(n,e)^n
+# n! ~= sqrt(2*Pi) * n^(n+1/2) / e^n
 # log(i!) ~= i*log(i) - i
 #
 # f(x) = x*log(x) - x - t
@@ -417,7 +423,7 @@ by seeking an i for which the target factorial "value" has
 Newton's method is applied to solve for i,
 
     target=log(value)
-    f(x) = x*log(x) - x - target,     wanting f(x)=0
+    f(x) = x*log(x) - x - target      wanting f(x)=0
     f'(x) = log(x)
 
     iterate next_x = x - f(x)/f'(x)
@@ -428,7 +434,7 @@ Just two iterations is quite close
     target = log(value)
     i0 = target
     i1 = (i0+target)/log(target)
-       = 2t/log(target)
+       = 2*target/log(target)
     i2 = (i1+target)/log(i1)
 
     i ~= int(i2)

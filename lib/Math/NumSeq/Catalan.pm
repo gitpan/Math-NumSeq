@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 61;
+$VERSION = 62;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -327,9 +327,13 @@ sub ith {
 
 
 #--------
-# Stirling
+# Stirling approximation to n!
 # n! ~= sqrt(2pi*n) * binomial(n,e)^n
 # log(i!) ~= i*log(i) - i
+#
+# noted by Dan Fux in A000108 gives
+#   C(n) ~= 4^n / (sqrt(pi*n)*(n+1))
+# 
 # log((2i)!/(i!(i+1)!))
 #    ~= (2i*log(2i) - 2i) - (i*log(i) - i) - ((i+1)*log(i+1) - i+1)
 #     = 2i*log(2i) - 2i - i*log(i) + i - (i+1)*log(i+1) + i+1
@@ -470,9 +474,17 @@ Return the C<$i>'th value.
 
 Return an estimate of the i corresponding to C<$value>.
 
-The current code is based on C(n) ~= 4^n / (sqrt(pi*n)*(n+1)), but
-estimating simply i=log4(value) since the 4^n term dominates for medium to
-large C<$value> (for both plain and "odd").
+The current code is based on
+
+    C(n) ~= 4^n / (sqrt(pi*n)*(n+1))
+
+but ignoring the denominator there and so simply taking
+
+    C(n) ~= 4^n
+    hence i ~= log4(value)
+
+The 4^n term dominates for medium to large C<$value> (for both plain and
+"odd").
 
 =back
 

@@ -30,7 +30,7 @@ use List::Util qw(min max sum reduce);
 use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 use vars '$VERSION', '@ISA';
-$VERSION = 61;
+$VERSION = 62;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;

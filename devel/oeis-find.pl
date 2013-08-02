@@ -24,6 +24,9 @@ use List::Util;
 use URI::Escape;
 use Module::Load;
 
+use lib 'xt';
+use MyOEIS;
+
 # uncomment this to run the ### lines
 # use Smart::Comments;
 
@@ -37,13 +40,13 @@ sub want_module {
 }
 sub want_planepath {
   my ($planepath) = @_;
-  # return 0 unless $planepath =~ /CellularRule/;
-  # return 0 unless $planepath =~ /Diamond/;
+  return 0 unless $planepath =~ /Knight/;
+  # return 0 unless $planepath =~ /CCurve/;
   # return 0 unless $planepath =~ /Divis|DiagonalRationals|CoprimeCol/;
-  # return 0 unless $planepath =~ /DiamondSpiral/;
-  # return 0 unless $planepath =~ /LCornerTree$/;
+  # return 0 unless $planepath =~ /HilbertCurve/;
+  # return 0 unless $planepath =~ /LCornerTree/;
   # return 0 unless $planepath =~ /LCorn|RationalsTree/;
-  # return 0 unless $planepath =~ /^Corner$/i;
+  # return 0 unless $planepath =~ /ToothpickSpiral/;
   # return 0 unless $planepath =~ /SierpinskiArrowheadC/;
   # return 0 unless $planepath =~ /TriangleSpiralSkewed/;
   # return 0 unless $planepath =~ /^Rows/;
@@ -56,8 +59,10 @@ sub want_planepath {
 sub want_coordinate {
   my ($type) = @_;
   # return 0 unless $type =~ /Parity/;
-  # return 0 unless $type =~ /Depth/;
-   return 0 unless $type =~ /Surround/;
+  # return 0 unless $type =~ /NumSiblings/;
+  # return 0 unless $type =~ /SubHeight|NumChildren|NumSibling/;
+  # return 0 unless $type =~ m{Abs[XY]};
+  # return 0 unless $type =~ m{DiffXY/2};
   return 1;
 }
 
@@ -74,7 +79,7 @@ my $module;
 </head>
 <body>
 HERE
-  
+
   my $count = 0;
   require App::MathImage::Generator;
   foreach (App::MathImage::Generator->values_choices) {
@@ -85,24 +90,32 @@ HERE
     next if $module =~ 'CunninghamPrimes'; # broken
     next if $module =~ /KaprekarNumbers/; # bit slow yet
     next unless want_module($module);
-    
+
     ### $module
     my $class = App::MathImage::Generator->values_class($module);
     print "$class\n";
-    
+
     print OUT <<HERE or die;
 <p>
 $class
 HERE
-    
+
     my $parameters = parameter_info_list_to_parameters($class->parameter_info_list);
-    
+
   PARAMETERS: foreach my $p (@$parameters) {
+      # print join(' ',@$p),"\n";
       ### $p
       my $seq = $class->new (@$p);
       next if $seq->oeis_anum;
       ### $seq
-      
+
+      if ($seq->isa('Math::NumSeq::PlanePathCoord')) {
+        next PARAMETERS if $seq->{'coordinate_type'} eq 'AbsX'
+          && ! $seq->{'planepath_object'}->x_negative;
+        next PARAMETERS if $seq->{'coordinate_type'} eq 'AbsY'
+          && ! $seq->{'planepath_object'}->y_negative;
+      }
+
       my $values = '';
       my @values;
       my (undef, $first_value) = $seq->next
@@ -130,7 +143,7 @@ HERE
       next if (@values < 5);
       ### $values
       ### @values
-      
+
       my $p_string = '';
       while (@$p) {
         $p_string .= shift(@$p) . "=" . shift(@$p);
@@ -138,21 +151,22 @@ HERE
           $p_string .= ",  ";
         }
       }
-      
+
       my $signed='';
       if (defined (List::Util::first {$_<0} @values)) {
         $signed = 'signed:';
       }
-      
+      # print "$module $p_string\n ",join(',',@values),"\n";
+
       special_values($module, $p_string, $seq, [ $first_value, @values ]);
-      
+
       my $values_escaped = URI::Escape::uri_escape($values);
       print OUT "<br>\n$p_string\n" or die;
-      
+
       print OUT <<HERE or die;
 $first_value, <a href="http://oeis.org/search?q=$signed$values_escaped&sort=&language=english&go=Search">$values</a>
 HERE
-      
+
       if (my @unzeros = unzeros(@values)) {
         $first_value = shift @unzeros;
         $values = join(',',@unzeros);
@@ -161,15 +175,16 @@ HERE
 <br> &nbsp; unzeros: $first_value, <a href="http://oeis.org/search?q=$signed$values_escaped&sort=&language=english&go=Search">$values</a>
 HERE
       }
-      
+
       unless ($module =~ /FractionDigits|DigitLength/) {
         my $base_len = scalar(@values);
-        
+
         foreach (1 .. $base_len) {
           my ($i, $value) = $seq->next or last;
           push @values, $value;
         }
         if (my @undouble = undouble(@values)) {
+          ### @undouble
           unless (all_same(@undouble) || constant_diff(@undouble)) {
             $first_value = shift @undouble;
             $values = join(',',@undouble);
@@ -179,7 +194,7 @@ HERE
 HERE
           }
         }
-        
+
         foreach (1 .. $base_len) {
           my ($i, $value) = $seq->next or last;
           push @values, $value;
@@ -194,7 +209,7 @@ HERE
 HERE
           }
         }
-        
+
         foreach (1 .. $base_len) {
           my ($i, $value) = $seq->next or last;
           push @values, $value;
@@ -230,6 +245,7 @@ sub special_values {
   my ($module, $params, $seq, $values_aref) = @_;
   return unless @$values_aref;
   return if $module eq 'SqrtDigits';
+  ### special_values() ...
 
   $seq->rewind;
   my ($i_start, $value_start) = $seq->next;
@@ -249,6 +265,7 @@ sub special_values {
     }
 
   } elsif (defined (my $diff = constant_diff(@$values_aref))) {
+    ### constant diff: $diff
     if ($diff == -1 && $i_start != 0) {
       # A001489 negatives starts i=0, ignore others
 
@@ -266,12 +283,25 @@ sub special_values {
     }
 
   } elsif (is_squares(@$values_aref)) {
+    ### is_squares ...
     if ($values_aref->[0] == 0) {
       # A000290 starts i=0
-      print "$module $params: squares\n";
+      print "$module $params: perfect squares\n";
     }
   } else {
-    grep_for_values("$module $params", join(',',@$values_aref));
+    if (all_same(@$values_aref)) {
+      ### no grep for all same values ...
+    } else {
+      my $name = "$module $params";
+      my $values_str = join(',',@$values_aref);
+      my $found = MyOEIS->grep_for_values_str($values_str);
+      if ($found) {
+        print "\n";
+        print "$name\n";
+        print "  match $values_str\n";
+        print $found;
+      }
+    }
   }
 }
 
@@ -707,54 +737,3 @@ sub p_radix {
   return undef;
 }
 
-sub grep_for_values {
-  my ($name, $values_str) = @_;
-  # print "grep $values_str\n";
-  # unless (system 'zgrep', '-F', '-e', $values_str, "$ENV{HOME}/OEIS/stripped.gz") {
-  #   print "  match $values_str\n";
-  #   print "  $name\n";
-  #   print "\n"
-  # }
-  # unless (system 'fgrep', '-e', $values_str, "$ENV{HOME}/OEIS/oeis-grep.txt") {
-  #   print "  match $values_str\n";
-  #   print "  $name\n";
-  #   print "\n"
-  # }
-  # unless (system 'fgrep', '-e', $values_str, "$ENV{HOME}/OEIS/stripped") {
-  #   print "  match $values_str\n";
-  #   print "  $name\n";
-  #   print "\n"
-  # }
-  if (my $found = stripped_grep($values_str)) {
-    print "  match $values_str\n";
-    print "  $name\n";
-    print $found;
-    print "\n"
-  }
-}
-
-my $stripped;
-sub stripped_grep {
-  my ($str) = @_;
-  if (! $stripped) {
-    require File::Map;
-    my $filename = "$ENV{HOME}/OEIS/stripped";
-    File::Map::map_file ($stripped, $filename);
-    print "File::Map file length ",length($stripped),"\n";
-  }
-  my $ret = '';
-  my $pos = 0;
-  for (;;) {
-    $pos = index($stripped,$str,$pos);
-    last if $pos < 0;
-    my $start = rindex($stripped,"\n",$pos) + 1;
-    my $end = index($stripped,"\n",$pos);
-    my $line = substr($stripped,$start,$end-$start);
-    $ret .= "$line\n";
-    my ($anum) = ($line =~ /^(A\d+)/);
-    $anum || die "$anum not found";
-    $ret .= `zgrep -e ^$anum $ENV{HOME}/OEIS/names.gz`;
-    $pos = $end;
-  }
-  return $ret;
-}

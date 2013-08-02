@@ -34,6 +34,7 @@ WriteMakefile
                     'List::Util' => 0,
                     'Math::Libm' => 0,
                     'Math::Prime::XS' => '0.23', # version 0.23 for fix 1928099
+                    'Module::Pluggable' => 0,
 
                     # version 0.40 for factors() on Math::BigInt
                     'Math::Factor::XS' => '0.40',
@@ -57,11 +58,10 @@ WriteMakefile
      no_index => { directory=>['devel','xt'] },
 
      recommends =>
-     { 'Math::Prime::XS'  => '0.26', # v.26 for faster is_prime()
-
-       # 4.7 no core removal warns, which was a ridiculous way to
-       # communicate to developers
-       'Module::Pluggable' => 4.7,
+     { 'Math::Prime::XS' => '0.26', # v.26 for faster is_prime()
+       # version 4.7 to avoid warnings about removal from the core perl dist
+       # which was a ridiculous way to communicate to authors
+       'Module::Pluggable' => '4.7',
      },
      optional_features =>
      { maximum_interoperation =>

@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Math-NumSeq
-version:            61
+version:            62
 abstract:           Number sequences.
 author:
     - Kevin Ryde <user42@zip.com.au>
@@ -11,19 +11,20 @@ configure_requires:
 build_requires:
     ExtUtils::MakeMaker:  0
 requires:
-    constant:          1.02
-    constant::defer:   1
-    File::HomeDir:     0
-    File::Spec:        0
-    File::Temp:        0
-    List::Util:        0
-    Math::Factor::XS:  0.40
-    Math::Libm:        0
-    Math::Prime::XS:   0.23
-    Module::Load:      0
-    Module::Util:      0
-    perl:              5.004
-    Test:              0
+    constant:           1.02
+    constant::defer:    1
+    File::HomeDir:      0
+    File::Spec:         0
+    File::Temp:         0
+    List::Util:         0
+    Math::Factor::XS:   0.40
+    Math::Libm:         0
+    Math::Prime::XS:    0.23
+    Module::Load:       0
+    Module::Pluggable:  0
+    Module::Util:       0
+    perl:               5.004
+    Test:               0
 resources:
     homepage:  http://user42.tuxfamily.org/math-numseq/index.html
     license:   http://www.gnu.org/licenses/gpl.html

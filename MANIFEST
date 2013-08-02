@@ -59,6 +59,7 @@ devel/lib/Math/NumSeq/DigitLengthModulo.pm
 devel/lib/Math/NumSeq/EratosthenesStage.pm
 devel/lib/Math/NumSeq/FactorialProducts.pm
 devel/lib/Math/NumSeq/FibonacciProducts.pm
+devel/lib/Math/NumSeq/FibonacciRepresentations.pm
 devel/lib/Math/NumSeq/HypotCount.pm
 devel/lib/Math/NumSeq/JacobsthalFunction.pm
 devel/lib/Math/NumSeq/KaprekarNumbers.pm
@@ -396,6 +397,7 @@ xt/oeis/SpiroFibonacci-oeis.t
 xt/oeis/SqrtDigits-oeis.t
 xt/oeis/Squares-oeis.t
 xt/oeis/SternDiatomic-oeis.t
+xt/oeis/Tetrahedral-oeis.t
 xt/oeis/Totient-oeis.t
 xt/oeis/TotientCumulative-oeis.t
 xt/oeis/TotientSteps-oeis.t

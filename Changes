@@ -17,73 +17,77 @@ with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 62, August 2013
+    - PREREQ_PM of Module::Pluggable, as reported by Dana Jacobsen
+      RT#87529
+
 Version 61, May 2013
-     - BalancedBinary fix value_to_i_estimate() on oldish Math::BigInt
+    - BalancedBinary fix value_to_i_estimate() on oldish Math::BigInt
 
 Version 60, May 2013
-     - UndulatingNumbers value_to_i_floor() fixes for Math::BigInt
-     - LucasNumbers new seek_to_i();
-       value_to_i_estimate() fix return to be integer on BigInt value
+    - UndulatingNumbers value_to_i_floor() fixes for Math::BigInt
+    - LucasNumbers new seek_to_i();
+      value_to_i_estimate() fix return to be integer on BigInt value
 
 Version 59, March 2013
-     - new value_to_i()
-     - BalancedBinary fix value_to_i_ceil() on non-integer
-     - docs typo tell_i() doesn't take any parameters
+    - new value_to_i()
+    - BalancedBinary fix value_to_i_ceil() on non-integer
+    - docs typo tell_i() doesn't take any parameters
 
 Version 58, March 2013
-     - Totient etc use prime_factors() rather than sieve, since the
-       sieve is no faster and uses a lot of memory.  As reported by
-       Dana Jacobsen RT#83578.
+    - Totient etc use prime_factors() rather than sieve, since the
+      sieve is no faster and uses a lot of memory.  As reported by
+      Dana Jacobsen RT#83578.
 
 Version 57, March 2013
-     - Fibbinary new seek_to_i()
-     - FibbinaryBitCount new option digit=>"0","00"
+    - Fibbinary new seek_to_i()
+    - FibbinaryBitCount new option digit=>"0","00"
 
 Version 56, February 2013
-     - DigitSumModulo fixes for values_max() and oeis_anum() if modulus!=radix
+    - DigitSumModulo fixes for values_max() and oeis_anum() if modulus!=radix
 
 Version 55, October 2012
-     - tests Fibbinary don't assume sprintf NV is exact
+    - tests Fibbinary don't assume sprintf NV is exact
 
 Version 54, October 2012
-     - new AlgebraicContinued, PisanoPeriod, PisanoPeriodSteps
+    - new AlgebraicContinued, PisanoPeriod, PisanoPeriodSteps
 
 Version 53, October 2012
-     - new Catalan, BalancedBinary
-     - document Math::NumSeq::Base::IterateIth, Math::NumSeq::Base::IteratePred
+    - new Catalan, BalancedBinary
+    - document Math::NumSeq::Base::IterateIth, Math::NumSeq::Base::IteratePred
 
 Version 52, September 2012
-     - LiouvilleFunction new parameter values_type=>"0,1" and "1,0"
+    - LiouvilleFunction new parameter values_type=>"0,1" and "1,0"
 
 Version 51, September 2012
-     - GolayRudinShapiro new parameter values_type=>"0,1"
+    - GolayRudinShapiro new parameter values_type=>"0,1"
 
 Version 50, August 2012
-     - new RadixConversion
+    - new RadixConversion
 
 Version 49, August 2012
-     - Runs new runs_type="0to2N"
-     - document Math::NumSeq::OEIS::Catalogue::Plugin info_arrayref()
+    - Runs new runs_type="0to2N"
+    - document Math::NumSeq::OEIS::Catalogue::Plugin info_arrayref()
 
 Version 48, July 2012
-     - fix Fibonacci seek_to_i()
+    - fix Fibonacci seek_to_i()
 
 Version 47, June 2012
-     - new DuffinianNumbers
-     - SophieGermainPrimes faster noticed by Dana Jacobsen
+    - new DuffinianNumbers
+    - SophieGermainPrimes faster noticed by Dana Jacobsen
 
 Version 46, June 2012
-     - oops, DivisorCountLow missing digit parameter info
+    - oops, DivisorCountLow missing digit parameter info
 
 Version 45, June 2012
-     - new PowerFlip
+    - new PowerFlip
 
 Version 44, June 2012
-     - tests Fibbinary diagnostics
+    - tests Fibbinary diagnostics
 
 Version 43, June 2012
-     - GolombSequence squares,primes missing from parameter_info_array
-      (but otherwise working)
+    - GolombSequence squares,primes missing from parameter_info_array
+     (but otherwise working)
 
 Version 42, June 2012
     - new AllPrimeFactors, DigitProductSteps, MaxDigitCount

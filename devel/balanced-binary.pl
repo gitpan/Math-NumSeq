@@ -29,6 +29,29 @@ use List::Util 'max','min';
 
 
 
+
+{
+  # value_to_i_floor()
+  require Math::NumSeq::BalancedBinary;
+  my $seq = Math::NumSeq::BalancedBinary->new;
+  # {
+  #   my $i = $seq->value_to_i(3);
+  #   print "$i\n";
+  # }
+  my $input = 0xFFFF_FFFF;
+   $input = 0xFFFF_FFFF_FFFF_FFFF;  # 75_254_198_337_177_847
+  {
+    my $i = $seq->value_to_i_floor($input);
+    # $i = $seq->value_to_i_ceil($input);
+    my $value = $seq->ith($i);
+    printf "%d -> %d %d %#b\n", $input, $i, $value, $value;
+  }
+  # foreach my $i (1 .. 15) {
+  #   my $value = $seq->ith($i);
+  #   printf "%2d %3d %12b\n", $i, $value, $value;
+  # }
+  exit 0;
+}
 {
   # value_to_i_estimate()
 
@@ -95,28 +118,6 @@ use List::Util 'max','min';
   exit 0;
 }
 
-
-{
-  # value_to_i_floor()
-  require Math::NumSeq::BalancedBinary;
-  my $seq = Math::NumSeq::BalancedBinary->new;
-  # {
-  #   my $i = $seq->value_to_i(3);
-  #   print "$i\n";
-  # }
-  my $input = 64;
-  {
-    my $i = $seq->value_to_i_floor($input);
-    # $i = $seq->value_to_i_ceil($input);
-    my $value = $seq->ith($i);
-    printf "%d -> %d %d %#b\n", $input, $i, $value, $value;
-  }
-  # foreach my $i (1 .. 15) {
-  #   my $value = $seq->ith($i);
-  #   printf "%2d %3d %12b\n", $i, $value, $value;
-  # }
-  exit 0;
-}
 
 {
   # z,o

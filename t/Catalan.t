@@ -33,7 +33,7 @@ use Math::NumSeq::Catalan;
 # VERSION
 
 {
-  my $want_version = 61;
+  my $want_version = 62;
   ok ($Math::NumSeq::Catalan::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::Catalan->VERSION,  $want_version,

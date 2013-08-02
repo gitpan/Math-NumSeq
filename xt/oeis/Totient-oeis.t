@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -29,93 +29,41 @@ use MyOEIS;
 
 use Math::NumSeq::Totient;
 
-# uncomment this to run the ### lines
-#use Smart::Comments '###';
-
-
-sub diff_nums {
-  my ($gotaref, $wantaref) = @_;
-  for (my $i = 0; $i < @$gotaref; $i++) {
-    if ($i > @$wantaref) {
-      return "want ends prematurely pos=$i";
-    }
-    my $got = $gotaref->[$i];
-    my $want = $wantaref->[$i];
-    if (! defined $got && ! defined $want) {
-      next;
-    }
-    if (! defined $got || ! defined $want) {
-      return ("different pos=$i def/undef"
-              . "\n  got=".(defined $got ? $got : '[undef]')
-              . "\n want=".(defined $want ? $want : '[undef]'));
-    }
-    $got =~ /^[0-9.-]+$/
-      or return "not a number pos=$i got='$got'";
-    $want =~ /^[0-9.-]+$/
-      or return "not a number pos=$i want='$want'";
-    if ($got ne $want) {
-      ### $got
-      ### $want
-      return ("different pos=$i numbers"
-              . "\n  got=".(defined $got ? $got : '[undef]')
-              . "\n want=".(defined $want ? $want : '[undef]'));
-    }
-  }
-  return undef;
-}
 
 #------------------------------------------------------------------------------
 # A008330 - totient(p-1) for primes p
 
-{
-  my $anum = 'A008330';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my @got;
-  my $diff;
-  if ($bvalues) {
-    require Math::NumSeq::Primes;
-    my $primes  = Math::NumSeq::Primes->new;
-    my $totient  = Math::NumSeq::Totient->new;
-    while (@got < @$bvalues) {
-      my ($i, $prime) = $primes->next or last;
-      push @got, $totient->ith($prime-1);
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..60]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..60]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum");
-}
+MyOEIS::compare_values
+  (anum => 'A008330',
+   func => sub {
+     my ($count) = @_;
+     require Math::NumSeq::Primes;
+     my $primes  = Math::NumSeq::Primes->new;
+     my $totient  = Math::NumSeq::Totient->new;
+     my @got;
+     while (@got < $count) {
+       my ($i, $prime) = $primes->next or last;
+       push @got, $totient->ith($prime-1);
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 # A007617 - non-totients
 
-{
-  my $anum = 'A007617';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my @got;
-  my $diff;
-  if ($bvalues) {
-    my $seq  = Math::NumSeq::Totient->new;
-    for (my $n = 1; @got < @$bvalues; $n++) {
-      if (! $seq->pred($n)) {
-        push @got, $n;
-      }
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..60]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..60]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum -- non-totients");
-}
+MyOEIS::compare_values
+  (anum => 'A007617',
+   func => sub {
+     my ($count) = @_;
+     my $seq  = Math::NumSeq::Totient->new;
+     my @got;
+     for (my $value = 1; @got < $count; $value++) {
+       if (! $seq->pred($value)) {
+         push @got, $value;
+       }
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 exit 0;

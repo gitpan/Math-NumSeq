@@ -21,7 +21,7 @@ use strict;
 use Math::Prime::XS;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 61;
+$VERSION = 62;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;

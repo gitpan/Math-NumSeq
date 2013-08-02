@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -33,79 +33,38 @@ use Math::NumSeq::ReRound;
 #use Smart::Comments '###';
 
 
-sub diff_nums {
-  my ($gotaref, $wantaref) = @_;
-  for (my $i = 0; $i < @$gotaref; $i++) {
-    if ($i > @$wantaref) {
-      return "want ends prematurely pos=$i";
-    }
-    my $got = $gotaref->[$i];
-    my $want = $wantaref->[$i];
-    if (! defined $got && ! defined $want) {
-      next;
-    }
-    if (! defined $got || ! defined $want) {
-      return ("different pos=$i def/undef"
-              . "\n  got=".(defined $got ? $got : '[undef]')
-              . "\n want=".(defined $want ? $want : '[undef]'));
-    }
-    $got =~ /^[0-9.-]+$/
-      or return "not a number pos=$i got='$got'";
-    $want =~ /^[0-9.-]+$/
-      or return "not a number pos=$i want='$want'";
-    if ($got ne $want) {
-      ### $got
-      ### $want
-      return ("different pos=$i numbers"
-              . "\n  got=".(defined $got ? $got : '[undef]')
-              . "\n want=".(defined $want ? $want : '[undef]'));
-    }
-  }
-  return undef;
-}
-
 #------------------------------------------------------------------------------
 # A113749 k multiples
 
 # 1, 1, 1, 1, 1
 # 1, 2, 4, 6, 10
-# 1, 3, 7, 13, 
+# 1, 3, 7, 13,
 # 1, 4, 10, 18,
 
-{
-  my $anum = 'A113749';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my $diff;
-  if ($bvalues) {
-    my @got;
-    my $i = 0;
-    my $j = 0;
-    while (@got < @$bvalues) {
-      ### at: "i=$i j=$j"
-      if ($j == 0) {
-        push @got, 1;
-      } else {
-        my $seq  = Math::NumSeq::ReRound->new (extra_multiples => $j-1);
-        push @got, $seq->ith($i+1);
-      }
-
-      $i++;  # by diagonals
-      $j--;
-      if ($j < 0) {
-        $j = $i;
-        $i = 0;
-      }
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..60]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..60]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum");
-}
+MyOEIS::compare_values
+  (anum => 'A113749',
+   func => sub {
+     my ($count) = @_;
+     my @got;
+     my $i = 0;
+     my $j = 0;
+     while (@got < $count) {
+       ### at: "i=$i j=$j"
+       if ($j == 0) {
+         push @got, 1;
+       } else {
+         my $seq  = Math::NumSeq::ReRound->new (extra_multiples => $j-1);
+         push @got, $seq->ith($i+1);
+       }
+       $i++;  # by diagonals
+       $j--;
+       if ($j < 0) {
+         $j = $i;
+         $i = 0;
+       }
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 exit 0;

@@ -26,7 +26,7 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 61;
+$VERSION = 62;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -96,6 +96,17 @@ sub oeis_anum {
 
 #------------------------------------------------------------------------------
 
+# When $self->{'wantlen'} becomes equal to _WANTLEN_TO_BIGINT then go to
+# Math::BigInt since the bits of a UV would be overflowed.
+#
+# _WANTLEN_TO_BIGINT is floor(numbits(UV)/2), but calculated by a probe of
+# "~0".
+#
+# On a 32-bit UV balance binary value=0xFFFF0000 is reached at i=48_760_366
+# which is fairly big but might be reached by a long running loop.  On a
+# 64-bit UV the corresponding limit is i=75*10^15 so would not be reached in
+# any reasonable time.
+#
 use constant 1.02 _WANTLEN_TO_BIGINT => do {
   my $uv = ~0;
   my $limit = 0;
@@ -121,7 +132,7 @@ sub next {
   my $bits = $self->{'bits'};
   my $value;
 
-  if (scalar(@$bits) == 0) {
+  if (! @$bits) {
     ### initial 2 ...
     push @$bits, 2;
     $value = 2;
@@ -326,6 +337,11 @@ sub value_to_i_ceil {
   my ($self, $value) = @_;
   return _value_to_i_round ($self, $value, 1);
 }
+
+# Return the i corresponding to $value.
+# If $value is not balanced binary then round according to $ceil.
+# $ceil=1 to round up, or $ceil=0 to round down.
+#
 sub _value_to_i_round {
   my ($self, $value, $ceil) = @_;
   ### _value_to_i_round(): $value
@@ -401,7 +417,7 @@ sub _value_to_i_round {
           $i += $num[$o-1][$o] || 0;
           $o--;
         }
-        return $i - !$ceil;
+        return $i - (1-$ceil);
       }
 
       $z--;
@@ -468,18 +484,24 @@ sub _pred_on_bits {
   return ($count[0] == $count[1]);
 }
 
-# n = log2(value) / 2
-# Catalan = 4^n / (sqrt(Pi * n) * (n + 1))
-#         = 4^(log2(n)/2) / (sqrt(pi*log2(n)/2) * (log2(n)/2+1))
-#         = n / (sqrt(pi*log2(n)/2) * (log2(n)/2+1))
-#         = n / (sqrt(pi*log2(n)/2) * (log2(n)+2)/2)
-#         = n / (sqrt(pi*log2(n)/2)/2 * (log2(n)+2))
-#         = n / (sqrt(pi/8*log2(n)) * (log2(n)+2))
-# cumulative
-#   = sum n=0 to log2(value)/2
-#      of n / (sqrt(pi/8*log2(n)) * (log2(n)+2))
+# w = log2(value) / 2
+# Catalan = 4^w / (sqrt(Pi * w) * (w + 1))
+#         = 4^(log2(v)/2) / (sqrt(pi*log2(v)/2) * (log2(v)/2+1))
+#         = v / (sqrt(pi*log2(v)/2) * (log2(v)/2+1))
+#         = v / (sqrt(pi*log2(v)/2) * (log2(v)+2)/2)
+#         = v / (sqrt(pi*log2(v)/2)/2 * (log2(v)+2))
+#         = v / (sqrt(pi/8*log2(v)) * (log2(v)+2))
 #
-# is cumulative close to the plain ?
+# if value has 2*w bits then cumulative catalan 
+# i = sum w=0 to log2(value)/2
+#       of value / (sqrt(pi/8*log2(value)) * (log2(value)+2))
+#
+# is cumulative close enough to the plain ?
+#
+# 2*w bits, ipart=Catalan(w) value=4^w
+# so w = log4(value)
+#    ipart = Catalan(log4(value))
+#          = 
 
 sub value_to_i_estimate {
   my ($self, $value) = @_;
@@ -655,17 +677,16 @@ integer then return the i of the next higher or lower value, respectively.
 
 =head2 Next
 
-When stepping to the next value the number of 1s and 0s does not change
-within a width 2*w block of values.  But the 1s move to make a numerically
-higher value.  The simplest is an isolated low 1-bit.  It must move up one
-place.  For example,
+When stepping to the next value the number of 1s and 0s does not change.
+The 1s move to make a numerically higher value.  The simplest is an isolated
+low 1-bit.  It must move up one place.  For example,
 
     11100100             isolated low 1-bit
     ->                   shifts up
     11101000
 
 If the low 1 has a 1 above it then that bit must move up and the lower one
-goes to the end of the value.  For example
+goes to the low end of the value.  For example
 
     1110011000           pair of bits
     ->                   one shifts up, other drops to low end
@@ -679,7 +700,7 @@ low end.  For example a low run of 3 bits
     ->                   one shifts up, rest drop to low end
     1111101000001010
           ^     ^ ^
-         up     end
+         up     low end
 
 The final value in a 2*w block has all 1s at the high end.  The first of the
 next bigger block of values is an alternating 1010..10.  For example
@@ -692,23 +713,23 @@ next bigger block of values is an alternating 1010..10.  For example
 
 As described above there are Catalan(w) many values with 2*w bits.  The
 width of the i'th value can be found by successively subtracting C(1), C(2),
-etc until reaching a remainder S<i E<lt> C(w)>, giving width 2*w made up of
-w many "1"s and w many "0"s.
+etc until reaching a remainder S<i E<lt> C(w)>.  At that point the value is
+2*w many bits, being w many "1"s and w many "0"s.
 
 In general after outputting some bits of the value (at the high end) there
 will be some number z many "0"s and n many "1"s yet to be output.  The
 choice is then to output either 0 or 1 and reduce z or n accordingly.
 
     numvalues(z,n) = number of sequences of z "0"s and n "1"s
-                     with remaining 1s >= remaining 0s at all points
+                     with remaining 1s >= remaining 0s at all times
 
-    C = numvalues(z-1,n)
-      = how many "0..." combinations
+    N = numvalues(z-1,n)
+      = how many combinations starting with zero "0..."
 
     output
-      0   if i < C
-      1   if i >= C
-            and subtract C from i
+      0   if i < N
+      1   if i >= N
+            and subtract N from i
             which is the "0..." combinations skipped
 
 numvalues() is the "Catalan table" constructed by
@@ -719,7 +740,8 @@ numvalues() is the "Catalan table" constructed by
         numvalues(z,n) = numvalues(z-1,n)  # the 0... forms
                        + numvalues(z,n-1)  # the 1... forms
 
-Each numvalues(z,n-1) is the previous value calculated, so
+Each forming numvalues(z,n) the numvalues(z,n-1) term is the previous
+numvalues calculated, so a simple addition loop for the table
 
     for z=1 upwards
       t = numvalues(z,0) = 1

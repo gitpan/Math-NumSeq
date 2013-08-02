@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -30,87 +30,117 @@ use MyOEIS;
 
 use Math::NumSeq::MobiusFunction;
 
-# uncomment this to run the ### lines
-#use Smart::Comments '###';
-
-
-sub diff_nums {
-  my ($gotaref, $wantaref) = @_;
-  for (my $i = 0; $i < @$gotaref; $i++) {
-    if ($i > @$wantaref) {
-      return "want ends prematurely pos=$i";
-    }
-    my $got = $gotaref->[$i];
-    my $want = $wantaref->[$i];
-    if (! defined $got && ! defined $want) {
-      next;
-    }
-    if (! defined $got || ! defined $want) {
-      return "different pos=$i got=".(defined $got ? $got : '[undef]')
-        ." want=".(defined $want ? $want : '[undef]');
-    }
-    $got =~ /^[0-9.-]+$/
-      or return "not a number pos=$i got='$got'";
-    $want =~ /^[0-9.-]+$/
-      or return "not a number pos=$i want='$want'";
-    if ($got != $want) {
-      return "different pos=$i numbers got=$got want=$want";
-    }
-  }
-  return undef;
-}
 
 #------------------------------------------------------------------------------
-# A074819 - mu(n)=mu(n+1)
+# A063838 mu(n) + mu(n+1) + mu(n+2) = 3      # run three 1s
+# A070268 mu(n) + mu(n+1) + mu(n+2) = -3     # run three -1s
+# A063848 mu(n) + mu(n+1) + mu(n+2) = 2
+# A063849 mu(n) + mu(n+1) + mu(n+2) = 1
 
-{
-  my $anum = 'A074819';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my $diff;
-  if ($bvalues) {
-    my $seq = Math::NumSeq::MobiusFunction->new;
-    my @got;
-    for (my $i = 1; @got < @$bvalues; $i++) {
-      if ($seq->ith($i) == $seq->ith($i+1)) {
-        push @got, $i;
-      }
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum");
-}
+MyOEIS::compare_values
+  (anum => 'A070268',
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::MobiusFunction->new;
+     my @got;
+     for (my $i = 1; @got < $count; $i++) {
+       if ($seq->ith($i) + $seq->ith($i+1) + $seq->ith($i+2) == -3) {
+         push @got, $i;
+       }
+     }
+     return \@got;
+   });
+
+MyOEIS::compare_values
+  (anum => 'A063838',
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::MobiusFunction->new;
+     my @got;
+     for (my $i = 1; @got < $count; $i++) {
+       if ($seq->ith($i) + $seq->ith($i+1) + $seq->ith($i+2) == 3) {
+         push @got, $i;
+       }
+     }
+     return \@got;
+   });
+
+MyOEIS::compare_values
+  (anum => 'A063848',
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::MobiusFunction->new;
+     my @got;
+     for (my $i = 1; @got < $count; $i++) {
+       if ($seq->ith($i) + $seq->ith($i+1) + $seq->ith($i+2) == 2) {
+         push @got, $i;
+       }
+     }
+     return \@got;
+   });
+
+MyOEIS::compare_values
+  (anum => 'A063849',
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::MobiusFunction->new;
+     my @got;
+     for (my $i = 1; @got < $count; $i++) {
+       if ($seq->ith($i) + $seq->ith($i+1) + $seq->ith($i+2) == 1) {
+         push @got, $i;
+       }
+     }
+     return \@got;
+   });
+
+#------------------------------------------------------------------------------
+# A064148 mu(n) = mu(n+1)
+# A074819 mu(n) = - mu(n+1)
+
+MyOEIS::compare_values
+  (anum => 'A064148',
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::MobiusFunction->new;
+     my @got;
+     for (my $i = 1; @got < $count; $i++) {
+       if ($seq->ith($i) == $seq->ith($i+1)) {
+         push @got, $i;
+       }
+     }
+     return \@got;
+   });
+
+MyOEIS::compare_values
+  (anum => 'A074819',
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::MobiusFunction->new;
+     my @got;
+     for (my $i = 1; @got < $count; $i++) {
+       if ($seq->ith($i) == - $seq->ith($i+1)) {
+         push @got, $i;
+       }
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 # A074820 - mu(n)=mu(n+2)
 
-{
-  my $anum = 'A074820';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my $diff;
-  if ($bvalues) {
-    my $seq = Math::NumSeq::MobiusFunction->new;
-    my @got;
-    for (my $i = 1; @got < @$bvalues; $i++) {
-      if ($seq->ith($i) == $seq->ith($i+2)) {
-        push @got, $i;
-      }
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum");
-}
+MyOEIS::compare_values
+  (anum => 'A074820',
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::MobiusFunction->new;
+     my @got;
+     for (my $i = 1; @got < $count; $i++) {
+       if ($seq->ith($i) == $seq->ith($i+2)) {
+         push @got, $i;
+       }
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 exit 0;

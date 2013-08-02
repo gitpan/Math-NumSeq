@@ -16,12 +16,19 @@
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
+
+# cf A005894 centered tetrahedral numbers. (2*n+1)*(n^2+n+3)/3
+#    A005906 truncated tetrahedral numbers. (n+1)*(23*n^2+19*n+6)/6
+#    A015219 odd tetrahedrals (4n+1)(4n+2)(4n+3)/6
+#    A015220 even tetrahedrals
+
+
 package Math::NumSeq::Tetrahedral;
 use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 61;
+$VERSION = 62;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',

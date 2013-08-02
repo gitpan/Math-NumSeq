@@ -35,6 +35,14 @@ use Math::NumSeq::PisanoPeriod;
 #use Smart::Comments '###';
 
 
+
+# A175181 - period of Pell numbers mod n
+# A175182 Pisano period length of the 3-Fibonacci numbers A006190.
+# A175183 Pisano period length of the 4-Fibonacci numbers A001076.
+# A175184 Pisano period length of the 5-Fibonacci numbers, A052918 preceeded by 0.
+# A175185 Pisano period length of the 6-Fibonacci numbers A005668.
+
+
 #------------------------------------------------------------------------------
 # A071774 n for which period(n)==2n+1
 # or rather period==2n+2 in reckoning of PisanoPeriod
