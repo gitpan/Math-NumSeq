@@ -26,7 +26,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 62;
+$VERSION = 63;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -38,9 +38,9 @@ use Math::NumSeq::Base::IterateIth;
 
 # use constant name => Math::NumSeq::__('Baum-Sweet');
 use constant description => Math::NumSeq::__('Baum-Sweet sequence, 1 if i contains no odd-length run of 0-bits, 0 if it does.');
+use constant default_i_start => 0;
 use constant values_min => 0;
 use constant values_max => 1;
-use constant i_start => 0;
 use constant characteristic_integer => 1;
 
 # cf A037011 "Baum Sweet cubic"
@@ -136,7 +136,7 @@ L<Math::NumSeq::Fibbinary>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/math-numseq/index.html
+L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 

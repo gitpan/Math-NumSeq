@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -34,63 +34,26 @@ use Math::NumSeq::RadixConversion;
 #use Smart::Comments '###';
 
 
-sub diff_nums {
-  my ($gotaref, $wantaref) = @_;
-  for (my $i = 0; $i < @$gotaref; $i++) {
-    if ($i > @$wantaref) {
-      return "want ends prematurely pos=$i";
-    }
-    my $got = $gotaref->[$i];
-    my $want = $wantaref->[$i];
-    if (! defined $got && ! defined $want) {
-      next;
-    }
-    if (! defined $got || ! defined $want) {
-      return "different pos=$i got=".(defined $got ? $got : '[undef]')
-        ." want=".(defined $want ? $want : '[undef]');
-    }
-    $got =~ /^[0-9.-]+$/
-      or return "not a number pos=$i got='$got'";
-    $want =~ /^[0-9.-]+$/
-      or return "not a number pos=$i want='$want'";
-    if ($got != $want) {
-      return "different pos=$i numbers got=$got want=$want";
-    }
-  }
-  return undef;
-}
-
-
-
 #------------------------------------------------------------------------------
 # A062847 - base 2 interpreted as base 6 which is multiple of original
 
-{
-  my $anum = 'A062847';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my $diff;
-  if ($bvalues) {
-    my @got;
-    my $seq = Math::NumSeq::RadixConversion->new (from_radix => 2,
-                                                  to_radix => 6);
-    while (@got < @$bvalues) {
-      my ($i, $value) = $seq->next;
-      if ($i == 0 || ($value % $i) == 0) {
-        ### $i
-        ### $value
-        push @got, $i;
-      }
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..30]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..30]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum");
-}
+MyOEIS::compare_values
+  (anum => 'A062847',
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::RadixConversion->new (from_radix => 2,
+                                                   to_radix => 6);
+     my @got;
+     while (@got < $count) {
+       my ($i, $value) = $seq->next;
+       if ($i == 0 || ($value % $i) == 0) {
+         ### $i
+         ### $value
+         push @got, $i;
+       }
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 exit 0;

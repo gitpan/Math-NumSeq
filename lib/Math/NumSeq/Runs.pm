@@ -45,12 +45,10 @@ use strict;
 use Carp;
 
 use vars '$VERSION','@ISA';
-$VERSION = 62;
+$VERSION = 63;
 
 use Math::NumSeq 21; # v.21 for oeis_anum field
-use Math::NumSeq::Base::IterateIth;
-@ISA = ('Math::NumSeq::Base::IterateIth',
-        'Math::NumSeq');
+@ISA = ('Math::NumSeq');
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -529,7 +527,7 @@ L<Math::NumSeq::AllDigits>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/math-numseq/index.html
+L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 

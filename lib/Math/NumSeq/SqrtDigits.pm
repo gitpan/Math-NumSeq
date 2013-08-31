@@ -22,7 +22,7 @@ use Carp;
 use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 62;
+$VERSION = 63;
 
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
@@ -494,11 +494,11 @@ L<Math::NumSeq::SqrtEngel>,
 L<Math::NumSeq::FractionDigits>
 
 Norman L. de Forest, "The Square Root of 4 to a Million Places", at Project
-Gutenberg, http://www.gutenberg.org/ebooks/3651
+Gutenberg, L<http://www.gutenberg.org/ebooks/3651>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/math-numseq/index.html
+L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 

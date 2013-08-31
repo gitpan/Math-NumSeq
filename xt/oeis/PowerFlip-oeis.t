@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -34,85 +34,41 @@ use Math::NumSeq::PowerFlip;
 #use Smart::Comments '###';
 
 
-sub diff_nums {
-  my ($gotaref, $wantaref) = @_;
-  for (my $i = 0; $i < @$gotaref; $i++) {
-    if ($i > @$wantaref) {
-      return "want ends prematurely pos=$i";
-    }
-    my $got = $gotaref->[$i];
-    my $want = $wantaref->[$i];
-    if (! defined $got && ! defined $want) {
-      next;
-    }
-    if (! defined $got || ! defined $want) {
-      return "different pos=$i got=".(defined $got ? $got : '[undef]')
-        ." want=".(defined $want ? $want : '[undef]');
-    }
-    $got =~ /^[0-9.-]+$/
-      or return "not a number pos=$i got='$got'";
-    $want =~ /^[0-9.-]+$/
-      or return "not a number pos=$i want='$want'";
-    if ($got != $want) {
-      return "different pos=$i numbers got=$got want=$want";
-    }
-  }
-  return undef;
-}
-
 #------------------------------------------------------------------------------
 # A005117 - squarefrees all-and-only value 1
 
-{
-  my $anum = 'A005117';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my $diff;
-  if ($bvalues) {
-    my $seq = Math::NumSeq::PowerFlip->new;
-    my @got;
-    while (@got < @$bvalues) {
-      my ($i, $value) = $seq->next;
-      if ($value == 1) {
-        push @got, $i;
-      }
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum");
-}
+MyOEIS::compare_values
+  (anum => 'A005117',
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::PowerFlip->new;
+     my @got;
+     while (@got < $count) {
+       my ($i, $value) = $seq->next;
+       if ($value == 1) {
+         push @got, $i;
+       }
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 # A013929 - non-squarefrees all-and-only value!=1
 
-{
-  my $anum = 'A013929';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my $diff;
-  if ($bvalues) {
-    my $seq = Math::NumSeq::PowerFlip->new;
-    my @got;
-    while (@got < @$bvalues) {
-      my ($i, $value) = $seq->next;
-      if ($value != 1) {
-        push @got, $i;
-      }
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum");
-}
+MyOEIS::compare_values
+  (anum => 'A013929',
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::PowerFlip->new;
+     my @got;
+     while (@got < $count) {
+       my ($i, $value) = $seq->next;
+       if ($value != 1) {
+         push @got, $i;
+       }
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 

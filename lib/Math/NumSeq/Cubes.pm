@@ -23,7 +23,7 @@ use POSIX 'floor','ceil';
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 62;
+$VERSION = 63;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -258,7 +258,7 @@ L<Math::NumSeq::Squares>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/math-numseq/index.html
+L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 

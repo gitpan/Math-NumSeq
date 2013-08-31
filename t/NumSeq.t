@@ -26,11 +26,11 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
-my $test_count = (tests => 2034)[1];
+my $test_count = (tests => 2271)[1];
 plan tests => $test_count;
 
 # uncomment this to run the ### lines
-# use Smart::Comments '###';
+# use Smart::Comments;
 
 
 use POSIX ();
@@ -126,11 +126,86 @@ foreach my $elem
    # Expression.pm
    # Ln2Bits.pm
    # PiBits.pm
-
+   
+   [ 'Math::NumSeq::ProthNumbers',
+     [ 3, 5, 9, 13, 17, 25, 33, 41, 49, 57, 65, 81, 97, 113, 129, 145,
+       161, 177, 193, 209, 225, 241, 257, 289, 321, 353, 385, 417, 449, 481,
+       513, 545, 577, 609, 641, 673, 705, 737, 769, 801, 833, 865, 897, 929,
+       961, 993, 1025, 1089, 1153, 1217, 1281, 1345, 1409 ] ],
+   
+   [ 'Math::NumSeq::Fibbinary',
+     [ 0x0,  #      0
+       0x1,  #      1
+       0x2,  #     10
+       0x4,  #    100
+       0x5,  #    101
+       0x8,  #   1000
+       0x9,  #   1001
+       0xA,  #   1010
+       0x10, #  10000
+       0x11, #  10001
+       0x12, #  10010
+       0x14, #  10100
+       0x15, #  10101
+       0x20, # 100000
+     ],
+   ],
+   [ 'Math::NumSeq::FibbinaryBitCount',
+     [ 0, #      0
+       1, #      1
+       1, #     10
+       1, #    100
+       2, #    101
+       1, #   1000
+       2, #   1001
+       2, #   1010
+       1, #  10000
+       2, #  10001
+       2, #  10010
+       2, #  10100
+       3, #  10101
+       1, # 100000
+     ],
+   ],
+   
+   [ 'Math::NumSeq::Multiples',
+     [ 0, 2, 4, 6, 8, 10, 12 ],
+     { multiples => 2 },
+     { value_to_i_floor_below_first => -1 },
+   ],
+   [ 'Math::NumSeq::Multiples',
+     [ 0*37, 1*37, 2*37, 3*37, 4*37, 5*37, 6*37 ],
+     { multiples => 37 },
+     { value_to_i_floor_below_first => -1 },
+   ],
+   
+   [ 'Math::NumSeq::FibonacciWord',
+     [ 0,1,
+       0,
+       0,1,
+       0,1,0,
+       0,1,0,0,1,
+     ],
+   ],
+   [ 'Math::NumSeq::FibonacciWord',
+     [ 1,0,2,2,1,0,2,2,1,1,0,2,1,1 ],
+     { fibonacci_word_type => "dense" },
+   ],
+   
+   [ 'Math::NumSeq::Triangular',
+     [ 0, 1, 3, 6, 10, 15, 21 ] ],
+   
+   [ 'Math::NumSeq::Pronic',
+     [ 0, 2, 6, 12, 20, 30, 42 ] ],
+   
+   [ 'Math::NumSeq::LuckyNumbers',
+     [ 1, 3, 7, 9, 13, 15, 21, 25, 31, 33, 37, 43, 49, 51, 63, 67, 69, 73 ],
+   ],
+   
    [ 'Math::NumSeq::BalancedBinary',
      [ 2, 10, 12, 42, 44, 50, 52, 56, 170, 172, 178, ],
    ],
-
+   
    [ 'Math::NumSeq::UndulatingNumbers', # with a!=b
      [ ternary(0),ternary(1),ternary(2),
        ternary(10),            ternary(12),
@@ -197,15 +272,15 @@ foreach my $elem
      { radix => 2,
        including_repdigits => 0 },
    ],
-
+   
    [ 'Math::NumSeq::LucasNumbers',
      [  1, 3, 4, 7, 11, 18, 29 ],
    ],
-
+   
    [ 'Math::NumSeq::DedekindPsiCumulative',
      [ 1, 4, 8, 14, 20, 32, 40, 52, 64, 82, 94, 118 ], # values in the POD
    ],
-
+   
    [ 'Math::NumSeq::DedekindPsiSteps',
      [ 0,0,0,0,
        1, # 5 -> 5+1=6=2*3
@@ -216,12 +291,12 @@ foreach my $elem
        1, # 10 = 2*5 -> 3*6 = 2*3*3
      ],
    ],
-
-
+   
+   
    [ 'Math::NumSeq::HappyNumbers',
      [ 1, 7, 10, 13, 19, 23 ], # per POD
    ],
-
+   
    [ 'Math::NumSeq::HappySteps',
      [ 1, 9, 13, 8, 12, 17, 6, 13, 12, 2, ], # per POD
    ],
@@ -237,8 +312,8 @@ foreach my $elem
      ],
      { radix => 2 },
    ],
-
-
+   
+   
    [ 'Math::NumSeq::DigitSumModulo',
      [ 0,  # 00
        1,  # 01
@@ -251,7 +326,7 @@ foreach my $elem
        1,  # 1000
      ],
      { radix => 2, modulus => 3 } ],
-
+   
    [ 'Math::NumSeq::AlgebraicContinued',
      [ 1,3,1,5,1,1,4,1,1,8,1,14,1,10,2,1,4,12,2,3,2,1,3 ],
    ],
@@ -259,11 +334,11 @@ foreach my $elem
      [ 1,2,3,1,4,1,5,1,1,6,2,5,8,3,3,4,2,6,4,4,1,3,2,3 ],
      { expression => 'cbrt(3)' },
    ],
-
+   
    [ 'Math::NumSeq::MobiusFunction',
      [ 1, -1, -1, 0, -1, 1, ],
    ],
-
+   
    [ 'Math::NumSeq::Catalan',
      [ 1, 1, 2, 5, 14, 42, 132, 429, 1430, 4862, 16796, 58786, 208012,
        742900, ],
@@ -272,7 +347,7 @@ foreach my $elem
      [ 1, 1, 1, 5, 7, 21, 33, 429, 715, 2431, 4199, ],
      { values_type => 'odd' },
    ],
-
+   
    [ 'Math::NumSeq::LiouvilleFunction',
      [ 1,  # 1
        -1, # 2
@@ -308,7 +383,7 @@ foreach my $elem
      ],
      { values_type => '1,0' },
    ],
-
+   
    [ 'Math::NumSeq::GolayRudinShapiro',
      [ 1,   # 0
        1,   # 1
@@ -370,7 +445,7 @@ foreach my $elem
        5,  # 10000
      ],
    ],
-
+   
    [ 'Math::NumSeq::RadixConversion',
      [ 0, 1, 10, 11, 100, 101, 110, 111, 1000, 1001, 1010, 1011, ], # per POD
    ],
@@ -385,7 +460,7 @@ foreach my $elem
        4,5,6,7,8,9,10,11,12,13, ],
      { from_radix => 10, to_radix => 2 },
    ],
-
+   
    # [ 'Math::NumSeq::PrimesDigits',
    #   [ 2, 3, 5, 7, 1, 1, 1, 3, 1, 7, 1, 9, 2, 3, 2, 9, ],
    # ],
@@ -398,7 +473,7 @@ foreach my $elem
    #     1, 3, 3, 7, 1, 4, 3, 4, 4, 7, 3, 5, ],
    #   { order => 'sorted' },
    # ],
-
+   
    [ 'Math::NumSeq::DuffinianNumbers',
      [ 4,  # sumdiv=1+2=3
        8,  # sumdiv=1+2+4=7
@@ -413,7 +488,7 @@ foreach my $elem
        39, 49, 50, 55, 57, 63, 64, 65,
      ]
    ],
-
+   
    [ 'Math::NumSeq::PowerFlip',
      [ 1,  # 1
        1,  # 2^1 -> 1^2
@@ -425,7 +500,7 @@ foreach my $elem
        9,  # 2^3 -> 3^2
      ],
    ],
-
+   
    [ 'Math::NumSeq::DigitProductSteps',
      [ 0,0,0,0,0, 0,0,0,0,0,   # i=0 to 9
        1,1,1,1,1, 1,1,1,1,1,   # i=10 to 19
@@ -439,7 +514,7 @@ foreach my $elem
      ],
      { values_type => 'root' },
    ],
-
+   
    [ 'Math::NumSeq::MaxDigitCount',
      [ 0,   # i=1 no zeros ever
        1,   #   2 = 10 binary
@@ -467,7 +542,7 @@ foreach my $elem
      ],
      { values_type => 'radix' },
    ],
-
+   
    [ 'Math::NumSeq::MaxDigitCount',
      [ 1,   # i=1 = 1 binary
        1,   #   2 = 10 binary
@@ -497,7 +572,7 @@ foreach my $elem
      { digit => 1,
        values_type => 'radix' },
    ],
-
+   
    [ 'Math::NumSeq::AllPrimeFactors',
      [ 2, 3, 2,2, 5, 2,3, 7, 2,2,2, 3,3, 2,5, 11, ],
    ],
@@ -522,7 +597,7 @@ foreach my $elem
      { on_values => 'even',
        multiplicity => 'distinct' },
    ],
-
+   
    [ 'Math::NumSeq::Repdigits',
      [ 0,
        1,2,3,4,5,6,7,8,9,
@@ -558,11 +633,11 @@ foreach my $elem
      ],
      { radix => 2 },
    ],
-
+   
    [ 'Math::NumSeq::SpiroFibonacci',
      [ 0,1,1,1,1,1,1,1,2,3,4,5 ],
    ],
-
+   
    [ 'Math::NumSeq::PrimeIndexOrder',
      [ 0, 1, 2, 0, 3, 0, 1, 0, 0, 0, 4, 0, 1, 0, 0, 0, 2, ],
    ],
@@ -570,7 +645,7 @@ foreach my $elem
      [ 1, 2, 3, 1, 4, 1, 2, ],
      { on_values => 'primes' },
    ],
-
+   
    [ 'Math::NumSeq::PrimeIndexPrimes',
      [ 3, 5, 11, 17, 31, 41, 59, 67, 83, 109, 127, 157, 179, 191, ],
    ],
@@ -596,7 +671,7 @@ foreach my $elem
      { level => 0,
        level_type => 'exact' },
    ],
-
+   
    [ 'Math::NumSeq::GolombSequence',
      [ 1, 2,2, 3,3, 4,4,4, 5,5,5, 6,6,6,6, ],
    ],
@@ -620,7 +695,7 @@ foreach my $elem
      [ 2,2, 3,3, 5,5,5, 7,7,7, 11,11,11,11,11, ],
      { using_values => 'primes' },
    ],
-
+   
    [ 'Math::NumSeq::ErdosSelfridgeClass',
      [ 0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 2, 0, 0, 0, 1, 0, 2, 0, 0, ],
    ],
@@ -632,7 +707,7 @@ foreach my $elem
      [ 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1, 3, 2, 2, 1, 1, 2, 2, 2, 1, 4, ],
      { on_values => 'primes' },
    ],
-
+   
    [ 'Math::NumSeq::SelfLengthCumulative',
      [ 1, 2, 3, 4, 5,6,7,8, 9, 10, 12, 14, 16 ],
    ],
@@ -640,7 +715,7 @@ foreach my $elem
      [ 1, 2, 4, 7, 10, 14, 18, 23, 28, 33, 39, 45, ],
      { radix => 2 },
    ],
-
+   
    [ 'Math::NumSeq::Runs',
      [ 0, 1, 2, 3, 4 ],
      { runs_type => '1rep' },
@@ -701,16 +776,12 @@ foreach my $elem
      [ 0, 1,1, 2,2,2, 3,3,3,3, ],
      { runs_type => 'N+1rep' },
    ],
-
-
-   [ 'Math::NumSeq::LuckyNumbers',
-     [ 1, 3, 7, 9, 13, 15, 21, 25, 31, 33, 37, 43, 49, 51, 63, 67, 69, 73 ],
-   ],
-
+   
+   
    [ 'Math::NumSeq::MoranNumbers',
      [ 18, 21, 27, 42, 45, 63, 84, 111, 114, 117, 133, 152, 153, 156, ],
    ],
-
+   
    [ 'Math::NumSeq::SophieGermainPrimes',
      [ 2, 3, 5, 11, 23, 29, 41, 53, 83, 89, 113, 131, 173,
        179, 191, 233, 239, 251, 281, 293, 359, 419, 431,
@@ -719,7 +790,7 @@ foreach my $elem
        1223, 1229, 1289, 1409, 1439, 1451, 1481, 1499,
        1511, 1559 ],
    ],
-
+   
    # # http://oeis.org/A005385
    # [ 'Math::NumSeq::SafePrimes',
    #   [ 5, 7, 11, 23, 47, 59, 83, 107, 167, 179, 227, 263,
@@ -729,7 +800,7 @@ foreach my $elem
    #     2063, 2099, 2207, 2447, 2459, 2579, 2819, 2879, 2903,
    #   ],
    # ],
-
+   
    [ 'Math::NumSeq::DigitLength',
      [ 1,       # 0
        1,1,1,1,1,1,1,1,1,  # 1 to 9
@@ -766,56 +837,21 @@ foreach my $elem
        280, 286, 292 ],
      { radix => 2 },
    ],
-
-   [ 'Math::NumSeq::Fibbinary',
-     [ 0x0,  #      0
-       0x1,  #      1
-       0x2,  #     10
-       0x4,  #    100
-       0x5,  #    101
-       0x8,  #   1000
-       0x9,  #   1001
-       0xA,  #   1010
-       0x10, #  10000
-       0x11, #  10001
-       0x12, #  10010
-       0x14, #  10100
-       0x15, #  10101
-       0x20, # 100000
-     ],
-   ],
-   [ 'Math::NumSeq::FibbinaryBitCount',
-     [ 0, #      0
-       1, #      1
-       1, #     10
-       1, #    100
-       2, #    101
-       1, #   1000
-       2, #   1001
-       2, #   1010
-       1, #  10000
-       2, #  10001
-       2, #  10010
-       2, #  10100
-       3, #  10101
-       1, # 100000
-     ],
-   ],
-
+   
    [ 'Math::NumSeq::Cubes',
      [ 0, 1, 8, 27, 64, 125 ],
      {},
      { value_to_i_floor_below_first => -1 } ],
    # [ 'Math::NumSeq::Cubes', 3,
    #   [ 8, 27, 64, 125 ] ],
-
+   
    [ 'Math::NumSeq::Even',
      [ 0, 2, 4, 6, 8, 10, 12 ],
      {},
      { value_to_i_floor_below_first => -1 } ],
    # [ 'Math::NumSeq::Even', 5,
    #   [ 6, 8, 10, 12 ] ],
-
+   
    [ 'Math::NumSeq::All',
      [ 0, 1, 2, 3, 4, 5, 6, 7 ],
      {},
@@ -824,14 +860,14 @@ foreach my $elem
      [ 1,2,3,4,5,6 ],
      { i_start => 1 },
      { value_to_i_floor_below_first => 0 }],
-
+   
    [ 'Math::NumSeq::Odd',
      [ 1, 3, 5, 7, 9, 11, 13 ],
      {},
      { value_to_i_floor_below_first => -1 } ],
    # [ 'Math::NumSeq::Odd', 6,
    #   [ 7, 9, 11, 13 ] ],
-
+   
    [ 'Math::NumSeq::SelfLengthCumulative',
      [ 1,2,3,4,5,6,7,8,9,10,
        12,14,16,18,20,22,24,26,
@@ -854,7 +890,7 @@ foreach my $elem
      ],
      { radix => 2 },
    ],
-
+   
    [ 'Math::NumSeq::DeletablePrimes',
      [ 2,3,5,7,
        13,17,23 ],
@@ -864,7 +900,7 @@ foreach my $elem
        0x13 ],
      { radix => 16 },
    ],
-
+   
    [ 'Math::NumSeq::ConcatNumbers',
      [ 1, 12, 23, 34, 45, 56, 67, 78, 89, 910, 1011, 1112, 1213 ],
    ],
@@ -911,7 +947,7 @@ foreach my $elem
        concat_count => 4,
      },
    ],
-
+   
    [ 'Math::NumSeq::ConcatNumbers',
      [ 1, 12, 23, 34, 45, 56, 67, 78, 89, 910, 1011, 1112, 1213 ],
    ],
@@ -924,7 +960,7 @@ foreach my $elem
        0x9A, 0xAB, 0xBC, 0xCD, 0xDE, 0xEF, 0xF10, 0x1011, 0x1112, 0x1213 ],
      { radix => 16 },
    ],
-
+   
    [ 'Math::NumSeq::HofstadterFigure',
      [ 2, 3, 7, 12, 18, 26, 35, 45, ],
      { start => 2 },
@@ -932,7 +968,7 @@ foreach my $elem
    [ 'Math::NumSeq::HofstadterFigure',
      [ 1, 3, 7, 12, 18, 26, 35, 45, 56, 69, 83, 98 ],
    ],
-
+   
    # sqrt(2) = hex 1.6A09E667F3
    [ 'Math::NumSeq::SqrtDigits',
      [ 1, 6, 10, 0, 9, 14, 6, 6, 7, 15, 3 ],
@@ -942,12 +978,12 @@ foreach my $elem
      [ 1, 0, 1, 1, 0, 1, 0, 1, 0, ],
      { radix => 2, sqrt => 2 },
    ],
-
-
+   
+   
    [ 'Math::NumSeq::LemoineCount',
      [ 0, 0, 0, 0, 0, 1, 1, 1, 2, 0, 2, 1, 2, 0, 2, 1, 4, 0, ], # per POD
    ],
-
+   
    [ 'Math::NumSeq::GoldbachCount',
      [ 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 0, 1, 1, 2, 1, 2, 0, ], # per POD
    ],
@@ -955,11 +991,11 @@ foreach my $elem
      [ 0, 1, 1, 1, 2, 1, 2, 2, ],
      { on_values => 'even' },
    ],
-
+   
    [ 'Math::NumSeq::ReReplace',
      [ 1,2,1,2,3,3,1,2,4,4,3,4, ] # from the POD
    ],
-
+   
    [ 'Math::NumSeq::ReRound',
      [ 1, 2, 4, 6, 10, 12, ]
    ],
@@ -986,7 +1022,7 @@ foreach my $elem
      ],
      { multiplicity => 'distinct' },
    ],
-
+   
    [ 'Math::NumSeq::PrimeFactorCount',
      [ 0,  # 1
        0,  # 2
@@ -1046,7 +1082,7 @@ foreach my $elem
        prime_type => 'twin',
      },
    ],
-
+   
    [ 'Math::NumSeq::PrimeFactorCount',
      [ 0,  # 1
        1,  # 2    2   2*2+1=5
@@ -1075,7 +1111,7 @@ foreach my $elem
      { prime_type => 'SG',
      },
    ],
-
+   
    [ 'Math::NumSeq::PrimeFactorCount',
      [ 0,  # 1
        0,  # 2
@@ -1104,7 +1140,7 @@ foreach my $elem
      { prime_type => 'safe',
      },
    ],
-
+   
    [ 'Math::NumSeq::PythagoreanHypots',
      [ 5, 10, 13, 15, 17, 20, ]
    ],
@@ -1115,7 +1151,7 @@ foreach my $elem
    [ 'Math::NumSeq::UlamSequence',
      [ 1, 2, 3, 4, 6, 8, 11, 13, 16, 18, 26, ]
    ],
-
+   
    [ 'Math::NumSeq::PowerPart',
      [ 1,  # 1
        1,  # 2
@@ -1130,7 +1166,7 @@ foreach my $elem
    [ 'Math::NumSeq::SqrtContinued',
      [ 1, 2,2,2,2,2 ]
    ],
-
+   
    [ 'Math::NumSeq::Fibonacci',
      [ 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144,
        233, 377, 610, 987, 1597,
@@ -1197,7 +1233,7 @@ foreach my $elem
        # '8944394323791464',
        # '14472334024676221',
      ] ],
-
+   
    [ 'Math::NumSeq::AllDigits',
      [ 0,1,2,3,4,5,6,7,8,9,
        1,0, 1,1, 1,2, 1,3, 1,4, 1,5, 1,6 ],
@@ -1212,7 +1248,7 @@ foreach my $elem
        0,1, 1,1, 1,2, 1,3, 1,4, 1,5, 1,6 ],
      { order => 'sorted' },
    ],
-
+   
    [ 'Math::NumSeq::RepdigitRadix',
      [  2,  # 0
         0,  # 1
@@ -1225,7 +1261,7 @@ foreach my $elem
         3,  # 8
      ],
    ],
-
+   
    [ 'Math::NumSeq::RepdigitAny',
      [  0,
         7,  # 111 base 2
@@ -1236,8 +1272,8 @@ foreach my $elem
         31, # 11111 base 2
      ],
    ],
-
-
+   
+   
    [ 'Math::NumSeq::SqrtEngel',
      [ 1, 3, 5, 5, 16, ],
      { sqrt => 2 } ],
@@ -1247,7 +1283,7 @@ foreach my $elem
    [ 'Math::NumSeq::SqrtEngel',
      [ 1, 1, 1 ],
      { sqrt => 9 } ],
-
+   
    [ 'Math::NumSeq::DigitCountHigh',
      [ 0,  # 0
        0,  # 1
@@ -1259,7 +1295,7 @@ foreach my $elem
      { radix => 2,
        digit => 0,
      } ],
-
+   
    [ 'Math::NumSeq::DigitCountHigh',
      [ 0,  # 0
        1,  # 1
@@ -1282,7 +1318,7 @@ foreach my $elem
      { radix => 2,
        digit => 1,
      } ],
-
+   
    [ 'Math::NumSeq::DigitCountHigh',
      [ 0,  # 0
        1,  # 1
@@ -1312,7 +1348,7 @@ foreach my $elem
      { radix => 5,
        digit => 1,
      } ],
-
+   
    [ 'Math::NumSeq::DigitCountLow',
      [ 0,  # 0
        0,  # 1
@@ -1376,8 +1412,8 @@ foreach my $elem
      { radix => 5,
        digit => 0,
      } ],
-
-
+   
+   
    [ 'Math::NumSeq::AlmostPrimes',
      [ 4, 6, 9, 10, 14, 15, 21, 22, 25, 26, 33, 34, 35, 38,
        39, 46, 49, 51, 55, 57, 58, 62, 65, 69, 74, 77, 82,
@@ -1390,28 +1426,19 @@ foreach my $elem
    # #   [ 9, 15, 21, 25, 33, 35,
    # #     39, 49, 51, 55, 57, 65, 69, 77,
    # #   ] ],
-
-   [ 'Math::NumSeq::FibonacciWord',
-     [ 0,1,
-       0,
-       0,1,
-       0,1,0,
-       0,1,0,0,1,
-     ],
-   ],
-
+   
    [ 'Math::NumSeq::AsciiSelf',
      [ 53,51,53,49,53,51,52,57 ] ],
-
+   
    [ 'Math::NumSeq::DivisorCount',
      [ 1,2,2,3,2,4,2 ] ],
-
+   
    [ 'Math::NumSeq::KlarnerRado',
      [ 1,2,4,5,8,9 ] ],
-
+   
    [ 'Math::NumSeq::BaumSweet',
      [ 1,1,0,1,1,0,0,1,0,1,0,0 ] ],
-
+   
    [ 'Math::NumSeq::Pell',
      [ 0, 1, 2, 5, 12, 29, 70, 169, 408, 985, 2378, 5741,
        13860, 33461, 80782, 195025, 470832, 1136689,
@@ -1420,7 +1447,7 @@ foreach my $elem
    #   [ 12, 29, 70, 169, 408, 985, 2378, 5741,
    #     13860, 33461, 80782, 195025, 470832, 1136689,
    #   ] ],
-
+   
    [ 'Math::NumSeq::Polygonal',  # pentagonal
      [ 0, 1,   5, 12,   22 ],  { polygonal => 5 },
    ],
@@ -1434,7 +1461,7 @@ foreach my $elem
      [ 0, 1,2, 5,7, 12,15, 22,26 ],
      { polygonal => 5, pairs => 'both' },
    ],
-
+   
    [ 'Math::NumSeq::CollatzSteps',  # both
      [ 0,   # 1
        1,   # 2 -> 1
@@ -1464,7 +1491,7 @@ foreach my $elem
      ],
      { step_type => 'down' },
    ],
-
+   
    [ 'Math::NumSeq::NumAronson',
      [ 1, 4,
        6,7,8, 9,11,13,
@@ -1474,11 +1501,11 @@ foreach my $elem
      ],
      undef,
    ],
-
+   
    [ 'Math::NumSeq::Tribonacci',
      [ 0, 0, 1, 1, 2, 4, 7, 13, 24, ],
    ],
-
+   
    [ 'Math::NumSeq::DigitSum',
      [ 0,1,1,2,
        1,2,2,3,
@@ -1499,15 +1526,15 @@ foreach my $elem
      ],
      { power => 2 },
    ],
-
+   
    [ 'Math::NumSeq::Abundant',
      [  12, 18, 20, 24, 30 ],
    ],
-
+   
    [ 'Math::NumSeq::SternDiatomic',
      [ 0, 1, 1, 2, 1, 3, 2, 3, 1, 4, 3, 5 ],
    ],
-
+   
    [ 'Math::NumSeq::DigitProduct',
      [ 0,
        1,
@@ -1519,38 +1546,32 @@ foreach my $elem
        1,  # 111
        0, ],
      { radix => 2 } ],
-
+   
    [ 'Math::NumSeq::DigitProduct',
      [ 0,1,2,
        0,1,2,
        0,2,4,  # 20,21,22
-
+       
        0,0,0,  # 100,101,102
        0,1,2,
        0,2,4,
-
+       
        0,0,0,
        0,2,4,
        0,4,8, ],
      { radix => 3 } ],
-
+   
    [ 'Math::NumSeq::FractionDigits',
      [ 0,9,0,9,0,9,0,9,0,9,0,9, ],
      { fraction => '1/11' } ],
-
-   [ 'Math::NumSeq::ProthNumbers',
-     [ 3, 5, 9, 13, 17, 25, 33, 41, 49, 57, 65, 81, 97, 113, 129, 145,
-       161, 177, 193, 209, 225, 241, 257, 289, 321, 353, 385, 417, 449, 481,
-       513, 545, 577, 609, 641, 673, 705, 737, 769, 801, 833, 865, 897, 929,
-       961, 993, 1025, 1089, 1153, 1217, 1281, 1345, 1409 ] ],
-
+   
    [ 'Math::NumSeq::TotientCumulative',
      [ 0, 1, 2, 4, 6, 10, 12, 18, 22, 28, 32, 42 ],
    ],
-
+   
    # [ 'Math::NumSeq::Loeschian',
    #   [ 0,1,3,4,7,9,12,13,16,19,21,25 ] ],
-
+   
    [ 'Math::NumSeq::DigitCount',
      [ 0,1,1,2,
        1,2,2,3,
@@ -1582,13 +1603,13 @@ foreach my $elem
      { radix => 10,
        digit => 9,
      } ],
-
+   
    [ 'Math::NumSeq::CullenNumbers',
      [ 1, 3, 9, 25, 65, 161, 385, 897, 2049, 4609, ] ],
-
+   
    # [ 'Math::NumSeq::SumXsq3Ysq',
    #   [ 4,7,12,13,16,19,21,28,31,36,37 ] ],
-
+   
    [ 'Math::NumSeq::Palindromes',
      [ 0, 1, 3, 5, 7, 9, 15, 17, 21, 27, 31, 33, 45, 51,
        63, 65, 73, 85, 93, 99, 107, 119, 127, 129, 153,
@@ -1670,15 +1691,15 @@ foreach my $elem
        909,919,929,939,949,959,969,979,989,999,
        1001,1111,1221,1331,1441,1551,1661,1771,1881,1991,
      ] ],
-
+   
    [ 'Math::NumSeq::Factorials',
      [ 1, 1, 2, 6, 24, 120, 720 ],
    ],
-
+   
    [ 'Math::NumSeq::Primorials',
      [ 1, 2, 6, 30, 210, ],
    ],
-
+   
    # [ 'Math::NumSeq::SumTwoSquares',
    #   [ 2, 5, 8, 10, 13, 17, 18, 20, 25, 26, 29, 32, 34, 37,
    #     40, 41, 45, 50, 52, 53, 58, 61, 65, 68, 72, 73, 74,
@@ -1689,16 +1710,10 @@ foreach my $elem
    #
    # [ 'Math::NumSeq::PythagoreanHypots',
    #   [ 5, 10, 13, 15, 17, 20, 25, 26, 29, 30 ] ],
-
-   [ 'Math::NumSeq::Multiples',
-     [ 0, 2, 4, 6, 8, 10, 12 ],
-     { multiples => 2 },
-     { value_to_i_floor_below_first => -1 },
-   ],
-
+   
    [ 'Math::NumSeq::PolignacObstinate',
      [ 1, 127, ] ],
-
+   
    [ 'Math::NumSeq::RadixWithoutDigit',
      [ 1, 2,    # 1,2
        4,5,     # 11,12
@@ -1739,7 +1754,7 @@ foreach my $elem
        digit => -1,
      },
    ],
-
+   
    [ 'Math::NumSeq::RadixWithoutDigit',
      [ 0x01, 0x02, 0x03,    # 1,2,3
        0x05, 0x06, 0x07,    # 11,12,13
@@ -1778,13 +1793,13 @@ foreach my $elem
        digit => 3,
      },
    ],
-
+   
    [ 'Math::NumSeq::StarNumbers',
      [ 1, 13, 37, 73, 121, ],
      {},
      { value_to_i_floor_below_first => 0 },
    ],
-
+   
    [ 'Math::NumSeq::Polygonal', # triangular
      [ 0, 1, 3, 6, 10, 15, 21 ],
      { polygonal => 3 },
@@ -1835,13 +1850,13 @@ foreach my $elem
      [ 0, 1, 14, 39, 76, 125, 186, ],
      { polygonal => 14 },
    ],
-
-
+   
+   
    [ 'Math::NumSeq::Tetrahedral',
      [ 0, 1, 4, 10, 20, 35, 56, 84, 120 ],
      {},
      { value_to_i_floor_below_first => -3 } ],
-
+   
    [ 'Math::NumSeq::Emirps',
      [ 13, 17, 31, 37, 71, 73, 79, 97, 107, 113, 149, 157,
        167, 179, 199, 311, 337, 347, 359, 389, 701, 709,
@@ -1849,30 +1864,24 @@ foreach my $elem
        967, 971, 983, 991, 1009, 1021, 1031, 1033, 1061,
        1069, 1091, 1097, 1103, 1109, 1151, 1153, 1181, 1193
      ] ],
-
+   
    [ 'Math::NumSeq::Squares',
      [ 0, 1, 4, 9, 16, 25 ] ],
    # [ 'Math::NumSeq::Squares', 3,
    #   [ 4, 9, 16, 25 ] ],
-
-   [ 'Math::NumSeq::Triangular',
-     [ 0, 1, 3, 6, 10, 15, 21 ] ],
-
-   [ 'Math::NumSeq::Pronic',
-     [ 0, 2, 6, 12, 20, 30, 42 ] ],
-
+   
    [ 'Math::NumSeq::Perrin',
      [ 3, 0, 2, 3, 2, 5, 5, 7, 10, 12, 17 ] ],
    # [ 'Math::NumSeq::Padovan',
    #   [ 1, 1, 1, 2, 2, 3, 4, 5, 7, 9, 12 ],
    #   undef,
    #   { bfile_offset => 5 } ],
-
+   
    [ 'Math::NumSeq::Primes',
      [ 2, 3, 5, 7, 11, 13, 17 ] ],
    # [ 'Math::NumSeq::Primes', 10,
    #   [ 11, 13, 17 ] ],
-
+   
    [ 'Math::NumSeq::TwinPrimes',
      [ 3, 5, 7, 11, 13, 17, 19, 29, 31 ],
      { pairs => 'both' },
@@ -1881,7 +1890,7 @@ foreach my $elem
    #   [ 11, 13, 17, 19, 29, 31 ],
    #   { pairs => 'both' },
    # ],
-
+   
    [ 'Math::NumSeq::TwinPrimes',
      [ 3, 5, 11, 17, 29 ],
      { pairs => 'first' },
@@ -1890,7 +1899,7 @@ foreach my $elem
    #   [ 5, 11, 17, 29 ],
    #   { pairs => 'first' },
    # ],
-
+   
    [ 'Math::NumSeq::TwinPrimes',
      [ 5, 7, 13, 19, 31 ],
      { pairs => 'second' },
@@ -1899,7 +1908,7 @@ foreach my $elem
    #   [ 7, 13, 19, 31 ],
    #   { pairs => 'second' },
    # ],
-
+   
    # [ 'Math::NumSeq::ThueMorseEvil',
    #   [ 0, 3, 5, 6, 9, 10, 12, 15, 17, 18, 20, 23, 24, 27,
    #     29, 30, 33, 34, 36, 39, 40, 43, 45, 46, 48, 51, 53,
@@ -1925,7 +1934,7 @@ foreach my $elem
    # [ 'Math::NumSeq::ThueMorseOdious', 3, [ 4, 7, ] ],
    # [ 'Math::NumSeq::ThueMorseOdious', 4, [ 4, 7, ] ],
    # [ 'Math::NumSeq::ThueMorseOdious', 5, [ 7, ] ],
-
+   
    [ 'Math::NumSeq::Beastly',
      [ 666,
        1666, 2666, 3666, 4666, 5666,
@@ -1953,14 +1962,14 @@ foreach my $elem
        027666,
      ],
      { radix => 8 } ],
-
+   
    # [ 'Math::NumSeq::PrimeQuadraticEuler',
    #   [ 41, 43, 47, 53, 61, 71, 83, 97, 113, 131, 151 ] ],
    # [ 'Math::NumSeq::PrimeQuadraticLegendre',
    #   [ 29, 31, 37, 47, 61, 79, 101, 127, 157, 191, 229 ] ],
    # [ 'Math::NumSeq::PrimeQuadraticHonaker',
    #   [ 59, 67, 83, 107, 139, 179, 227, 283, 347, 419, 499 ] ],
-
+   
    # # [ 'Math::NumSeq::GolayRudinShapiro',
    # #   [ 0,1,2,4,5,7 ] ],
    # # http://oeis.org/A022155
@@ -1973,32 +1982,32 @@ foreach my $elem
    #     96, 97, 98, 100, 101, 103, 104, 105,
    #     106, 110, 115, 118, 120, 121, 122, 126,
    #     131, 134, 139, 140 ] ],
-
+   
   ) {
   my ($class, $want, $values_options, $test_options) = @$elem;
   $values_options ||= {};
   my $good = 1;
   my $lo = $want->[0];
-
+  
   ref $want eq 'ARRAY' or die "$class, oops, want array is not an array";
-
+  
   my $name = join (' ',
                    $class,
                    map {"$_=$values_options->{$_}"} keys %$values_options);
-
+  
   ### $class
   eval "require $class; 1" or die $@;
   my $seq = $class->new (%$values_options);
-
+  
   $seq->oeis_anum;
   $seq->description;
   $class->description;
-
-
+  my $i_start = $seq->i_start;
+  
   #### $want
   my $hi = $want->[-1];
   # MyTestHelpers::diag ("$name $lo to ",$hi);
-
+  
   # SKIP: {
   #    require Module::Load;
   #    if (! eval { Module::Load::load ($class);
@@ -2021,7 +2030,7 @@ foreach my $elem
   foreach my $rewind (0, 1) {
     {
       my $i = $seq->tell_i;
-      ok ($i, $seq->i_start, "$name tell_i() == i_start(), rewind=$rewind");
+      ok ($i, $i_start, "$name tell_i() == i_start(), rewind=$rewind");
     }
 
     my $got = [ map { my ($i, $value) = $seq->next; $value } 0 .. $#$want ];
@@ -2057,39 +2066,9 @@ foreach my $elem
     if (! $seq->can('ith')) {
       $skip = "$name no ith()";
     } else {
-      my $got = [ map { my $i = $_ + $seq->i_start;
+      my $got = [ map { my $i = $_ + $i_start;
                         $seq->ith($i) } 0 .. $#$want ];
-      foreach (@$got) { if (defined $_ && $_ == 0) { $_ = 0 } }  # avoid "-0"
-      foreach (@$got) { if (! defined $_) { $_ = 'undef' } }
-      foreach (@$got) { if (ref $_) { $_ = "$_" }
-                        elsif ($_ > ~0) { $_ = sprintf "%.0f", $_ } }
-      ### ref: ref $got->[-1]
-
-      $got_str = join(',', @$got);
-      # stray leading "+" from perl 5.6.2 on ConcatNumbers NVs or something
-      $got_str =~ s/^\+//;
-      $got_str =~ s/,\+/,/g;
-    }
-    my $want_str = join(',', @$want);
-    skip ($skip, $got_str, $want_str, "$name by ith(), lo=$lo hi=$hi");
-  }
-
-  ### seek_to_i() ...
-  {
-    my $skip;
-    my $got_str;
-    if (! $seq->can('seek_to_i')) {
-      $skip = "$name no seek_to_i()";
-    } else {
-      my $got = [ map { my $i = $_ + $seq->i_start;
-                        $seq->seek_to_i($i);
-                        my ($got_i, $value) = $seq->next;
-                        if ($i != $got_i) {
-                          die "oops $name seek_to_i() got_i=$got_i want i=$i";
-                        }
-                        $value
-                      }
-                  0 .. $#$want ];
+      ### $got
       foreach (@$got) { if (defined $_ && $_ == 0) { $_ = 0 } }  # avoid "-0"
       foreach (@$got) { if (! defined $_) { $_ = 'undef' } }
       foreach (@$got) { if (ref $_) { $_ = "$_" }
@@ -2112,7 +2091,7 @@ foreach my $elem
     my $bad = 0;
 
     foreach my $p (0 .. $#$want) {
-      my $i = $p + $seq->i_start;
+      my $i = $p + $i_start;
       my $value = $want->[$p];
 
       foreach my $using_bigint (0, 1) {
@@ -2128,21 +2107,21 @@ foreach my $elem
         }
         if ($seq->can('value_to_i')) {
           my $got_i = $seq->value_to_i($value);
-          if (! defined $got_i || $got_i != $want_i) {
-            MyTestHelpers::diag ("$name value_to_i($value) want $want_i got $got_i");
+          if (! equal($got_i, $want_i)) {
+            MyTestHelpers::diag ("$name value_to_i($value) want ",$want_i," got ",$got_i);
             $bad++
           }
         }
         if ($seq->can('value_to_i_floor')) {
           my $got_i = $seq->value_to_i_floor($value);
-          if (! defined $got_i || $got_i != $want_i) {
-            MyTestHelpers::diag ("$name value_to_i_floor($value) want $want_i got $got_i");
+          if (! equal($got_i, $want_i)) {
+            MyTestHelpers::diag ("$name value_to_i_floor($value) want ",$want_i," got ",$got_i);
             $bad++
           }
         }
         if ($seq->can('value_to_i_ceil')) {
           my $got_i = $seq->value_to_i_ceil($value);
-          if (! defined $got_i || $got_i != $want_i) {
+          if (! equal($got_i, $want_i)) {
             MyTestHelpers::diag ("$name value_to_i_ceil($value) want $want_i got $got_i");
             $bad++
           }
@@ -2266,6 +2245,85 @@ foreach my $elem
     }
     my $want_str = join(',', @$want);
     skip ($skip, $bad, 0, "$name value_to_i_floor()");
+  }
+
+  ### seek_to_i() ...
+  {
+    my $skip;
+    my $bad = 0;
+    if (! $seq->can('seek_to_i')) {
+      $skip = "$name no seek_to_i()";
+    } else {
+      foreach my $p (reverse 0 .. $#$want) {
+        my $got_str = '';
+        my $want_str = '';
+        my $i = $i_start + $p;
+        $seq->seek_to_i($i);
+
+        my $want_i = $i;
+        foreach my $pp ($p .. _min($p+20,$#$want)) {
+          my ($got_i, $value) = $seq->next;
+          if ($want_i != $got_i) {
+            die "oops $name seek_to_i() got_i=$got_i want i=$i";
+          }
+          if (defined $value && $value == 0) { $value = 0; }  # avoid "-0"
+          if (! defined $value) { $value = 'undef' }
+          if (ref $value) { $value = "$value" }
+          elsif ($value > ~0) { $value = sprintf "%.0f", $value }
+          $got_str  .= sprintf ',%b', $value;
+          $want_str .= sprintf ',%b', $want->[$pp];
+          # $got_str  .= ",$value";
+          # $want_str .= ",$want->[$pp]";
+          $want_i++;
+        }
+        # stray leading "+" from perl 5.6.2 on ConcatNumbers NVs or something
+        $got_str =~ s/^\+//;
+        $got_str =~ s/,\+/,/g;
+
+        if ($got_str ne $want_str) {
+          MyTestHelpers::diag ("$name seek_to_i($i)\nwant $want_str\ngot  $got_str");
+          if (++$bad > 8) {
+            die;
+            last;
+          }
+        }
+      }
+    }
+    skip ($skip, $bad, 0,
+          "$name by seek_to_i() next(), lo=$lo hi=$hi");
+  }
+
+  ### seek_to_value() ...
+  {
+    my $skip;
+    my $got_str;
+    if (! $seq->can('seek_to_value')) {
+      $skip = "$name no seek_to_value()";
+    } else {
+      my @got;
+      foreach my $p (reverse 0 .. $#$want) {
+        my $i = $i_start + $p;
+        $seq->seek_to_value($want->[$p]);
+        my ($got_i, $value) = $seq->next;
+        if ($i != $got_i) {
+          die "oops $name seek_to_value() got_i=$got_i want i=$i";
+        }
+        $got[$p] = $value;
+      }
+      foreach (@got) { if (defined $_ && $_ == 0) { $_ = 0 } }  # avoid "-0"
+      foreach (@got) { if (! defined $_) { $_ = 'undef' } }
+      foreach (@got) { if (ref $_) { $_ = "$_" }
+                        elsif ($_ > ~0) { $_ = sprintf "%.0f", $_ } }
+      ### ref: ref $got[-1]
+
+      $got_str = join(',', @got);
+      # stray leading "+" from perl 5.6.2 on ConcatNumbers NVs or something
+      $got_str =~ s/^\+//;
+      $got_str =~ s/,\+/,/g;
+    }
+    my $want_str = join(',', @$want);
+    skip ($skip, $got_str, $want_str,
+          "$name by seek_to_value() next(), lo=$lo hi=$hi");
   }
 
   # value_to_i_estimate() should be an integer, and should be clean to
@@ -2406,5 +2464,11 @@ foreach my $elem
 #------------------------------------------------------------------------------
 
 # MyTestHelpers::diag ("Math::Prime::XS version ", Math::Prime::XS->VERSION);
+
+sub equal {
+  my ($x,$y) = @_;
+  return ((defined $x && defined $y && $x == $y)
+          || (! defined $x && ! defined $y));
+}
 
 exit 0;

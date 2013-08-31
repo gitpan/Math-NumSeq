@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 62;
+$VERSION = 63;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -165,7 +165,7 @@ L<Math::NumSeq::Polygonal>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/math-numseq/index.html
+L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 

@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 62;
+$VERSION = 63;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -115,12 +115,30 @@ sub oeis_anum {
 #------------------------------------------------------------------------------
 # i_offset is a hack to number A143667 starting OFFSET=1, whereas otherwise
 # here start i=0
+#
+# $self->{'i'} is the next $i to return from next()
+#
+# $self->{'value'} is Fibbinary->ith($self->{'i'}), or for "dense" is
+# Fibbinary->ith(2 * $self->{'i'}).  $self->{'value'} is incremented by the
+# same bit-twiddling as in Fibbinary.  The low bit of $self->{'value'} is
+# the FibonacciWord $value.  Or for "dense" the low bit of two successive
+# values combined.
+#
 
 sub rewind {
   my ($self) = @_;
   $self->{'i'} = $self->i_start;
   $self->{'value'} = 0;
   $self->{'i_offset'} ||= 0;
+}
+sub seek_to_i {
+  my ($self, $i) = @_;
+  $self->{'i'} = $i;
+  if ($self->{'fibonacci_word_type'} eq 'dense') {
+    $self->{'value'} = Math::NumSeq::Fibbinary->ith(2*$i);
+  } else {
+    $self->{'value'} = Math::NumSeq::Fibbinary->ith($i);
+  }
 }
 sub next {
   my ($self) = @_;
@@ -180,7 +198,6 @@ sub ith {
     $level++;
   }
   ### above: "$f1,$f0  level=$level"
-
 
   if ($self->{'fibonacci_word_type'} eq 'dense') {
     my $v = Math::NumSeq::Fibbinary->ith(2*$i);
@@ -261,7 +278,7 @@ The result is also the Fibbinary numbers modulo 2, which is the least
 significant bit of the Zeckendorf base representation of i.
 
 The Zeckendorf base breakdown subtracts Fibonacci numbers F(k) until
-reaching 0 or 1.  This effectively undoes the above append to expand
+reaching 0 or 1.  This effectively undoes the above append expansion
 procedure.  (See L<Math::NumSeq::Fibbinary/Zeckendorf Base>.)
 
     start at i
@@ -280,11 +297,13 @@ Option C<fibonacci_word_type =E<gt> "dense"> selects the dense Fibonacci
 word
 
     1,0,2,2,1,0,2,2,1,1,0,2,1,1,...
+    starting i=0
 
 This is the above plain word with each two values (not overlapping) encoded
 in a binary style as
 
     plain pair   dense value
+    ----------   -----------
         0,0           0
         0,1           1
         1,0           2
@@ -311,6 +330,17 @@ Create and return a new sequence object.  The C<fibonacci_word_type> option
 
 =back
 
+=head2 Iterating
+
+=over
+
+=item C<$seq-E<gt>seek_to_i($i)>
+
+Move the current i so C<next()> will return C<$i> (and corresponding value)
+on the next call.
+
+=back
+
 =head2 Random Access
 
 =over
@@ -321,8 +351,8 @@ Return the C<$i>'th value in the sequence.  The first value is at i=0.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value> occurs in the sequence, which simply means 0 or 1.
-Or for the dense Fibonacci word 0, 1 or 2.
+Return true if C<$value> occurs in the sequence.  This simply means 0 or 1,
+or for the dense Fibonacci word 0, 1 or 2.
 
 =back
 
@@ -336,7 +366,7 @@ L<Math::PlanePath::FibonacciWordFractal>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/math-numseq/index.html
+L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 

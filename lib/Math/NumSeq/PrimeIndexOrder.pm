@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 62;
+$VERSION = 63;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -134,7 +134,11 @@ Math::NumSeq::PrimeIndexOrder -- order of primeness by primes at prime indexes
 This is the order of primeness by Neil Fernandez, counting levels of prime
 at prime index iterations,
 
-    http://www.borve.org/primeness/FOP.html
+=over
+
+L<http://www.borve.org/primeness/FOP.html>
+
+=back
 
     i     = 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17
 
@@ -177,7 +181,7 @@ L<Math::NumSeq::ErdosSelfridgeClass>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/math-numseq/index.html
+L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 

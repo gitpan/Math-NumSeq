@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 62;
+$VERSION = 63;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -218,19 +218,33 @@ Math::NumSeq::NumAronson -- numerical version of Aronson's sequence
 
 =head1 DESCRIPTION
 
-This is a self-referential sequence by Cloitre, Sloane and Vandermast,
-1,4,6,7,8,9,11,13,etc, intended as a numerical version of Aronson's sequence
-(L<Math::NumSeq::Aronson>).
+X<Cloitre, Benoit>X<Sloane, Neil>X<Vandermast, Matthew>This is a
+self-referential sequence by Cloitre, Sloane and Vandermast,
 
-    http://arxiv.org/abs/math.NT/0305308
+=over
 
-Starting from a(1)=1 the rule is "n is in the sequence iff a(n) is odd".
+"Numerical Analogues of Aronson's Sequence",
+L<http://arxiv.org/abs/math.NT/0305308>
+
+=back
+
+The sequence begins
+
+    1, 4, 6, 7, 8, 9, 11, 13, ...
+    starting i=1
+
+Starting with a(1)=1 the rule is "n is in the sequence iff a(n) is odd".
 The result is a uniform pattern 3 steps by 1 then 3 steps by 2, followed by
 6 steps by 1 and 6 steps by 2, then 12, 24, 48, etc.
 
-    1,  4
-    6,  7,  8,  9,  11, 13
-    15, 16, 17, 18, 19, 20, 21, 23, 25, 27, 29, 31
+    1,
+    4,
+    6,  7,  8,                   # 3 steps by 1
+    9,  11, 13,                  # 3 steps by 2
+    15, 16, 17, 18, 19, 20,      # 6 steps by 1
+    21, 23, 25, 27, 29, 31,      # 6 steps by 2
+                                 # 3*2^k steps by 1
+                                 # 3*2^k steps by 2
 
 In general
 
@@ -273,7 +287,7 @@ L<Math::NumSeq::Aronson>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/math-numseq/index.html
+L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 

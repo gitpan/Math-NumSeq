@@ -38,7 +38,7 @@ sub numeq_array {
   if (! ref $a1 || ! ref $a2) {
     return 0;
   }
-  my $i = 0; 
+  my $i = 0;
   while ($i < @$a1 && $i < @$a2) {
     if ($a1->[$i] ne $a2->[$i]) {
       return 0;
@@ -47,31 +47,51 @@ sub numeq_array {
   }
   return (@$a1 == @$a2);
 }
-sub diff_nums {
-  my ($gotaref, $wantaref) = @_;
-  for (my $i = 0; $i < @$gotaref; $i++) {
-    if ($i > @$wantaref) {
-      return "want ends prematurely pos=$i";
-    }
-    my $got = $gotaref->[$i];
-    my $want = $wantaref->[$i];
-    if (! defined $got && ! defined $want) {
-      next;
-    }
-    if (! defined $got || ! defined $want) {
-      return "different pos=$i got=".(defined $got ? $got : '[undef]')
-        ." want=".(defined $want ? $want : '[undef]');
-    }
-    $got =~ /^[0-9.-]+$/
-      or return "not a number pos=$i got='$got'";
-    $want =~ /^[0-9.-]+$/
-      or return "not a number pos=$i want='$want'";
-    if ($got != $want) {
-      return "different pos=$i numbers got=$got want=$want";
-    }
-  }
-  return undef;
-}
+
+#------------------------------------------------------------------------------
+# A203531 GRS run lengths
+
+MyOEIS::compare_values
+  (anum => 'A203531',
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::GolayRudinShapiro->new;
+     my @got;
+     (undef, my $prev) = $seq->next;
+     my $runlength = 1;
+     while (@got < $count) {
+       my ($i, $value) = $seq->next;
+       if ($value == $prev) {
+         $runlength++;
+       } else {
+         push @got, $runlength;
+         $prev = $value;
+         $runlength = 1;
+       }
+     }
+     return \@got;
+   });
+
+#------------------------------------------------------------------------------
+# A014081 - count of 11 bit pairs, taken mod 2 is GRS
+
+MyOEIS::compare_values
+  (anum => 'A014081',
+   fixup => sub {
+     my ($aref) = @_;
+     foreach (@$aref) { $_ %= 2; }
+   },
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::GolayRudinShapiro->new (values_type => '0,1');
+     my @got;
+     while (@got < $count) {
+       my ($i,$value) = $seq->next;
+       push @got, $value;
+     }
+     return \@got;
+   });
+
 
 #------------------------------------------------------------------------------
 # A005943 - number of subwords length n
@@ -102,37 +122,6 @@ MyOEIS::compare_values
      return \@got;
    });
 
-
-#------------------------------------------------------------------------------
-# A203531 GRS run lengths
-{
-  my $anum = 'A203531';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my @got;
-  if ($bvalues) {
-    my $seq = Math::NumSeq::GolayRudinShapiro->new;
-    (undef, my $prev) = $seq->next;
-    my $count = 1;
-    while (@got < @$bvalues) {
-      my ($i, $value) = $seq->next;
-      if ($value == $prev) {
-        $count++;
-      } else {
-        push @got, $count;
-        $prev = $value;
-        $count = 1;
-      }
-    }
-
-    if (! numeq_array(\@got, $bvalues)) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        numeq_array(\@got, $bvalues),
-        1, "$anum");
-}
 
 #------------------------------------------------------------------------------
 # A022156 - first differences of A020991 highest occurrence of n in cumulative

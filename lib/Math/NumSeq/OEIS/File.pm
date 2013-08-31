@@ -27,17 +27,16 @@ use Carp;
 use POSIX ();
 use File::Spec;
 use Symbol 'gensym';
-use Math::NumSeq;
 
 use vars '$VERSION','@ISA';
-$VERSION = 62;
+$VERSION = 63;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_to_bigint = \&Math::NumSeq::_to_bigint;
 
 use vars '$VERSION';
-$VERSION = 62;
+$VERSION = 63;
 
 eval q{use Scalar::Util 'weaken'; 1}
   || eval q{sub weaken { $_[0] = undef }; 1 }
@@ -180,30 +179,44 @@ my %afile_exclude
      'a027750.txt' => 1,
     );
 
+
+# Fields:
+#   fh          File handle ref, if reading B-file or A-file
+#
+#   next_seek   File pos to seek $fh for next() to read from.
+#               ith() sets this when it moves the file position.
+#
+#   array       Arrayref of values if using .internal or .html.
+#   array_pos   Index 0,1,2,... of next value of $array to return by next().
+#
+#   i           Next $i for next() to return.
+#               When reading a file this is ignored, use the file i instead.
+
 sub new {
   ### OEIS-File new() ...
   my $self = shift->SUPER::new(@_);
 
+  delete $self->{'next_seek'}; # no initial seek
+  $self->{'characteristic'}->{'integer'} = 1;
+
   my $anum = $self->{'anum'};
-  my $oeis_dir = oeis_dir();
   (my $num = $anum) =~ s/^A//;
   foreach my $basefile ("a$num.txt",
                         "b$num.txt") {
     next if $afile_exclude{$basefile};
 
-    next if $basefile =~ /^a/ && $self->{'_dont_use_afile'};
-    next if $basefile =~ /^b/ && $self->{'_dont_use_bfile'};
+    next if $self->{'_dont_use_afile'} && $basefile =~ /^a/;
+    next if $self->{'_dont_use_bfile'} && $basefile =~ /^b/;
 
-    my $filename = File::Spec->catfile ($oeis_dir, $basefile);
+    my $filename = File::Spec->catfile (oeis_dir(), $basefile);
     ### $filename
-
-    my $fh = gensym;
+    my $fh = gensym();
     if (! open $fh, "< $filename") {
       ### cannot open: $!
       next;
     }
 
-    $self->{'filename'} = $filename;
+    $self->{'filename'} = $filename; # the B-file or A-file name
     $self->{'fh'} = $fh;
     if (! _afile_is_good($self)) {
       ### this afile not good ...
@@ -211,6 +224,7 @@ sub new {
       delete $self->{'filename'};
       next;
     }
+    $self->{'fh_i'} = $self->i_start;  # at first entry
 
     ### opened: $fh
     last;
@@ -382,10 +396,7 @@ sub rewind {
 
   $self->{'i'} = $self->i_start;
   $self->{'array_pos'} = 0;
-  if ($self->{'fh'}) {
-    seek ($self->{'fh'}, 0, 0)
-      or croak "Cannot seek $self->{'filename'}: $!";
-  }
+  $self->{'next_seek'} = 0;
 }
 
 sub next {
@@ -395,26 +406,45 @@ sub next {
   my $value;
   if (my $fh = $self->{'fh'}) {
     ### from readline ...
-    ($self->{'i'}, $value) = _readline($self)
-      or return;
+    if (defined (my $pos = delete $self->{'next_seek'})) {
+      ### seek to: $pos
+      _seek($self, $pos);
+    }
+    return _readline($self);
+
   } else {
     ### from array ...
-    my $array = $self->{'array'};
-    my $pos = $self->{'array_pos'}++;
-    if ($pos > $#$array) {
-      return;
-    }
-    $value = $array->[$pos];
-
-    # large values as Math::BigInt
-    # initially $array has strings, make bigint objects when required
-    if (! ref $value && length($value) > _MAX_DIGIT_LENGTH) {
-      $value = $array->[$pos] = _to_bigint($value);
-    }
+    my ($value) = _array_value($self, $self->{'array_pos'}++)
+      or return;
+    return ($self->{'i'}++, $value);
   }
-  return ($self->{'i'}++, $value);
 }
 
+# Return $self->{'array'}->[$pos], or no values if $pos past end of array.
+# Array values are promoted to BigInt if necessary.
+sub _array_value {
+  my ($self, $pos) = @_;
+  ### _array_value(): $pos
+
+  my $array = $self->{'array'};
+  if ($pos > $#$array) {
+    ### past end of array ...
+    return;
+  }
+  my $value = $array->[$pos];
+
+  # large values as Math::BigInt
+  # initially $array has strings, make bigint objects when required
+  if (! ref $value && length($value) > _MAX_DIGIT_LENGTH) {
+    $value = $array->[$pos] = _to_bigint($value);
+  }
+  ### $value
+  return $value;
+}
+
+# Read a line from an open B-file or A-file, return ($i,$value).
+# At EOF return empty ().
+#
 sub _readline {
   my ($self) = @_;
   my $fh = $self->{'fh'};
@@ -440,9 +470,11 @@ sub _readline {
       if (length($value) > _MAX_DIGIT_LENGTH) {
         $value = _to_bigint($value);
       }
+      $self->{'fh_i'} = $i+1;
       return ($i, $value);
     }
   }
+  undef $self->{'fh_i'};
   return;
 }
 
@@ -484,23 +516,11 @@ sub _read_internal {
   return 0 if $self->{'_dont_use_internal'};
 
   foreach my $basefile ("$anum.internal", "$anum.internal.html") {
-    my $filename = File::Spec->catfile (oeis_dir(), $basefile);
-    ### $basefile
-    ### $filename
-
-    if (! open FH, "<$filename") {
-      ### cannot open .internal file: $!
-      next;
-    }
-    my $contents = do { local $/; <FH> }; # slurp
-    close FH or die "Error reading $filename: ",$!;
-
+    my ($fullname, $contents) = _slurp_oeis_file($self,$basefile)
+      or next;
     # "Internal" files are served as html with a <meta> charset indicator
     $contents = _decode_html_charset($contents);
     ### $contents
-
-    my %characteristic = (integer => 1);
-    $self->{'characteristic'} = \%characteristic;
 
     my $offset;
     if ($contents =~ /(^|<tt>)%O\s+(\d+)/im) {
@@ -511,7 +531,7 @@ sub _read_internal {
     }
 
     if ($contents =~ m{(^|<tt>)%N (.*?)(<tt>|$)}im) {
-      _set_description ($self, $2, $filename);
+      _set_description ($self, $2);
     } else {
       ### description not matched ...
     }
@@ -536,11 +556,11 @@ sub _read_internal {
           push @samples, $2;
         }
         unless (@samples) {
-          croak "Oops list of values not found in ",$filename;
+          croak "Oops list of values not found in ",$self->{'filename'};
         }
       }
-      _split_sample_values ($self, $filename,
-                            join (', ', @samples)); # multiple lines of samples
+      # join multiple lines of samples
+      _split_sample_values ($self, join(', ',@samples));
     }
 
     # %O "OFFSET" is subscript of first number.
@@ -559,8 +579,9 @@ sub _read_internal {
   return 0; # file not found
 }
 
-# various fragile greps of the html ...
-# return 1 if .html or .htm file exists, 0 if not
+# Fill $self with contents of ~/OEIS/A000000.html but various fragile greps
+# of the html.
+# Return 1 if .html or .htm file exists, 0 if not.
 #
 sub _read_html {
   my ($self, $anum) = @_;
@@ -569,17 +590,8 @@ sub _read_html {
   return 0 if $self->{'_dont_use_html'};
 
   foreach my $basefile ("$anum.html", "$anum.htm") {
-    my $filename = File::Spec->catfile (oeis_dir(), $basefile);
-    ### $basefile
-    ### $filename
-
-    if (! open FH, "< $filename") {
-      ### cannot open: $!
-      next;
-    }
-    my $contents = do { local $/; <FH> }; # slurp
-    close FH or die;
-
+    my ($fullname, $contents) = _slurp_oeis_file($self,$basefile)
+      or next;
     $contents = _decode_html_charset($contents);
 
     if ($contents =~
@@ -590,7 +602,7 @@ sub _read_html {
           (.*?)                  # text through to ...
           (<br>|</?td)           # <br> or </td> or <td>
        }isx) {
-      _set_description ($self, $1, $filename);
+      _set_description ($self, $1);
     } else {
       ### description not matched ...
     }
@@ -614,7 +626,7 @@ sub _read_html {
       $contents =~ s{>graph</a>.*}{};
       $contents =~ m{.*<tt>([^<]+)</tt>}i;
       my $list = $1;
-      _split_sample_values ($self, $filename, $list);
+      _split_sample_values ($self, $list);
     }
 
     # %O "OFFSET" is subscript of first number, but for digit expansions
@@ -631,8 +643,27 @@ sub _read_html {
   return 0;
 }
 
+# Return the contents of ~/OEIS/$filename.
+# $filename is like "A000000.html" to be taken relative to oeis_dir().
+# If $filename cannot be read then return undef.
+sub _slurp_oeis_file {
+  my ($self,$filename) = @_;
+  $filename = File::Spec->catfile (oeis_dir(), $filename);
+  ### $filename
+
+  if (! open FH, "< $filename") {
+    ### cannot open file: $!
+    return;
+  }
+  my $contents = do { local $/; <FH> }; # slurp
+  close FH
+    or return;
+  $self->{'filename'} ||= $filename;
+  return ($filename, $contents);
+}
+
 sub _set_description {
-  my ($self, $description, $few_filename) = @_;
+  my ($self, $description) = @_;
   ### _set_description(): $description
 
   $description =~ s/\s+$//;       # trailing whitespace
@@ -646,12 +677,12 @@ sub _set_description {
   # ENHANCE-ME: maybe __x() if made available, or an sprintf "... %s" would
   # be enough ...
   $description .= "\n";
-  if (defined $self->{'filename'}) {
-    $description .= Math::NumSeq::__('Values from B-file ')
-      . $self->{'filename'};
+  if ($self->{'fh'}) {
+    $description .= sprintf(Math::NumSeq::__('Values from B-file %s'),
+                            $self->{'filename'})
   } else {
-    $description .= Math::NumSeq::__('Values from ')
-      . $few_filename;
+    $description .= sprintf(Math::NumSeq::__('Values from %s'),
+                            $self->{'filename'})
   }
   $self->{'description'} = $description;
 }
@@ -701,10 +732,10 @@ sub _set_characteristics {
 }
 
 sub _split_sample_values {
-  my ($self, $filename, $str) = @_;
+  my ($self, $str) = @_;
   ### _split_sample_values(): $str
   unless (defined $str && $str =~ m{^([0-9,-]|\s)+$}) {
-    croak "Oops list of sample values not recognised in ",$filename,"\n",
+    croak "Oops list of sample values not recognised in ",$self->{'filename'},"\n",
       (defined $str ? $str : ());
   }
   $self->{'array'} = [ split /[, \t\r\n]+/, $str ];
@@ -732,16 +763,132 @@ sub _decode_html_charset {
 }
 
 #------------------------------------------------------------------------------
+
+# Similar bsearch to Search::Dict, but Search::Dict doesn't allow for
+# comment lines at the start of the file or blank lines at the end.
+#
+#use Smart::Comments;
+
+sub ith {
+  my ($self, $i) = @_;
+  ### ith(): "$i  cf fh_i=".($self->{'fh_i'} || -999)
+
+  if (my $fh = $self->{'fh'}) {
+    if (! defined $self->{'next_seek'}) {
+      $self->{'next_seek'} = tell($fh);
+    }
+
+    if (defined $self->{'fh_i'} && $i <= $self->{'fh_i'} + 20) {
+      ### fh_i is target ...
+      if (my ($line_i, $value) = _readline($self)) {
+        if ($line_i == $i) {
+          return $value;
+        }
+      }
+    }
+
+    my $lo = 0;
+    my $hi = -s $fh;
+    for (;;) {
+      ### at: "lo=$lo hi=$hi  consider mid=".int(($lo+$hi)/2)
+      my $mid = int(($lo+$hi)/2);
+      _seek ($self, $mid);
+
+      if (! defined(readline $fh)) {
+        ### mid is EOF ...
+        last;
+      }
+      ### skip partial line to: tell($fh)
+      $mid = tell($fh);
+      if ($mid >= $hi) {
+        last;
+      }
+
+      my ($line_i,$value) = _readline($self)
+        or last;  # only blank lines between $mid and EOF, go linear
+
+      ### $line_i
+      ### $value
+      if ($line_i == $i) {
+        ### found by binary search ...
+        return $value;
+      }
+      if ($line_i < $i) {
+        ### line_i before the target, advance lo ...
+        $lo = tell($fh);
+      } else {
+        ### line_i after target, reduce hi ...
+        $hi = $mid;
+      }
+    }
+
+    _seek ($self, $lo);
+    for (;;) {
+      my ($line_i,$value) = _readline($self)
+        or last;
+      if ($line_i == $i) {
+        ### found by linear search ...
+        $self->{'fh_i'} = $line_i+1;
+        return $value;
+      }
+      if ($line_i > $i) {
+        return undef;
+      }
+    }
+    return undef;
+
+  } else {
+    $i -= $self->i_start;
+    unless ($i >= 0) {
+      return undef; # negative or NaN
+    }
+    return $self->{'array'}->[$i];
+  }
+}
+
+1;
+__END__
+
+
+#------------------------------------------------------------------------------
+
+# foreach my $basefile (anum_to_html($anum), anum_to_html($anum,'.htm')) {
+#   my $filename = File::Spec->catfile (oeis_dir(), $basefile);
+#   ### $basefile
+#   ### $filename
+#   if (open FH, "<$filename") {
+#     my $contents = do { local $/; <FH> }; # slurp
+#     close FH or die;
+#
+#     # fragile grep out of the html ...
+#     $contents =~ s{>graph</a>.*}{};
+#     $contents =~ m{.*<tt>([^<]+)</tt>};
+#     my $list = $1;
+#     unless ($list =~ m{^([0-9,-]|\s)+$}) {
+#       croak "Oops list of values not found in ",$filename;
+#     }
+#     my @array = split /[, \t\r\n]+/, $list;
+#     ### $list
+#     ### @array
+#     return \@array;
+#   }
+#   ### no html: $!
+# }
+
+
+
+
+#------------------------------------------------------------------------------
 # stripped.gz and names.gz
 # no OFFSET, so i_start would be wrong, in general
 
 # sub _read_stripped {
 #   my ($self, $anum) = @_;
 #   ### _read_stripped(): $anum
-# 
+#
 #   return 0 if $self->{'_dont_use_stripped'};
 #   (my $num = $anum) =~ s/^A//;
-# 
+#
 #   my $filename = File::Spec->catfile (oeis_dir(), "stripped");
 #   ### $filename
 #   my $line;
@@ -760,13 +907,10 @@ sub _decode_html_charset {
 #   if (! defined $line) {
 #     return 0;
 #   }
-# 
-#   my %characteristic = (integer => 1);
-#   $self->{'characteristic'} = \%characteristic;
-# 
+#
 #   return 1; # success
 # }
-# 
+#
 # sub _bsearch_textfile {
 #   my ($fh, $cmpfunc) = @_;
 #   my $lo = 0;
@@ -775,21 +919,21 @@ sub _decode_html_charset {
 #     my $mid = ($lo+$hi)/2;
 #     seek $fh, $mid, 0
 #       or last;
-# 
+#
 #     # skip partial line
 #     defined(readline $fh)
 #       or last; # EOF
-# 
+#
 #     # position start of line
 #     $mid = tell($fh);
 #     if ($mid >= $hi) {
 #       last;
 #     }
-# 
+#
 #     my $line = readline $fh;
 #     defined $line
 #       or last; # EOF
-# 
+#
 #     my $cmp = &$cmpfunc ($line);
 #     if ($cmp == 0) {
 #       return $line;
@@ -800,7 +944,7 @@ sub _decode_html_charset {
 #       $hi = $mid;
 #     }
 #   }
-# 
+#
 #   seek $fh, $lo, 0;
 #   while (defined (my $line = readline $fh)) {
 #     my $cmp = &$cmpfunc($line);
@@ -813,35 +957,3 @@ sub _decode_html_charset {
 #   }
 #   return undef;
 # }
-
-1;
-__END__
-
-
-
-
-
-
-
-  # foreach my $basefile (anum_to_html($anum), anum_to_html($anum,'.htm')) {
-  #   my $filename = File::Spec->catfile (oeis_dir(), $basefile);
-  #   ### $basefile
-  #   ### $filename
-  #   if (open FH, "<$filename") {
-  #     my $contents = do { local $/; <FH> }; # slurp
-  #     close FH or die;
-  # 
-  #     # fragile grep out of the html ...
-  #     $contents =~ s{>graph</a>.*}{};
-  #     $contents =~ m{.*<tt>([^<]+)</tt>};
-  #     my $list = $1;
-  #     unless ($list =~ m{^([0-9,-]|\s)+$}) {
-  #       croak "Oops list of values not found in ",$filename;
-  #     }
-  #     my @array = split /[, \t\r\n]+/, $list;
-  #     ### $list
-  #     ### @array
-  #     return \@array;
-  #   }
-  #   ### no html: $!
-  # }

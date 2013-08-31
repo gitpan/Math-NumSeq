@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 62;
+$VERSION = 63;
 use Math::NumSeq;
 use List::Util 'min';
 use Math::NumSeq::Base::IterateIth;

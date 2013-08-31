@@ -25,7 +25,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 62;
+$VERSION = 63;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -214,6 +214,7 @@ Math::NumSeq::PrimeIndexPrimes -- primes with prime number indexes
 This is the sequence of primes which are at prime indexes,
 
     3, 5, 11, 17, 31, 41, 59, 67, 83, 109, 127, 157, 179, 191, ...
+    starting i=1
 
 The primes begin
 
@@ -235,7 +236,11 @@ Optional C<level> controls how many repetitions of the prime indexing is to
 be applied.  The level is based on the order of primeness by Neil Fernandez
 in the PrimeIndexOrder sequence.
 
-    http://www.borve.org/primeness/FOP.html
+=over
+
+L<http://www.borve.org/primeness/FOP.html>
+
+=back
 
 The default is C<level=E<gt>2>, asking for primes with an order of primeness
 E<gt>=2.  C<level=E<gt>1> gives all primes, and C<level=E<gt>0> gives all
@@ -330,7 +335,7 @@ L<Math::NumSeq::PrimeIndexOrder>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/math-numseq/index.html
+L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 

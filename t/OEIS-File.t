@@ -35,7 +35,7 @@ use Math::NumSeq::OEIS::File;
 # VERSION
 
 {
-  my $want_version = 62;
+  my $want_version = 63;
   ok ($Math::NumSeq::OEIS::File::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::OEIS::File->VERSION, $want_version,
@@ -124,6 +124,11 @@ foreach my $options ([],
         $bad = 1;
       }
     } else {
+      if (defined $seq->{'next_seek'}) {
+        $err = "oops, next_seek set on initial creation";
+        $bad = 1;
+      }        
+
       my ($i, $value) = $seq->next;
 
       my $i_start = $seq->i_start;

@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -31,197 +31,121 @@ use MyOEIS;
 use Math::NumSeq::GolayRudinShapiroCumulative;
 
 # uncomment this to run the ### lines
-#use Smart::Comments '###';
-
-sub numeq_array {
-  my ($a1, $a2) = @_;
-  if (! ref $a1 || ! ref $a2) {
-    return 0;
-  }
-  my $i = 0; 
-  while ($i < @$a1 && $i < @$a2) {
-    if ($a1->[$i] ne $a2->[$i]) {
-      return 0;
-    }
-    $i++;
-  }
-  return (@$a1 == @$a2);
-}
-sub diff_nums {
-  my ($gotaref, $wantaref) = @_;
-  for (my $i = 0; $i < @$gotaref; $i++) {
-    if ($i > @$wantaref) {
-      return "want ends prematurely pos=$i";
-    }
-    my $got = $gotaref->[$i];
-    my $want = $wantaref->[$i];
-    if (! defined $got && ! defined $want) {
-      next;
-    }
-    if (! defined $got || ! defined $want) {
-      return "different pos=$i got=".(defined $got ? $got : '[undef]')
-        ." want=".(defined $want ? $want : '[undef]');
-    }
-    $got =~ /^[0-9.-]+$/
-      or return "not a number pos=$i got='$got'";
-    $want =~ /^[0-9.-]+$/
-      or return "not a number pos=$i want='$want'";
-    if ($got != $want) {
-      return "different pos=$i numbers got=$got want=$want";
-    }
-  }
-  return undef;
-}
+#use Smart::Comments;
 
 
 #------------------------------------------------------------------------------
 # A212591 - position of first occurance of n
 
-{
-  my $anum = 'A212591';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum,
-                                                      max_count => 1000);
-  my @got;
-  if ($bvalues) {
-    my $seq = Math::NumSeq::GolayRudinShapiroCumulative->new;
-    my $target = 1;
-    while (@got < @$bvalues) {
-      my ($i, $value) = $seq->next;
-      if ($value == $target) {
-        push @got, $i;
-        $target++;
-      }
-    }
-
-    if (! numeq_array(\@got, $bvalues)) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        numeq_array(\@got, $bvalues),
-        1, "$anum");
-}
+MyOEIS::compare_values
+  (anum => 'A212591',
+   max_count => 1000,
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::GolayRudinShapiroCumulative->new;
+     my @got;
+     my $target = 1;
+     while (@got < $count) {
+       my ($i, $value) = $seq->next;
+       if ($value == $target) {
+         push @got, $i;
+         $target++;
+       }
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 # A020991 - position of last occurrence of k in the partial sums
 
-{
-  my $anum = 'A020991';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my @got;
-  if ($bvalues) {
-    my $seq = Math::NumSeq::GolayRudinShapiroCumulative->new;
-    my @count;
-    for (my $n = 1; @got < @$bvalues; ) {
-      my ($i, $value) = $seq->next;
-      $count[$value]++;
-      if ($value == $n && $count[$value] >= $n) {  # last
-        push @got, $i;
-        $n++;
-      }
-    }
-
-    if (! numeq_array(\@got, $bvalues)) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        numeq_array(\@got, $bvalues),
-        1, "$anum");
-}
+MyOEIS::compare_values
+  (anum => 'A020991',
+   max_count => 1000,
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::GolayRudinShapiroCumulative->new;
+     my @got;
+     my @reps;
+     for (my $n = 1; @got < $count; ) {
+       my ($i, $value) = $seq->next;
+       $reps[$value]++;
+       if ($value == $n && $reps[$value] >= $n) {  # last
+         push @got, $i;
+         $n++;
+       }
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 # A051032 - GRS cumulative of 2^n
 
-{
-  my $anum = 'A051032';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my @got;
-  if ($bvalues) {
-    require Math::BigInt;
-    my $seq = Math::NumSeq::GolayRudinShapiroCumulative->new;
-    for (my $n = Math::BigInt->new(1); @got < @$bvalues; $n *= 2) {
-      push @got, $seq->ith($n);
-    }
-
-    if (! numeq_array(\@got, $bvalues)) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        numeq_array(\@got, $bvalues),
-        1, "$anum - GRS cumulative of 2^n");
-}
+MyOEIS::compare_values
+  (anum => 'A051032',
+   max_count => 1000,
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::GolayRudinShapiroCumulative->new;
+     require Math::BigInt;
+     my @got;
+     for (my $n = Math::BigInt->new(1); @got < $count; $n *= 2) {
+       push @got, $seq->ith($n);
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 # A022156 - first differences of A020991 highest occurrence of n in cumulative
 
-{
-  my $anum = 'A022156';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my @got;
-  if ($bvalues) {
-    my $seq = Math::NumSeq::GolayRudinShapiroCumulative->new;
-    my @count;
-    my $prev = 0;
-    for (my $n = 1; @got < @$bvalues; ) {
-      my ($i, $value) = $seq->next;
-      $count[$value]++;
-      if ($value == $n && $count[$value] >= $n) {
-        if ($n >= 2) {
-          push @got, $i - $prev;
-        }
-        $prev = $i;
-        $n++;
-      }
-    }
-
-    if (! numeq_array(\@got, $bvalues)) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        numeq_array(\@got, $bvalues),
-        1, "$anum - first diffs highest occurrence of n as cumulative");
-}
+MyOEIS::compare_values
+  (anum => 'A022156',
+   max_count => 1000,
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::GolayRudinShapiroCumulative->new;
+     my @got;
+     my @reps;
+     my $prev = 0;
+     for (my $n = 1; @got < $count; ) {
+       my ($i, $value) = $seq->next;
+       $reps[$value]++;
+       if ($value == $n && $reps[$value] >= $n) {
+         if ($n >= 2) {
+           push @got, $i - $prev;
+         }
+         $prev = $i;
+         $n++;
+       }
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 # A093573 - triangle of n as cumulative
 
-{
-  my $anum = 'A093573';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my @got;
-  if ($bvalues) {
-    my $seq = Math::NumSeq::GolayRudinShapiroCumulative->new;
-    my @triangle;
-    for (my $n = 1; @got < @$bvalues; ) {
-      my ($i, $value) = $seq->next;
+MyOEIS::compare_values
+  (anum => 'A093573',
+   max_count => 1000,
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::GolayRudinShapiroCumulative->new;
+     my @got;
+     my @triangle;
+     for (my $n = 1; @got < $count; ) {
+       my ($i, $value) = $seq->next;
 
-      my $aref = ($triangle[$value] ||= []);
-      push @$aref, $i;
-      if ($value == $n && scalar(@$aref) == $n) {
-        while (@$aref && @got < @$bvalues) {
-          push @got, shift @$aref;
-        }
-        delete $triangle[$value];
-        $n++;
-      }
-    }
-
-    if (! numeq_array(\@got, $bvalues)) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        numeq_array(\@got, $bvalues),
-        1, "$anum - triangle of occurrences of n as cumulative");
-}
+       my $aref = ($triangle[$value] ||= []);
+       push @$aref, $i;
+       if ($value == $n && scalar(@$aref) == $n) {
+         while (@$aref && @got < $count) {
+           push @got, shift @$aref;
+         }
+         delete $triangle[$value];
+         $n++;
+       }
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 exit 0;

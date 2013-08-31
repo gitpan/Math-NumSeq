@@ -60,6 +60,9 @@ devel/lib/Math/NumSeq/EratosthenesStage.pm
 devel/lib/Math/NumSeq/FactorialProducts.pm
 devel/lib/Math/NumSeq/FibonacciProducts.pm
 devel/lib/Math/NumSeq/FibonacciRepresentations.pm
+devel/lib/Math/NumSeq/HafermanByBits.pm
+devel/lib/Math/NumSeq/HafermanCarpet.pm
+devel/lib/Math/NumSeq/HafermanZ.pm
 devel/lib/Math/NumSeq/HypotCount.pm
 devel/lib/Math/NumSeq/JacobsthalFunction.pm
 devel/lib/Math/NumSeq/KaprekarNumbers.pm
@@ -74,6 +77,8 @@ devel/lib/Math/NumSeq/Ln2Bits.pm
 devel/lib/Math/NumSeq/Loeschian.pm
 devel/lib/Math/NumSeq/LongFractionPrimes.pm
 devel/lib/Math/NumSeq/LucasSequenceModulo.pm
+devel/lib/Math/NumSeq/LuckyNumbersByStep.pm
+devel/lib/Math/NumSeq/LuckyNumbersSlow.pm
 devel/lib/Math/NumSeq/numseq-oeis.t
 devel/lib/Math/NumSeq/OEIS/Catalogue/Plugin/Alpha.pm
 devel/lib/Math/NumSeq/Padovan.pm
@@ -104,7 +109,8 @@ devel/lib/Math/NumSeq/Xenodromes-slow.t
 devel/lib/Math/NumSeq/xenodromes.pl
 devel/lib/Math/NumSeq/Xenodromes.pm
 devel/lipschitz.pl
-devel/lucky.pl
+devel/lucky-numbers.gri
+devel/lucky-numbers.pl
 devel/math-factor.pl
 devel/maybe-decprime.pl
 devel/maybe-ln.pl

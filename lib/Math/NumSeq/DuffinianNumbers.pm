@@ -24,7 +24,7 @@ use Math::Factor::XS 0.40 'factors'; # version 0.40 for factors() on BigInt
 
 
 use vars '$VERSION', '@ISA';
-$VERSION = 62;
+$VERSION = 63;
 use Math::NumSeq;
 use List::Util 'min';
 use Math::NumSeq::Base::IteratePred;
@@ -142,7 +142,7 @@ L<Math::NumSeq>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/math-numseq/index.html
+L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 

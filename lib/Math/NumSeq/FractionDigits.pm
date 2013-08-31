@@ -25,7 +25,7 @@ use Math::NumSeq;
 *_to_bigint = \&Math::NumSeq::_to_bigint;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 62;
+$VERSION = 63;
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
 
@@ -401,7 +401,7 @@ L<Math::NumSeq::SqrtDigits>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/math-numseq/index.html
+L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 

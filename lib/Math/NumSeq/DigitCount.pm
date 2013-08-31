@@ -20,14 +20,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 62;
-use Math::NumSeq;
-*_is_infinite = \&Math::NumSeq::_is_infinite;
+$VERSION = 63;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
+*_is_infinite = \&Math::NumSeq::_is_infinite;
 
 use Math::NumSeq::Repdigits;
 *_digit_split_lowtohigh = \&Math::NumSeq::Repdigits::_digit_split_lowtohigh;
@@ -217,7 +216,7 @@ L<Math::NumSeq::RadixWithoutDigit>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/math-numseq/index.html
+L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 

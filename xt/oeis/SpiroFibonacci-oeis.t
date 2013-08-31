@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -28,73 +28,34 @@ use MyTestHelpers;
 MyTestHelpers::nowarnings();
 use MyOEIS;
 
-use Math::NumSeq::MathImageSpiroFibonacci;
+use Math::NumSeq::SpiroFibonacci;
 
 # uncomment this to run the ### lines
 #use Smart::Comments '###';
 
 
-sub diff_nums {
-  my ($gotaref, $wantaref) = @_;
-  for (my $i = 0; $i < @$gotaref; $i++) {
-    if ($i > @$wantaref) {
-      return "want ends prematurely pos=$i";
-    }
-    my $got = $gotaref->[$i];
-    my $want = $wantaref->[$i];
-    if (! defined $got && ! defined $want) {
-      next;
-    }
-    if (! defined $got || ! defined $want) {
-      return "different pos=$i got=".(defined $got ? $got : '[undef]')
-        ." want=".(defined $want ? $want : '[undef]');
-    }
-    $got =~ /^[0-9.-]+$/
-      or return "not a number pos=$i got='$got'";
-    $want =~ /^[0-9.-]+$/
-      or return "not a number pos=$i want='$want'";
-    if ($got != $want) {
-      return "different pos=$i numbers got=$got want=$want";
-    }
-  }
-  return undef;
-}
-
 #------------------------------------------------------------------------------
 # A079422 - cumulative absdiff to n^2
 
-{
-  my $anum = 'A079422';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my @got;
-  my $diff;
-  if (! $bvalues) {
-    MyTestHelpers::diag ("$anum not available");
-  } else {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
-    my $seq = Math::NumSeq::MathImageSpiroFibonacci->new (recurrence_type => 'absdiff');
-    my $target = 1;
-    my $target_n = 1;
-    my $total = 0;
-    while (@got < @$bvalues) {
-      my ($i, $value) = $seq->next;
-      if ($i >= $target) {
-        $target = (++$target_n) ** 2;
-        push @got, $total;
-      }
-      $total += $value;
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..10]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..10]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum - absdiff cumulative to n^2");
-}
+MyOEIS::compare_values
+  (anum => 'A079422',
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::SpiroFibonacci->new (recurrence_type => 'absdiff');
+     my @got;
+     my $target = 1;
+     my $target_n = 1;
+     my $total = 0;
+     while (@got < $count) {
+       my ($i, $value) = $seq->next;
+       if ($i >= $target) {
+         $target = (++$target_n) ** 2;
+         push @got, $total;
+       }
+       $total += $value;
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 exit 0;

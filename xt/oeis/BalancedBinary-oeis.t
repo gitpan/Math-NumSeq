@@ -49,33 +49,6 @@ use Math::NumSeq::RadixConversion;
 #use Smart::Comments '###';
 
 
-sub diff_nums {
-  my ($gotaref, $wantaref) = @_;
-  for (my $i = 0; $i < @$gotaref; $i++) {
-    if ($i > @$wantaref) {
-      return "want ends prematurely pos=$i";
-    }
-    my $got = $gotaref->[$i];
-    my $want = $wantaref->[$i];
-    if (! defined $got && ! defined $want) {
-      next;
-    }
-    if (! defined $got || ! defined $want) {
-      return "different pos=$i got=".(defined $got ? $got : '[undef]')
-        ." want=".(defined $want ? $want : '[undef]');
-    }
-    $got =~ /^[0-9.-]+$/
-      or return "not a number pos=$i got='$got'";
-    $want =~ /^[0-9.-]+$/
-      or return "not a number pos=$i want='$want'";
-    if ($got != $want) {
-      return "different pos=$i numbers got=$got want=$want";
-    }
-  }
-  return undef;
-}
-
-
 #------------------------------------------------------------------------------
 # A080300 - ranking, value -> i or if no such then 0
 
@@ -368,34 +341,26 @@ sub bits_breadth_to_depth {
 
 # cf A209642 left-only trees, not in ascending order
 
-{
-  my $anum = 'A071162';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum,
-                                                      max_count => 1024);
-  my $diff;
-  if ($bvalues) {
-    my $seq = Math::NumSeq::BalancedBinary->new;
-    my @got = (0);
-    while (@got < @$bvalues) {
-      my ($i, $value) = $seq->next;
-      my @bits = bit_split_hightolow($value);
-      my $tree = depthfirst_bits_to_tree(@bits);
-      ### $value
-      ### $tree
-      if (bits_is_oneonly(@bits)) {
-        push @got, $value;
-      }
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..10]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..10]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum");
-}
+MyOEIS::compare_values
+  (anum => 'A071162',
+   max_count => 1024,
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::BalancedBinary->new;
+     my @got = (0);
+
+     while (@got < $count) {
+       my ($i, $value) = $seq->next;
+       my @bits = bit_split_hightolow($value);
+       my $tree = depthfirst_bits_to_tree(@bits);
+       ### $value
+       ### $tree
+       if (bits_is_oneonly(@bits)) {
+         push @got, $value;
+       }
+     }
+     return \@got;
+   });
 
 sub bits_is_oneonly {
   my @bits = @_;
@@ -433,57 +398,41 @@ sub bits_is_oneonly {
 #------------------------------------------------------------------------------
 # A071152 - Lukasiewicz, binary with 0,2, including value=0
 
-{
-  my $anum = 'A071152';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my $diff;
-  if ($bvalues) {
-    my $seq = Math::NumSeq::BalancedBinary->new;
-    my @got = ('0');
-    while (@got < @$bvalues) {
-      my ($i, $value) = $seq->next;
-      my $str = to_binary_str($value);
-      $str =~ tr/1/2/;
-      push @got, $str;
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum");
-}
+MyOEIS::compare_values
+  (anum => 'A071152',
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::BalancedBinary->new;
+     my @got = ('0');
+
+     while (@got < $count) {
+       my ($i, $value) = $seq->next;
+       my $str = to_binary_str($value);
+       $str =~ tr/1/2/;
+       push @got, $str;
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 # A072643 balanced binary width, including value=0
 
-{
-  my $anum = 'A072643';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my $diff;
-  if ($bvalues) {
-    require Math::NumSeq::DigitLength;
-    my $dlen = Math::NumSeq::DigitLength->new (radix => 2);
-    my $seq = Math::NumSeq::BalancedBinary->new;
-    my @got = (0);
-    for (my $value = 0; @got < @$bvalues; $value++) {
-      my ($i,$value) = $seq->next;
-      push @got, $dlen->ith($value)/2;
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum");
-}
+MyOEIS::compare_values
+  (anum => 'A072643',
+   func => sub {
+     my ($count) = @_;
+     require Math::NumSeq::DigitLength;
+     my $dlen = Math::NumSeq::DigitLength->new (radix => 2);
 
+     my $seq = Math::NumSeq::BalancedBinary->new;
+     my @got = (0);
+
+     for (my $value = 0; @got < $count; $value++) {
+       my ($i,$value) = $seq->next;
+       push @got, $dlen->ith($value)/2;
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 # A071671 - permuted by A071651/A071652
@@ -513,133 +462,88 @@ sub bits_is_oneonly {
 #------------------------------------------------------------------------------
 # A085192 first diffs
 
-{
-  my $anum = 'A085192';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my $diff;
-  if ($bvalues) {
-    my $seq = Math::NumSeq::BalancedBinary->new;
-    my $prev = 0;
-    my @got;
-    while (@got < @$bvalues) {
-      my ($i, $value) = $seq->next;
-      push @got, $value - $prev;
-      $prev = $value;
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum");
-}
+MyOEIS::compare_values
+  (anum => 'A085192',
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::BalancedBinary->new;
+     my @got;
+     my $prev = 0;
+     while (@got < $count) {
+       my ($i, $value) = $seq->next;
+       push @got, $value - $prev;
+       $prev = $value;
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 # A085223 - positions of single trailing zero
 
-{
-  my $anum = 'A085223';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my $diff;
-  if ($bvalues) {
-    my $seq = Math::NumSeq::BalancedBinary->new;
-    my @got;
-    while (@got < @$bvalues) {
-      my ($i, $value) = $seq->next;
-      if (($value % 4) == 2) {
-        push @got, $i;
-      }
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum");
-}
+MyOEIS::compare_values
+  (anum => 'A085223',
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::BalancedBinary->new;
+     my @got;
+     my $prev = 0;
+     while (@got < $count) {
+       my ($i, $value) = $seq->next;
+       if (($value % 4) == 2) {
+         push @got, $i;
+       }
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 # A080237 - num trailing zeros
 
-{
-  my $anum = 'A080237';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my $diff;
-  if ($bvalues) {
-    require Math::NumSeq::DigitCountLow;
-    my $seq = Math::NumSeq::BalancedBinary->new;
-    my $low = Math::NumSeq::DigitCountLow->new (radix => 2, digit => 0);
-    my @got;
-    while (@got < @$bvalues) {
-      my ($i, $value) = $seq->next;
-      push @got, $low->ith($value);
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum");
-}
+MyOEIS::compare_values
+  (anum => 'A080237',
+   func => sub {
+     my ($count) = @_;
+     require Math::NumSeq::DigitCountLow;
+     my $low = Math::NumSeq::DigitCountLow->new (radix => 2, digit => 0);
+     my $seq = Math::NumSeq::BalancedBinary->new;
+     my @got;
+     while (@got < $count) {
+       my ($i, $value) = $seq->next;
+       push @got, $low->ith($value);
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 # A080116 predicate 0,1
 
-{
-  my $anum = 'A080116';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my $diff;
-  if ($bvalues) {
-    my $seq = Math::NumSeq::BalancedBinary->new;
-    my @got = (1);
-    for (my $value = 1; @got < @$bvalues; $value++) {
-      push @got, ($seq->pred($value) ? 1 : 0);
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum");
-}
-
+MyOEIS::compare_values
+  (anum => 'A080116',
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::BalancedBinary->new;
+     my @got = (1);
+     for (my $value = 1; @got < $count; $value++) {
+       push @got, ($seq->pred($value) ? 1 : 0);
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 # A063171 - in binary
 
-{
-  my $anum = 'A063171';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my $diff;
-  if ($bvalues) {
-    my $seq = Math::NumSeq::BalancedBinary->new;
-    my @got;
-    while (@got < @$bvalues) {
-      my ($i, $value) = $seq->next;
-      push @got, to_binary_str($value);
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum");
-}
+MyOEIS::compare_values
+  (anum => 'A063171',
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::BalancedBinary->new;
+     my @got;
+     while (@got < $count) {
+       my ($i, $value) = $seq->next;
+       push @got, to_binary_str($value);
+     }
+     return \@got;
+   });
 
 sub to_binary_str {
   my ($n) = @_;
@@ -656,7 +560,6 @@ sub to_binary_str {
   }
   return join('',reverse @bits);
 }
-
 
 #------------------------------------------------------------------------------
 exit 0;

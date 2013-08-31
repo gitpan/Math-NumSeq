@@ -21,7 +21,7 @@ use strict;
 use POSIX 'ceil';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 62;
+$VERSION = 63;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -122,14 +122,14 @@ sub rewind {
   my ($self) = @_;
   $self->{'i'} = $self->i_start;
 }
-sub _UNTESTED__seek_to_i {
+sub seek_to_i {
   my ($self, $i) = @_;
   # if ($i >= $self->{'uv_i_limit'}) {
   #   $i = Math::NumSeq::_to_bigint($i);
   # }
   $self->{'i'} = $i;
 }
-sub _UNTESTED__seek_to_value {
+sub seek_to_value {
   my ($self, $value) = @_;
   $self->{'i'} = $self->value_to_i_ceil($value);
 }
@@ -181,7 +181,7 @@ sub value_to_i_floor {
   my ($self, $value) = @_;
   return _floor($value/$self->{'multiples'});
 }
-sub _UNTESTED__value_to_i_ceil {
+sub value_to_i_ceil {
   my ($self, $value) = @_;
   if ($value < 0) { return 0; }
   my $i = $self->value_to_i_floor($value);
@@ -253,7 +253,7 @@ L<Math::NumSeq::Modulo>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/math-numseq/index.html
+L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 

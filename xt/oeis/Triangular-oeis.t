@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -32,6 +32,23 @@ use Math::NumSeq::Triangular;
 
 # uncomment this to run the ### lines
 #use Smart::Comments '###';
+
+#------------------------------------------------------------------------------
+# A190660 - count triangulars 2^(n-1) < T <= 2^k
+# start n=0 2^-1=1/2 < T <= 2^0=1 is T=1 only
+
+MyOEIS::compare_values
+  (anum => 'A190660',
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::Triangular->new;
+     my @got = (1);
+     for (my $pow = 1; @got < $count; $pow *= 2) {
+       push @got, ($seq->value_to_i_floor(2*$pow)
+                   - $seq->value_to_i_floor($pow));
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 # A010054 - characteristic 0/1 of triangular

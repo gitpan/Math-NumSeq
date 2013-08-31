@@ -24,7 +24,7 @@ use strict;
 use Module::Load;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 62;
+$VERSION = 63;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');

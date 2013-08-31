@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 18;
+plan tests => 20;
 
 use lib 't';
 use MyTestHelpers;
@@ -36,7 +36,7 @@ use Math::NumSeq::Primes;
 # VERSION
 
 {
-  my $want_version = 62;
+  my $want_version = 63;
   ok ($Math::NumSeq::Primes::VERSION, $want_version, 'VERSION variable');
   ok (Math::NumSeq::Primes->VERSION,  $want_version, 'VERSION class method');
 
@@ -64,6 +64,21 @@ use Math::NumSeq::Primes;
 {
   my @list = Math::NumSeq::Primes::_primes_list(1,10);
   ok (join(',',@list), '2,3,5,7');
+}
+
+#------------------------------------------------------------------------------
+# pred()
+
+{
+  my $seq = Math::NumSeq::Primes->new;
+  { my $pred = $seq->pred (2**33-1);
+    ok ($pred, undef);
+  }
+  { require Math::BigInt;
+    my $value = (Math::BigInt->new(2) << 33) - 1;
+    my $pred = $seq->pred ($value);
+    ok ($pred, undef);
+  }
 }
 
 #------------------------------------------------------------------------------
@@ -128,4 +143,6 @@ use Math::NumSeq::Primes;
           $i > 0, 1);
   }
 }
+
+#------------------------------------------------------------------------------
 exit 0;

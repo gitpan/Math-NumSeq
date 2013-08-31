@@ -17,9 +17,16 @@ with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 63, August 2013
+    - OEIS new ith() on files
+    - LuckyNumbers speedup per Dana Jacobsen RT#83581 but by a
+      progressive algorithm rather than a sieve for now
+    - FibonacciWord,ProthNumbers fixes for seek_to_i()
+    - ErdosSelfridgeClass,ReReplace,Runs remove bad undocumented seek_to_i()
+    - Fibbinary new value_to_i_ceil(), value_to_i(), seek_to_value()
+
 Version 62, August 2013
-    - PREREQ_PM of Module::Pluggable, as reported by Dana Jacobsen
-      RT#87529
+    - PREREQ_PM of Module::Pluggable, as reported by Dana Jacobsen RT#87529
 
 Version 61, May 2013
     - BalancedBinary fix value_to_i_estimate() on oldish Math::BigInt

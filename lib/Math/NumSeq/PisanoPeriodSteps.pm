@@ -27,7 +27,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 62;
+$VERSION = 63;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -217,9 +217,13 @@ reaching an unchanging value.
 
 X<Fulton, D.>X<Morris, W.L.>As per Fulton and Morris
 
-    "On arithmetical functions related to the Fibonacci numbers",
-    Acta Arithmetica, volume 16, 1969, pages 105-110.
-    http://matwbn.icm.edu.pl/ksiazki/aa/aa16/aa1621.pdf
+=over
+
+"On arithmetical functions related to the Fibonacci numbers",
+Acta Arithmetica, volume 16, 1969, pages 105-110.
+L<http://matwbn.icm.edu.pl/ksiazki/aa/aa16/aa1621.pdf>
+
+=back
 
 repeatedly applying the PisanoPeriod eventually reaches an m which is
 unchanging, ie. for which PisanoPeriod(m)==m.  For example i=5 goes
@@ -278,7 +282,7 @@ L<Math::NumSeq::Fibonacci>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/math-numseq/index.html
+L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 

@@ -22,13 +22,13 @@ use POSIX ();
 use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 62;
+$VERSION = 63;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+# use Smart::Comments;
 
 
 # use constant name => Math::NumSeq::__('Prime Numbers');
@@ -146,6 +146,8 @@ sub _primes_list {
 
 sub pred {
   my ($self, $value) = @_;
+  ### pred(): "$value"
+
   if (_is_infinite($value) || $value > 0xFFFF_FFFF) {
     return undef;
   }
@@ -273,7 +275,7 @@ L<Math::Prime::Util>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/math-numseq/index.html
+L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 

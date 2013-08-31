@@ -28,7 +28,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 62;
+$VERSION = 63;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -80,6 +80,10 @@ sub seek_to_i {
   }
   $self->{'i'} = $i;
   $self->{'value'} = $self->ith($i);
+}
+sub seek_to_value {
+  my ($self, $value) = @_;
+  $self->seek_to_i($self->value_to_i_ceil($value));
 }
 
 sub next {
@@ -169,19 +173,47 @@ sub pred {
   return ! ($int & ($int >> 1));
 }
 
+#------------------------------------------------------------------------------
+
 sub value_to_i_floor {
   my ($self, $value) = @_;
   ### Fibbinary value_to_i_floor(): $value
+  if ($value < 0) { return 0; }
+  my ($i) = _value_to_i_and_floor($value);
+  return $i;
+}
+sub value_to_i_ceil {
+  my ($self, $value) = @_;
+  ### Fibbinary value_to_i_ceil(): $value
+  if ($value < 0) { return 0; }
+  my ($i,$floor) = _value_to_i_and_floor($value);
+  return $i + $floor;
+}
+sub value_to_i {
+  my ($self, $value) = @_;
+  ### Fibbinary value_to_i(): $value
+  if ($value < 0) { return undef; }
+  my ($i,$floor) = _value_to_i_and_floor($value);
+  return ($floor ? undef : $i);
+}
+
+# return ($i, $floor)
+sub _value_to_i_and_floor {
+  my ($value) = @_;
 
   if (_is_infinite($value)) {
-    return $value;
-  }
-  $value = int($value);
-  if ($value <= 0) {
-    return 0;
+    return ($value,
+            0); # reckon infinite as not rounded
   }
 
-  # ENHANCE-ME: _digit_split()
+  my $floor;
+  {
+    my $int = int($value);
+    $floor = ($value == $int ? 0 : 1);
+    $value = $int
+      || return (0, $floor);  # i=0 not handled below
+  }
+
   my @bits = _bits_high_to_low($value);
   my @fibs;
   {
@@ -211,16 +243,21 @@ sub value_to_i_floor {
           $i += pop @fibs;
           pop @fibs;
         }
-        return $i;
+        return ($i,
+                1);  # rounded down
       }
       $i += $fib;
       ### add i to: $i
     }
     $prev_bit = $bit;
   }
-  return $i;
+  ### exact i: "$i"
+  return ($i,
+          $floor);  # not rounded, unless $value was fractional
 }
-# *value_to_i_estimate = \&value_to_i_floor;
+
+#------------------------------------------------------------------------------
+# value_to_i_estimate()
 
 use constant 1.02 _PHI => (1 + sqrt(5)) / 2;
 
@@ -293,21 +330,6 @@ sub value_to_i_estimate {
 #   }
 #   return $i;
 # }
-
-
-sub _UNTESTED__seek_to_value {
-  my ($self, $value) = @_;
-  $self->{'i'} = $self->value_to_i_ceil($value);
-}
-sub _UNTESTED__value_to_i_ceil {
-  my ($self, $value) = @_;
-  if ($value < 0) { return 0; }
-  my $i = $self->value_to_i_floor($value);
-  if ($self->ith($i) < $value) {
-    $i += 1;
-  }
-  return $i;
-}
 
 1;
 __END__
@@ -459,8 +481,11 @@ Create and return a new sequence object.
 
 =item C<$seq-E<gt>seek_to_i($i)>
 
-Move the current sequence position to C<$i>.  The next call to C<next()>
-will return C<$i> and corresponding value.
+=item C<$seq-E<gt>seek_to_value($value)>
+
+Move the current i so C<next()> will return C<$i> or C<$value> on the next
+call.  If C<$value> is not in the sequence then move so as to return the
+next higher value which is.
 
 =back
 
@@ -477,10 +502,16 @@ Return the C<$i>'th fibbinary number.
 Return true if C<$value> is a fibbinary number, which means that in binary
 it doesn't have any consecutive 1-bits.
 
+=item C<$i = $seq-E<gt>value_to_i($value)>
+
+=item C<$i = $seq-E<gt>value_to_i_ceil($value)>
+
 =item C<$i = $seq-E<gt>value_to_i_floor($value)>
 
-Return the index i of C<$value> or of the next fibbinary number below
-C<$value>.
+Return the index i of C<$value>.  If C<$value> is not in the sequence then
+C<value_to_i()> returns C<undef>, or C<value_to_i_ceil()> returns the i of
+the next higher value which is, or C<value_to_i_floor()> the i of the next
+lower value.
 
 =item C<$i = $seq-E<gt>value_to_i_estimate($value)>
 
@@ -614,7 +645,7 @@ L<Math::Fibonacci> C<decompose()>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/math-numseq/index.html
+L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 

@@ -51,7 +51,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 62;
+$VERSION = 63;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -365,7 +365,11 @@ For example
 
 The web page for that is then
 
-    http://oeis.org/A000290
+=over
+
+L<http://oeis.org/A000290>
+
+=back
 
 Sometimes the OEIS has duplicates, ie. two A-numbers which are the same
 sequence.  When that's accidental or historical C<$seq-E<gt>oeis_anum()> is

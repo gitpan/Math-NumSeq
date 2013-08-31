@@ -32,12 +32,10 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 62;
+$VERSION = 63;
 
 use Math::NumSeq 7; # v.7 for _is_infinite()
-use Math::NumSeq::Base::IterateIth;
-@ISA = ('Math::NumSeq::Base::IterateIth',
-        'Math::NumSeq');
+@ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
 # uncomment this to run the ### lines
@@ -153,8 +151,8 @@ Math::NumSeq::ReReplace -- sequence of repeated replacements
 
 =head1 DESCRIPTION
 
-This is a sequence by David Madore formed by repeatedly replacing every N'th
-occurrence of a term with N.
+X<Madore, David>This is a sequence by David Madore formed by repeatedly
+replacing every N'th occurrence of a term with N.
 
     1, 2, 1, 2, 3, 3, 1, 2, 4, 4, 3, 4, ...
 
@@ -206,7 +204,7 @@ L<Math::NumSeq::ReRound>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/math-numseq/index.html
+L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 

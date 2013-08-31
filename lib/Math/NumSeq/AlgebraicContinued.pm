@@ -21,7 +21,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 62;
+$VERSION = 63;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -543,10 +543,14 @@ The binary search or similar root finding algorithm for the integer part is
 important.  The integer part is often 1, and in that case a single check to
 see if x=2 gives polyE<lt>0 suffices.  But a term can be quite large so a
 linear search 1,2,3,4,etc is undesirable.  An example with large terms can
-be found in Sloane's OEIS
+be found in Sloane's OEIS,
 
-    http://oeis.org/A093876
-    continued fraction 4throot of 9.1, ie. (91/10)^(1/4)
+=over
+
+L<http://oeis.org/A093876>
+continued fraction of 4th root of 9.1, ie. (91/10)^(1/4)
+
+=back
 
 The first few terms include 75656 and 262344, before settling down to more
 usual size terms it seems.
@@ -558,7 +562,7 @@ L<Math::NumSeq::SqrtContinued>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/math-numseq/index.html
+L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 

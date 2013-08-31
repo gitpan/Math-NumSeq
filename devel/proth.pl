@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -23,6 +23,30 @@ use warnings;
 use POSIX;
 use List::Util 'max','min';
 
+{
+  # value_to_i_estimate()
+  require Math::NumSeq::ProthNumbers;
+  my $seq = Math::NumSeq::ProthNumbers->new;
+  my $ss = Math::NumSeq::ProthNumbers->new;
+  print " i        i              value      inc            limit          for value\n";
+  foreach my $i (1 .. 128) {
+    my $value = $seq->ith($i);
+    printf "%3d %8b   %16b %8b %16b   %16b\n",
+      $i, $i, $seq->{'value'}, $seq->{'inc'}, $seq->{'limit'}, $value;
+
+    # $ss->seek_to_i($i);
+    # my $diff = ($ss->{'value'} == $seq->{'value'}
+    #             && $ss->{'inc'} == $seq->{'inc'}
+    #             && $ss->{'limit'} == $seq->{'limit'}
+    #             ? ''
+    #             : '  ***');
+    # printf "%3s %8s   %16b %8b %16b%s\n",
+    #   '','', $ss->{'value'}, $ss->{'inc'}, $ss->{'limit'}, $diff;
+
+    $seq->next;
+  }
+  exit 0;
+}
 {
   # value_to_i_estimate()
 

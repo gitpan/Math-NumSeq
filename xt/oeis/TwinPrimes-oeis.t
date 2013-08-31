@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 6;
+plan tests => 1;
 
 use lib 't','xt';
 use MyTestHelpers;
@@ -30,51 +30,27 @@ use MyOEIS;
 use Math::NumSeq::TwinPrimes;
 
 # uncomment this to run the ### lines
-#use Smart::Comments '###';
-
-
-sub numeq_array {
-  my ($a1, $a2) = @_;
-  if (! ref $a1 || ! ref $a2) {
-    return 0;
-  }
-  my $i = 0; 
-  while ($i < @$a1 && $i < @$a2) {
-    if ($a1->[$i] ne $a2->[$i]) {
-      return 0;
-    }
-    $i++;
-  }
-  return (@$a1 == @$a2);
-}
-
+#use Smart::Comments;
 
 
 #------------------------------------------------------------------------------
 # A100923 - characteristic boolean 0 or 1 according as 6n+/-1 both prime
 
-{
-  my $anum = 'A100923';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my @got;
-  if ($bvalues) {
-    my $seq  = Math::NumSeq::TwinPrimes->new (pairs => 'first');
-    for (my $n = 1; @got < @$bvalues; $n++) {
-      if ($seq->pred(6*$n-1)) {
-        push @got, 1;
-      } else {
-        push @got, 0;
-      }
-    }
-    if (! numeq_array(\@got, $bvalues)) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        numeq_array(\@got, $bvalues),
-        1, "$anum -- 0/1 boolean");
-}
+MyOEIS::compare_values
+  (anum => 'A100923',
+   func => sub {
+     my ($count) = @_;
+     my $seq  = Math::NumSeq::TwinPrimes->new (pairs => 'first');
+     my @got;
+     for (my $n = 1; @got < $count; $n++) {
+       if ($seq->pred(6*$n-1)) {
+         push @got, 1;
+       } else {
+         push @got, 0;
+       }
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 exit 0;

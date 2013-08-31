@@ -22,7 +22,7 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 62;
+$VERSION = 63;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -30,7 +30,7 @@ use Math::NumSeq::Base::IterateIth;
         'Math::NumSeq');
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+# use Smart::Comments;
 
 
 # use constant name => Math::NumSeq::__('Triangular Numbers');
@@ -203,7 +203,7 @@ L<Math::NumSeq::Squares>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/math-numseq/index.html
+L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 

@@ -27,7 +27,7 @@ BEGIN { MyTestHelpers::nowarnings(); }
 
 use Math::NumSeq::ProthNumbers;
 
-my $test_count = (tests => 18)[1];
+my $test_count = (tests => 1584)[1];
 plan tests => $test_count;
 
 
@@ -35,7 +35,7 @@ plan tests => $test_count;
 # VERSION
 
 {
-  my $want_version = 62;
+  my $want_version = 63;
   ok ($Math::NumSeq::ProthNumbers::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::ProthNumbers->VERSION,  $want_version,
@@ -66,6 +66,22 @@ plan tests => $test_count;
       '');
 }
 
+
+#------------------------------------------------------------------------------
+# seek_to_i()
+
+{
+  my $nn = Math::NumSeq::ProthNumbers->new;
+  my $ss = Math::NumSeq::ProthNumbers->new;
+
+  foreach my $i (1 .. 512+10) {
+    $ss->seek_to_i($i);
+    ok ($ss->{'value'}, $nn->{'value'}, "value at i=$i");
+    ok ($ss->{'inc'},   $nn->{'inc'},   "inc   at i=$i");
+    ok ($ss->{'limit'}, $nn->{'limit'}, "limit at i=$i");
+    $nn->next;
+  }
+}
 
 #------------------------------------------------------------------------------
 # pred()

@@ -20,16 +20,17 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 62;
+$VERSION = 63;
 
 use Math::NumSeq;
-use Math::NumSeq::Base::IterateIth;
-@ISA = ('Math::NumSeq::Base::IterateIth',
-        'Math::NumSeq');
+@ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
+use Math::NumSeq::NumAronson;
+*_round_down_pow = \&Math::NumSeq::NumAronson::_round_down_pow;
+
 # uncomment this to run the ### lines
-#use Smart::Comments;
+# use Smart::Comments;
 
 
 # use constant name => Math::NumSeq::__('Proth Numbers');
@@ -79,7 +80,6 @@ sub rewind {
   $self->{'limit'} = 4;
   $self->{'i'} = $self->i_start;
 }
-
 sub next {
   my ($self) = @_;
   ### ProthNumbers next(): sprintf('value=%b inc=%b limit=%b', $self->{'value'}, $self->{'inc'}, $self->{'limit'})
@@ -96,41 +96,72 @@ sub next {
     $self->{'inc'} *= 2;
     $self->{'limit'} *= 4;
   }
-
   return ($self->{'i'}++, $value);
+}
+
+# seek value at i-1, inc and limit ready to make next value
+#
+# i     i         value       inc     limit           next value
+#  1     1             1       10         100               11
+#  2    10            11       10         100              101
+#  3    11           101      100       10000             1001
+#  4   100          1001      100       10000             1101
+#  5   101          1101      100       10000            10001
+#  6   110         10001     1000     1000000            11001
+#  7   111         11001     1000     1000000           100001
+#  8  1000        100001     1000     1000000           101001
+#  9  1001        101001     1000     1000000           110001
+# 10  1010        110001     1000     1000000           111001
+# 11  1011        111001     1000     1000000          1000001
+# 12  1100       1000001    10000   100000000          1010001
+# 13  1101       1010001    10000   100000000          1100001
+# 14  1110       1100001    10000   100000000          1110001
+# 15  1111       1110001    10000   100000000         10000001
+# 16 10000      10000001    10000   100000000         10010001
+#
+sub seek_to_i {
+  my ($self, $i) = @_;
+  $self->{'i'} = $i;
+
+  my ($pow) = _round_down_pow($i, 2);  # i = 1zxxx
+  $i -= $pow;                          # without high bit, so i=zxxx
+
+  # $zpow is the z bit position, or 1 if $i==1
+  my $zpow = ($pow >= 2 ? $pow/2 : 0);
+
+  if ($i >= $zpow) {
+    # z=1 so return value=1xxx 0 0001, extra low 0-bit
+    $pow *= 2;
+  } else {
+    # z=0 so return value=1xxx 0001, turn on 1-bit in i
+    $i += $zpow;    # i=0xxx becomes i=1xxx
+  }
+
+  if ($pow*$pow >= $uv_limit) {
+    $pow = Math::NumSeq::_to_bigint($pow);
+  }
+  $self->{'value'} = $pow*$i + 1;
+  $self->{'inc'}   = $pow;
+  $self->{'limit'} = $pow*$pow;
 }
 
 sub ith {
   my ($self, $i) = @_;
   ### ProthNumbers ith(): $i
 
-  if ($i == 1) {
-    return 3;
-  }
   $i += 1;
+  my ($pow) = _round_down_pow($i, 2);  # i = 1zxxx
+  $i -= $pow;                          # without high bit, so i=zxxx
 
-  if (_is_infinite($i)) {
-    return $i;  # don't loop forever if $i is +infinity
+  my $zpow = $pow/2;
+  if ($i >= $zpow) { # test z bit
+    # z=1 so return value=1xxx 0 0001, extra low 0-bit
+    $pow *= 2;
+  } else {
+    # z=1 so return value=1xxx 0001, turn on 1-bit in i
+    $i += $zpow;    # i=0xxx becomes i=1xxx
   }
-
-  my $exp = ($i * 0);  # inherit bignum from $i
-  my $rem = $i;
-  while ($rem > 3) {
-    $rem >>= 1;
-    $exp++;
-  }
-  my $bit = 2**$exp;
-
-  ### i: sprintf('0b%b', $i)
-  ### bit: sprintf('0b%b', $bit)
-  ### $rem
-  ### high: sprintf('0b%b', ($i - $bit*($rem-1)))
-  ### rem factor: ($rem - 1)
-  ### so: sprintf('0b%b', ($i - $bit*($rem-1)) * $bit * ($rem - 1) + 1)
-  ### assert: $rem==2 || $rem==3
-
-  $rem--;  # now 2 or 1
-  return ($i - $bit*$rem) * 2 * $rem*$bit + 1;
+  return $i*$pow + 1;
 }
 
 sub pred {
@@ -193,6 +224,7 @@ Math::NumSeq::ProthNumbers -- Proth number sequence
 The Proth numbers
 
     3, 5, 9, 13, 17, 25, 33, 41, 49, 57, 65, 81, 97, 113, ...
+    starting i=1
 
 being integers of the form k*2^n+1 for some k and n and where
 S<k E<lt> 2^n>.
@@ -280,7 +312,7 @@ Taking the values by their length in bits, the values are
       1x01       2 values i=3,4
       1x001      2 values i=5,6
      1xx001      4 values i=7 to 10
-     1xx0001     4 values 
+     1xx0001     4 values
     1xxx0001     8 values
     1xxx00001    8 values
 
@@ -288,9 +320,9 @@ For a given 1xxx high part the low zeros, which is the 2^n factor, is the
 same length and then repeated 1 bigger.  That doubling can be controlled by
 a high bit of the i, so in the following Z is either a zero bit or omitted,
 
-       1Z1       
-      1xZ01      
-     1xxZ001     
+       1Z1
+      1xZ01
+     1xxZ001
     1xxxZ0001
 
 The ith Proth number can be formed from the bits of the index
@@ -316,7 +348,7 @@ L<Math::NumSeq::WoodallNumbers>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/math-numseq/index.html
+L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 

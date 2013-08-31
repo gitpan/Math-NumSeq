@@ -27,6 +27,9 @@ use Module::Load;
 use lib 'xt';
 use MyOEIS;
 
+use Math::NumSeq::LeastPrimitiveRoot;
+*gcd = \&Math::NumSeq::LeastPrimitiveRoot::_gcd;
+
 # uncomment this to run the ### lines
 # use Smart::Comments;
 
@@ -34,13 +37,13 @@ use MyOEIS;
 sub want_module {
   my ($module) = @_;
   # return 1 if $module =~ /Aron/;
-  return 0 unless $module =~ /PlanePath/;
-  # return 1 if $module =~ /DigitProduct/;
+  # return 0 unless $module =~ /PlanePath/;
+  return 0 unless $module =~ /HafermanCarpet/;
   return 1;
 }
 sub want_planepath {
   my ($planepath) = @_;
-  return 0 unless $planepath =~ /Knight/;
+  # return 0 unless $planepath =~ /Knight/;
   # return 0 unless $planepath =~ /CCurve/;
   # return 0 unless $planepath =~ /Divis|DiagonalRationals|CoprimeCol/;
   # return 0 unless $planepath =~ /HilbertCurve/;
@@ -58,7 +61,9 @@ sub want_planepath {
 }
 sub want_coordinate {
   my ($type) = @_;
-  # return 0 unless $type =~ /Parity/;
+  return 0 unless $type =~ /Turn4/;
+  # return 0 unless $type =~ /RSL/;
+  # return 0 unless $type =~ /Straight/;
   # return 0 unless $type =~ /NumSiblings/;
   # return 0 unless $type =~ /SubHeight|NumChildren|NumSibling/;
   # return 0 unless $type =~ m{Abs[XY]};
@@ -124,6 +129,7 @@ HERE
 
       my $target_values_length = 150;
       if ($class =~ /BinaryUnd/) { $target_values_length = 20; }
+      my %int_multipler;
       while (length($values) < $target_values_length) {
         my ($i, $value) = $seq->next
           or last;
@@ -133,7 +139,16 @@ HERE
         if (! defined $value) {
           die "Oops $module @$p returned value undef";
         }
-        $value == int($value) or next PARAMETERS; # not an integer seq
+
+        if ($value != int($value)) {
+          if (my $m = int_multiplier($value)) {
+            # not an integer seq, but can be made so by multiplying
+            $int_multipler{$m} = 1;
+          } else {
+            # no small multiplier
+            next PARAMETERS;
+          }
+        }
         if ($values ne '') {
           $values .= ', ';
         }
@@ -150,6 +165,16 @@ HERE
         if (@$p) {
           $p_string .= ",  ";
         }
+      }
+
+      if (%int_multipler) {
+        my $m = lcm(keys %int_multipler);
+        print " mul by $m, keys ",join(',',keys(%int_multipler)),"\n";
+        foreach (@values) { $_ *= $m; }
+        $values = join(',',@values);
+        $p_string .= " mul by $m";
+      } else {
+        # next PARAMETERS;
       }
 
       my $signed='';
@@ -293,12 +318,10 @@ sub special_values {
       ### no grep for all same values ...
     } else {
       my $name = "$module $params";
-      my $values_str = join(',',@$values_aref);
-      my $found = MyOEIS->grep_for_values_str($values_str);
+      my $found = MyOEIS->grep_for_values(array => $values_aref);
       if ($found) {
         print "\n";
         print "$name\n";
-        print "  match $values_str\n";
         print $found;
       }
     }
@@ -737,3 +760,21 @@ sub p_radix {
   return undef;
 }
 
+sub int_multiplier {
+  my ($x) = @_;
+  foreach my $m (2 .. 16) {
+    my $f = $x*$m;
+    if (abs($f-int($f)) < 0.000001) {
+      return $m;
+    }
+  }
+  return 0;
+}
+
+sub lcm {
+  my $ret = shift;
+  foreach my $n (@_) {
+    $ret *= $n/gcd($ret,$n);
+  }
+  return $ret;
+}

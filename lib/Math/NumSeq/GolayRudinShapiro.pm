@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max','min';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 62;
+$VERSION = 63;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -172,8 +172,8 @@ being an even or odd number of adjacent 11 bit pairs in i.
     1, 1, 1, -1, 1, 1, -1, 1, 1, 1, 1, -1, ...
 
 The first -1 is at i=3 which is binary 11 with a single 11 bit pair, then
-i=6 binary 110 likewise -1.  Or later for example i=14 is binary 1110 which
-has two adjacent 11 pairs (overlapping pairs count), so value=1.
+i=6 binary 110 likewise -1.  Later for example i=14 is binary 1110 which has
+two adjacent 11 pairs (overlapping pairs count), so value=1.
 
 The value is also the parity of the number of even-length runs of 1-bits
 in i.  An even length run has an odd number of 11 pairs, so each of them is
@@ -237,7 +237,7 @@ L<Math::PlanePath::AlternatePaper>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/math-numseq/index.html
+L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 

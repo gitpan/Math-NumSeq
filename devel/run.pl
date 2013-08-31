@@ -101,12 +101,9 @@ $|=1;
   $values_class = 'Math::NumSeq::DeletablePrimes';
   $values_class = 'Math::NumSeq::LipschitzClass';
   $values_class = 'Math::NumSeq::GolombSequence';
-  $values_class = 'Math::NumSeq::OEIS::File';
   $values_class = 'Math::NumSeq::GolayRudinShapiroCumulative';
-  $values_class = 'Math::NumSeq::ProthNumbers';
   $values_class = 'Math::NumSeq::BinaryUndulants';
   $values_class = 'Math::NumSeq::FractionDigits';
-  $values_class = 'Math::NumSeq::LuckyNumbers';
   $values_class = 'Math::NumSeq::Tribonacci';
   $values_class = 'Math::NumSeq::SelfLengthCumulative';
   $values_class = 'Math::NumSeq::Tetrahedral';
@@ -127,7 +124,6 @@ $|=1;
   $values_class = 'Math::NumSeq::SternDiatomic';
   $values_class = 'Math::NumSeq::SlopingExcluded';
   $values_class = 'Math::NumSeq::PrimeIndexOrder';
-  $values_class = 'Math::NumSeq::PrimeIndexPrimes';
   $values_class = 'Math::NumSeq::KaprekarSteps';
   $values_class = 'Math::NumSeq::Padovan';
   $values_class = 'Math::NumSeq::StoehrSequence';
@@ -192,15 +188,31 @@ $|=1;
   $values_class = 'Math::NumSeq::SumPowSub1';
   $values_class = 'Math::NumSeq::Fibonacci';
   $values_class = 'Math::NumSeq::LucasNumbers';
-  $values_class = 'Math::NumSeq::PlanePathTurn';
   $values_class = 'Math::NumSeq::PlanePathN';
   $values_class = 'Math::NumSeq::FibonacciRepresentations';
   $values_class = 'Math::NumSeq::PlanePathDelta';
   $values_class = 'Math::NumSeq::PlanePathCoord';
+  $values_class = 'Math::NumSeq::LuckyNumbers';
+  $values_class = 'Math::NumSeq::OEIS::File';
+  $values_class = 'Math::NumSeq::ProthNumbers';
+  $values_class = 'Math::NumSeq::PlanePathTurn';
+  $values_class = 'Math::NumSeq::HafermanCarpet';
+  $values_class = 'Math::NumSeq::PrimeIndexPrimes';
 
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new
     (
+     haferman_type => 'box',
+      # inverse => 1,
+
+     # _dont_use_bfile => 1,
+     anum  => 'A000110', # 9.7mb A-file
+     # anum  => 'A151725',
+     # anum  => 'A151725',
+     # anum  => 'A196199', # bfile
+     # anum  => 'A194831', # small bfile
+     # anum  => 'A195467',
+
      # root_type => 'negative',
      # digit => 0,
      # radix => 3,
@@ -266,7 +278,7 @@ $|=1;
      # planepath => 'OneOfEight,parts=3side',
      # planepath => 'MultipleRings,step=6,ring_shape=polygon',
      # planepath => 'RationalsTree,tree_type=AYT',
-      planepath => 'VogelFloret',
+     # planepath => 'VogelFloret',
      # planepath => 'SierpinskiTriangle,align=diagonal',
      # planepath => 'DivisibleColumns,divisor_type=proper,n_start=2',
      # planepath => 'CellularRule,rule=2,n_start=0',
@@ -276,7 +288,7 @@ $|=1;
      # planepath => 'PyramidRows,step=3',
      # planepath => 'LCornerTree,parts=diagonal-1',
      # planepath => 'UlamWarburton,parts=4',
-      coordinate_type => 'GCD',
+     # coordinate_type => 'GCD',
      # coordinate_type => 'TRSquared',
      # coordinate_type => 'NumSiblings',
      # coordinate_type => 'Parity',
@@ -284,19 +296,20 @@ $|=1;
      # planepath => 'PythagoreanTree,coordinates=AC',
      # planepath => 'DragonCurve',
      # planepath => 'AlternatePaper',
-     # planepath => 'MultipleRings,step=7,ring_shape=circle',
      # planepath => 'RationalsTree,tree_type=L',
      # planepath => 'TerdragonCurve,arms=1',
      # planepath => 'CellularRule,rule=14',
      # planepath => 'PyramidRows,step=2',
-      # planepath => 'CornerReplicate',
-      # delta_type=>'dDiffXY',
+     # planepath => 'CornerReplicate',
+     # delta_type=>'dDiffXY',
 
+     # planepath => 'MultipleRings,step=1,ring_shape=circle',
      # planepath => 'Diagonals',
      # planepath => 'PythagoreanTree,coordinates=BC',
      # planepath => 'ChanTree,k=4',
-      # planepath => 'SquareSpiral',
-      # turn_type => 'Turn4',
+     # planepath => 'SquareSpiral',
+      planepath => 'KochCurve',
+      turn_type => 'SLR',
 
      # planepath => 'CfracDigits',
      # planepath => 'RationalsTree',
@@ -315,11 +328,6 @@ $|=1;
      # line_type => 'X_axis',
      # line_type => 'Depth_end',
      # i_start => 1,
-
-     # anum  => 'A151725',
-     # anum  => 'A196199', # bfile
-     # anum  => 'A194831', # small bfile
-     # anum  => 'A195467',
 
      # start => 5,
      # including_repdigits => 1,
@@ -355,8 +363,8 @@ $|=1;
      # length => 2,
      # which => 'last',
 
-     polygonal => 18,
-     pairs => 'second',
+     # polygonal => 18,
+     # pairs => 'second',
 
      # including_zero => 1,
      # # divisors_type => 'proper',

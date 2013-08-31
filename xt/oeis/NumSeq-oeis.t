@@ -42,19 +42,19 @@ use POSIX ();
 POSIX::setlocale(POSIX::LC_ALL(), 'C'); # no message translations
 
 # uncomment this to run the ### lines
-#use Smart::Comments '###';
+# use Smart::Comments '###';
 
 
 sub want_anum {
   my ($anum) = @_;
-   return 0 unless $anum =~ /A000119/;
+   return 0 unless $anum =~ /A000959/;
   # return 0 unless $anum =~ /A005228|A030124/;
   # return 0 unless $anum =~ /A177702|A102283|A131756/;
   return 1;
 }
 sub want_module {
   my ($module) = @_;
-   return 0 unless $module =~ /Lucas/;
+   return 0 unless $module =~ /Lucky/;
   return 1;
 }
 
@@ -198,7 +198,7 @@ sub check_class {
     #   $max_count = 400;
 
   } elsif ($anum eq 'A000959') { # LuckyNumbers
-    $max_value = 20_000;
+    $max_count = 100;
 
   } elsif ($anum eq 'A082897') {
     # perfect totients

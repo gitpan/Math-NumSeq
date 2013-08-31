@@ -35,7 +35,7 @@ use Math::NumSeq::SophieGermainPrimes;
 # VERSION
 
 {
-  my $want_version = 62;
+  my $want_version = 63;
   ok ($Math::NumSeq::SophieGermainPrimes::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::SophieGermainPrimes->VERSION,  $want_version,

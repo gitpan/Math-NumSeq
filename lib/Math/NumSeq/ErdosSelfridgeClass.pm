@@ -21,12 +21,10 @@ use strict;
 use Math::NumSeq::Primes;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 62;
+$VERSION = 63;
 
 use Math::NumSeq;
-use Math::NumSeq::Base::IterateIth;
-@ISA = ('Math::NumSeq::Base::IterateIth',
-        'Math::NumSeq');
+@ISA = ('Math::NumSeq');
 
 use Math::NumSeq::PrimeFactorCount;;
 *_prime_factors = \&Math::NumSeq::PrimeFactorCount::_prime_factors;
@@ -141,7 +139,7 @@ sub ith {
 }
 sub can {
   my ($class_or_self, $method) = @_;
-  if ($method eq 'ith'
+  if (($method eq 'ith' || $method eq 'seek_to_i')
       && ref $class_or_self
       && $class_or_self->{'on_values'} eq 'primes') {
     return undef;
@@ -293,7 +291,7 @@ L<Math::NumSeq::Primes>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/math-numseq/index.html
+L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 

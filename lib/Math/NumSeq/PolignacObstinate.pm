@@ -32,7 +32,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 62;
+$VERSION = 63;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -191,7 +191,11 @@ L<Math::NumSeq::Primes>
 
 Clifford Pickover, "The Grand Internet Obstinate Number Search"
 
-    http://sprott.physics.wisc.edu/pickover/obstinate.html
+=over
+
+L<http://sprott.physics.wisc.edu/pickover/obstinate.html>
+
+=back
 
 =head1 LICENSE
 

@@ -21,7 +21,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION','@ISA';
-$VERSION = 62;
+$VERSION = 63;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -153,13 +153,19 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 Create and return a new sequence object.
 
+=back
+
+=head2 Iterating
+
+=over
+
 =item C<($i, $value) = $seq-E<gt>next()>
 
 Return the next index and value in the sequence.
 
 In the current code when reading from a file any values bigger than a usual
-Perl int or float are returned as C<Math::BigInt> objects.  Is that a good
-idea?  It preserves precision.
+Perl int or float are returned as C<Math::BigInt> objects in order to
+preserve precision.  Is that a good idea?
 
 An F<a000000.txt> or F<b000000.txt> file is read line by line.  For Perl 5.8
 ithreads there's a C<CLONE> setup which re-opens the file in a new thread so
@@ -167,14 +173,39 @@ the C<$seq> in each thread has its own position.  (See L<perlthrtut> and
 L<perlmod/Making your module threadsafe>).
 
 But a C<fork()> will still have both parent and child with the same open
-file so care should be taken that just one of them uses the C<$seq> in that
-case.  The same is true of all open file handling across a C<fork()>.  Is
-this a good idea?
+file so care should be taken that only one of them uses C<$seq> in that
+case.  The same is true of all open file handling across a C<fork()>.
+
+=back
+
+=head2 Random Access
+
+=over
+
+=item C<$value = $seq-E<gt>ith($i)>
+
+Return the C<$i>'th value from C<$seq>, or C<undef> if C<$i> is outside the
+range of available values.
+
+An F<a000000.txt> or F<b000000.txt> file is read by a binary search to find
+the target C<$i>.  This is reasonably efficient and avoids loading or
+processing an entire file if just a few values are wanted.
+
+If C<$i> happens to be the next line or just a short distance ahead of what
+was last read then no search is necessary.  This means that C<ith()> called
+sequentially i=1,2,3,4,etc simply reads successive lines, the same as
+C<next()> would do.
+
+=back
+
+=head2 Information
+
+=over
 
 =item C<$str = $seq-E<gt>description()>
 
 Return a human-readable description of the sequence.  For the downloaded
-files this is the "%N NAME" part, which is a short description of the
+files this is the "%N NAME" part which is a short description of the
 sequence.
 
 A few sequences may have non-ASCII characters in the description.  For Perl
@@ -193,7 +224,7 @@ For files C<values_min()> is guessed from the first few values if
 non-negative, and C<values_max()> normally is considered to be infinite.  If
 the range seems to be limited (eg. sequences of -1,0,1) then min and max are
 obtained from those, and likewise for "full" sequences where the samples are
-all the full finite set of values.
+the entire sequence.
 
 =item C<$ret = $seq-E<gt>characteristic($key)>
 
@@ -245,7 +276,7 @@ L<Math::NumSeq::OEIS::Catalogue>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/math-numseq/index.html
+L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 

@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -34,32 +34,6 @@ use Math::NumSeq::LuckyNumbers;
 #use Smart::Comments '###';
 
 
-sub diff_nums {
-  my ($gotaref, $wantaref) = @_;
-  for (my $i = 0; $i < @$gotaref; $i++) {
-    if ($i > @$wantaref) {
-      return "want ends prematurely pos=$i";
-    }
-    my $got = $gotaref->[$i];
-    my $want = $wantaref->[$i];
-    if (! defined $got && ! defined $want) {
-      next;
-    }
-    if (! defined $got || ! defined $want) {
-      return "different pos=$i got=".(defined $got ? $got : '[undef]')
-        ." want=".(defined $want ? $want : '[undef]');
-    }
-    $got =~ /^[0-9.-]+$/
-      or return "not a number pos=$i got='$got'";
-    $want =~ /^[0-9.-]+$/
-      or return "not a number pos=$i want='$want'";
-    if ($got != $want) {
-      return "different pos=$i numbers got=$got want=$want";
-    }
-  }
-  return undef;
-}
-
 #------------------------------------------------------------------------------
 # A137164 etc - Lucky with various modulo
 
@@ -83,132 +57,84 @@ foreach my $elem (['A137164', 0, 3],
                   ['A137196', 7, 8],
                  ) {
   my ($anum, $target, $modulus) = @$elem;
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my $diff;
-  if (! $bvalues) {
-    MyTestHelpers::diag ("$anum not available");
-  } else {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-    my $seq = Math::NumSeq::LuckyNumbers->new;
-    my @got;
-    while (@got < @$bvalues) {
-      my ($i, $value) = $seq->next;
-      if (($value % $modulus) == $target) {
-        push @got, $value;
-      }
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("target=$target modulus=$modulus");
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum - lucky congruent to $target modulo $modulus");
+
+  MyOEIS::compare_values
+      (name => "$anum - lucky congruent to $target modulo $modulus",
+       anum => $anum,
+       max_value => 1_000_000,
+       func => sub {
+         my ($count) = @_;
+         my $seq = Math::NumSeq::LuckyNumbers->new;
+         my @got;
+
+         while (@got < $count) {
+           my ($i, $value) = $seq->next;
+           if (($value % $modulus) == $target) {
+             push @got, $value;
+           }
+         }
+         return \@got;
+       });
 }
 
 #------------------------------------------------------------------------------
 # A118567 - Lucky with only odd digits
 
-{
-  my $anum = 'A118567';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my $diff;
-  if (! $bvalues) {
-    MyTestHelpers::diag ("$anum not available");
-  } else {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-
-    if ($bvalues->[20] == 171) {
-      MyTestHelpers::diag ("  insert apparently missing 159");
-      splice @$bvalues, 20,0, 159;
-    }
-
-    my $seq = Math::NumSeq::LuckyNumbers->new;
-    my @got;
-    while (@got < @$bvalues) {
-      my ($i, $value) = $seq->next;
-      if ($value =~ /^[13579]+$/) {
-        push @got, $value;
-      }
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum - lucky with only odd digits");
-}
+MyOEIS::compare_values
+  (anum => 'A118567',
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::LuckyNumbers->new;
+     my @got;
+     while (@got < $count) {
+       my ($i, $value) = $seq->next;
+       if ($value =~ /^[13579]+$/) {
+         push @got, $value;
+       }
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 # A050505 - non-Lucky numbers
 
-{
-  my $anum = 'A050505';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my $diff;
-  if (! $bvalues) {
-    MyTestHelpers::diag ("$anum not available");
-  } else {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-    my $seq = Math::NumSeq::LuckyNumbers->new;
-    my @got;
-    my ($i, $value) = $seq->next;
-    for (my $n = 1; @got < @$bvalues; $n++) {
-      if ($n < $value) {
-        push @got, $n;
-      } else {
-        ($i, $value) = $seq->next;
-      }
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum - non-lucky");
-}
+MyOEIS::compare_values
+  (anum => 'A050505',
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::LuckyNumbers->new;
+     my @got;
+     my ($i, $value) = $seq->next;
+     for (my $n = 1; @got < $count; $n++) {
+       if ($n < $value) {
+         push @got, $n;
+       } else {
+         ($i, $value) = $seq->next;
+       }
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 # A145649 - 0,1 characteristic
 
-{
-  my $anum = 'A145649';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my $diff;
-  if (! $bvalues) {
-    MyTestHelpers::diag ("$anum not available");
-  } else {
-    MyTestHelpers::diag ("$anum has ",scalar(@$bvalues)," values");
-    my $seq = Math::NumSeq::LuckyNumbers->new;
-    my @got;
-    my ($i, $value) = $seq->next;
-    for (my $n = 1; @got < @$bvalues; $n++) {
-      if ($n < $value) {
-        push @got, 0;
-      } else {
-        push @got, 1;
-        ($i, $value) = $seq->next;
-      }
-    }
-    $diff = diff_nums(\@got, $bvalues);
-    if ($diff) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  }
-  skip (! $bvalues,
-        $diff, undef,
-        "$anum - 0,1 characteristic");
-}
+MyOEIS::compare_values
+  (anum => 'A145649',
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::LuckyNumbers->new;
+     my @got;
+     my ($i, $value) = $seq->next;
+     for (my $n = 1; @got < $count; $n++) {
+       if ($n < $value) {
+         push @got, 0;
+       } else {
+         push @got, 1;
+         ($i, $value) = $seq->next;
+       }
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 exit 0;
