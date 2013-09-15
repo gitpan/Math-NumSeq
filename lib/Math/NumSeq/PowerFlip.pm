@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 63;
+$VERSION = 64;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -171,7 +171,11 @@ square-free.
 The possible values which occur in the sequence are related to square
 factors.  Since value=e^p has prime pE<gt>=2, every e,f,g etc powered up in
 the value is a square or higher power.  So sequence values are a product of
-squares and higher, the same as 
+squares and higher.
+
+These calculations require factorizing C<$i> and in the current code after
+small factors a hard limit of 2**32 is enforced in the interests of not
+going into a near-infinite loop.
 
 =head1 FUNCTIONS
 

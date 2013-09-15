@@ -29,7 +29,7 @@ use strict;
 use POSIX 'ceil';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 63;
+$VERSION = 64;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
@@ -273,8 +273,9 @@ Create and return a new sequence object.
 
 Return the number of ways C<$i> can be expressed as the sum of two squares.
 
-This requires factorizing C<$i> and the current code has a hard limit of
-2**32 on C<$i>, in the interests of not going into a near-infinite loop.
+This calculation requires factorizing C<$i> and in the current code after
+small factors a hard limit of 2**32 is enforced in the interests of not
+going into a near-infinite loop.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 

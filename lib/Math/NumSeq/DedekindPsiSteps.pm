@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 63;
+$VERSION = 64;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -201,9 +201,9 @@ Create and return a new sequence object.
 Return the number of repeated applications of the psi function on C<$i>
 required to reach just factors 2 and 3.
 
-This requires factorizing C<$i> and in the current code a hard limit of
-2**32 is placed on C<$i>, in the interests of not going into a near-infinite
-loop.  Above that the return is C<undef>.
+This calculation requires factorizing C<$i> and in the current code after
+small factors a hard limit of 2**32 is enforced in the interests of not
+going into a near-infinite loop.  Above that the return is C<undef>.
 
 =back
 

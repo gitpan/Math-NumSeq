@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -29,6 +29,40 @@ use Math::Trig 'pi';
 use Smart::Comments;
 
 # use blib "$ENV{HOME}/perl/bit-vector/Bit-Vector-7.1/blib";
+
+{
+  # prime gaps
+
+  require Math::NumSeq::Primes;
+  my $seq = Math::NumSeq::Primes->new;
+  my $max = 0;
+  my $prev = 0;
+  while (my ($i, $value) = $seq->next) {
+    my $gap = $value - $prev;
+    if ($gap > $max) {
+      my $half = $gap/2;
+      print "$i $value gap=$gap  half=$half\n";
+      $max = $gap;
+    }
+    $prev = $value;
+  }
+  exit 0;
+}
+
+{
+  # DivisorCount on primorials
+
+  require Math::NumSeq::Primorials;
+  require Math::NumSeq::DivisorCount;
+  my $primorials = Math::NumSeq::Primorials->new;
+  my $dcount = Math::NumSeq::DivisorCount->new;
+  foreach (1 .. 100) {
+    my ($i,$value) = $primorials->next;
+    my $c = $dcount->ith($value) // 'undef';
+    print "$i $c $value\n";
+  }
+  exit 0;
+}
 
 {
   require Math::NumSeq::PrimeFactorCount;

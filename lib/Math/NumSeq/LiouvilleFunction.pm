@@ -21,11 +21,12 @@ use strict;
 use List::Util 'max','min';
 
 use vars '$VERSION','@ISA';
-$VERSION = 63;
+$VERSION = 64;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
 use Math::NumSeq::PrimeFactorCount;
+*_prime_factors = \&Math::NumSeq::PrimeFactorCount::_prime_factors;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -100,10 +101,6 @@ sub new {
   $self->{'characteristic'}->{'pn1'}
     = (($values[0] == 1 && $values[1] == -1)
        || ($values[0] == -1 && $values[1] == 1));
-
-  $self->{'multiplicity'} = 'repeated'; # for PrimeFactorCount ith()
-  $self->{'prime_type'} = 'all';        # for PrimeFactorCount ith()
-  $self->{'values_type'} = 'count';     # for PrimeFactorCount ith()
 
   ### $self
   return $self;
@@ -180,9 +177,9 @@ sub ith {
   my ($self, $i) = @_;
   ### LiouvilleFunction ith(): $i
 
-  my $count = $self->Math::NumSeq::PrimeFactorCount::ith($i);
-  return (defined $count
-          ? $self->{'values'}->[$count & 1]
+  my ($good, @primes) = _prime_factors($i);
+  return ($good
+          ? $self->{'values'}->[scalar(@primes) & 1]
           : undef);
 }
 
@@ -269,9 +266,9 @@ can be
 Return the Liouville function of C<$i>, being 1 or -1 (or other
 C<values_type>) according to the number of prime factors in C<$i>.
 
-This requires factorizing C<$i> and the current code tries small primes then
-has a hard limit of 2**32 on C<$i>, in the interests of not going into a
-near-infinite loop.
+This calculation requires factorizing C<$i> and in the current code after
+small factors a hard limit of 2**32 is enforced in the interests of not
+going into a near-infinite loop.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 

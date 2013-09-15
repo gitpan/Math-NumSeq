@@ -24,9 +24,12 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 63;
+$VERSION = 64;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
+
+use Math::NumSeq::PrimeFactorCount;
+*_prime_factors = \&Math::NumSeq::PrimeFactorCount::_prime_factors;
 
 # uncomment this to run the ### lines
 #use Devel::Comments;
@@ -88,8 +91,8 @@ sub values_min {
 #
 sub oeis_anum {
   my ($self) = @_;
-  # OEIS-Catalogue: A000005
   return 'A000005';
+  # OEIS-Catalogue: A000005
 
   # my %oeis_anum = (all    => 'A000005',  # all divisors starting n=1
   #                  # proper => 'A032741', # starts n=0 ...
@@ -156,38 +159,33 @@ sub ith {
   my ($self, $i) = @_;
 
   $i = abs($i);
-  if ($i <= 1) {
-    return $i;
+  if ($i == 0) {
+    return 0;
   }
-  unless ($i <= 0xFFFF_FFFF) {
-    return undef;
-  }
-  $i = "$i"; # numize Math::BigInt for speed
 
-  my $ret = 1;
-  unless ($i % 2) {
-    my $count = 1;
-    do {
-      $i /= 2;
-      $count++;
-    } until ($i % 2);
-    $ret *= $count;
-  }
-  my $limit = sqrt($i);
-  for (my $d = 3; $d <= $limit; $d+=2) {
-    unless ($i % $d) {
-      my $count = 1;
-      do {
-        $i /= $d;
-        $count++;
-      } until ($i % $d);
-      $limit = sqrt($i);
-      $ret *= $count;
+  # If i = p^a * q^b * ... then divisorcount = (a+1)*(b+1)*...
+  # which is each possible power p^0, p^1, ..., p^a of each prime,
+  # including all zeros p^0*q^0*... = 1 and p^a*q^b*... itself.
+  #
+  # If i is a primorial 2*3*5*7*13*... with k primes then divisorcount=2^k
+  # so the $value product can become a bignum if $i is a bignum.
+
+  my ($good, @primes) = _prime_factors($i);
+  return undef unless $good;
+
+  my $value = ($i*0) + 1;   # inherit possible bignum
+  my $prev = 0;
+  my $dcount = 1;
+  while (my $p = shift @primes) {
+    if ($p == $prev) {
+      $dcount++;
+    } else {
+      $value *= $dcount;
+      $dcount = 2;
+      $prev = $p;
     }
   }
-  if ($i > 1) {
-    $ret *= 2;
-  }
+  return $value * $dcount;
 
   # if ($self->{'divisor_type'} eq 'propn1') {
   #   if ($ret <= 2) {
@@ -195,8 +193,6 @@ sub ith {
   #   }
   #   $ret -= 2;
   # }
-
-  return $ret;
 }
 
 sub pred {
@@ -246,9 +242,9 @@ Create and return a new sequence object.
 
 Return the number of prime factors in C<$i>.
 
-This calculation requires factorizing C<$i> and in the current code a hard
-limit of 2**32 is placed on C<$i>, in the interests of not going into a
-near-infinite loop.
+This calculation requires factorizing C<$i> and in the current code after
+small factors a hard limit of 2**32 is enforced in the interests of not
+going into a near-infinite loop.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 

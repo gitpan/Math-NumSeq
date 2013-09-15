@@ -1,6 +1,8 @@
 # download related seqs
 # similar works in other bases .. SlopingExcluded
 
+# A104401 sloping binary
+
 
 
 # Copyright 2012, 2013 Kevin Ryde
@@ -25,7 +27,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 63;
+$VERSION = 64;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;

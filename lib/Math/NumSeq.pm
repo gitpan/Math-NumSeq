@@ -51,7 +51,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 63;
+$VERSION = 64;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -592,12 +592,13 @@ L<Math::NumSeq::WoodallNumbers>,
 L<Math::NumSeq::BaumSweet>,
 L<Math::NumSeq::GolayRudinShapiro>,
 L<Math::NumSeq::GolayRudinShapiroCumulative>,
+L<Math::NumSeq::MephistoWaltz>,
+L<Math::NumSeq::HafermanCarpet>,
 L<Math::NumSeq::KlarnerRado>,
 L<Math::NumSeq::UlamSequence>,
 L<Math::NumSeq::ReRound>,
 L<Math::NumSeq::ReReplace>,
-L<Math::NumSeq::LuckyNumbers>,
-L<Math::NumSeq::MephistoWaltz>
+L<Math::NumSeq::LuckyNumbers>
 
 L<Math::NumSeq::CollatzSteps>,
 L<Math::NumSeq::ReverseAdd>,

@@ -61,7 +61,6 @@ $|=1;
   $values_class = 'Math::NumSeq::DigitProduct';
   $values_class = 'Math::NumSeq::Pell';
   $values_class = 'Math::NumSeq::KlarnerRado';
-  $values_class = 'Math::NumSeq::DivisorCount';
   $values_class = 'Math::NumSeq::Kolakoski';
   $values_class = 'Math::NumSeq::UlamSequence';
   $values_class = 'Math::NumSeq::ReplicateDigits';
@@ -195,9 +194,10 @@ $|=1;
   $values_class = 'Math::NumSeq::LuckyNumbers';
   $values_class = 'Math::NumSeq::OEIS::File';
   $values_class = 'Math::NumSeq::ProthNumbers';
-  $values_class = 'Math::NumSeq::PlanePathTurn';
   $values_class = 'Math::NumSeq::HafermanCarpet';
   $values_class = 'Math::NumSeq::PrimeIndexPrimes';
+  $values_class = 'Math::NumSeq::PlanePathTurn';
+  $values_class = 'Math::NumSeq::DivisorCount';
 
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new
@@ -308,7 +308,7 @@ $|=1;
      # planepath => 'PythagoreanTree,coordinates=BC',
      # planepath => 'ChanTree,k=4',
      # planepath => 'SquareSpiral',
-      planepath => 'KochCurve',
+      planepath => 'PowerArray,radix=4',
       turn_type => 'SLR',
 
      # planepath => 'CfracDigits',

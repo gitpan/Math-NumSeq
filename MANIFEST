@@ -22,6 +22,7 @@ devel/engel.pl
 devel/erdos-selfridge.pl
 devel/euler.pl
 devel/exe-cbrt.c
+devel/exe-flimsy.c
 devel/exe-gen-bits.c
 devel/exe-ln2.c
 devel/exe-perrin.c
@@ -31,12 +32,14 @@ devel/factorials.pl
 devel/fibbinary.pl
 devel/fibonacci-word.pl
 devel/fibonacci.pl
+devel/flimsy.pl
 devel/fraction-digits.pl
 devel/gen-bits.pl
 devel/GNUmakefile
 devel/golay-rudin-shapiro.pl
 devel/golomb-sequence.pl
 devel/grep-oeis-non-ascii.pl
+devel/haferman-carpet.pl
 devel/happy.pl
 devel/hofstadter-figure.pl
 devel/juggler.pl
@@ -61,7 +64,6 @@ devel/lib/Math/NumSeq/FactorialProducts.pm
 devel/lib/Math/NumSeq/FibonacciProducts.pm
 devel/lib/Math/NumSeq/FibonacciRepresentations.pm
 devel/lib/Math/NumSeq/HafermanByBits.pm
-devel/lib/Math/NumSeq/HafermanCarpet.pm
 devel/lib/Math/NumSeq/HafermanZ.pm
 devel/lib/Math/NumSeq/HypotCount.pm
 devel/lib/Math/NumSeq/JacobsthalFunction.pm
@@ -206,6 +208,7 @@ lib/Math/NumSeq/GolayRudinShapiro.pm
 lib/Math/NumSeq/GolayRudinShapiroCumulative.pm
 lib/Math/NumSeq/GoldbachCount.pm
 lib/Math/NumSeq/GolombSequence.pm
+lib/Math/NumSeq/HafermanCarpet.pm
 lib/Math/NumSeq/HappyNumbers.pm
 lib/Math/NumSeq/HappySteps.pm
 lib/Math/NumSeq/HarshadNumbers.pm
@@ -382,6 +385,7 @@ xt/oeis/File-oeis.t
 xt/oeis/GolayRudinShapiro-oeis.t
 xt/oeis/GolayRudinShapiroCumulative-oeis.t
 xt/oeis/GolombSequence-oeis.t
+xt/oeis/HafermanCarpet-oeis.t
 xt/oeis/LemoineCount-oeis.t
 xt/oeis/LiouvilleFunction-oeis.t
 xt/oeis/LuckyNumbers-oeis.t

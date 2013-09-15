@@ -21,7 +21,7 @@ use strict;
 use List::Util 'min','max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 63;
+$VERSION = 64;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -129,16 +129,16 @@ sub ith {
 
   my $ret = 0;
 
+  if (_is_infinite($i) || $i < 0) {
+    return undef;
+  }
+
   if (($i % 2) == 0) {
     $i /= 2;
     if (($i % 2) == 0) {
       return 0;  # square factor
     }
     $ret = 1;
-  }
-
-  if (_is_infinite($i) || $i < 0) {
-    return undef;
   }
 
   if ($i <= 0xFFFF_FFFF) {
@@ -155,7 +155,8 @@ sub ith {
     if (($i % $p) == 0) {
       $i /= $p;
       if (($i % $p) == 0) {
-        return 0;  # square factor
+        ### square factor, zero ...
+        return 0;
       }
       $ret ^= 1;
       $sqrt = int(sqrt($i));  # new smaller limit
@@ -165,6 +166,7 @@ sub ith {
   }
   if ($sqrt > $limit) {
     ### not all factors found up to limit ...
+    # ENHANCE-ME: prime_factors() here if <2^32
     return undef;
   }
   if ($i != 1) {

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 63;
+$VERSION = 64;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -301,8 +301,9 @@ Create and return a new sequence object.
 
 Return the largest perfect square, cube, etc root dividing C<$i>.
 
-The current code relies on factorizing C<$i> and a hard limit of 2**32 is
-placed on C<$i> in the interests of not going into a near-infinite loop.
+This calculation requires factorizing C<$i> and in the current code after
+small factors a hard limit of 2**32 is enforced in the interests of not
+going into a near-infinite loop.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 

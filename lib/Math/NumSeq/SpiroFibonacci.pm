@@ -32,7 +32,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 63;
+$VERSION = 64;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_to_bigint = \&Math::NumSeq::_to_bigint;

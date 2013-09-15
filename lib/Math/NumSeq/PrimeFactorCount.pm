@@ -25,7 +25,7 @@ use strict;
 use List::Util 'min', 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 63;
+$VERSION = 64;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -297,6 +297,13 @@ sub ith {
   return $count;
 }
 
+# Return ($good, $prime,$prime,$prime,...).
+# $good is true if a full factorization is found.
+# $good is false if cannot factorize because $n is too big or infinite.
+#
+# If $n==0 or $n==1 then there are no prime factors and the return is
+# $good=1 and an empty list of primes.
+#
 sub _prime_factors {
   my ($n) = @_;
   ### _prime_factors(): $n
@@ -304,33 +311,54 @@ sub _prime_factors {
   unless ($n >= 0) {
     return 0;
   }
-  my @ret;
   if (_is_infinite($n)) {
     return 0;
   }
-  if ($n > 0xFFFF_FFFF) {
-    my $limit = 10_000 / (_blog2_estimate($n) || 1);
-    until ($n % 2) {
-      ### div2: $n
-      $n /= 2;
-      push @ret, 2;
-    }
-    for (my $p = 3; $p <= $limit; $p += 2) {
-      while (($n % $p) == 0) {
+
+  if ($n <= 0xFFFF_FFFF) {
+    return (1, prime_factors($n));
+  }
+
+  my @ret;
+  until ($n % 2) {
+    ### div2: $n
+    $n /= 2;
+    push @ret, 2;
+  }
+
+  # Stop at when prime $p reaches $limit and when no prime factor has been
+  # found for the last 20 attempted $p.  Stopping only after a run of no
+  # factors found allows big primorials 2*3*5*7*13*... to be divided out.
+  # If the divisions are making progress reducing $i then continue.
+  #
+  # Would like $p and $gap to count primes, not just odd numbers.  Perhaps
+  # a table of small primes.  The first gap of 36 odds between primes
+  # occurs at prime=31469.  cf A000230 smallest prime p for gap 2n.
+
+  my $limit = 10_000 / (_blog2_estimate($n) || 1);
+  my $gap = 0;
+  for (my $p = 3; $gap < 36 || $p <= $limit ; $p += 2) {
+    if ($n % $p) {
+      $gap++;
+    } else {
+      do  {
         ### prime: $p
         $n /= $p;
         push @ret, $p;
-      }
+      } until ($n % $p);
+
       if ($n <= 1) {
-        return (1, @ret);  # all factors found
+        ### all factors found ...
+        return (1, @ret);
       }
+      if ($n < 0xFFFF_FFFF) {
+        ### remaining factors by XS ...
+        return (1, @ret, prime_factors($n));
+      }
+      $gap = 0;
     }
   }
-  if ($n <= 0xFFFF_FFFF) {
-    return (1, @ret, prime_factors($n));
-  } else {
-    return 0;  # factors too big
-  }
+  return 0;  # factors too big
 }
 
 sub _is_twin_prime {
@@ -518,9 +546,9 @@ Option C<prime_type> is a string either
 
 Return the number of prime factors in C<$i>.
 
-This requires factorizing C<$i> and the current code tries small primes then
-has a hard limit of 2**32 on C<$i>, in the interests of not going into a
-near-infinite loop.
+This calculation requires factorizing C<$i> and in the current code after
+small factors a hard limit of 2**32 is enforced in the interests of not
+going into a near-infinite loop.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 

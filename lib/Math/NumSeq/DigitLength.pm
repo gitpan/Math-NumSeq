@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 63;
+$VERSION = 64;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -104,7 +104,8 @@ sub ith {
     return $i;  # don't loop forever if $i is +infinity
   }
   my $length = 1;
-  my $power = my $radix = $self->{'radix'};
+  my $radix = $self->{'radix'};
+  my $power = $i*0 + $radix;   # inherit possible $i bignum
   while ($i >= $power) {
     $length++;
     $power *= $radix;

@@ -54,7 +54,7 @@ plan tests => $test_count;
 # VERSION
 
 {
-  my $want_version = 63;
+  my $want_version = 64;
   ok ($Math::NumSeq::FractionDigits::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::FractionDigits->VERSION,  $want_version,

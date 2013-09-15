@@ -17,6 +17,9 @@ with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 64, September 2013
+    - new HafermanCarpet
+
 Version 63, August 2013
     - OEIS new ith() on files
     - LuckyNumbers speedup per Dana Jacobsen RT#83581 but by a

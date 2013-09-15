@@ -22,7 +22,7 @@ use strict;
 use List::Util 'reduce';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 63;
+$VERSION = 64;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;

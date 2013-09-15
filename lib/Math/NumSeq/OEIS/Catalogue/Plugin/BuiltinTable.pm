@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 63;
+$VERSION = 64;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 884 A-numbers in 114 modules
+# total 884 A-numbers in 115 modules
 
 use constant info_arrayref =>
 [

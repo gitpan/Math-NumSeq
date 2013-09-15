@@ -26,7 +26,7 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
-my $test_count = (tests => 2271)[1];
+my $test_count = (tests => 2301)[1];
 plan tests => $test_count;
 
 # uncomment this to run the ### lines
@@ -127,6 +127,57 @@ foreach my $elem
    # Ln2Bits.pm
    # PiBits.pm
    
+   [ 'Math::NumSeq::DivisorCount',
+     [ 1,2,2,3,2,4,2 ] ],
+   
+   [ 'Math::NumSeq::LiouvilleFunction',
+     [ 1,  # 1
+       -1, # 2
+       -1, # 3
+       1,  # 4
+       -1, # 5
+       1,  # 6
+       -1, # 7
+       -1, # 8
+     ],
+   ],
+   [ 'Math::NumSeq::LiouvilleFunction',
+     [ 0,  # 1
+       1,  # 2
+       1,  # 3
+       0,  # 4
+       1,  # 5
+       0,  # 6
+       1,  # 7
+       1,  # 8
+     ],
+     { values_type => '0,1' },
+   ],
+   [ 'Math::NumSeq::LiouvilleFunction',
+     [ 1,  # 1
+       0,  # 2
+       0,  # 3
+       1,  # 4
+       0,  # 5
+       1,  # 6
+       0,  # 7
+       0,  # 8
+     ],
+     { values_type => '1,0' },
+   ],
+   
+   [ 'Math::NumSeq::HafermanCarpet',  # per pod
+     [ 0,1,0,1,0,1,0,1,0, 0,1,0,1,0,1,0,1,0, 0,1,0,1,0,1,0,1,0, 0, ],
+   ],
+   [ 'Math::NumSeq::HafermanCarpet',  # per pod
+     [ 1,1,1,1,1,1,1,1,1,0,1,0,1,0,1,0,1,0,1,1,1,1,1,1,1,1,1,0,1,0,1,0, ],
+     { initial_value => 1 },
+   ],
+   [ 'Math::NumSeq::HafermanCarpet',  # per pod
+     [ 1,0,1,0,1,0,1,0,1,1,0,1,0,1,0,1,0,1,1,0,1,0,1,0,1,0,1,1,0,1,0,1, ],
+     { inverse => 1 },
+   ],
+
    [ 'Math::NumSeq::ProthNumbers',
      [ 3, 5, 9, 13, 17, 25, 33, 41, 49, 57, 65, 81, 97, 113, 129, 145,
        161, 177, 193, 209, 225, 241, 257, 289, 321, 353, 385, 417, 449, 481,
@@ -346,42 +397,6 @@ foreach my $elem
    [ 'Math::NumSeq::Catalan',
      [ 1, 1, 1, 5, 7, 21, 33, 429, 715, 2431, 4199, ],
      { values_type => 'odd' },
-   ],
-   
-   [ 'Math::NumSeq::LiouvilleFunction',
-     [ 1,  # 1
-       -1, # 2
-       -1, # 3
-       1,  # 4
-       -1, # 5
-       1,  # 6
-       -1, # 7
-       -1, # 8
-     ],
-   ],
-   [ 'Math::NumSeq::LiouvilleFunction',
-     [ 0,  # 1
-       1,  # 2
-       1,  # 3
-       0,  # 4
-       1,  # 5
-       0,  # 6
-       1,  # 7
-       1,  # 8
-     ],
-     { values_type => '0,1' },
-   ],
-   [ 'Math::NumSeq::LiouvilleFunction',
-     [ 1,  # 1
-       0,  # 2
-       0,  # 3
-       1,  # 4
-       0,  # 5
-       1,  # 6
-       0,  # 7
-       0,  # 8
-     ],
-     { values_type => '1,0' },
    ],
    
    [ 'Math::NumSeq::GolayRudinShapiro',
@@ -1429,9 +1444,6 @@ foreach my $elem
    
    [ 'Math::NumSeq::AsciiSelf',
      [ 53,51,53,49,53,51,52,57 ] ],
-   
-   [ 'Math::NumSeq::DivisorCount',
-     [ 1,2,2,3,2,4,2 ] ],
    
    [ 'Math::NumSeq::KlarnerRado',
      [ 1,2,4,5,8,9 ] ],

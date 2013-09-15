@@ -1,4 +1,4 @@
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -17,3 +17,6 @@
 
 
 CFLAGS = -Wall -std=gnu99 -O3 -g -mtune=athlon -march=athlon
+
+# exe-flimsy: exe-flimsy.o flimsy-subr.o
+

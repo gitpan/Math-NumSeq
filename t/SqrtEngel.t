@@ -55,7 +55,7 @@ use Math::BigInt;
 # VERSION
 
 {
-  my $want_version = 63;
+  my $want_version = 64;
   ok ($Math::NumSeq::SqrtEngel::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::SqrtEngel->VERSION,  $want_version,

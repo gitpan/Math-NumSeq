@@ -23,7 +23,7 @@ use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 use Math::Factor::XS 'factors';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 63;
+$VERSION = 64;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -256,9 +256,9 @@ Create and return a new sequence object.
 
 Return totient(i).
 
-This requires factorizing C<$i> and in the current code a hard limit of
-2**32 is placed on C<$i> in the interests of not going into a near-infinite
-loop.  Above that the return is C<undef>.
+This calculation requires factorizing C<$i> and in the current code after
+small factors a hard limit of 2**32 is enforced in the interests of not
+going into a near-infinite loop.  Above that the return is C<undef>.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 

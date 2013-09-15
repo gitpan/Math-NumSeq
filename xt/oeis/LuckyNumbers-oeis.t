@@ -35,6 +35,26 @@ use Math::NumSeq::LuckyNumbers;
 
 
 #------------------------------------------------------------------------------
+# A031162 - lucky and square
+
+MyOEIS::compare_values
+  (anum => 'A031162',
+   func => sub {
+     my ($count) = @_;
+     require Math::NumSeq::Squares;
+     my $lucky = Math::NumSeq::LuckyNumbers->new;
+     my $square = Math::NumSeq::Squares->new;
+     my @got;
+     while (@got < $count) {
+       my ($i, $value) = $lucky->next;
+       if ($square->pred($value)) {
+         push @got, $value;
+       }
+     }
+     return \@got;
+   });
+
+#------------------------------------------------------------------------------
 # A137164 etc - Lucky with various modulo
 
 foreach my $elem (['A137164', 0, 3],
