@@ -25,9 +25,11 @@ use strict;
 use List::Util 'min', 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 64;
+$VERSION = 65;
 use Math::NumSeq;
-@ISA = ('Math::NumSeq');
+use Math::NumSeq::Base::IterateIth;
+@ISA = ('Math::NumSeq::Base::IterateIth',
+        'Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
 use Math::Prime::XS 'is_prime';
@@ -168,85 +170,6 @@ sub oeis_anum {
 
 #------------------------------------------------------------------------------
 
-sub rewind {
-  my ($self) = @_;
-  ### PrimeFactorCount rewind()
-  $self->{'i'} = $self->i_start;
-  _restart_sieve ($self, 500);
-}
-sub _restart_sieve {
-  my ($self, $hi) = @_;
-
-  $self->{'hi'} = $hi;
-  $self->{'string'} = "\0" x ($self->{'hi'}+1);
-}
-
-# ENHANCE-ME: maybe _primes_list() applied to block array
-#
-sub next {
-  my ($self) = @_;
-  ### PrimeFactorCount next() ...
-
-  my $i = $self->{'i'}++;
-  my $hi = $self->{'hi'};
-  my $start = $i;
-  if ($i > $hi) {
-    _restart_sieve ($self, $hi *= 2);
-    $start = 2;
-  }
-
-  my $prime_type = $self->{'prime_type'};
-  my $cref = \$self->{'string'};
-  ### $i
-  my $ret;
-  foreach my $i ($start .. $i) {
-    $ret = vec ($$cref, $i,8);
-    ### at: "i=$i ret=$ret"
-
-    if ($ret == 255) {
-      ### composite with no matching factors: $i
-      $ret = 0;
-
-    } elsif ($ret == 0 && $i >= 2) {
-      ### prime: $i
-      if ($prime_type eq 'all'
-          || ($prime_type eq 'odd' && ($i&1))
-          || ($prime_type eq '4k+1' && ($i&3)==1)
-          || ($prime_type eq '4k+3' && ($i&3)==3)
-          || ($prime_type eq 'twin' && _is_twin_prime($i))
-          || ($prime_type eq 'SG' && _is_SG_prime($i))
-          || ($prime_type eq 'safe' && _is_safe_prime($i))) {
-        ### increment ...
-        $ret++;
-        for (my $step = $i; $step <= $hi; $step *= $i) {
-          for (my $j = $step; $j <= $hi; $j += $step) {
-            my $c = vec($$cref,$j,8);
-            if ($c == 255) { $c = 0; }
-            vec($$cref, $j,8) = min (255, $c+1);
-          }
-          last if $self->{'multiplicity'} eq 'distinct';
-        }
-        # print "applied: $i\n";
-        # for (my $j = 0; $j < $hi; $j++) {
-        #   printf "  %2d %2d\n", $j, vec($$cref, $j,8));
-        # }
-      } else {
-        ### flag composites ...
-        for (my $j = 2*$i; $j <= $hi; $j += $i) {
-          unless (vec($$cref, $j,8)) {
-            vec($$cref, $j,8) = 255;
-          }
-        }
-      }
-    }
-  }
-  ### ret: "$i, $ret"
-  if ($self->{'values_type'} eq 'mod2') {
-    $ret %= 2;
-  }
-  return ($i, $ret);
-}
-
 # prime_factors() is about 5x faster
 #
 sub ith {
@@ -254,9 +177,7 @@ sub ith {
   $i = abs($i);
 
   my ($good, @primes) = _prime_factors($i);
-  if (! $good) {
-    return undef;
-  }
+  return undef unless $good;
 
   my $multiplicity = ($self->{'multiplicity'} ne 'distinct');
   my $prime_type = $self->{'prime_type'};
@@ -378,6 +299,13 @@ sub _is_safe_prime {
   return (($n&1) && is_prime(($n-1)/2));
 }
 
+sub pred {
+  my ($self, $value) = @_;
+  return ($value >= 0 && $value == int($value));
+}
+
+1;
+__END__
 
 # if (0 && eval '; 1') {
 #   ### use prime_factors() ...
@@ -469,13 +397,87 @@ sub _is_safe_prime {
 # HERE
 # }
 
-sub pred {
-  my ($self, $value) = @_;
-  return ($value >= 0 && $value == int($value));
-}
-
-1;
-__END__
+# This was next() done by sieve, but it's scarcely faster than ith() and
+# uses a lot of memory if call next() for a long time.
+#
+# sub rewind {
+#   my ($self) = @_;
+#   ### PrimeFactorCount rewind()
+#   $self->{'i'} = $self->i_start;
+#   _restart_sieve ($self, 500);
+# }
+# sub _restart_sieve {
+#   my ($self, $hi) = @_;
+# 
+#   $self->{'hi'} = $hi;
+#   $self->{'string'} = "\0" x ($self->{'hi'}+1);
+# }
+# 
+# # ENHANCE-ME: maybe _primes_list() applied to block array
+# #
+# sub next {
+#   my ($self) = @_;
+#   ### PrimeFactorCount next() ...
+# 
+#   my $i = $self->{'i'}++;
+#   my $hi = $self->{'hi'};
+#   my $start = $i;
+#   if ($i > $hi) {
+#     _restart_sieve ($self, $hi *= 2);
+#     $start = 2;
+#   }
+# 
+#   my $prime_type = $self->{'prime_type'};
+#   my $cref = \$self->{'string'};
+#   ### $i
+#   my $ret;
+#   foreach my $i ($start .. $i) {
+#     $ret = vec ($$cref, $i,8);
+#     ### at: "i=$i ret=$ret"
+# 
+#     if ($ret == 255) {
+#       ### composite with no matching factors: $i
+#       $ret = 0;
+# 
+#     } elsif ($ret == 0 && $i >= 2) {
+#       ### prime: $i
+#       if ($prime_type eq 'all'
+#           || ($prime_type eq 'odd' && ($i&1))
+#           || ($prime_type eq '4k+1' && ($i&3)==1)
+#           || ($prime_type eq '4k+3' && ($i&3)==3)
+#           || ($prime_type eq 'twin' && _is_twin_prime($i))
+#           || ($prime_type eq 'SG' && _is_SG_prime($i))
+#           || ($prime_type eq 'safe' && _is_safe_prime($i))) {
+#         ### increment ...
+#         $ret++;
+#         for (my $step = $i; $step <= $hi; $step *= $i) {
+#           for (my $j = $step; $j <= $hi; $j += $step) {
+#             my $c = vec($$cref,$j,8);
+#             if ($c == 255) { $c = 0; }
+#             vec($$cref, $j,8) = min (255, $c+1);
+#           }
+#           last if $self->{'multiplicity'} eq 'distinct';
+#         }
+#         # print "applied: $i\n";
+#         # for (my $j = 0; $j < $hi; $j++) {
+#         #   printf "  %2d %2d\n", $j, vec($$cref, $j,8));
+#         # }
+#       } else {
+#         ### flag composites ...
+#         for (my $j = 2*$i; $j <= $hi; $j += $i) {
+#           unless (vec($$cref, $j,8)) {
+#             vec($$cref, $j,8) = 255;
+#           }
+#         }
+#       }
+#     }
+#   }
+#   ### ret: "$i, $ret"
+#   if ($self->{'values_type'} eq 'mod2') {
+#     $ret %= 2;
+#   }
+#   return ($i, $ret);
+# }
 
 =for stopwords Ryde Math-NumSeq
 

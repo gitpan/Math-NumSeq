@@ -7,6 +7,7 @@ debian/copyright
 debian/rules
 debian/source/format
 debian/watch
+devel/abundant.pl
 devel/ascii-self.pl
 devel/balanced-binary.pl
 devel/Base4Only01.pm

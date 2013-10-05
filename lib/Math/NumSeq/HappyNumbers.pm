@@ -21,7 +21,7 @@ use strict;
 use List::Util 'sum';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 64;
+$VERSION = 65;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
@@ -40,8 +40,6 @@ use Math::NumSeq::Repdigits;
 use constant description => Math::NumSeq::__('Happy numbers 1,7,10,13,19,23,etc, reaching 1 under iterating sum of squares of digits.');
 use constant default_i_start => 1;
 use constant values_min => 1;
-use constant characteristic_increasing => 1;
-use constant characteristic_integer => 1;
 
 use Math::NumSeq::Base::Digits
   'parameter_info_array';   # radix parameter

@@ -35,7 +35,7 @@ use Math::NumSeq::AsciiSelf;
 # VERSION
 
 {
-  my $want_version = 64;
+  my $want_version = 65;
   ok ($Math::NumSeq::AsciiSelf::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::AsciiSelf->VERSION, $want_version,

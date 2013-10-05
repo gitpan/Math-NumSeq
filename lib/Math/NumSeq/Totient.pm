@@ -23,7 +23,7 @@ use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 use Math::Factor::XS 'factors';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 64;
+$VERSION = 65;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -77,9 +77,7 @@ sub _totient {
     return 0;
   }
   my ($good, @primes) = _prime_factors($n);
-  if (! $good) {
-    return undef; # too big to factorize
-  }
+  return undef unless $good;
 
   my $prev = 0;
   my $ret = 1;

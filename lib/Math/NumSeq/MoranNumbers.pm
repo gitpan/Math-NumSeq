@@ -21,7 +21,7 @@ use strict;
 use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 64;
+$VERSION = 65;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
@@ -35,8 +35,6 @@ use Math::NumSeq::Base::IteratePred;
 use constant name => Math::NumSeq::__('Moran Numbers');
 use constant description => Math::NumSeq::__('Moran numbers, divisible by the sum of their digits and that division resulting in a prime.');
 use constant i_start => 1;
-use constant characteristic_increasing => 1;
-use constant characteristic_integer => 1;
 
 use Math::NumSeq::Base::Digits
   'parameter_info_array';   # radix parameter

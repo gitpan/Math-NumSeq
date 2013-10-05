@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 64;
+$VERSION = 65;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
@@ -168,9 +168,8 @@ sub _is_primitive_root {
     return undef;  # too big to factorize
   }
   my ($good, @primes) = _prime_factors($exponent);
-  if (! $good) {
-    return undef;  # too big to factorize
-  }
+  return undef unless $good;
+
   my $prev_p = 0;
   while (defined (my $p = shift @primes)) {
     next if $p == $prev_p;
@@ -210,9 +209,7 @@ sub _lambda {
   ### _lambda(): $n
 
   my ($good, @primes) = _prime_factors($n);
-  if (! $good) {
-    return undef;  # too big to factorize
-  }
+  return undef unless $good;
   ### @primes
 
   if (@primes >= 3 && $primes[2] == 2) {

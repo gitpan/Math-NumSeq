@@ -21,9 +21,11 @@ use strict;
 use List::Util 'max','min';
 
 use vars '$VERSION','@ISA';
-$VERSION = 64;
+$VERSION = 65;
 use Math::NumSeq;
-@ISA = ('Math::NumSeq');
+use Math::NumSeq::Base::IterateIth;
+@ISA = ('Math::NumSeq::Base::IterateIth',
+        'Math::NumSeq');
 
 use Math::NumSeq::PrimeFactorCount;
 *_prime_factors = \&Math::NumSeq::PrimeFactorCount::_prime_factors;
@@ -33,13 +35,12 @@ use Math::NumSeq::PrimeFactorCount;
 
 
 # use constant name => Math::NumSeq::__('Liouville Function');
-use constant characteristic_increasing => 0;
 use constant default_i_start => 1;
 
 use constant parameter_info_array =>
   [ {
      name    => 'values_type',
-     share_key => 'values_type_1-10110',
+     share_key => 'values_type_1-1_01_10',
      type    => 'enum',
      default => '1,-1',
      choices => ['1,-1',
@@ -63,6 +64,16 @@ sub description {
                  $even, $odd);
 }
 
+use constant characteristic_increasing => 0;
+sub characteristic_integer {
+  my ($self) = @_;
+  return (_is_integer($self->{'values_min'})
+          && _is_integer($self->{'values_max'}));
+}
+sub characteristic_pn1 {
+  my ($self) = @_;
+  return ($self->{'values_min'} == -1 && $self->{'values_max'} == 1);
+}
 
 #------------------------------------------------------------------------------
 # cf A026424  the -1 positions, odd number of primes
@@ -88,89 +99,13 @@ sub oeis_anum {
 #------------------------------------------------------------------------------
 
 sub new {
-  ### Liouville new(): @_
   my $self = shift->SUPER::new(@_);
-  ### $self
 
   my @values = split /,/, $self->{'values_type'};
   $self->{'values'} = \@values;
   $self->{'values_min'} = min(@values);
   $self->{'values_max'} = max(@values);
-  $self->{'characteristic'}->{'integer'}
-    = (_is_integer($values[0]) && _is_integer($values[1]));
-  $self->{'characteristic'}->{'pn1'}
-    = (($values[0] == 1 && $values[1] == -1)
-       || ($values[0] == -1 && $values[1] == 1));
-
-  ### $self
   return $self;
-}
-sub _is_integer {
-  my ($n) = @_;
-  return ($n == int($n));
-}
-
-# each 2-bit vec() value is
-#    0 unset
-#    1 (unused)
-#    2 even count of factors
-#    3 odd count of factors
-
-sub rewind {
-  my ($self) = @_;
-  $self->{'i'} = $self->i_start;
-  _restart_sieve ($self, 500);
-}
-sub _restart_sieve {
-  my ($self, $hi) = @_;
-  ### _restart_sieve() ...
-  $self->{'hi'} = $hi;
-  $self->{'string'} = "\0" x (($hi+1)/4);  # 4 of 2 bits each
-  vec($self->{'string'}, 0,2) = 1;  # N=0 ...
-  vec($self->{'string'}, 1,2) = 2;  # N=1 treated as even
-}
-
-sub next {
-  my ($self) = @_;
-
-  my $i = $self->{'i'}++;
-  my $hi = $self->{'hi'};
-  if ($i <= 1) {
-    return ($i, $self->{'values'}->[0]);
-  }
-
-  my $start = $i;
-  if ($i > $hi) {
-    _restart_sieve ($self, $hi *= 2);
-    $start = 2;
-  }
-  my $sref = \$self->{'string'};
-
-  my $ret;
-  foreach my $i ($start .. $i) {
-    $ret = vec($$sref, $i,2);
-    if ($ret == 0) {
-      ### prime: $i
-      $ret = 3; # odd
-
-      # existing squares $v==1 left alone, others toggle 2=odd,3=even
-
-      for (my $power = $i; $power <= $hi; $power *= $i) {
-        for (my $j = $power; $j <= $hi; $j += $power) {
-          ### p: "$j ".vec($$sref, $j,2)
-          vec($$sref, $j,2) = (vec($$sref, $j,2) ^ 1) | 2;
-          ### set: vec($$sref, $j,2)
-        }
-      }
-
-      # print "applied: $i\n";
-      # for (my $j = 0; $j < $hi; $j++) {
-      #   printf "  %2d %2d\n", $j, vec($$sref,$j,2);
-      # }
-    }
-  }
-  ### ret: "$i, $ret -> ".$self->{'values'}->[$ret-2]
-  return ($i, $self->{'values'}->[$ret-2]);
 }
 
 sub ith {
@@ -189,8 +124,83 @@ sub pred {
           || $value == $self->{'values'}->[1]);
 }
 
+#------------------------------------------------------------------------------
+# generic
+
+sub _is_integer {
+  my ($n) = @_;
+  return ($n == int($n));
+}
+
 1;
 __END__
+
+# This was next() done by sieve, but it's scarcely faster than ith() and
+# uses a lot of memory if call next() for a long time.
+#
+# # each 2-bit vec() value is
+# #    0 unset
+# #    1 (unused)
+# #    2 even count of factors
+# #    3 odd count of factors
+# 
+# sub rewind {
+#   my ($self) = @_;
+#   $self->{'i'} = $self->i_start;
+#   _restart_sieve ($self, 500);
+# }
+# sub _restart_sieve {
+#   my ($self, $hi) = @_;
+#   ### _restart_sieve() ...
+#   $self->{'hi'} = $hi;
+#   $self->{'string'} = "\0" x (($hi+1)/4);  # 4 of 2 bits each
+#   vec($self->{'string'}, 0,2) = 1;  # N=0 ...
+#   vec($self->{'string'}, 1,2) = 2;  # N=1 treated as even
+# }
+# 
+# sub next {
+#   my ($self) = @_;
+# 
+#   my $i = $self->{'i'}++;
+#   my $hi = $self->{'hi'};
+#   if ($i <= 1) {
+#     return ($i, $self->{'values'}->[0]);
+#   }
+# 
+#   my $start = $i;
+#   if ($i > $hi) {
+#     _restart_sieve ($self, $hi *= 2);
+#     $start = 2;
+#   }
+#   my $sref = \$self->{'string'};
+# 
+#   my $ret;
+#   foreach my $i ($start .. $i) {
+#     $ret = vec($$sref, $i,2);
+#     if ($ret == 0) {
+#       ### prime: $i
+#       $ret = 3; # odd
+# 
+#       # existing squares $v==1 left alone, others toggle 2=odd,3=even
+# 
+#       for (my $power = $i; $power <= $hi; $power *= $i) {
+#         for (my $j = $power; $j <= $hi; $j += $power) {
+#           ### p: "$j ".vec($$sref, $j,2)
+#           vec($$sref, $j,2) = (vec($$sref, $j,2) ^ 1) | 2;
+#           ### set: vec($$sref, $j,2)
+#         }
+#       }
+# 
+#       # print "applied: $i\n";
+#       # for (my $j = 0; $j < $hi; $j++) {
+#       #   printf "  %2d %2d\n", $j, vec($$sref,$j,2);
+#       # }
+#     }
+#   }
+#   ### ret: "$i, $ret -> ".$self->{'values'}->[$ret-2]
+#   return ($i, $self->{'values'}->[$ret-2]);
+# }
+
 
 =for stopwords Math-NumSeq Ryde Liouville ie
 

@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
-use blib "$ENV{HOME}/p/fx/38_02/blib";
+# use blib "$ENV{HOME}/p/fx/38_02/blib";
 use Math::Factor::XS 'prime_factors';
 
 use 5.004;
@@ -30,14 +30,27 @@ use Smart::Comments;
 {
   # factors() is slower, maybe due to arg checking overhead
   require Devel::TimeThis;
-  require Math::NumSeq::DivisorCount;
-  my $seq = Math::NumSeq::DivisorCount->new;
 
-  my $num = 50000;
+  my $class = 'Math::NumSeq::DivisorCount';
+  $class = 'Math::NumSeq::LiouvilleFunction';
+  $class = 'Math::NumSeq::MobiusFunction';
+  $class = 'Math::NumSeq::PrimeFactorCount';
+  $class = 'Math::NumSeq::PowerPart';
+  eval "require $class";
+
+  my $num = 100000;
   {
+    my $seq = $class->new;
     my $t = Devel::TimeThis->new('ith');
     foreach (1 .. $num) {
       $seq->ith($_);
+    }
+  }
+  {
+    my $seq = $class->new;
+    my $t = Devel::TimeThis->new('next');
+    foreach (1 .. $num) {
+      $seq->next;
     }
   }
   {
@@ -46,12 +59,12 @@ use Smart::Comments;
       factors($_);
     }
   }
-  {
-    my $t = Devel::TimeThis->new('xs_factors');
-    foreach (1 .. $num) {
-      Math::Factor::XS::xs_factors($_);
-    }
-  }
+  # {
+  #   my $t = Devel::TimeThis->new('xs_factors');
+  #   foreach (1 .. $num) {
+  #     Math::Factor::XS::xs_factors($_);
+  #   }
+  # }
   exit 0;
 }
 

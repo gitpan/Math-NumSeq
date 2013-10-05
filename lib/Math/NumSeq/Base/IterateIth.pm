@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION';
-$VERSION = 64;
+$VERSION = 65;
 
 sub rewind {
   my ($self) = @_;
@@ -87,7 +87,7 @@ L<Math::NumSeq>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/math-numseq/index.html
+L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 

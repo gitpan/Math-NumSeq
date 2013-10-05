@@ -36,8 +36,8 @@ use Math::NumSeq::LeastPrimitiveRoot;
 
 sub want_module {
   my ($module) = @_;
-  # return 1 if $module =~ /Aron/;
-  return 0 unless $module =~ /PlanePath/;
+  return 0 unless $module =~ /DigitExtract/;
+  # return 0 unless $module =~ /PlanePath/;
   # return 0 unless $module =~ /HafermanCarpet/;
   return 1;
 }

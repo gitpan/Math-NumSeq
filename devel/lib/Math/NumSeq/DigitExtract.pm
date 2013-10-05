@@ -1,15 +1,9 @@
 # N_low
 # N_high
 # N_middle
-# position_offset
 #
 # DigitExtract
 # DigitAverage
-
-# minimum
-# maximum
-# high
-# low
 
 # mean
 # geometric_mean
@@ -50,7 +44,7 @@ use strict;
 use List::Util qw(min max sum reduce);
 
 use vars '$VERSION', '@ISA';
-$VERSION = 64;
+$VERSION = 65;
 
 use Math::NumSeq::Base::IterateIth;
 use Math::NumSeq::Base::Digits;
@@ -60,8 +54,12 @@ use Math::NumSeq::Base::Digits;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
+use Math::NumSeq::Modulo;
+use Math::NumSeq::Repdigits;
+*_digit_split_lowtohigh = \&Math::NumSeq::Repdigits::_digit_split_lowtohigh;
+
 # uncomment this to run the ### lines
-#use Devel::Comments;
+# use Smart::Comments;
 
 
 # use constant name => Math::NumSeq::__('...');
@@ -71,46 +69,55 @@ use constant characteristic_increasing => 0;
 
 use constant parameter_info_array =>
   [
-   {
-    name    => 'extract_type',
-    type    => 'enum',
-    default => 'low',
-    choices => ['low','high',
-                # 'second_low','second_high','middle',
-                'minimum','maximum',
-                'mean',
-                # 'median',
-                # 'mode',
-                'geometric_mean',
-                'quadratic_mean',
-               ],
-   },
    Math::NumSeq::Base::Digits::parameter_common_radix(),
-   {
-    name    => 'round',
-    # display => Math::NumSeq::__('Round'),
-    type    => 'enum',
-    default => 'unrounded',
-    choices => ['unrounded', 'floor', 'ceil', 'nearest'],
-    description => Math::NumSeq::__('Rounding direction'),
+   { name    => 'extract_type',
+     type    => 'enum',
+     default => 'low',
+     choices => ['low','high',
+                 'middle_lower','middle_higher',
+                 'minimum','maximum',
+
+                 # 'second_low','second_high',
+                 # 'mean',
+                 # # 'median',
+                 # # 'mode',
+                 # 'geometric_mean',
+                 # 'quadratic_mean',
+                ],
+   },
+   { name    => 'extract_offset',
+     type    => 'integer',
+     default => 0,
+     width   => 3,
+   },
+   { name    => 'round',
+     # display => Math::NumSeq::__('Round'),
+     type    => 'enum',
+     default => 'unrounded',
+     choices => ['unrounded',
+                 # 'floor', 'ceil', 'nearest'
+                ],
+     description => Math::NumSeq::__('Rounding direction'),
    },
   ];
 
 sub values_min {
   my ($self) = @_;
-  if ($self->{'extract_type'} eq 'high') {
-    return ($self->i_start > 0 ? 1 : 0);
+  if ($self->i_start > 0
+      && (($self->{'extract_type'} eq 'high' && $self->{'extract_offset'} == 0)
+          || $self->{'extract_type'} eq 'maximum')) {
+    return 1;  # high digit >= 1
   }
   return 0;
 }
 
 my %type_is_integer = (low => 1,
                        high => 1,
-                       second_low => 1,
-                       second_high => 1,
-                       middle => 1,
+                       middle_lower => 1,
+                       middle_higher => 1,
                        minimum => 1,
                        maximum => 1,
+
                        mean => 0,
                        median => 0,
                        mode => 0,
@@ -144,16 +151,29 @@ my @oeis_anum;
 #    A044959 numbers with a distinct mode, ie. unique most populous
 #    A141391 when RMS is an integer
 #    A038374 length longest run of 1-bits
+#
+#    A175262 binary odd num digits and middle digit is 0
+#    A175263 binary odd num digits and middle digit is 1
 
-$oeis_anum[0]->{'low'}->{'unrounded'}->[10] = 'A010879';  # 0 to 9 rep
-# OEIS-Catalogue: A010879 extract_type=low
+#----------
+# low digit
+
+# OEIS-Other: A000035 extract_type=low radix=2
+# OEIS-Other: A010879 extract_type=low
+
 $oeis_anum[0]->{'low'}->{'floor'}
   = $oeis_anum[0]->{'low'}->{'ceil'}
   = $oeis_anum[0]->{'low'}->{'unrounded'};
 
-$oeis_anum[1]->{'high'}->{'unrounded'}->[3] = 'A122586'; # starting OFFSET=1
-$oeis_anum[1]->{'high'}->{'unrounded'}->[4] = 'A122587'; # starting OFFSET=1
-$oeis_anum[0]->{'high'}->{'unrounded'}->[10] = 'A000030';
+# A133873 radix=2 second lowest, not quite OFFSET=0 starts 1,1,1,2,2,2,0,0,0
+# $oeis_anum[0]->{'low'}->{'unrounded'}->[1]->[3]  = 'A133873';  # radix=3
+
+#----------
+# high digit
+
+$oeis_anum[1]->{'high'}->{'unrounded'}->[0]->[3] = 'A122586'; # starting OFFSET=1
+$oeis_anum[1]->{'high'}->{'unrounded'}->[0]->[4] = 'A122587'; # starting OFFSET=1
+$oeis_anum[0]->{'high'}->{'unrounded'}->[0]->[10] = 'A000030';
 # OEIS-Catalogue: A122586 extract_type=high radix=3 i_start=1
 # OEIS-Catalogue: A122587 extract_type=high radix=4 i_start=1
 # OEIS-Catalogue: A000030 extract_type=high
@@ -161,27 +181,37 @@ $oeis_anum[0]->{'high'}->{'floor'}
   = $oeis_anum[0]->{'high'}->{'ceil'}
   = $oeis_anum[0]->{'high'}->{'unrounded'};
 
-$oeis_anum[1]->{'middle'}->{'floor'}->[10] = 'A179636'; # less significant
-$oeis_anum[1]->{'middle'}->{'ceil'}->[10]   = 'A179635'; # more significant
-# OEIS-Catalogue: A179636 extract_type=middle round=floor i_start=1
-# OEIS-Catalogue: A179635 extract_type=middle round=ceil i_start=1
+#----------
+# middle digit
 
-$oeis_anum[0]->{'minimum'}->{'unrounded'}->[10] = 'A054054';
+# A179635 digit to the left, meaning higher
+$oeis_anum[1]->{'middle_higher'}->{'unrounded'}->[0]->[10] = 'A179635';
+$oeis_anum[1]->{'middle_lower'}->{'unrounded'}->[0]->[10]  = 'A179636';
+# OEIS-Catalogue: A179635 extract_type=middle_higher i_start=1
+# OEIS-Catalogue: A179636 extract_type=middle_lower  i_start=1
+
+#----------
+# minimum digit
+
+$oeis_anum[0]->{'minimum'}->{'unrounded'}->[0]->[10] = 'A054054';
 # OEIS-Catalogue: A054054 extract_type=minimum
 $oeis_anum[0]->{'minimum'}->{'floor'}
   = $oeis_anum[0]->{'minimum'}->{'ceil'}
   = $oeis_anum[0]->{'minimum'}->{'unrounded'};
 
-$oeis_anum[0]->{'maximum'}->{'unrounded'}->[3] = 'A190592';
-$oeis_anum[0]->{'maximum'}->{'unrounded'}->[4] = 'A190593';
-$oeis_anum[0]->{'maximum'}->{'unrounded'}->[5] = 'A190594';
-$oeis_anum[0]->{'maximum'}->{'unrounded'}->[6] = 'A190595';
-$oeis_anum[0]->{'maximum'}->{'unrounded'}->[7] = 'A190596';
-$oeis_anum[0]->{'maximum'}->{'unrounded'}->[8] = 'A190597';
-$oeis_anum[0]->{'maximum'}->{'unrounded'}->[9] = 'A190598';
-$oeis_anum[0]->{'maximum'}->{'unrounded'}->[10] = 'A054055';
-$oeis_anum[0]->{'maximum'}->{'unrounded'}->[11] = 'A190599';
-$oeis_anum[0]->{'maximum'}->{'unrounded'}->[12] = 'A190600';
+#----------
+# maximum digit
+
+$oeis_anum[0]->{'maximum'}->{'unrounded'}->[0]->[3] = 'A190592';
+$oeis_anum[0]->{'maximum'}->{'unrounded'}->[0]->[4] = 'A190593';
+$oeis_anum[0]->{'maximum'}->{'unrounded'}->[0]->[5] = 'A190594';
+$oeis_anum[0]->{'maximum'}->{'unrounded'}->[0]->[6] = 'A190595';
+$oeis_anum[0]->{'maximum'}->{'unrounded'}->[0]->[7] = 'A190596';
+$oeis_anum[0]->{'maximum'}->{'unrounded'}->[0]->[8] = 'A190597';
+$oeis_anum[0]->{'maximum'}->{'unrounded'}->[0]->[9] = 'A190598';
+$oeis_anum[0]->{'maximum'}->{'unrounded'}->[0]->[10] = 'A054055';
+$oeis_anum[0]->{'maximum'}->{'unrounded'}->[0]->[11] = 'A190599';
+$oeis_anum[0]->{'maximum'}->{'unrounded'}->[0]->[12] = 'A190600';
 # OEIS-Catalogue: A190592 extract_type=maximum radix=3
 # OEIS-Catalogue: A190593 extract_type=maximum radix=4
 # OEIS-Catalogue: A190594 extract_type=maximum radix=5
@@ -195,6 +225,9 @@ $oeis_anum[0]->{'maximum'}->{'unrounded'}->[12] = 'A190600';
 $oeis_anum[0]->{'maximum'}->{'floor'}
   = $oeis_anum[0]->{'maximum'}->{'ceil'}
   = $oeis_anum[0]->{'maximum'}->{'unrounded'};
+
+#----------
+# mean digit, rounded
 
 $oeis_anum[0]->{'mean'}->{'floor'}->[10] = 'A004426';
 $oeis_anum[0]->{'mean'}->{'ceil'}->[10]   = 'A004427';
@@ -222,13 +255,29 @@ $oeis_anum[0]->{'mode'}->{'floor'}->[10] = 'A115353';  # mode of decimal
 
 sub oeis_anum {
   my ($self) = @_;
+  my $radix = $self->{'radix'};
+
+  if ($self->{'extract_type'} eq 'low'
+      && $self->{'extract_offset'} == 0) {
+    return Math::NumSeq::Modulo::_modulus_to_anum($radix);
+  }
+
+  ### lookup: $oeis_anum[$self->i_start]->{$self->{'extract_type'}}->{$self->{'round'}}
+
   return $oeis_anum[$self->i_start]
-    ->{$self->{'extract_type'}}
-      ->{$self->{'round'}}
-        ->[$self->{'radix'}];
+    ->{$self->{'extract_type'}}->{$self->{'round'}}
+      ->[$self->{'extract_offset'}]->[$radix];
 }
 
 #------------------------------------------------------------------------------
+
+sub new {
+  my $self = shift->SUPER::new(@_);
+  unless ($self->{'extract_type'} =~ /middle/) {
+    $self->{'extract_offset'} = abs($self->{'extract_offset'});
+  }
+  return $self;
+}
 
 sub ith {
   my ($self, $i) = @_;
@@ -240,114 +289,152 @@ sub ith {
   }
 
   my $radix = $self->{'radix'};
-  my $extract_type = $self->{'extract_type'};
+  my $extract_type   = $self->{'extract_type'};
+  my $extract_offset = $self->{'extract_offset'};
 
   if ($extract_type eq 'low') {
-    return $i % $radix;
+    my $ret = 0;
+    foreach (0 .. $extract_offset) {
+      $ret = _divrem_mutate($i,$radix);
+    }
+    return $ret;
   }
 
-  if ($extract_type eq 'second_low') {
-    return int($i/$radix) % $radix;
-  }
-
-  my @digits;
-  do {
-    push @digits, $i % $radix;
-    $i = int($i/$radix);
-  } while ($i);
+  my @digits = _digit_split_lowtohigh($i, $radix);
 
   if ($extract_type eq 'high') {
-    return $digits[-1];
-  }
-  if ($extract_type eq 'second_high') {
-    return @digits >= 2 ? $digits[-2] : 0;
-  }
-
-  if ($extract_type eq 'minimum') {
-    return min(@digits);
-  }
-  if ($extract_type eq 'maximum') {
-    return max(@digits);
-  }
-
-  if ($extract_type eq 'middle') {
-    if ($self->{'round'} eq 'ceil') {
-      return $digits[scalar(@digits)/2];
-    }
-    if ($self->{'round'} eq 'floor') {
-      return $digits[$#digits/2];
-    }
-    return ($digits[$#digits/2] + $digits[scalar(@digits)/2]) / 2;
-  }
-  if ($extract_type eq 'median') {
-    # 6 digits 0,1,2,3,4,5 int(6/2)=3 is ceil
-    # 6 digits 0,1,2,3,4,5 int((6-1)/2)=2 is floor
-    # 7 digits 0,1,2,3,4,5,6 int(7/2)=3
-    # 7 digits 0,1,2,3,4,5,6 int((7-1)/2)=3 too
-    @digits = sort {$a<=>$b} @digits;
-    if ($self->{'round'} eq 'ceil') {
-      return $digits[scalar(@digits)/2];
-    }
-    if ($self->{'round'} eq 'floor') {
-      return $digits[$#digits/2];
-    }
-    return ($digits[$#digits/2] + $digits[scalar(@digits)/2]) / 2;
-  }
-  if ($extract_type eq 'mode') {
-    my @count;
-    my $max_count = 0;
-    foreach my $digit (@digits) {
-      if (++$count[$digit] > $max_count) {
-        $max_count = $count[$digit];
-      }
-    }
-    my $sum = 0;
-    my $sumcount = 0;
-    my $last = 0;
-    foreach my $digit (0 .. $#count) {
-      if (($count[$digit]||0) == $max_count) {
-        if ($self->{'round'} eq 'floor') {
-          return $digit;
-        }
-        $sum += $digit; $sumcount++;
-        $last = $digit;
-      }
-    }
-    if ($self->{'round'} eq 'ceil') {
-      return $last;
-    }
-    return $sum/$sumcount;
-  }
-
-  my $ret;
-  if ($extract_type eq 'mean') {
-    $ret = sum(@digits) / scalar(@digits);
-
-  } elsif ($extract_type eq 'geometric_mean') {
-    $ret = (reduce {$a*$b} @digits) ** (1/scalar(@digits));
-
-  } elsif ($extract_type eq 'quadratic_mean') {
-    $ret = sqrt(sum(map{$_*$_}@digits)/scalar(@digits));
-
+    $extract_offset = $#digits - $extract_offset;
+  } elsif ($extract_type eq 'middle_lower') {
+    # 1,2,3    $#digits = 2, middle_lower=int(2/2)=1
+    # 1,2,3,4  $#digits = 3, middle_lower=int(3/2)=1
+    $extract_offset += int($#digits/2);
+  } elsif ($extract_type eq 'middle_higher') {
+    #   3,2,1  $#digits = 2, middle_higher=int(3/2)=1
+    # 4,3,2,1  $#digits = 3, middle_higher=int(4/2)=2
+    $extract_offset += int(scalar(@digits)/2);
   } else {
-    die "Unrecognised extract_type: ",$extract_type;
+    ### assert: $extract_type eq 'minimum' || $extract_type eq 'maximum'
+    @digits = sort {$a<=>$b} @digits;  # ascending order
+    if ($extract_type eq 'maximum') {
+      $extract_offset = $#digits - $extract_offset;
+    }
   }
+  return ($extract_offset < 0 ? 0
+          : ($digits[$extract_offset] || 0));
 
-  if ($self->{'round'} eq 'floor') {
-    return int($ret);
+
+  # if ($extract_type eq 'middle') {
+  #   if ($self->{'round'} eq 'ceil') {
+  #     return $digits[scalar(@digits)/2];
+  #   }
+  #   if ($self->{'round'} eq 'floor') {
+  #     return $digits[$#digits/2];
+  #   }
+  #   return ($digits[$#digits/2] + $digits[scalar(@digits)/2]) / 2;
+  # }
+  # if ($extract_type eq 'median') {
+  #   # 6 digits 0,1,2,3,4,5 int(6/2)=3 is ceil
+  #   # 6 digits 0,1,2,3,4,5 int((6-1)/2)=2 is floor
+  #   # 7 digits 0,1,2,3,4,5,6 int(7/2)=3
+  #   # 7 digits 0,1,2,3,4,5,6 int((7-1)/2)=3 too
+  #   @digits = sort {$a<=>$b} @digits;
+  #   if ($self->{'round'} eq 'ceil') {
+  #     return $digits[scalar(@digits)/2];
+  #   }
+  #   if ($self->{'round'} eq 'floor') {
+  #     return $digits[$#digits/2];
+  #   }
+  #   return ($digits[$#digits/2] + $digits[scalar(@digits)/2]) / 2;
+  # }
+  # if ($extract_type eq 'mode') {
+  #   my @count;
+  #   my $max_count = 0;
+  #   foreach my $digit (@digits) {
+  #     if (++$count[$digit] > $max_count) {
+  #       $max_count = $count[$digit];
+  #     }
+  #   }
+  #   my $sum = 0;
+  #   my $sumcount = 0;
+  #   my $last = 0;
+  #   foreach my $digit (0 .. $#count) {
+  #     if (($count[$digit]||0) == $max_count) {
+  #       if ($self->{'round'} eq 'floor') {
+  #         return $digit;
+  #       }
+  #       $sum += $digit; $sumcount++;
+  #       $last = $digit;
+  #     }
+  #   }
+  #   if ($self->{'round'} eq 'ceil') {
+  #     return $last;
+  #   }
+  #   return $sum/$sumcount;
+  # }
+  #
+  # my $ret;
+  # if ($extract_type eq 'mean') {
+  #   $ret = sum(@digits) / scalar(@digits);
+  #
+  # } elsif ($extract_type eq 'geometric_mean') {
+  #   $ret = (reduce {$a*$b} @digits) ** (1/scalar(@digits));
+  #
+  # } elsif ($extract_type eq 'quadratic_mean') {
+  #   $ret = sqrt(sum(map{$_*$_}@digits)/scalar(@digits));
+  #
+  # } else {
+  #   die "Unrecognised extract_type: ",$extract_type;
+  # }
+  #
+  # if ($self->{'round'} eq 'floor') {
+  #   return int($ret);
+  # }
+  # if ($self->{'round'} eq 'ceil') {
+  #   my $int = int($ret);
+  #   return $int + ($ret != int($ret));
+  # }
+  # if ($self->{'round'} eq 'nearest') {
+  #   return int($ret+0.5);
+  # }
+  # return $ret;
+}
+
+#------------------------------------------------------------------------------
+
+# return $remainder, modify $n
+# the scalar $_[0] is modified, but if it's a BigInt then a new BigInt is made
+# and stored there, the bigint value is not changed
+sub _divrem_mutate {
+  my $d = $_[1];
+  my $rem;
+  if (ref $_[0] && $_[0]->isa('Math::BigInt')) {
+    ($_[0], $rem) = $_[0]->copy->bdiv($d);  # quot,rem in array context
+    if (! ref $d || $d < 1_000_000) {
+      return $rem->numify;  # plain remainder if fits
+    }
+  } else {
+    $rem = $_[0] % $d;
+    $_[0] = int(($_[0]-$rem)/$d); # exact division stays in UV
   }
-  if ($self->{'round'} eq 'ceil') {
-    my $int = int($ret);
-    return $int + ($ret != int($ret));
-  }
-  if ($self->{'round'} eq 'nearest') {
-    return int($ret+0.5);
-  }
-  return $ret;
+  return $rem;
 }
 
 1;
 __END__
+
+#     "mean"              average sum/n
+#     "geometric_mean"    nthroot(product)
+#     "quadratic_mean"    sqrt(sumsquares/n)
+#     "median"            middle digit when sorted
+#     "mode"              most frequent digit
+# 
+# For "middle" and "median" when there's an even number of digits the average
+# (mean) of the two middle ones is returned, or the C<round> parameter can be
+# "ceil" or "floor" to go to the more/less significant for the middle or the
+# higher/lower for the median.
+# 
+# For the averages the result is a fractional value in general, but the
+# C<round> parameter "ceil" or "floor can round to the next integer.
 
 =for stopwords Ryde Math-NumSeq
 
@@ -365,29 +452,37 @@ Math::NumSeq::DigitExtract -- one of the digits of integers 0 upwards
 
 I<In progress ...>
 
-Extract one of the digits from the index i.  C<extract_type> (a string) can
-be
+Extract one of the digits from the index i.  The default is to extract the
+lowest decimal digit,
+
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, ...
+    starting i=0
+
+The C<extract_type> option (a string) gives which digit to extract
 
     "low"               least significant digit
     "high"              most significant digit
-    "second_low"        second least significant digit
-    "second_high"       second most significant digit
-    "middle"            middle digit
+    "middle_lower"      second least significant digit
+    "middle_higher"     second most significant digit
     "minimum"           smallest digit
     "maximum"           largest digit
-    "mean"              average sum/n
-    "geometric_mean"    nthroot(product)
-    "quadratic_mean"    sqrt(sumsquares/n)
-    "median"            middle digit when sorted
-    "mode"              most frequent digit
 
-For "middle" and "median" when there's an even number of digits the average
-(mean) of the two middle ones is returned, or the C<round> parameter can be
-"ceil" or "floor" to go to the more/less significant for the middle or the
-higher/lower for the median.
+For an even number of digits "middle_lower" selects the lower position one
+and "middle_higher" selects the higher position one.
 
-For the averages the result is a fractional value in general, but the
-C<round> parameter "ceil" or "floor can round to the next integer.
+Option C<radix =E<gt> $integer> selects a base other than decimal.
+
+=head2 Offset
+
+Option C<extract_offset =E<gt> $integer> can select the digit at a position
+offset from the C<extract_type>.  For example with the default "low" an
+offset of 1 gives the second lowest digit,
+
+    extract_offset=>1
+    0,0,0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1,1,1, 2,2,2,2,2,2,2,2,2,2,
+
+For "minimum" and "maximum" the digits are imagined sorted into increasing
+or decreasing order then the C<extract_offset> applied to select from there.
 
 =head1 FUNCTIONS
 
@@ -395,7 +490,7 @@ See L<Math::NumSeq/FUNCTIONS> for the behaviour common to all path classes.
 
 =over 4
 
-=item C<$seq = Math::NumSeq::DigitExtract-E<gt>new (length =E<gt> $integer)>
+=item C<$seq = Math::NumSeq::DigitExtract-E<gt>new (extract_type =E<gt> $integer, extract_offset =E<gt> $integer, radix =E<gt> $integer)>
 
 Create and return a new sequence object.
 
@@ -414,7 +509,8 @@ Return the C<$i>'th value from the sequence.
 =head1 SEE ALSO
 
 L<Math::NumSeq>,
-L<Math::NumSeq::Digit>
+L<Math::NumSeq::DigitCount>,
+L<Math::NumSeq::DigitLength>
 
 =head1 HOME PAGE
 
@@ -422,7 +518,7 @@ L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 
-Copyright 2012, 2013 Kevin Ryde
+Copyright 2011, 2012, 2013 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

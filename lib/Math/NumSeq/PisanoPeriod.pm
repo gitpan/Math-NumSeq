@@ -41,7 +41,7 @@ use strict;
 use Math::Prime::XS 'is_prime';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 64;
+$VERSION = 65;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -90,9 +90,7 @@ sub ith {
   }
 
   my ($good, @primes) = _prime_factors($i);
-  if (! $good) {
-    return undef;  # too big to factorize
-  }
+  return undef unless $good;
 
   my $lcm = Math::NumSeq::_to_bigint(1);
   while (@primes) {

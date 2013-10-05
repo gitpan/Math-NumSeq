@@ -21,7 +21,7 @@ use strict;
 use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 64;
+$VERSION = 65;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -94,9 +94,7 @@ sub ith {
     my %next;
     foreach my $v (@this) {
       my ($good, @primes) = _prime_factors($v);
-      if (! $good) {
-        return undef;  # too big to factorize
-      }
+      return undef unless $good;
       @next{@primes} = ();  # hash slice, distinct primes
     }
     $ret++;

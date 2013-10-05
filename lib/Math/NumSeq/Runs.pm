@@ -45,7 +45,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION','@ISA';
-$VERSION = 64;
+$VERSION = 65;
 
 use Math::NumSeq 21; # v.21 for oeis_anum field
 @ISA = ('Math::NumSeq');

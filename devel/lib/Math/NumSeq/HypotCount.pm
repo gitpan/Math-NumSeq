@@ -29,7 +29,7 @@ use strict;
 use POSIX 'ceil';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 64;
+$VERSION = 65;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
@@ -148,9 +148,7 @@ sub ith {
   # }
 
   my ($good, @primes) = _prime_factors($i);
-  if (! $good) {
-    return undef;  # too big to factorize
-  }
+  return undef unless $good;
 
   my $pow2 = 1;
   while (@primes && $primes[0] == 2) {

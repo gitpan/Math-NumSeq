@@ -24,7 +24,7 @@ use Math::Factor::XS 0.40 'factors'; # version 0.40 for factors() on BigInt
 
 
 use vars '$VERSION', '@ISA';
-$VERSION = 64;
+$VERSION = 65;
 use Math::NumSeq;
 use List::Util 'min';
 use Math::NumSeq::Base::IteratePred;
@@ -40,8 +40,6 @@ use Math::NumSeq::Base::IteratePred;
 # use constant name => Math::NumSeq::__('Duffinian Numbers');
 use constant description => Math::NumSeq::__('Duffinian numbers.');
 use constant i_start => 1;
-use constant characteristic_integer => 1;
-use constant characteristic_increasing => 1;
 
 use constant values_min => 4;
 

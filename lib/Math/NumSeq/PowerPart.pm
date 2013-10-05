@@ -20,12 +20,14 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 64;
+$VERSION = 65;
 use Math::NumSeq 7; # v.7 for _is_infinite()
-@ISA = ('Math::NumSeq');
+use Math::NumSeq::Base::IterateIth;
+@ISA = ('Math::NumSeq::Base::IterateIth',
+        'Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
-use Math::NumSeq::PrimeFactorCount;;
+use Math::NumSeq::PrimeFactorCount;
 *_prime_factors = \&Math::NumSeq::PrimeFactorCount::_prime_factors;
 
 # uncomment this to run the ### lines
@@ -33,13 +35,20 @@ use Math::NumSeq::PrimeFactorCount;;
 
 
 # use constant name => Math::NumSeq::__('Powered Part');
-use constant description => Math::NumSeq::__('Largest square etc dividing i.');
 use constant characteristic_non_decreasing => 0;
 use constant characteristic_increasing => 0;
 use constant characteristic_integer => 1;
 use constant characteristic_smaller => 1;
 use constant values_min => 1;
 use constant i_start => 1;
+
+sub description {
+  my ($self) = @_;
+  return sprintf(Math::NumSeq::__('Largest %s dividing i.'),
+                 ! ref $self || $self->{'power'} == 2 ? 'square'
+                 : $self->{'power'} == 3 ? 'cube'
+                 : sprintf('%sth',$self->{'power'}));
+}
 
 use constant parameter_info_array =>
   [
@@ -52,6 +61,7 @@ use constant parameter_info_array =>
    },
   ];
 
+#------------------------------------------------------------------------------
 # cf A008833 - largest square dividing n
 #    A008834 - largest cube dividing n
 #    A008835 - largest 4th power dividing n
@@ -71,66 +81,7 @@ sub oeis_anum {
   return $oeis_anum[$self->{'power'}];
 }
 
-sub rewind {
-  my ($self) = @_;
-  $self->{'i'} = $self->i_start;
-  _restart_sieve ($self, 20);
-}
-
-# ENHANCE-ME: When growing the sieve keep the small primes and apply them to
-# an array of just a new lo to hi region.
-#
-sub _restart_sieve {
-  my ($self, $hi) = @_;
-  ### _restart_sieve() ...
-  $self->{'hi'} = $hi = int($hi);
-  my $array = $self->{'array'} = [];
-  $#$array = $hi;
-  $array->[1] = 1;
-}
-
-sub next {
-  my ($self) = @_;
-
-  my $i = my $target = $self->{'i'}++;
-  my $power = $self->{'power'};
-  if ($power < 2) {
-    return $i;
-  }
-
-  if ($i > $self->{'hi'}) {
-    _restart_sieve ($self, $self->{'hi'} * 1.5);
-    $i = 2;
-  }
-
-  my $hi = $self->{'hi'};
-  my $aref = $self->{'array'};
-
-  my $ret;
-  for ( ; $i <= $target; $i++) {
-    $ret = $aref->[$i];
-    if (! defined $ret) {
-      ### prime: $i
-
-      # composites marked
-      for (my $j = 2*$i; $j <= $hi; $j += $i) {
-        ### composite: $j
-        $aref->[$j] ||= 1;
-      }
-
-      # p^power multiplied in
-      my $pow = $i ** $power;
-      for (my $step = $pow; $step <= $hi; $step *= $pow) {
-        ### $step
-        for (my $j = $step; $j <= $hi; $j += $step) {
-          ### divide: "j=$j value $aref->[$j] by $pow"
-          $aref->[$j] *= $i;
-        }
-      }
-    }
-  }
-  return ($target, $ret||1);
-}
+#------------------------------------------------------------------------------
 
 sub ith {
   my ($self, $i) = @_;
@@ -145,9 +96,8 @@ sub ith {
     return undef;
   }
   my ($good, @primes) = _prime_factors($i);
-  if (! $good) {
-    return undef;  # too big to factorize
-  }
+  return undef unless $good;
+
   my $prev = 0;
   my $count = 0;
   my $ret = 1;
@@ -156,10 +106,10 @@ sub ith {
     if ($p == $prev) {
       ### same ...
       ### $count
-      if (++$count >= $power) {
+      if (++$count == $power) {
         ### incorporate ...
         $ret *= $p;
-        $count -= $power;
+        $count = 0;
       }
     } else {
       ### different ...
@@ -170,67 +120,6 @@ sub ith {
   return $ret;
 }
 
-# if (0) { # ... eval '; 1') {
-#   ### use prime_factors() ...
-#   eval "\n#line ".(__LINE__+1)." \"".__FILE__."\"\n" . <<'HERE';
-# HERE
-# } else {
-#   ### $@
-#   ### use plain perl ...
-#   eval "\n#line ".(__LINE__+1)." \"".__FILE__."\"\n" . <<'HERE';
-# 
-# sub ith {
-#   my ($self, $i) = @_;
-#   ### PowerPart ith(): $i
-#   $i = abs($i);
-#   my $power = $self->{'power'};
-#   if ($power < 2) {
-#     return $i;
-#   }
-#   if ($i > 0xFFFF_FFFF) {
-#     return undef;
-#   }
-#   if (_is_infinite($i)) { # nan
-#     return $i;
-#   }
-#   if (abs($i) < 4) {
-#     return 1;
-#   }
-# 
-#   my $ret = 1;
-# 
-#   {
-#     my $pow = 2 ** $power;
-#     while (($i % $pow) == 0) {
-#       ### $pow
-#       $i /= $pow;
-#       $ret *= 2;
-#     }
-#     while (($i % 2) == 0) {
-#       $i /= 2;
-#     }
-#   }
-# 
-#   for (my $p = 3; ; $p += 2) {
-#     my $pow = $p ** $power;
-#     last if $pow > abs($i);
-#     while (($i % $pow) == 0) {
-#       ### $pow
-#       $i /= $pow;
-#       $ret *= $p;
-#     }
-#     while (($i % $p) == 0) {
-#       $i /= $p;
-#     }
-#   }
-# 
-#   ### $ret
-#   return $ret;
-# }
-# 
-# HERE
-# }
-
 sub pred {
   my ($self, $value) = @_;
   return ($value == int($value) && $value >= 1);
@@ -239,7 +128,71 @@ sub pred {
 1;
 __END__
 
-=for stopwords Ryde Math-NumSeq sqrt ie MobiusFunction PowerPart
+# This was next() done by sieve, but it's scarcely faster than ith() and
+# uses a lot of memory if call next() for a long time.
+#
+# sub rewind {
+#   my ($self) = @_;
+#   $self->{'i'} = $self->i_start;
+#   _restart_sieve ($self, 20);
+# }
+# 
+# # ENHANCE-ME: When growing the sieve keep the small primes and apply them to
+# # an array of just a new lo to hi region.
+# #
+# sub _restart_sieve {
+#   my ($self, $hi) = @_;
+#   ### _restart_sieve() ...
+#   $self->{'hi'} = $hi = int($hi);
+#   my $array = $self->{'array'} = [];
+#   $#$array = $hi;
+#   $array->[1] = 1;
+# }
+# 
+# sub next {
+#   my ($self) = @_;
+# 
+#   my $i = my $target = $self->{'i'}++;
+#   my $power = $self->{'power'};
+#   if ($power < 2) {
+#     return $i;
+#   }
+# 
+#   if ($i > $self->{'hi'}) {
+#     _restart_sieve ($self, $self->{'hi'} * 1.5);
+#     $i = 2;
+#   }
+# 
+#   my $hi = $self->{'hi'};
+#   my $aref = $self->{'array'};
+# 
+#   my $ret;
+#   for ( ; $i <= $target; $i++) {
+#     $ret = $aref->[$i];
+#     if (! defined $ret) {
+#       ### prime: $i
+# 
+#       # composites marked
+#       for (my $j = 2*$i; $j <= $hi; $j += $i) {
+#         ### composite: $j
+#         $aref->[$j] ||= 1;
+#       }
+# 
+#       # p^power multiplied in
+#       my $pow = $i ** $power;
+#       for (my $step = $pow; $step <= $hi; $step *= $pow) {
+#         ### $step
+#         for (my $j = $step; $j <= $hi; $j += $step) {
+#           ### divide: "j=$j value $aref->[$j] by $pow"
+#           $aref->[$j] *= $i;
+#         }
+#       }
+#     }
+#   }
+#   return ($target, $ret||1);
+# }
+
+=for stopwords Ryde Math-NumSeq sqrt ie PowerPart
 
 =head1 NAME
 
@@ -259,13 +212,13 @@ This sequence is the largest integer whose square is a divisor of i,
     starting i=1
 
 For example at i=27 the value is 3 since 3^2=9 is the largest square which
-is a divisor of 27.  Notice the sequence value is the root, ie. 3, of the
-divisor, not the square 9 etc.
+is a divisor of 27.  Notice the sequence value is the square root, ie. 3, of
+the divisor, not the square 9.
 
 When i has no square divisor, ie. is square-free, the value is 1.  Compare
-the MobiusFunction where value 1 or -1 means square-free.  And conversely
-MobiusFunction is 0 when there's a square factor, and PowerPart value here
-is S<E<gt> 1> in that case.
+the C<MobiusFunction> where value 1 or -1 means square-free.  And conversely
+C<MobiusFunction> is 0 when there's a square factor, and PowerPart value
+here is S<E<gt> 1> in that case.
 
 =head2 Power Option
 

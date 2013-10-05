@@ -22,13 +22,19 @@
 #
 # i=0 for odd same as Odd->ith() ?
 
+# 2^E(N) = 3^O(N) * N * Res(N)
+# log(2^E(N)) = log(3^O(N) * N * Res(N))
+# log(2^E(N)) = log(3^O(N)) + log(N) + log(Res(N))
+# E(N)*log(2) = O(N)*log(3) + log(N) + log(Res(N))
+# log(Res(N)) = O(N)*log(3) - E(N)*log(2) + log(N)
+
 
 package Math::NumSeq::CollatzSteps;
 use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 64;
+$VERSION = 65;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -143,6 +149,7 @@ sub ith {
   } elsif ($self->{'on_values'} eq 'even') {
     $i *= 2;
   }
+  my $orig_i = $i;
 
   if ($i <= 1) {
     return 0;
@@ -152,16 +159,27 @@ sub ith {
   }
 
   my $count = 0;
+  my $ups = 0;
+  my $downs = 0;
   my $step_type = $self->{'step_type'};
   my $count_up = ($step_type ne 'down');
   my $count_down = ($step_type ne 'up');
   for (;;) {
     until ($i & 1) {
       $i >>= 1;
+      $downs++;
       $count += $count_down;
     }
     ### odd: $i
     if ($i <= 1) {
+      if ($self->{'step_type'} eq 'completeness') {
+        return $ups / $downs;
+      }
+      if ($self->{'step_type'} eq 'residue') {
+        # log(Res(N)) = O(N)*log(3) - E(N)*log(2) + log(N)
+        return $ups*log(3) - $downs*log(2) + log($orig_i);
+      }
+
       return $count;
     }
 
@@ -173,11 +191,13 @@ sub ith {
         ### odd: "$i"
         $i->bmul(3);
         $i->binc();
+        $ups++;
         $count += $count_up;
         ### tripled: "$i  count=$count"
 
         until ($i->is_odd) {
           $i->brsft(1);
+          $downs++;
           $count += $count_down;
           ### halve: "$i  count=$count"
         }
@@ -188,6 +208,7 @@ sub ith {
     }
 
     $i = 3*$i + 1;
+    $ups++;
     $count += $count_up;
     ### tripled: "$i  count=$count"
   }

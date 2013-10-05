@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max','min';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 64;
+$VERSION = 65;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -64,6 +64,16 @@ sub description {
                  $even, $odd);
 }
 
+sub characteristic_integer {
+  my ($self) = @_;
+  return (_is_integer($self->{'values_min'})
+          && _is_integer($self->{'values_max'}));
+}
+sub characteristic_pn1 {
+  my ($self) = @_;
+  return ($self->{'values_min'} == -1 && $self->{'values_max'} == 1);
+}
+
 #------------------------------------------------------------------------------
 # cf A022155 - positions of -1
 #    A203463 - positions of +1
@@ -87,23 +97,14 @@ sub oeis_anum {
 
 sub new {
   my $self = shift->SUPER::new(@_);
+
   my @values = split /,/, $self->{'values_type'};
   $self->{'values'} = \@values;
   $self->{'values_min'} = min(@values);
   $self->{'values_max'} = max(@values);
-  $self->{'characteristic'}->{'integer'}
-    = (_is_integer($values[0]) && _is_integer($values[1]));
-  $self->{'characteristic'}->{'pn1'}
-    = (($values[0] == 1 && $values[1] == -1)
-       || ($values[0] == -1 && $values[1] == 1));
   ### $self
   return $self;
 }
-sub _is_integer {
-  my ($n) = @_;
-  return ($n == int($n));
-}
-
 
 # ENHANCE-ME: use as_bin() on BigInt when available
 #
@@ -144,9 +145,15 @@ sub pred {
 # and if the 1000 has a 1 above it then that's a parity change too
 # so flip if 10..00 is an odd bit position XOR the bit above it
 
+
+#------------------------------------------------------------------------------
+sub _is_integer {
+  my ($n) = @_;
+  return ($n == int($n));
+}
+
 1;
 __END__
-
 
 
 =for stopwords Ryde Math-NumSeq OEIS GRS dX dY dX,dY ie

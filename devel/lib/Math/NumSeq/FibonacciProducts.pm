@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 64;
+$VERSION = 65;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
@@ -38,7 +38,6 @@ use Math::NumSeq::Fibonacci;
 use constant name => Math::NumSeq::__('Fibonacci Products');
 use constant description => Math::NumSeq::__('Numbers which can be formed by multiplying together some set of Fibonacci numbers.');
 use constant default_i_start => 1;
-use constant characteristic_integer => 1;
 use constant values_min => 1;
 
 #------------------------------------------------------------------------------

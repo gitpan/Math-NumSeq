@@ -21,7 +21,7 @@ use strict;
 use Math::NumSeq::Primes;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 64;
+$VERSION = 65;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -65,9 +65,8 @@ sub _psi {
   my ($n) = @_;
   ### _psi(): $n
   my ($good, @primes) = _prime_factors($n);
-  if (! $good) {
-    return undef;  # too big to factorize
-  }
+  return undef unless $good;
+
   my $prev = 0;
   foreach my $p (@primes) {
     if ($p != $prev) {

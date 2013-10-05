@@ -29,14 +29,14 @@ use File::Spec;
 use Symbol 'gensym';
 
 use vars '$VERSION','@ISA';
-$VERSION = 64;
+$VERSION = 65;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_to_bigint = \&Math::NumSeq::_to_bigint;
 
 use vars '$VERSION';
-$VERSION = 64;
+$VERSION = 65;
 
 eval q{use Scalar::Util 'weaken'; 1}
   || eval q{sub weaken { $_[0] = undef }; 1 }
@@ -545,7 +545,7 @@ sub _read_internal {
     # %S,%T,%U lines for non-negative sequences
     # though now %S is signed and unsigned both is it?
     #
-    if (! $self->{'array'}) {
+    if (! $self->{'fh'}) {
       my @samples;
       # capital %STU etc, but any case <tt>
       while ($contents =~ m{(^|<[tT][tT]>)%[VWX] (.*?)(</[tT][tT]>|$)}mg) {
@@ -621,7 +621,7 @@ sub _read_html {
     }
     _set_characteristics ($self, $keywords);
 
-    if (! $self->{'array'}) {
+    if (! $self->{'fh'}) {
       # fragile grep out of the html ...
       $contents =~ s{>graph</a>.*}{};
       $contents =~ m{.*<tt>([^<]+)</tt>}i;

@@ -25,7 +25,7 @@ use strict;
 use Math::PlanePath::Base::Digits 'digit_split_lowtohigh';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 64;
+$VERSION = 65;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;

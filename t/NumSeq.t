@@ -26,7 +26,7 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
-my $test_count = (tests => 2301)[1];
+my $test_count = (tests => 2345)[1];
 plan tests => $test_count;
 
 # uncomment this to run the ### lines
@@ -127,6 +127,62 @@ foreach my $elem
    # Ln2Bits.pm
    # PiBits.pm
    
+   [ 'Math::NumSeq::Abundant',
+     [ 12, 18, 20, 24, 30 ],
+   ],
+   [ 'Math::NumSeq::Abundant',
+     [ 1,2,3,4,5,7,8,9,10,11,13,14,15,16,17,19,21,22,23,25 ],
+     { abundant_type => 'deficient' },
+   ],
+   [ 'Math::NumSeq::Abundant',
+     [ 12,18,20,30,42,56,66,70,78,88,102,104,114,138,174,186 ],
+     { abundant_type => 'primitive' },
+   ],
+   [ 'Math::NumSeq::Abundant',
+     [ 24, 36, 40, 48, 54, 60, 72, 80, 84, 90, 96, 100, 108, 112, 120, 126, ],
+     { abundant_type => 'non-primitive' },
+   ],
+   
+   [ 'Math::NumSeq::PowerPart',
+     [ 1,  # 1
+       1,  # 2
+       1,  # 3
+       2,  # 4
+       1,  # 5
+       1,  # 6
+       1,  # 7
+       2,  # 8
+     ]
+   ],
+   [ 'Math::NumSeq::PowerPart',
+     [ 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1 ],
+     { power => 3 },
+   ],
+
+   [ 'Math::NumSeq::PrimeFactorCount',
+     [ 0,  # 1
+       1,  # 2
+       1,  # 3
+       2,  # 4
+       1,  # 5
+       2,  # 6
+       1,  # 7
+       3,  # 8
+     ],
+   ],
+   [ 'Math::NumSeq::PrimeFactorCount',
+     [ 0,  # 1
+       1,  # 2
+       1,  # 3
+       1,  # 4
+       1,  # 5
+       2,  # 6
+       1,  # 7
+       1,  # 8
+     ],
+     { multiplicity => 'distinct' },
+   ],
+
    [ 'Math::NumSeq::DivisorCount',
      [ 1,2,2,3,2,4,2 ] ],
    
@@ -1014,29 +1070,6 @@ foreach my $elem
    [ 'Math::NumSeq::ReRound',
      [ 1, 2, 4, 6, 10, 12, ]
    ],
-   [ 'Math::NumSeq::PrimeFactorCount',
-     [ 0,  # 1
-       1,  # 2
-       1,  # 3
-       2,  # 4
-       1,  # 5
-       2,  # 6
-       1,  # 7
-       3,  # 8
-     ],
-   ],
-   [ 'Math::NumSeq::PrimeFactorCount',
-     [ 0,  # 1
-       1,  # 2
-       1,  # 3
-       1,  # 4
-       1,  # 5
-       2,  # 6
-       1,  # 7
-       1,  # 8
-     ],
-     { multiplicity => 'distinct' },
-   ],
    
    [ 'Math::NumSeq::PrimeFactorCount',
      [ 0,  # 1
@@ -1167,17 +1200,6 @@ foreach my $elem
      [ 1, 2, 3, 4, 6, 8, 11, 13, 16, 18, 26, ]
    ],
    
-   [ 'Math::NumSeq::PowerPart',
-     [ 1,  # 1
-       1,  # 2
-       1,  # 3
-       2,  # 4
-       1,  # 5
-       1,  # 6
-       1,  # 7
-       2,  # 8
-     ]
-   ],
    [ 'Math::NumSeq::SqrtContinued',
      [ 1, 2,2,2,2,2 ]
    ],
@@ -1537,10 +1559,6 @@ foreach my $elem
        4,5,8,13,20,29,40,53,68,85,   # 20 to 29
      ],
      { power => 2 },
-   ],
-   
-   [ 'Math::NumSeq::Abundant',
-     [  12, 18, 20, 24, 30 ],
    ],
    
    [ 'Math::NumSeq::SternDiatomic',

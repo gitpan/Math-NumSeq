@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 64;
+$VERSION = 65;
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
@@ -79,9 +79,7 @@ sub ith {
   }
 
   my ($good, @primes) = _prime_factors($i);
-  if (! $good) {
-    return undef;  # too big to factorize
-  }
+  return undef unless $good;
 
   my %primes;
   foreach my $p (@primes) {
@@ -101,9 +99,7 @@ sub ith {
       }
       my $prime_factors_aref = ($prime_factors{$p} ||= do {
         my ($good, @primes) = _prime_factors($p-1);
-        if (! $good) {
-          return undef;  # too big to factorize
-        }
+        return undef unless $good;
         \@primes
       });
       foreach my $f (@$prime_factors_aref) {

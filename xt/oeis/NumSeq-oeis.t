@@ -47,7 +47,7 @@ POSIX::setlocale(POSIX::LC_ALL(), 'C'); # no message translations
 
 sub want_anum {
   my ($anum) = @_;
-   return 0 unless $anum =~ /A000005/;
+  # return 0 unless $anum =~ /A09119[12]/;
   # return 0 unless $anum =~ /A005228|A030124/;
   # return 0 unless $anum =~ /A177702|A102283|A131756/;
   return 1;
@@ -55,6 +55,7 @@ sub want_anum {
 sub want_module {
   my ($module) = @_;
   # return 0 unless $module =~ /Lucky/;
+  # return 0 unless $module =~ /Abundant/;
   return 1;
 }
 
@@ -641,7 +642,7 @@ sub check_class {
 # OEIS-Other vs files
 
 {
-  system("perl ../ns/tools/make-oeis-catalogue.pl --module=TempOther --other=only") == 0
+  system("perl tools/make-oeis-catalogue.pl --module=TempOther --other=only") == 0
     or die;
   require 'lib/Math/NumSeq/OEIS/Catalogue/Plugin/TempOther.pm';
   unlink  'lib/Math/NumSeq/OEIS/Catalogue/Plugin/TempOther.pm' or die;

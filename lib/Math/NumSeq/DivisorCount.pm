@@ -16,17 +16,16 @@
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# A137518 smallest same divisor count
-
-
 package Math::NumSeq::DivisorCount;
 use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 64;
+$VERSION = 65;
 use Math::NumSeq;
-@ISA = ('Math::NumSeq');
+use Math::NumSeq::Base::IterateIth;
+@ISA = ('Math::NumSeq::Base::IterateIth',
+        'Math::NumSeq');
 
 use Math::NumSeq::PrimeFactorCount;
 *_prime_factors = \&Math::NumSeq::PrimeFactorCount::_prime_factors;
@@ -46,6 +45,10 @@ use constant characteristic_increasing => 0;
 # "proper" divisors just means 1 less in each value, not sure much use for
 # that.
 #
+# n itself -- proper, or not
+# 1        -- proper, or not
+# square, non-square
+#
 # use constant parameter_info_array =>
 #   [ { name    => 'divisor_type',
 #       display => Math::NumSeq::__('Divisor Type'),
@@ -62,6 +65,7 @@ my %values_min = (all    => 1,
                   propn1 => 0);
 sub values_min {
   my ($self) = @_;
+  # or values_min=0 if i_start=0
   return 1;       # $values_min{$self->{'divisor_type'}};
 }
 
@@ -87,7 +91,10 @@ sub values_min {
 #    A033834 - n with new high count factorizations
 #    A033833 - highly factorable
 #
-#    A056595 - sum non-square divisors
+#    A056595 - count non-square divisors
+#    A046951 - count square divisors
+#    A013936 - cumulative count square divisors
+#    A137518 - same divisor count as n, and > a(n-1) so increasing
 #
 sub oeis_anum {
   my ($self) = @_;
@@ -101,60 +108,8 @@ sub oeis_anum {
   # return $oeis_anum{$self->{'divisor_type'}};
 }
 
-sub rewind {
-  my ($self) = @_;
-  ### DivisorCount rewind()
-  $self->{'i'} = $self->i_start;
-  _restart_sieve ($self, 5);
-}
-sub _restart_sieve {
-  my ($self, $hi) = @_;
 
-  $self->{'hi'} = $hi;
-  $self->{'array'} = [ 0, (1) x $self->{'hi'} ];
-}
-
-sub next {
-  my ($self) = @_;
-  ### DivisorCount next(): $self->{'i'}
-
-  my $hi = $self->{'hi'};
-  my $start = my $i = $self->{'i'}++;
-  if ($i > $hi) {
-    _restart_sieve ($self, $hi *= 2);
-    $start = 2;
-  }
-
-  my $aref = $self->{'array'};
-  if ($start <= $i) {
-    if ($start < 2) {
-      $start = 2;
-    }
-    foreach my $i ($start .. $i) {
-      if ($aref->[$i] == 1) {
-        ### apply prime: $i
-        my $step = 1;
-        for (my $pcount = 1; ; $pcount++) {
-          $step *= $i;
-          ### $step
-          last if ($step > $hi);
-          my $pmul = $pcount+1;
-          for (my $j = $step; $j <= $hi; $j += $step) {
-            ($aref->[$j] /= $pcount) *= $pmul;
-          }
-          # last if $self->{'divisor_type'} eq 'propn1';
-        }
-        # print "applied: $i\n";
-        # for (my $j = 0; $j < $hi; $j++) {
-        #   printf "  %2d %2d\n", $j, vec($$aref, $j,8));
-        # }
-      }
-    }
-  }
-  ### ret: "$i, $aref->[$i]"
-  return ($i, $aref->[$i]);
-}
-
+#------------------------------------------------------------------------------
 sub ith {
   my ($self, $i) = @_;
 
@@ -203,6 +158,66 @@ sub pred {
 1;
 __END__
 
+
+# This was next() done by sieve, but it's slower from about i=5000 with XS
+# code for prime_factors() and it uses a lot of memory if continue next()
+# for a long time.
+#
+# sub rewind {
+#   my ($self) = @_;
+#   ### DivisorCount rewind()
+#   $self->{'i'} = $self->i_start;
+#   _restart_sieve ($self, 5);
+# }
+# sub _restart_sieve {
+#   my ($self, $hi) = @_;
+# 
+#   $self->{'hi'} = $hi;
+#   $self->{'array'} = [ 0, (1) x $self->{'hi'} ];
+# }
+# 
+# sub next {
+#   my ($self) = @_;
+#   ### DivisorCount next(): $self->{'i'}
+# 
+#   my $hi = $self->{'hi'};
+#   my $start = my $i = $self->{'i'}++;
+#   if ($i > $hi) {
+#     _restart_sieve ($self, $hi *= 2);
+#     $start = 2;
+#   }
+# 
+#   my $aref = $self->{'array'};
+#   if ($start <= $i) {
+#     if ($start < 2) {
+#       $start = 2;
+#     }
+#     foreach my $i ($start .. $i) {
+#       if ($aref->[$i] == 1) {
+#         ### apply prime: $i
+#         my $step = 1;
+#         for (my $pcount = 1; ; $pcount++) {
+#           $step *= $i;
+#           ### $step
+#           last if ($step > $hi);
+#           my $pmul = $pcount+1;
+#           for (my $j = $step; $j <= $hi; $j += $step) {
+#             ($aref->[$j] /= $pcount) *= $pmul;
+#           }
+#           # last if $self->{'divisor_type'} eq 'propn1';
+#         }
+#         # print "applied: $i\n";
+#         # for (my $j = 0; $j < $hi; $j++) {
+#         #   printf "  %2d %2d\n", $j, vec($$aref, $j,8));
+#         # }
+#       }
+#     }
+#   }
+#   ### ret: "$i, $aref->[$i]"
+#   return ($i, $aref->[$i]);
+# }
+
+
 =for stopwords Ryde Math-NumSeq
 
 =head1 NAME
@@ -217,10 +232,13 @@ Math::NumSeq::DivisorCount -- how many divisors
 
 =head1 DESCRIPTION
 
-The number of divisors of i, being 1,2,2,3,2,4,2, etc.
+The number of divisors of i,
 
-The sequence starts from i=1 and 1 is divisible only by itself.  Then i=2 is
-divisible by 1 and 2.  Or for example i=6 is divisible by 4 numbers 1,2,3,6.
+    1, 2, 2, 3, 2, 4, 2, 4, 3, 4, 2, 6, 2, 4, 4, 5, 2, 6, 2, ...
+    starting i=1
+
+i=1 is divisible only by 1 so value=1.  Then i=2 is divisible by 1 and 2 so
+value=2.  Or for example i=6 is divisible by 4 numbers 1,2,3,6 so value=4.
 
 =head1 FUNCTIONS
 

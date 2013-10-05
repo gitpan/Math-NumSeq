@@ -17,6 +17,14 @@ with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 65, October 2013
+    - fix Abundant "primitive" pred() wrong results
+    - Abundant new abundant_type="non-primitive"
+    - Abundant, DivisorCount, LiouvilleFunction, MobiusFunction,
+      PowerPart, PrimeFactorCount don't use sieve for next() as memory
+      use can be excessive and is scarcely faster than ith(), as
+      reported by Dana Jacobsen.
+
 Version 64, September 2013
     - new HafermanCarpet
 

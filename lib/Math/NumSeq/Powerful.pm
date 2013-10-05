@@ -21,7 +21,7 @@ use strict;
 use List::Util 'min';
 
 use vars '$VERSION','@ISA';
-$VERSION = 64;
+$VERSION = 65;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IteratePred;
 @ISA = ('Math::NumSeq::Base::IteratePred',
@@ -33,8 +33,6 @@ use Math::NumSeq::Base::IteratePred;
 
 
 # use constant name => Math::NumSeq::__('Powerful Numbers');
-use constant characteristic_increasing => 1;
-use constant characteristic_integer => 1;
 use constant i_start => 1;
 
 sub description {
@@ -112,6 +110,70 @@ sub oeis_anum {
   return $oeis_anum{$self->{'powerful_type'}}->[$self->{'power'}];
 }
 
+sub pred {
+  my ($self, $value) = @_;
+  ### SquareFree pred(): $value
+
+  $value = abs($value);
+  unless ($value >= 0) {
+    return 0;
+  }
+  if ($value <= 0xFFFF_FFFF) {
+    $value = "$value"; # numize Math::BigInt for speed
+  }
+
+  if ($value < 1 || $value != int($value)) {
+    return 0;
+  }
+
+  my $power = $self->{'power'};
+  my $limit = "$value" ** (1/$power) + 3;
+  my $reduced_limit = min($limit,65535);
+
+  my $p = 2;
+  for ( ; $p <= $reduced_limit; $p += 2-($p==2)) {
+    next if ($value % $p);
+    ### prime factor: $p
+
+    $value /= $p;
+    my $count = 1;
+    while (($value % $p) == 0) {
+      ++$count;
+      if ($count >= $power && $self->{'powerful_type'} eq 'some') {
+        ### found some factor of desired power ...
+        return 1;
+      }
+      $value /= $p;
+    }
+    if ($count < $power && $self->{'powerful_type'} ne 'some') {
+      ### all/all_prim prime without desired power ...
+      return 0;
+    }
+
+    $limit = "$value" ** (1/$power) + 3;
+    $reduced_limit = min($limit,65535);
+    ### divided out: "$p, now value=$value, new limit $limit reduced $reduced_limit"
+  }
+  ### final value: $value
+
+  if ($p < $limit) {
+    ### value too big to check ...
+    return undef;
+  }
+  if ($self->{'powerful_type'} eq 'some') {
+    ### some, no suitable power found ...
+    return 0;
+  } else {
+    ### all, ok if reduced to value==1 ...
+    return ($value == 1);
+  }
+}
+
+1;
+__END__
+
+# Did this work?
+#
 # # each 2-bit vec() value is
 # #    0   unset
 # #    1   composite
@@ -174,68 +236,6 @@ sub oeis_anum {
 #     }
 #   }
 # }
-
-sub pred {
-  my ($self, $value) = @_;
-  ### SquareFree pred(): $value
-
-  $value = abs($value);
-  unless ($value >= 0) {
-    return 0;
-  }
-  if ($value <= 0xFFFF_FFFF) {
-    $value = "$value"; # numize Math::BigInt for speed
-  }
-
-  if ($value < 1 || $value != int($value)) {
-    return 0;
-  }
-
-  my $power = $self->{'power'};
-  my $limit = "$value" ** (1/$power) + 3;
-  my $reduced_limit = min($limit,65535);
-
-  my $p = 2;
-  for ( ; $p <= $reduced_limit; $p += 2-($p==2)) {
-    next if ($value % $p);
-    ### prime factor: $p
-
-    $value /= $p;
-    my $count = 1;
-    while (($value % $p) == 0) {
-      ++$count;
-      if ($count >= $power && $self->{'powerful_type'} eq 'some') {
-        ### found some factor of desired power ...
-        return 1;
-      }
-      $value /= $p;
-    }
-    if ($count < $power && $self->{'powerful_type'} ne 'some') {
-      ### all/all_prim prime without desired power ...
-      return 0;
-    }
-
-    $limit = "$value" ** (1/$power) + 3;
-    $reduced_limit = min($limit,65535);
-    ### divided out: "$p, now value=$value, new limit $limit reduced $reduced_limit"
-  }
-  ### final value: $value
-
-  if ($p < $limit) {
-    ### value too big to check ...
-    return undef;
-  }
-  if ($self->{'powerful_type'} eq 'some') {
-    ### some, no suitable power found ...
-    return 0;
-  } else {
-    ### all, ok if reduced to value==1 ...
-    return ($value == 1);
-  }
-}
-
-1;
-__END__
 
 =for stopwords Ryde Math-NumSeq squarefrees non-squarefrees squareful
 

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 64;
+$VERSION = 65;
 use Math::NumSeq::Base::Digits;
 @ISA = ('Math::NumSeq::Base::Digits');
 
@@ -71,6 +71,10 @@ use constant parameter_info_array =>
 #    A193493 - decimal 5 digits at a time
 #    A019519 - decimal concat odd nums as bignums
 #    A000422 - decimal reverse concats as bignums
+#
+#    A031324 - decimal digits of Fibonacci numbers
+#    A034004 - decimal digits of triangular numbers
+#    A034005 - decimal digits of Catalan numbers
 #
 my %oeis_anum;
 

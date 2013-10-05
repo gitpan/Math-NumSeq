@@ -50,6 +50,24 @@ sub numeq_array {
 
 
 #------------------------------------------------------------------------------
+# A060384 - number of decimal digits in Fib[n]
+
+MyOEIS::compare_values
+  (anum => 'A060384',
+   func => sub {
+     my ($count) = @_;
+     require Math::NumSeq::DigitLength;
+     my $cnt = Math::NumSeq::DigitLength->new;
+     my $seq = Math::NumSeq::Fibonacci->new;
+     my @got;
+     while (@got < $count) {
+       my ($i, $value) = $seq->next;
+       push @got, $cnt->ith($value);
+     }
+     return \@got;
+   });
+
+#------------------------------------------------------------------------------
 # A114477 smallest Fibonacci with n 1-bits, or -1 if no such
 
 MyOEIS::compare_values

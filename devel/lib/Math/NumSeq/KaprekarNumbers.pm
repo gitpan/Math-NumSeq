@@ -23,7 +23,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 64;
+$VERSION = 65;
 use Math::NumSeq;
 use List::Util 'min';
 use Math::NumSeq::Base::IteratePred;
@@ -42,7 +42,6 @@ use Math::NumSeq::NumAronson;
 # use constant name => Math::NumSeq::__('...');
 use constant description => Math::NumSeq::__('Number of steps of the Kaprekar iteration digits ascending + digits descending until reaching a cycle.');
 use constant i_start => 1;
-use constant characteristic_integer => 1;
 
 use Math::NumSeq::Base::Digits
   'parameter_info_array';   # radix parameter

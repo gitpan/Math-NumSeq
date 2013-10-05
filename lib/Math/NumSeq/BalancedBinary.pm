@@ -26,7 +26,7 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 64;
+$VERSION = 65;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -552,29 +552,29 @@ closing parentheses.
 
 Written in binary a 1-bit is an opening "(" and a 0-bit is a closing ")".
 
-     i    value in    parens
-          binary 
-    ---  --------   ----------
-     1         10   ()
-     2       1010   () ()
-     3       1100   (())
-     4     101010   () () ()
-     5     101100   () (())
-     6     110010   (()) ()
-     7     110100   (() ())
-     8     111000   ((()))
-     9   10101010   () () () ()
-    10   10101100   () () (())
+           value     
+     i   in binary   as parens
+    ---  ---------   ----------
+     1         10    ()
+     2       1010    () ()
+     3       1100    (())
+     4     101010    () () ()
+     5     101100    () (())
+     6     110010    (()) ()
+     7     110100    (() ())
+     8     111000    ((()))
+     9   10101010    () () () ()
+    10   10101100    () () (())
 
-Balanced means the total number of 1s and 0s are the same and reading from
-high to low has count(1s) E<gt>= count(0s) at all times, ie. any closing ")"
-must have a preceding matching open "(".
+Balanced means the total number of 1s and 0s are the same and when reading
+from high to low has count(1s) E<gt>= count(0s) at all times, which is to
+say any closing ")" must have a preceding matching open "(".
 
 Because the number of 1s and 0s are equal the width is always an even 2*w.
 The number of values with a given width is the Catalan number C(w) =
 (2w)!/(w!*(w+1)!).  For example 6-bit values w=6/2=3 gives C(3) =
 (2*3)!/(3!*4!) = 5 many such values, being i=4 through i=8 inclusive as
-shown above.
+shown above.  (See L<Math::NumSeq::Catalan>.)
 
 =head2 Binary Trees
 
@@ -584,7 +584,7 @@ left and/or right child.  Such a tree can be encoded by writing
     0                         if no node (empty tree)
     1,left-tree,right-tree    at a node
 
-The "left-tree" and "right-tree" parts are the left and right legs from the
+The "left-tree" and "right-tree" parts are the left and right legs of the
 node written out recursively.  If those legs are both empty (ie. the node is
 a leaf) then they're empty trees and are "0" giving node "100".  Otherwise
 the node is 1 followed by various more 1s and 0s.  For example,
@@ -603,11 +603,11 @@ so write 0.  The right of "c" is "d" so write 1 and the two empty legs of
 "d" are 0,0.  The very final 0 from that right-most leaf "d" is dropped
 (shown "[0]" above).
 
-This encoding can be applied breadth-first too by pushing the left and right
-descents onto a queue of pending work instead of onto a stack by recursing.
-In both cases there's an extra final 0 which is dropped.  This 0 arises
-because in any binary tree with K nodes there are K+1 empty legs.  That
-would give K many 1-bits and K+1 many 0-bits.
+This encoding can also be applied breadth-first by pushing the left and
+right descents onto a queue of pending work instead of onto a stack by
+recursing.  In both cases there's an extra final 0 which is dropped.  This 0
+arises because in any binary tree with K nodes there are K+1 empty legs.
+That would give K many 1-bits and K+1 many 0-bits.
 
 In this encoding the balanced binary condition "count 1s E<gt>= count 0s"
 corresponds to there being at least one unfinished node at any time in the
@@ -633,7 +633,7 @@ above its starting level at all times.
 
 Numerical order of the values means narrower mountain ranges are before
 wider ones, and two ranges with equal width are ordered by down-slope
-preceding up-slope at the first bit difference.
+preceding up-slope at the first place they differ.
 
 =head1 FUNCTIONS
 
@@ -678,8 +678,8 @@ integer then return the i of the next higher or lower value, respectively.
 =head2 Next
 
 When stepping to the next value the number of 1s and 0s does not change.
-The 1s move to make a numerically higher value.  The simplest is an isolated
-low 1-bit.  It must move up one place.  For example,
+The 1s move to make a numerically higher value.  The simplest case is an
+isolated low 1-bit.  It must move up one place.  For example,
 
     11100100             isolated low 1-bit
     ->                   shifts up
@@ -717,8 +717,8 @@ etc until reaching a remainder S<i E<lt> C(w)>.  At that point the value is
 2*w many bits, being w many "1"s and w many "0"s.
 
 In general after outputting some bits of the value (at the high end) there
-will be some number z many "0"s and n many "1"s yet to be output.  The
-choice is then to output either 0 or 1 and reduce z or n accordingly.
+will be a number z many "0"s and n many "1"s yet to be output.  The choice
+is then to output either 0 or 1 and reduce z or n accordingly.
 
     numvalues(z,n) = number of sequences of z "0"s and n "1"s
                      with remaining 1s >= remaining 0s at all times
@@ -726,11 +726,9 @@ choice is then to output either 0 or 1 and reduce z or n accordingly.
     N = numvalues(z-1,n)
       = how many combinations starting with zero "0..."
 
-    output
-      0   if i < N
-      1   if i >= N
-            and subtract N from i
-            which is the "0..." combinations skipped
+    if i < N  then output 0   
+    if i >= N then output 1 and subtract N from i
+                    (which is the "0..." combinations skipped)
 
 numvalues() is the "Catalan table" constructed by
 
@@ -740,8 +738,8 @@ numvalues() is the "Catalan table" constructed by
         numvalues(z,n) = numvalues(z-1,n)  # the 0... forms
                        + numvalues(z,n-1)  # the 1... forms
 
-Each forming numvalues(z,n) the numvalues(z,n-1) term is the previous
-numvalues calculated, so a simple addition loop for the table
+In each numvalues(z,n) the numvalues(z,n-1) term is the previous numvalues
+calculated, so a simple addition loop for the table
 
     for z=1 upwards
       t = numvalues(z,0) = 1

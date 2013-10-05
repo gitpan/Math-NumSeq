@@ -21,7 +21,7 @@ use strict;
 use Math::NumSeq::Primes;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 64;
+$VERSION = 65;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -161,9 +161,8 @@ sub _classify {
     my %next;
     foreach my $prime (@this) {
       my ($good, @primes) = _prime_factors($prime + $offset);
-      if (! $good) {
-        return undef;  # too big to factorize
-      }
+      return undef unless $good;
+
       @next{@primes} = ();  # hash slice, for uniq
     }
     delete @next{2,3}; # hash slice, not 2 or 3

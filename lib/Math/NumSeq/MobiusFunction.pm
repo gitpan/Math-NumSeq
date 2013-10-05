@@ -21,9 +21,11 @@ use strict;
 use List::Util 'min','max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 64;
+$VERSION = 65;
 use Math::NumSeq;
-@ISA = ('Math::NumSeq');
+use Math::NumSeq::Base::IterateIth;
+@ISA = ('Math::NumSeq::Base::IterateIth',
+        'Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
 use Math::NumSeq::Fibonacci;
@@ -41,6 +43,7 @@ use constant values_min => -1;
 use constant values_max => 1;
 use constant default_i_start => 1;
 
+#------------------------------------------------------------------------------
 # cf A030059 the -1 positions, being odd number of distinct primes
 #    A030229 the 1 positions, being even number of distinct primes
 #    A013929 the 0 positions, being square factor, ie. the non-square-frees
@@ -49,79 +52,7 @@ use constant default_i_start => 1;
 use constant oeis_anum => 'A008683'; # mobius -1,0,1 starting i=1
 
 
-# each 2-bit vec() value is
-#    0 unset
-#    1 square factor
-#    2 even count of factors
-#    3 odd count of factors
-
-my @transform = (0, 0, 1, -1);
-
-sub rewind {
-  my ($self) = @_;
-  $self->{'i'} = $self->i_start;
-  _restart_sieve ($self, 500);
-}
-sub _restart_sieve {
-  my ($self, $hi) = @_;
-  ### _restart_sieve() ...
-  $self->{'hi'} = $hi;
-  $self->{'string'} = "\0" x (($hi+1)/4);  # 4 of 2 bits each
-  vec($self->{'string'}, 0,2) = 1;  # N=0 treated as square
-  vec($self->{'string'}, 1,2) = 2;  # N=1 treated as even
-}
-
-sub next {
-  my ($self) = @_;
-
-  my $i = $self->{'i'}++;
-  my $hi = $self->{'hi'};
-  if ($i <= 1) {
-    if ($i <= 0) {
-      return ($i, 0);
-    }
-    else {
-      return ($i, 1);
-    }
-  }
-
-  my $start = $i;
-  if ($i > $hi) {
-    _restart_sieve ($self, $hi *= 2);
-    $start = 2;
-  }
-  my $sref = \$self->{'string'};
-
-  my $ret;
-  foreach my $i ($start .. $i) {
-    $ret = vec($$sref, $i,2);
-    if ($ret == 0) {
-      ### prime: $i
-      $ret = 3; # odd
-
-      # existing squares $v==1 left alone, others toggle 2=odd,3=even
-      for (my $j = $i; $j <= $hi; $j += $i) {
-        ### p: "$j ".vec($$sref, $j,2)
-        if ((my $v = vec($$sref, $j,2)) != 1) {
-          vec($$sref, $j,2) = ($v ^ 1) | 2;
-          ### set: vec($$sref, $j,2)
-        }
-      }
-
-      # squares set to $v==1
-      my $step = $i * $i;
-      for (my $j = $step; $j <= $hi; $j += $step) {
-        vec($$sref, $j,2) = 1;
-      }
-      # print "applied: $i\n";
-      # for (my $j = 0; $j < $hi; $j++) {
-      #   printf "  %2d %2d\n", $j, vec($$sref,$j,2);
-      # }
-    }
-  }
-  ### ret: "$i, $ret -> ".$transform[$ret]
-  return ($i, $transform[$ret]);
-}
+#------------------------------------------------------------------------------
 
 sub ith {
   my ($self, $i) = @_;
@@ -182,6 +113,83 @@ sub pred {
 
 1;
 __END__
+
+# This was next() done by sieve, but it's scarcely faster than ith() and
+# uses a lot of memory if call next() for a long time.
+#
+# # each 2-bit vec() value is
+# #    0 unset
+# #    1 square factor
+# #    2 even count of factors
+# #    3 odd count of factors
+# 
+# my @transform = (0, 0, 1, -1);
+# 
+# sub rewind {
+#   my ($self) = @_;
+#   $self->{'i'} = $self->i_start;
+#   _restart_sieve ($self, 500);
+# }
+# sub _restart_sieve {
+#   my ($self, $hi) = @_;
+#   ### _restart_sieve() ...
+#   $self->{'hi'} = $hi;
+#   $self->{'string'} = "\0" x (($hi+1)/4);  # 4 of 2 bits each
+#   vec($self->{'string'}, 0,2) = 1;  # N=0 treated as square
+#   vec($self->{'string'}, 1,2) = 2;  # N=1 treated as even
+# }
+# 
+# sub next {
+#   my ($self) = @_;
+# 
+#   my $i = $self->{'i'}++;
+#   my $hi = $self->{'hi'};
+#   if ($i <= 1) {
+#     if ($i <= 0) {
+#       return ($i, 0);
+#     }
+#     else {
+#       return ($i, 1);
+#     }
+#   }
+# 
+#   my $start = $i;
+#   if ($i > $hi) {
+#     _restart_sieve ($self, $hi *= 2);
+#     $start = 2;
+#   }
+#   my $sref = \$self->{'string'};
+# 
+#   my $ret;
+#   foreach my $i ($start .. $i) {
+#     $ret = vec($$sref, $i,2);
+#     if ($ret == 0) {
+#       ### prime: $i
+#       $ret = 3; # odd
+# 
+#       # existing squares $v==1 left alone, others toggle 2=odd,3=even
+#       for (my $j = $i; $j <= $hi; $j += $i) {
+#         ### p: "$j ".vec($$sref, $j,2)
+#         if ((my $v = vec($$sref, $j,2)) != 1) {
+#           vec($$sref, $j,2) = ($v ^ 1) | 2;
+#           ### set: vec($$sref, $j,2)
+#         }
+#       }
+# 
+#       # squares set to $v==1
+#       my $step = $i * $i;
+#       for (my $j = $step; $j <= $hi; $j += $step) {
+#         vec($$sref, $j,2) = 1;
+#       }
+#       # print "applied: $i\n";
+#       # for (my $j = 0; $j < $hi; $j++) {
+#       #   printf "  %2d %2d\n", $j, vec($$sref,$j,2);
+#       # }
+#     }
+#   }
+#   ### ret: "$i, $ret -> ".$transform[$ret]
+#   return ($i, $transform[$ret]);
+# }
 
 =for stopwords Ryde Mobius ie Math-NumSeq
 

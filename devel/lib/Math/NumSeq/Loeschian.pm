@@ -25,7 +25,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 64;
+$VERSION = 65;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -117,9 +117,7 @@ sub pred {
   }
 
   my ($good, @primes) = _prime_factors($value);
-  if (! $good) {
-    return undef;  # too big to factorize
-  }
+  return undef unless $good;
 
   while (@primes) {
     my $p = shift @primes;

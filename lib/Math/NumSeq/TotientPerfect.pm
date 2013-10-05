@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 64;
+$VERSION = 65;
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
 @ISA = ('Math::NumSeq::Base::IteratePred',
@@ -39,8 +39,7 @@ use Math::NumSeq::PrimeFactorCount;;
 
 # use constant name => Math::NumSeq::__('Totient Perfect Numbers');
 use constant description => Math::NumSeq::__('Numbers for which the sum of repeated applications of the totient function equals N.  Eg. 9 is perfect because phi(9)=6, phi(6)=2, phi(2)=1 and the sum 6+2+1 = 9.');
-use constant characteristic_increasing => 1;
-use constant characteristic_integer => 1;
+
 use constant values_min => 3;
 use constant i_start => 1;
 use constant oeis_anum => 'A082897';
@@ -84,9 +83,8 @@ sub pred {
   }
 
   my ($good, @primes) = _prime_factors($value);
-  if (! $good) {
-    return undef;  # too big to factorize
-  }
+  return undef unless $good;
+
   my %primes;
   foreach my $p (@primes) {
     $primes{$p}++;
@@ -104,9 +102,7 @@ sub pred {
       }
       my $factors_aref = ($factors{$p} ||= do {
         my ($good, @primes) = _prime_factors($p-1);
-        if (! $good) {
-          return undef;  # too big to factorize
-        }
+        return undef unless $good;
         \@primes
       });
       foreach my $f (@$factors_aref) {

@@ -21,15 +21,30 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION';
-$VERSION = 64;
+$VERSION = 65;
+
+# uncomment this to run the ### lines
+# use Smart::Comments;
+
+use constant characteristic_increasing => 1;
+use constant characteristic_integer => 1;
+use constant characteristic_smaller => 0;
 
 sub rewind {
   my ($self) = @_;
+  ### IteratePred rewind() ...
+
   $self->{'i'} = $self->i_start;
   $self->{'value'} = $self->values_min;
+
+  ### i: $self->{'i'}
+  ### value: $self->{'value'}
 }
+
 sub next {
   my ($self) = @_;
+  ### IteratePred next() at value: $self->{'value'}
+
   for (my $value = $self->{'value'}; ; $value++) {
     if ($self->pred($value)) {
       $self->{'value'} = $value+1;
@@ -88,18 +103,31 @@ Math::NumSeq::Base::IteratePred -- iterate by searching with pred()
 
 This is a multi-inheritance mix-in providing the following methods
 
-    rewind()
-    next()
+    rewind()   # return to $self->i_start() and $self->values_min()
+    next()     # search using $self->pred()
 
-They iterate by calling C<pred()> to search for values in the sequence,
-starting at C<values_min()> and stepping by 1 each time.
+    characteristic_increasing()    # always true
+    characteristic_integer()       # always true
+
+C<next()> iterates by searching for values satisfying
+C<$self-E<gt>pred($value)>, starting at C<values_min()> and stepping by 1
+each time.
 
 This is a handy way to implement the iterating methods for a C<NumSeq> if
-there's no easy way to step or random access for values, only test a
-condition.
+there's no easy way to step or have random access to values, only a test of
+a condition.
 
 The current implementation is designed for infinite sequences, it doesn't
 check for a C<values_max()> limit.
+
+The two "characteristic" methods mean that calls
+
+    $self->characteristic('increasing')
+    $self->characteristic('integer')
+
+are both true.  "Increasing" is since C<next()> always searches upwards.
+"Integer" currently presumes that the starting C<values_min()> is an
+integer.
 
 =head1 SEE ALSO
 
@@ -107,7 +135,7 @@ L<Math::NumSeq>
 
 =head1 HOME PAGE
 
-http://user42.tuxfamily.org/math-numseq/index.html
+L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 

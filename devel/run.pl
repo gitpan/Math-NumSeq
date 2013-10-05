@@ -34,7 +34,7 @@ $|=1;
 
 {
   my $pred_upto = 0;
-
+  
   my $values_class;
   # $values_class = $gen->values_class('Emirps');
   # $values_class = $gen->values_class('UndulatingNumbers');
@@ -141,7 +141,6 @@ $|=1;
   $values_class = 'Math::NumSeq::Palindromes';
   $values_class = 'Math::NumSeq::PrimeExponentFlip';
   $values_class = 'Math::NumSeq::PrimesDigits';
-  $values_class = 'Math::NumSeq::PowerPart';
   $values_class = 'Math::NumSeq::Plaindromes';
   $values_class = 'Math::NumSeq::Xenodromes';
   $values_class = 'Math::NumSeq::DuffinianNumbers';
@@ -198,27 +197,36 @@ $|=1;
   $values_class = 'Math::NumSeq::PrimeIndexPrimes';
   $values_class = 'Math::NumSeq::PlanePathTurn';
   $values_class = 'Math::NumSeq::DivisorCount';
-
+  $values_class = 'Math::NumSeq::PowerPart';
+  $values_class = 'Math::NumSeq::Abundant';
+  $values_class = 'Math::NumSeq::DigitExtract';
+  
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new
     (
+     extract_type => 'middle_lower',
+     extract_offset => 0,
+     
+     # abundant_type => 'primitive',
+     # abundant_type => 'non-primitive',
+     
      haferman_type => 'box',
-      # inverse => 1,
-
+     # inverse => 1,
+     
      # _dont_use_bfile => 1,
-     anum  => 'A000110', # 9.7mb A-file
+     # anum  => 'A000110', # 9.7mb A-file
      # anum  => 'A151725',
      # anum  => 'A151725',
      # anum  => 'A196199', # bfile
      # anum  => 'A194831', # small bfile
      # anum  => 'A195467',
-
+     
      # root_type => 'negative',
      # digit => 0,
      # radix => 3,
      # i_start => 1,
      # modulus => 2,
-
+     
      # of => 'Primorials',
      # of => 'Fibonacci',
      # of => 'Catalan',
@@ -235,10 +243,10 @@ $|=1;
      # values_type => 'log',
      # values_type => 'odd',
      # lang => 'fr',
-
+     
      # runs_type => '1to2N',
      # values_type => 'mod2',
-
+     
      # extra_multiples => 0,
      # radix => 10,
      # order => 'sorted',
@@ -256,14 +264,14 @@ $|=1;
      # level => 2,
      # level_type => 'exact',
      # stage => 1,
-
+     
      # p_or_m => '-',
      # using_values => 'primes',
      # values_type => 'radix',
      # concat_count => 3,
      # radix => 2,
      # sqrt => 120,
-
+     
      # order => 'forward',
      # fraction => '1/14',
      # from_radix => 10,
@@ -273,7 +281,7 @@ $|=1;
      # fibonacci_word_type => 'dense',
      # including_self => 0,
      # offset => 3,
-
+     
      # planepath => 'Diagonals,x_start=1,y_start=1,direction=up',
      # planepath => 'OneOfEight,parts=3side',
      # planepath => 'MultipleRings,step=6,ring_shape=polygon',
@@ -292,7 +300,7 @@ $|=1;
      # coordinate_type => 'TRSquared',
      # coordinate_type => 'NumSiblings',
      # coordinate_type => 'Parity',
-
+     
      # planepath => 'PythagoreanTree,coordinates=AC',
      # planepath => 'DragonCurve',
      # planepath => 'AlternatePaper',
@@ -302,15 +310,15 @@ $|=1;
      # planepath => 'PyramidRows,step=2',
      # planepath => 'CornerReplicate',
      # delta_type=>'dDiffXY',
-
+     
      # planepath => 'MultipleRings,step=1,ring_shape=circle',
      # planepath => 'Diagonals',
      # planepath => 'PythagoreanTree,coordinates=BC',
      # planepath => 'ChanTree,k=4',
      # planepath => 'SquareSpiral',
-      planepath => 'PowerArray,radix=4',
-      turn_type => 'SLR',
-
+     planepath => 'PowerArray,radix=4',
+     turn_type => 'SLR',
+     
      # planepath => 'CfracDigits',
      # planepath => 'RationalsTree',
      # planepath => 'UlamWarburton,n_start=1',
@@ -328,12 +336,12 @@ $|=1;
      # line_type => 'X_axis',
      # line_type => 'Depth_end',
      # i_start => 1,
-
+     
      # start => 5,
      # including_repdigits => 1,
-
+     
      # i_start => 3,
-
+     
      # including_one => 1,
      # start => 1,
      # pythagorean_type => 'primitive',
@@ -342,10 +350,9 @@ $|=1;
      # pairs => 'both',
      # powerful_type => 'all',
      # power => 3,
-     # abundant_type => 'primitive',
      # multiples => 1,
      # digit => 1,
-
+     
      # order => 'forward',
      # including_self => 0,
      #
@@ -362,10 +369,10 @@ $|=1;
      #
      # length => 2,
      # which => 'last',
-
+     
      # polygonal => 18,
      # pairs => 'second',
-
+     
      # including_zero => 1,
      # # divisors_type => 'proper',
      # # algorithm_type => '1/2-3/2',
@@ -375,7 +382,7 @@ $|=1;
      # where => 'low',
     );
   my $hi = 103;
-
+  
   my $i_start = $seq->i_start;
   print "i_start $i_start\n";
   print "anum ",($seq->oeis_anum//'[undef]'),"\n";
@@ -392,14 +399,14 @@ $|=1;
     print "planepath_object ",ref $planepath_object,"\n";
   }
   print "\n";
-
+  
   my $values_min = $seq->values_min;
   my $values_max = $seq->values_max;
   my $saw_values_min;
   my $saw_values_max;
   my $prev_value;
   my $prev_i;
-
+  
   foreach my $rep (1 .. 2) {
     ### $seq
     if (my $radix = $seq->characteristic('digits')) {
@@ -407,10 +414,10 @@ $|=1;
     }
     print "by next(): ";
     my $show_i = 1;
-
+    
     my $check_pred_upto = ! $seq->characteristic('digits')
       && ! $seq->characteristic('count');
-
+    
     foreach my $want_i ($i_start .. $i_start + $hi) {
       my @ret = $seq->next;
       my ($i,$value) = @ret;
