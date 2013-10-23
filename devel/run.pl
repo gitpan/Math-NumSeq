@@ -130,7 +130,6 @@ $|=1;
   $values_class = 'Math::NumSeq::PowerSieve';
   $values_class = 'Math::NumSeq::DigitProductSteps';
   $values_class = 'Math::NumSeq::KaprekarNumbers';
-  $values_class = 'Math::NumSeq::CollatzSteps';
   $values_class = 'Math::NumSeq::LongFractionPrimes';
   $values_class = 'Math::NumSeq::Squares';
   $values_class = 'Math::NumSeq::SpiroFibonacci';
@@ -188,8 +187,6 @@ $|=1;
   $values_class = 'Math::NumSeq::LucasNumbers';
   $values_class = 'Math::NumSeq::PlanePathN';
   $values_class = 'Math::NumSeq::FibonacciRepresentations';
-  $values_class = 'Math::NumSeq::PlanePathDelta';
-  $values_class = 'Math::NumSeq::PlanePathCoord';
   $values_class = 'Math::NumSeq::LuckyNumbers';
   $values_class = 'Math::NumSeq::OEIS::File';
   $values_class = 'Math::NumSeq::ProthNumbers';
@@ -200,12 +197,17 @@ $|=1;
   $values_class = 'Math::NumSeq::PowerPart';
   $values_class = 'Math::NumSeq::Abundant';
   $values_class = 'Math::NumSeq::DigitExtract';
+  $values_class = 'Math::NumSeq::PlanePathCoord';
+  $values_class = 'Math::NumSeq::PlanePathDelta';
+  $values_class = 'Math::NumSeq::CollatzSteps';
   
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new
     (
-     extract_type => 'middle_lower',
-     extract_offset => 0,
+     end_type => 'below',
+
+     # extract_type => 'middle_lower',
+     # extract_offset => 0,
      
      # abundant_type => 'primitive',
      # abundant_type => 'non-primitive',
@@ -286,7 +288,7 @@ $|=1;
      # planepath => 'OneOfEight,parts=3side',
      # planepath => 'MultipleRings,step=6,ring_shape=polygon',
      # planepath => 'RationalsTree,tree_type=AYT',
-     # planepath => 'VogelFloret',
+     # planepath => 'Corner',
      # planepath => 'SierpinskiTriangle,align=diagonal',
      # planepath => 'DivisibleColumns,divisor_type=proper,n_start=2',
      # planepath => 'CellularRule,rule=2,n_start=0',
@@ -299,25 +301,25 @@ $|=1;
      # coordinate_type => 'GCD',
      # coordinate_type => 'TRSquared',
      # coordinate_type => 'NumSiblings',
-     # coordinate_type => 'Parity',
+     # coordinate_type => 'AbsDiff',
      
      # planepath => 'PythagoreanTree,coordinates=AC',
      # planepath => 'DragonCurve',
      # planepath => 'AlternatePaper',
      # planepath => 'RationalsTree,tree_type=L',
      # planepath => 'TerdragonCurve,arms=1',
-     # planepath => 'CellularRule,rule=14',
+      planepath => 'CellularRule,rule=84',
      # planepath => 'PyramidRows,step=2',
-     # planepath => 'CornerReplicate',
-     # delta_type=>'dDiffXY',
+     # planepath => 'Columns,height=2,n_start=0',
+      delta_type=>'dRSquared',
      
      # planepath => 'MultipleRings,step=1,ring_shape=circle',
      # planepath => 'Diagonals',
      # planepath => 'PythagoreanTree,coordinates=BC',
      # planepath => 'ChanTree,k=4',
      # planepath => 'SquareSpiral',
-     planepath => 'PowerArray,radix=4',
-     turn_type => 'SLR',
+     # planepath => 'PowerArray,radix=4',
+     # turn_type => 'SLR',
      
      # planepath => 'CfracDigits',
      # planepath => 'RationalsTree',
@@ -592,8 +594,7 @@ $|=1;
   }
 
   foreach my $method ('ith','pred') {
-    if ($seq->can($method)) {
-      require Data::Float;
+    if ($seq->can($method) && eval { require Data::Float }) {
       print "$method(0): ";
       print $seq->$method(0)//'undef',"\n";
       print "$method(-1): ";

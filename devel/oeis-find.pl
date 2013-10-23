@@ -36,8 +36,8 @@ use Math::NumSeq::LeastPrimitiveRoot;
 
 sub want_module {
   my ($module) = @_;
-  return 0 unless $module =~ /DigitExtract/;
-  # return 0 unless $module =~ /PlanePath/;
+  # return 0 unless $module =~ /DigitExtract/;
+   return 0 unless $module =~ /PlanePathDelta/;
   # return 0 unless $module =~ /HafermanCarpet/;
   return 1;
 }
@@ -62,8 +62,8 @@ sub want_planepath {
 sub want_coordinate {
   my ($type) = @_;
   # return 0 unless $type =~ /Turn4/;
-  return 0 unless $type =~ /SRL|SLR/;
-  # return 0 unless $type =~ /Straight/;
+  # return 0 unless $type =~ /SRL|SLR/;
+   return 0 unless $type =~ /dR/;
   # return 0 unless $type =~ /NumSiblings/;
   # return 0 unless $type =~ /SubHeight|NumChildren|NumSibling/;
   # return 0 unless $type =~ m{Abs[XY]};

@@ -35,7 +35,7 @@ use Math::NumSeq::Powerful;
 # VERSION
 
 {
-  my $want_version = 65;
+  my $want_version = 66;
   ok ($Math::NumSeq::Powerful::VERSION, $want_version, 'VERSION variable');
   ok (Math::NumSeq::Powerful->VERSION,  $want_version, 'VERSION class method');
 

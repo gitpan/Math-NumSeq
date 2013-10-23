@@ -35,17 +35,98 @@
 use 5.010;
 use strict;
 use List::Util 'min','max';
-use Math::BigInt try => 'GMP';
+# use Math::BigInt try => 'GMP';
 
-use Math::NumSeq;
-*_is_infinite = \&Math::NumSeq::_is_infinite;
+# use Math::NumSeq;
+# *_is_infinite = \&Math::NumSeq::_is_infinite;
 
-use Math::NumSeq::NumAronson;
-*_round_down_pow = \&Math::NumSeq::NumAronson::_round_down_pow;
+# use Math::NumSeq::NumAronson;
+# *_round_down_pow = \&Math::NumSeq::NumAronson::_round_down_pow;
 
 # uncomment this to run the ### lines
 # use Smart::Comments;
 
+
+{
+  for (my $m = 3; $m < 20; $m += 2) {
+    my $e = ($m+1)/2;
+    my $p = powmod(2,$e,$m);
+    my $q = powmod(2,2*$e,$m);
+    if ($p == $m-1) {
+      $p = -1;
+    }
+    print "$m  $p  $q\n";
+  }
+  exit 0;
+
+  sub powmod {
+    my ($b, $e, $m) = @_;
+    my $ret = 1;
+    while ($e) {
+      if ($e & 1) {
+        $ret *= $b;
+        $ret %= $m;
+      }
+      $b *= $b;
+      $b %= $m;
+      $e >>= 1;
+    }
+    return $ret;
+  }
+}
+
+
+{
+  require Math::BigInt;
+  require Math::NumSeq::OEIS;
+  my $seq = Math::NumSeq::OEIS->new(anum=>'A143069');
+  while (my ($i,$value) = $seq->next) {
+    next unless $i % 2;
+    $i = Math::BigInt->new($i);
+    $value = Math::BigInt->new($value);
+    my $p = $i*$value;
+    my $ibits = count_1_bits($i);
+    my $pbits = count_1_bits($p);
+    next unless $pbits == 3;
+    my $i2 = $i->as_bin;
+    my $value2 = $value->as_bin;
+    my $p2 = $p->as_bin;
+    my $order = order_of_2($i);
+    my $ofrac = ($i-1)/$order;
+    next unless $ofrac > 3;
+    printf "%s * %s = %s\n  %s * %s = %s     %s -> %s bits\n",
+      $i, $value, $p,
+        $i2, $value2, $p2,
+          $ibits, $pbits;
+    printf "  order %d div %d\n",
+      $order, $ofrac;
+  }
+  exit 0;
+}
+{
+  my $n = 73;
+  my $p = 1;
+  my $count = 0;
+  do {
+    print "$p ";
+    $p = (2*$p) % $n;
+    $count++;
+  } while ($p != 1);
+  print "\n";
+  print "order $count\n";
+  exit 0;
+}
+sub order_of_2 {
+  my ($n) = @_;
+  my $p = 1;
+  my %seen;
+  my $count = 0;
+  do {
+    $p = (2*$p) % $n;
+    $count++;
+  } until ($seen{$p}++);
+  return $count;
+}
 
 
 
@@ -477,7 +558,7 @@ sub XXis_flimsy {
   }
 }
 
-BEGIN {
+{
   my @want;
   sub want_is_flimsy {
     my ($n) = @_;

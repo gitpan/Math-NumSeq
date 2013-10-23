@@ -16,6 +16,7 @@ devel/binary-undulant.pl
 devel/bits.pl
 devel/cbrt-continued.pl
 devel/cbrt.pl
+devel/collatz.pl
 devel/concat.pl
 devel/digit-count.pl
 devel/digit-length-cumulative.pl
@@ -40,6 +41,7 @@ devel/GNUmakefile
 devel/golay-rudin-shapiro.pl
 devel/golomb-sequence.pl
 devel/grep-oeis-non-ascii.pl
+devel/haferman-carpet-x11.pl
 devel/haferman-carpet.pl
 devel/happy.pl
 devel/hofstadter-figure.pl
@@ -83,7 +85,6 @@ devel/lib/Math/NumSeq/LucasSequenceModulo.pm
 devel/lib/Math/NumSeq/LuckyNumbersByStep.pm
 devel/lib/Math/NumSeq/LuckyNumbersSlow.pm
 devel/lib/Math/NumSeq/numseq-oeis.t
-devel/lib/Math/NumSeq/OEIS/Catalogue/Plugin/Alpha.pm
 devel/lib/Math/NumSeq/Padovan.pm
 devel/lib/Math/NumSeq/pi.gz
 devel/lib/Math/NumSeq/PiBits.pm
@@ -291,6 +292,7 @@ MANIFEST			This list of files
 MANIFEST.SKIP
 META.yml
 SIGNATURE
+t/Abundant.t
 t/All.t
 t/AsciiSelf.t
 t/BalancedBinary.t
@@ -425,3 +427,4 @@ xtools/my-manifest.sh
 xtools/my-pc.sh
 xtools/my-tags.sh
 xtools/my-wunused.sh
+META.json                                Module JSON meta-data (added by MakeMaker)

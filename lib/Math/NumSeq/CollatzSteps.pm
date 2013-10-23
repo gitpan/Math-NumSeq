@@ -28,13 +28,15 @@
 # E(N)*log(2) = O(N)*log(3) + log(N) + log(Res(N))
 # log(Res(N)) = O(N)*log(3) - E(N)*log(2) + log(N)
 
+# "Glide" how many steps to get a value < N.
+#
 
 package Math::NumSeq::CollatzSteps;
 use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 65;
+$VERSION = 66;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -46,8 +48,18 @@ use Math::NumSeq::Base::IterateIth;
 #use Devel::Comments;
 
 # use constant name => Math::NumSeq::__('Collatz Steps');
-use constant description =>
-  Math::NumSeq::__('Number of steps to reach 1 in the Collatz "3n+1" problem.');
+sub description {
+  my ($self) = @_;
+  if (ref $self) {
+    if ($self->{'step_type'} eq 'up') {
+      return Math::NumSeq::__('Number of up steps to reach 1 in the Collatz "3n+1" problem.');
+    }
+    if ($self->{'step_type'} eq 'down') {
+      return Math::NumSeq::__('Number of up steps to reach 1 in the Collatz "3n+1" problem.');
+    }
+  }
+  return Math::NumSeq::__('Number of steps to reach 1 in the Collatz "3n+1" problem.');
+}
 
 sub default_i_start {
   my ($self) = @_;
@@ -68,7 +80,7 @@ use constant characteristic_increasing => 0;
 use constant parameter_info_array =>
   [
    { name      => 'step_type',
-     share_key => 'step_type_both', # default "both"
+     share_key => 'step_type_bothupdown',
      display   => Math::NumSeq::__('Step Type'),
      type      => 'enum',
      default   => 'both',
@@ -78,6 +90,17 @@ use constant parameter_info_array =>
                          Math::NumSeq::__('Down'),
                         ],
      description => Math::NumSeq::__('Which steps to count, the 3*n+1 ups, the n/2 downs, or both.'),
+   },
+   { name      => 'end_type',
+     share_key => 'end_type_1below', # default "both"
+     display   => Math::NumSeq::__('End Type'),
+     type      => 'enum',
+     default   => '1',
+     choices   => ['1','below'],
+     choices_display => ['1',
+                         Math::NumSeq::__('Below'),
+                        ],
+     # description => Math::NumSeq::__(''),
    },
    # { name      => 'on_values',
    #   share_key => 'on_values_aoe',
@@ -97,6 +120,22 @@ use constant parameter_info_array =>
 #    A014682 one step 3x+1 or x/2 on the integers
 #    A006884 new record for highest point reached in iteration
 #    A006885   that record high position
+#
+#    A102419
+#    A217934 new highs of "glide" steps to go below
+#    A060412 n where those highs occur
+#
+#    A074473
+#    A075476
+#    A075477
+#    A075478
+#    A075480
+#    A075481
+#    A075482
+#    A075483
+#    A060445
+#    A060412
+#    A217934
 #
 my %oeis_anum =
   (all  => { up   => 'A006667', # triplings
@@ -158,30 +197,17 @@ sub ith {
     return $i;
   }
 
-  my $count = 0;
   my $ups = 0;
   my $downs = 0;
-  my $step_type = $self->{'step_type'};
-  my $count_up = ($step_type ne 'down');
-  my $count_down = ($step_type ne 'up');
-  for (;;) {
+  my $end = ($self->{'end_type'} eq '1' ? 1 : $i);
+
+ OUTER: for (;;) {
     until ($i & 1) {
       $i >>= 1;
       $downs++;
-      $count += $count_down;
+      last OUTER if $i <= $end;
     }
     ### odd: $i
-    if ($i <= 1) {
-      if ($self->{'step_type'} eq 'completeness') {
-        return $ups / $downs;
-      }
-      if ($self->{'step_type'} eq 'residue') {
-        # log(Res(N)) = O(N)*log(3) - E(N)*log(2) + log(N)
-        return $ups*log(3) - $downs*log(2) + log($orig_i);
-      }
-
-      return $count;
-    }
 
     if ($i > _UV_LIMIT) {
       $i = Math::NumSeq::_to_bigint($i);
@@ -192,26 +218,37 @@ sub ith {
         $i->bmul(3);
         $i->binc();
         $ups++;
-        $count += $count_up;
         ### tripled: "$i  count=$count"
 
         until ($i->is_odd) {
           $i->brsft(1);
           $downs++;
-          $count += $count_down;
           ### halve: "$i  count=$count"
-        }
-        if ($i <= 1) {
-          return $count;
+          last OUTER if $i <= $end;
         }
       }
     }
 
     $i = 3*$i + 1;
     $ups++;
-    $count += $count_up;
     ### tripled: "$i  count=$count"
   }
+
+  my $step_type = $self->{'step_type'};
+  if ($step_type eq 'up') {
+    return $ups;
+  }
+  if ($step_type eq 'down') {
+    return $downs;
+  }
+  if ($step_type eq 'completeness') {
+    return $ups / $downs;
+  }
+  if ($step_type eq 'residue') {
+    # log(Res(N)) = O(N)*log(3) - E(N)*log(2) + log(N)
+    return $ups*log(3) - $downs*log(2) + log($orig_i);
+  }
+  return $ups + $downs;
 }
 
 sub pred {
@@ -239,11 +276,20 @@ Math::NumSeq::CollatzSteps -- steps in the "3n+1" problem
 
 The number of steps it takes to reach 1 by the Collatz "3n+1" problem,
 
+    0, 1, 7, 2, 5, 8, 16, 3, 19, 6, 14, 9, 9, 17, 17, 4, 12, 20, 20, ...
+    starting i=1
+
+The Collatz problem iterates
+
     n -> / 3n+1  if n odd
          \ n/2   if n even
 
-It's conjectured that any starting n will always eventually reduce to 1, so
-the number of steps is finite.  There's no limit in the code on how many
+For example i=6 takes value=8 many steps to reach 1,
+
+    6 -> 3 -> 10 -> 5 -> 16 -> 8 -> 4 -> 2 -> 1
+
+It's conjectured that any starting n will always eventually reduce to 1 and
+so the number of steps is finite.  There's no limit in the code on how many
 steps counted.  C<Math::BigInt> is used if 3n+1 steps go past the usual
 scalar integer limit.
 
@@ -255,7 +301,7 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =item C<$seq = Math::NumSeq::CollatzSteps-E<gt>new ()>
 
-=item C<$seq = Math::NumSeq::CollatzSteps-E<gt>new (step_type =E<gt> 'down')>
+=item C<$seq = Math::NumSeq::CollatzSteps-E<gt>new (step_type =E<gt> $str)>
 
 Create and return a new sequence object.
 
@@ -263,7 +309,7 @@ The optional C<step_type> parameter (a string) selects between
 
     "up"      upward steps 3n+1
     "down"    downward steps n/2
-    "both"    both up and down, which is the default
+    "both"    both up and down (the default)
 
 =back
 
@@ -280,6 +326,21 @@ Return the number of steps to take C<$i> down to 1.
 Return true if C<$value> occurs as a step count.  This is simply C<$value
 E<gt>= 0>.
 
+=cut
+
+# i=2^k steps down n->n/2
+# n odd n -> 3n+1 want == 2 mod 4
+# 3n+1 == 2 mod 4
+# 3n == 1 mod 4
+# 3*1=3 3*2=6 3*3=9
+# so n == 3 mod 4
+# 4k+3 is odd -> 3*(4k+3)+1 = 12k+8 -> 3k+2
+# 3k+2 == 1 mod 4
+# 2,5,8,11  k=4j+1
+# 3(4j+1)+2 = 12j+5
+
+=pod
+
 =back
 
 =head1 SEE ALSO
@@ -287,6 +348,7 @@ E<gt>= 0>.
 L<Math::NumSeq>,
 L<Math::NumSeq::JugglerSteps>,
 L<Math::NumSeq::ReverseAddSteps>
+L<Math::NumSeq::HappySteps>
 
 =head1 HOME PAGE
 

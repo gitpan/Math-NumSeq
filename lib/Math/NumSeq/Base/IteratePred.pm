@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION';
-$VERSION = 65;
+$VERSION = 66;
 
 # uncomment this to run the ### lines
 # use Smart::Comments;
@@ -35,10 +35,12 @@ sub rewind {
   ### IteratePred rewind() ...
 
   $self->{'i'} = $self->i_start;
-  $self->{'value'} = $self->values_min;
+  my $value = $self->values_min;
+  if (! defined $value) { die "Oops, no values_min() for predicate start"; }
+  $self->{'value'} = $value;
 
   ### i: $self->{'i'}
-  ### value: $self->{'value'}
+  ### $value
 }
 
 sub next {

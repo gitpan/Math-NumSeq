@@ -1,0 +1,91 @@
+{
+   "abstract" : "Number sequences.",
+   "author" : [
+      "Kevin Ryde <user42@zip.com.au>"
+   ],
+   "dynamic_config" : 1,
+   "generated_by" : "ExtUtils::MakeMaker version 6.66, CPAN::Meta::Converter version 2.132830",
+   "license" : [
+      "open_source"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Math-NumSeq",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "inc",
+         "devel",
+         "xt"
+      ]
+   },
+   "optional_features" : {
+      "maximum_interoperation" : {
+         "description" : "Have maximum inter-operation with other modules (optional other stuff).",
+         "prereqs" : {
+            "runtime" : {
+               "requires" : {
+                  "Language::Expr" : "0",
+                  "Language::Expr::Compiler::Perl" : "0",
+                  "Math::Expression::Evaluator" : "0",
+                  "Math::Symbolic" : "0"
+               }
+            }
+         }
+      },
+      "maximum_tests" : {
+         "description" : "Have \"make test\" do as much as possible.",
+         "prereqs" : {
+            "runtime" : {
+               "requires" : {
+                  "Data::Float" : "0"
+               }
+            }
+         }
+      }
+   },
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
+      "runtime" : {
+         "recommends" : {
+            "Math::Prime::XS" : "0.26",
+            "Module::Pluggable" : "4.7"
+         },
+         "requires" : {
+            "File::HomeDir" : "0",
+            "File::Spec" : "0",
+            "File::Temp" : "0",
+            "List::Util" : "0",
+            "Math::Factor::XS" : "0.40",
+            "Math::Libm" : "0",
+            "Math::Prime::XS" : "0.23",
+            "Module::Load" : "0",
+            "Module::Pluggable" : "0",
+            "Module::Util" : "0",
+            "Test" : "0",
+            "constant" : "1.02",
+            "constant::defer" : "1",
+            "perl" : "5.004"
+         }
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "homepage" : "http://user42.tuxfamily.org/math-numseq/index.html",
+      "license" : [
+         "http://www.gnu.org/licenses/gpl.html"
+      ]
+   },
+   "version" : "66"
+}

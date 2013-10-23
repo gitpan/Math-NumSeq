@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 65;
+$VERSION = 66;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -269,13 +269,13 @@ If an odd number of expansions were done then for example the first bit
 flips 0E<lt>-E<gt>1.  The even number of expansions can also be expressed as
 each bit morphing into an 81-long run.
 
-    0  -> 0,1,0,1,0,1,0,1,0,  # 9 times repeating
+    0  -> 0,1,0,1,0,1,0,1,0,  # 9 times repeat
           0,1,0,1,0,1,0,1,0,
           0,1,0,1,0,1,0,1,0,
           ...
 
-    1  -> 1,1,1,1,1,1,1,1,1,  # 9 times repeating
-          0,1,0,1,0,1,0,1,0,  # alternating 111..111 or 010..010
+    1  -> 1,1,1,1,1,1,1,1,1,  # 9 times repeat
+          0,1,0,1,0,1,0,1,0,  # alternate 111..111 or 010..010
           1,1,1,1,1,1,1,1,1,
           0,1,0,1,0,1,0,1,0,
           ...

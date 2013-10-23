@@ -17,6 +17,10 @@ with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 66, October 2013
+    - Abundant avoid infinite loop if bad abundant_type, as reported
+      by Dana Jacobsen
+
 Version 65, October 2013
     - fix Abundant "primitive" pred() wrong results
     - Abundant new abundant_type="non-primitive"

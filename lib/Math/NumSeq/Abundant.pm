@@ -18,9 +18,10 @@
 package Math::NumSeq::Abundant;
 use 5.004;
 use strict;
+use Carp;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 65;
+$VERSION = 66;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IteratePred;
 @ISA = ('Math::NumSeq::Base::IteratePred',
@@ -106,6 +107,14 @@ sub oeis_anum {
 
 
 #------------------------------------------------------------------------------
+
+sub new {
+  my $self = shift->SUPER::new(@_);
+  exists $values_min{$self->{'abundant_type'}}
+    or croak "Unrecognised abundant_type ", $self->{'abundant_type'};
+  return $self;
+}
+
 # i = primes p^k * ...
 # sumdivisors(i) = (p^(k+1) - 1)/(p-1) * ...
 # if k=1 then (p^2-1)/(p-1)
@@ -138,8 +147,6 @@ sub oeis_anum {
 # for 101, f = (p^(k+1)-p) / (p^(k+1)-1) = 10100 / 10200
 #      so 5712 * 10100 / 10200 = 5656
 #
-
-
 sub pred {
   my ($self, $value) = @_;
   ### Abundant pred(): $value

@@ -24,7 +24,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA', '@EXPORT_OK';
-$VERSION = 65;
+$VERSION = 66;
 @ISA = ('Exporter');
 @EXPORT_OK = ('cache_hash', 'make_key');
 

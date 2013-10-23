@@ -35,7 +35,7 @@ use Math::NumSeq::MephistoWaltz;
 # VERSION
 
 {
-  my $want_version = 65;
+  my $want_version = 66;
   ok ($Math::NumSeq::MephistoWaltz::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::MephistoWaltz->VERSION,  $want_version,

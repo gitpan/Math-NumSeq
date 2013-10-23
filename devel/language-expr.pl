@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010, 2011 Kevin Ryde
+# Copyright 2010, 2011, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -26,6 +26,16 @@ use Smart::Comments;
 # Language::Expr::Manual::Syntax
 
 
+{
+  require Language::Expr;
+  my $le = Language::Expr->new (interpreted => 1);
+  $le->var (num => 123);
+  my $val = $le->eval(<<'HERE');
+"I have $num apples"
+HERE
+  ### $val
+  exit 0;
+}
 
 {
   require Safe;
@@ -62,15 +72,6 @@ HERE
   exit 0;
 }
 
-{
-  my $le = Language::Expr->new (interpreted => 1);
-  $le->var (num => 123);
-  my $val = $le->eval(<<'HERE');
-"I have $num apples"
-HERE
-  ### $val
-  exit 0;
-}
 
 {
   my $le = Language::Expr->new (interpreted => 1);
