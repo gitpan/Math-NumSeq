@@ -21,7 +21,7 @@ use strict;
 use List::Util 'max';
 
 use vars '$VERSION';
-$VERSION = 66;
+$VERSION = 67;
 
 # uncomment this to run the ### lines
 # use Smart::Comments;

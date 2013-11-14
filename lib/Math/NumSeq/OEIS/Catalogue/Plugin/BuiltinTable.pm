@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 66;
+$VERSION = 67;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 885 A-numbers in 115 modules
+# total 895 A-numbers in 115 modules
 
 use constant info_arrayref =>
 [
@@ -1397,6 +1397,10 @@ use constant info_arrayref =>
     ]
   },
   {
+    'anum' => 'A006577',
+    'class' => 'Math::NumSeq::CollatzSteps'
+  },
+  {
     'anum' => 'A006667',
     'class' => 'Math::NumSeq::CollatzSteps',
     'parameters' => [
@@ -1413,19 +1417,109 @@ use constant info_arrayref =>
     ]
   },
   {
-    'anum' => 'A006577',
-    'class' => 'Math::NumSeq::CollatzSteps',
-    'parameters' => [
-      'step_type',
-      'both'
-    ]
-  },
-  {
     'anum' => 'A008908',
     'class' => 'Math::NumSeq::CollatzSteps',
     'parameters' => [
       'on_values',
       'even'
+    ]
+  },
+  {
+    'anum' => 'A064685',
+    'class' => 'Math::NumSeq::CollatzSteps',
+    'parameters' => [
+      'on_values',
+      'odd',
+      'step_type',
+      'both+1'
+    ]
+  },
+  {
+    'anum' => 'A166549',
+    'class' => 'Math::NumSeq::CollatzSteps',
+    'parameters' => [
+      'on_values',
+      'odd1',
+      'step_type',
+      'down'
+    ]
+  },
+  {
+    'anum' => 'A075680',
+    'class' => 'Math::NumSeq::CollatzSteps',
+    'parameters' => [
+      'on_values',
+      'odd1',
+      'step_type',
+      'up'
+    ]
+  },
+  {
+    'anum' => 'A102419',
+    'class' => 'Math::NumSeq::CollatzSteps',
+    'parameters' => [
+      'end_type',
+      'drop'
+    ]
+  },
+  {
+    'anum' => 'A074473',
+    'class' => 'Math::NumSeq::CollatzSteps',
+    'parameters' => [
+      'end_type',
+      'drop',
+      'step_type',
+      'both+1'
+    ]
+  },
+  {
+    'anum' => 'A126241',
+    'class' => 'Math::NumSeq::CollatzSteps',
+    'parameters' => [
+      'end_type',
+      'drop',
+      'step_type',
+      'down'
+    ]
+  },
+  {
+    'anum' => 'A060445',
+    'class' => 'Math::NumSeq::CollatzSteps',
+    'parameters' => [
+      'end_type',
+      'drop',
+      'on_values',
+      'odd'
+    ]
+  },
+  {
+    'anum' => 'A122458',
+    'class' => 'Math::NumSeq::CollatzSteps',
+    'parameters' => [
+      'end_type',
+      'drop',
+      'on_values',
+      'odd',
+      'step_type',
+      'up'
+    ]
+  },
+  {
+    'anum' => 'A087225',
+    'class' => 'Math::NumSeq::CollatzSteps',
+    'parameters' => [
+      'end_type',
+      'to_peak',
+      'step_type',
+      'both+1'
+    ]
+  },
+  {
+    'anum' => 'A208981',
+    'class' => 'Math::NumSeq::CollatzSteps',
+    'parameters' => [
+      'end_type',
+      'pow2'
     ]
   },
   {

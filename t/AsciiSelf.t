@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 80;
+plan tests => 81;
 
 use lib 't';
 use MyTestHelpers;
@@ -35,7 +35,7 @@ use Math::NumSeq::AsciiSelf;
 # VERSION
 
 {
-  my $want_version = 66;
+  my $want_version = 67;
   ok ($Math::NumSeq::AsciiSelf::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::AsciiSelf->VERSION, $want_version,
@@ -58,6 +58,7 @@ use Math::NumSeq::AsciiSelf;
   my $seq = Math::NumSeq::AsciiSelf->new;
   ok ($seq->characteristic('count'), undef, 'characteristic(count)');
   ok ($seq->characteristic('integer'), 1, 'characteristic(integer)');
+  ok ($seq->characteristic('smaller'), 1, 'characteristic(smaller)');
 }
 
 

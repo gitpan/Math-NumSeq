@@ -28,7 +28,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 66;
+$VERSION = 67;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -577,7 +577,7 @@ Testing for a fibbinary value can be done by a shift and AND,
 
 Any adjacent 1-bits overlap in the shift+AND and come through as non-zero.
 
-In Perl C<&> converts NV float to UV integer.  If a value in an NV is an
+Perl C<&> operator converts NV float to UV integer.  If an NV value is an
 integer but bigger than a UV then bits will be lost to the C<&>.  Conversion
 to C<Math::BigInt> or similar is necessary to preserve the full value.
 

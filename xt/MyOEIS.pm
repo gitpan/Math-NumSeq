@@ -201,9 +201,13 @@ sub compare_values {
       MyTestHelpers::diag ("got:     ",join_values($got));
     }
   }
-  require Test;
-  local $Test::TestLevel = $Test::TestLevel + 1;
-  Test::skip (! $bvalues, $diff, undef, "$anum");
+  if (defined $Test::TestLevel) {
+    require Test;
+    local $Test::TestLevel = $Test::TestLevel + 1;
+    Test::skip (! $bvalues, $diff, undef, "$anum");
+  } elsif (defined $diff) {
+    print "$diff\n";
+  }
 }
 
 sub join_values {

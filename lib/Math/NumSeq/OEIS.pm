@@ -21,7 +21,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION','@ISA';
-$VERSION = 66;
+$VERSION = 67;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -68,7 +68,7 @@ sub new {
 
   require Math::NumSeq::OEIS::Catalogue;
   my $info = Math::NumSeq::OEIS::Catalogue->anum_to_info($anum)
-    || croak 'Unknown OEIS sequence ',$anum;
+    || croak 'No data for OEIS sequence ',$anum;
   ### $info
 
   my $numseq_class = $info->{'class'};

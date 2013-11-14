@@ -120,7 +120,6 @@ $|=1;
   $values_class = 'Math::NumSeq::EratosthenesStage';
   $values_class = 'Math::NumSeq::ReReplace';
   $values_class = 'Math::NumSeq::SqrtContinued';
-  $values_class = 'Math::NumSeq::SternDiatomic';
   $values_class = 'Math::NumSeq::SlopingExcluded';
   $values_class = 'Math::NumSeq::PrimeIndexOrder';
   $values_class = 'Math::NumSeq::KaprekarSteps';
@@ -188,7 +187,6 @@ $|=1;
   $values_class = 'Math::NumSeq::PlanePathN';
   $values_class = 'Math::NumSeq::FibonacciRepresentations';
   $values_class = 'Math::NumSeq::LuckyNumbers';
-  $values_class = 'Math::NumSeq::OEIS::File';
   $values_class = 'Math::NumSeq::ProthNumbers';
   $values_class = 'Math::NumSeq::HafermanCarpet';
   $values_class = 'Math::NumSeq::PrimeIndexPrimes';
@@ -199,12 +197,16 @@ $|=1;
   $values_class = 'Math::NumSeq::DigitExtract';
   $values_class = 'Math::NumSeq::PlanePathCoord';
   $values_class = 'Math::NumSeq::PlanePathDelta';
+  $values_class = 'Math::NumSeq::SternDiatomic';
+  $values_class = 'Math::NumSeq::OEIS::File';
   $values_class = 'Math::NumSeq::CollatzSteps';
   
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new
     (
-     end_type => 'below',
+     # on_values => 'even',
+     # end_type => 'to_peak',
+     step_type => 'down',
 
      # extract_type => 'middle_lower',
      # extract_offset => 0,
@@ -212,16 +214,13 @@ $|=1;
      # abundant_type => 'primitive',
      # abundant_type => 'non-primitive',
      
-     haferman_type => 'box',
-     # inverse => 1,
-     
      # _dont_use_bfile => 1,
      # anum  => 'A000110', # 9.7mb A-file
      # anum  => 'A151725',
      # anum  => 'A151725',
      # anum  => 'A196199', # bfile
      # anum  => 'A194831', # small bfile
-     # anum  => 'A195467',
+      anum  => 'A102419',
      
      # root_type => 'negative',
      # digit => 0,
@@ -257,7 +256,6 @@ $|=1;
      # root_type => 'negative',
      # letter => '',
      # order => 'descending',
-     # step_type => 'both',
      # on_values => 'even',
      # i_start => 0,
      # recurrence_type => 'absdiff',
@@ -286,7 +284,6 @@ $|=1;
      
      # planepath => 'Diagonals,x_start=1,y_start=1,direction=up',
      # planepath => 'OneOfEight,parts=3side',
-     # planepath => 'MultipleRings,step=6,ring_shape=polygon',
      # planepath => 'RationalsTree,tree_type=AYT',
      # planepath => 'Corner',
      # planepath => 'SierpinskiTriangle,align=diagonal',
@@ -308,10 +305,11 @@ $|=1;
      # planepath => 'AlternatePaper',
      # planepath => 'RationalsTree,tree_type=L',
      # planepath => 'TerdragonCurve,arms=1',
-      planepath => 'CellularRule,rule=84',
+     # planepath => 'CellularRule,rule=84',
      # planepath => 'PyramidRows,step=2',
      # planepath => 'Columns,height=2,n_start=0',
-      delta_type=>'dRSquared',
+      planepath => 'MultipleRings,step=0,ring_shape=circle',
+      delta_type=>'dRadius',
      
      # planepath => 'MultipleRings,step=1,ring_shape=circle',
      # planepath => 'Diagonals',

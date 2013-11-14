@@ -36,7 +36,7 @@ use Math::NumSeq::LuckyNumbers;
 # VERSION
 
 {
-  my $want_version = 66;
+  my $want_version = 67;
   ok ($Math::NumSeq::LuckyNumbers::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::LuckyNumbers->VERSION,  $want_version,
@@ -103,5 +103,7 @@ use Math::NumSeq::LuckyNumbers;
   my $sieve = join(',', @sieve);
   ok ($got, $sieve);
 }
+
+#------------------------------------------------------------------------------
 
 exit 0;

@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 66;
+$VERSION = 67;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -30,7 +30,7 @@ use Math::NumSeq::NumAronson 8; # new in v.8
 *_round_down_pow = \&Math::NumSeq::NumAronson::_round_down_pow;
 
 # uncomment this to run the ### lines
-use Smart::Comments;
+# use Smart::Comments;
 
 
 # use constant name => Math::NumSeq::__('...');

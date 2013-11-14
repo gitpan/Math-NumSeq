@@ -29,14 +29,14 @@ use File::Spec;
 use Symbol 'gensym';
 
 use vars '$VERSION','@ISA';
-$VERSION = 66;
+$VERSION = 67;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_to_bigint = \&Math::NumSeq::_to_bigint;
 
 use vars '$VERSION';
-$VERSION = 66;
+$VERSION = 67;
 
 eval q{use Scalar::Util 'weaken'; 1}
   || eval q{sub weaken { $_[0] = undef }; 1 }
@@ -484,6 +484,8 @@ sub _readline {
 sub _afile_is_good {
   my ($self) = @_;
   my $fh = $self->{'fh'};
+  my $good = 0;
+  my $prev_i;
   while (defined (my $line = <$fh>)) {
     chomp $line;
     $line =~ tr/\r//d;    # delete CR if CRLF line endings, eg. b009000.txt
@@ -494,16 +496,26 @@ sub _afile_is_good {
       next;
     }
 
-    # a line "0 123" means good
-    if ($line =~ /^([0-9]+)     # i
-                  [ \t]+
-                  (-?[0-9]+)    # value
-                  [ \t]*
-                  $/x) {
+    # Must have line like "0 123".  Can have negative OFFSET and so index i,
+    # eg. A166242 (though that one doesn't have an A-file).
+    my ($i,$value) = ($line =~ /^(-?[0-9]+)     # i
+                                [ \t]+
+                                (-?[0-9]+)    # value
+                                [ \t]*
+                                $/x)
+      or last;
+
+    if (defined $prev_i && $i != $prev_i+1) {
+      ### bad A-file, initial "i" values not consecutive ...
+      last;
+    }
+    $prev_i = $i;
+
+    $good++;
+    if ($good >= 3) {
+      ### three good lines, A-file is good ...
       _seek ($self, 0);
       return 1;
-    } else {
-      last;
     }
   }
   return 0;

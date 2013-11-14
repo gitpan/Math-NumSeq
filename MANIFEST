@@ -10,7 +10,6 @@ debian/watch
 devel/abundant.pl
 devel/ascii-self.pl
 devel/balanced-binary.pl
-devel/Base4Only01.pm
 devel/baum-sweet.pl
 devel/binary-undulant.pl
 devel/bits.pl
@@ -41,7 +40,6 @@ devel/GNUmakefile
 devel/golay-rudin-shapiro.pl
 devel/golomb-sequence.pl
 devel/grep-oeis-non-ascii.pl
-devel/haferman-carpet-x11.pl
 devel/haferman-carpet.pl
 devel/happy.pl
 devel/hofstadter-figure.pl
@@ -159,6 +157,7 @@ devel/sqrt-continued.pl
 devel/tetrahedral.pl
 devel/totient.pl
 devel/triangular.pl
+examples/other/haferman-carpet-x11.pl
 lib/Math/NumSeq.pm
 lib/Math/NumSeq/Abundant.pm
 lib/Math/NumSeq/AlgebraicContinued.pm
@@ -317,6 +316,7 @@ t/FractionDigits-Catalogue.t
 t/FractionDigits.t
 t/GolayRudinShapiroCumulative.t
 t/GolombSequence.t
+t/HafermanCarpet.t
 t/HofstadterFigure.t
 t/LucasNumbers.t
 t/LuckyNumbers.t

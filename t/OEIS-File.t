@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 64;
+plan tests => 69;
 
 use lib 't';
 use MyTestHelpers;
@@ -35,7 +35,7 @@ use Math::NumSeq::OEIS::File;
 # VERSION
 
 {
-  my $want_version = 66;
+  my $want_version = 67;
   ok ($Math::NumSeq::OEIS::File::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::OEIS::File->VERSION, $want_version,
@@ -107,6 +107,7 @@ foreach my $options ([],
                     'A067188',  # "full"
                     'A000796',  # pi in decimal
                     'A005105',  # a005105.txt is code
+                    'A102419',  # a102419.txt is pairs but not n,value
                    ) {
     ### $anum
 

@@ -17,6 +17,11 @@ with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 67, November 2013
+    - CollatzSteps new on_values="odd","even"
+    - SternDiatomic iterate by method of Moshe Newman
+    - new examples/other/haferman-carpet-x11.pl
+
 Version 66, October 2013
     - Abundant avoid infinite loop if bad abundant_type, as reported
       by Dana Jacobsen

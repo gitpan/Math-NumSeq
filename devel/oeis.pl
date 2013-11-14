@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010, 2011, 2012 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -24,6 +24,25 @@ use POSIX;
 # uncomment this to run the ### lines
 use Smart::Comments;
 
+
+{
+  require Math::NumSeq::OEIS::File;
+  my $anum = 'A000032';
+  my $num = 218181;
+
+  # open my $fh, '<', "$ENV{HOME}/OEIS/stripped" or die $!;
+  # open my $fh, '<:gzip', "$ENV{HOME}/OEIS/stripped.gz" or die $!;
+  open my $fh, '<:gzip', "$ENV{HOME}/OEIS/names.gz" or die $!;
+
+  my $line = Math::NumSeq::OEIS::File::_bsearch_textfile
+    ($fh, sub {
+       my ($line) = @_;
+       $line =~ /^A(\d+)/ or return -1;
+       return ($1 <=> $num);
+     });
+  ### $line
+  exit 0;
+}
 {
   # no seek() at all in IO::Zlib 1.10, AUTOLOAD error
   seek STDIN, 0,0
@@ -77,24 +96,6 @@ use Smart::Comments;
   exit 0;
 }
 
-{
-  require Math::NumSeq::OEIS::File;
-  my $anum = 'A000032';
-  my $num = 218181;
-
-  # open my $fh, '<', "$ENV{HOME}/OEIS/stripped" or die $!;
-  # open my $fh, '<:gzip', "$ENV{HOME}/OEIS/stripped.gz" or die $!;
-  open my $fh, '<:gzip', "$ENV{HOME}/OEIS/names.gz" or die $!;
-
-  my $line = Math::NumSeq::OEIS::File::_bsearch_textfile
-    ($fh, sub {
-       my ($line) = @_;
-       $line =~ /^A(\d+)/ or return -1;
-       return ($1 <=> $num);
-     });
-  ### $line
-  exit 0;
-}
 
 {
   require Math::NumSeq::OEIS;

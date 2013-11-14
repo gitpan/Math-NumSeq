@@ -23,20 +23,20 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 66;
+$VERSION = 67;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
 # uncomment this to run the ### lines
-#use Devel::Comments;
+# use Smart::Comments;
 
 
 # use constant name => Math::NumSeq::__('Ascii Self');
 use constant description => Math::NumSeq::__('Sequence is itself in ASCII.');
 use constant i_start => 1;
 use constant characteristic_increasing => 0;
-use constant characteristic_smaller => 0;
+use constant characteristic_smaller => 1;
 use constant characteristic_integer => 1;
 
 # use constant characteristic_charset => 'ASCII';

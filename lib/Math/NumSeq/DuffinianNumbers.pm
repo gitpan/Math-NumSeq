@@ -24,7 +24,7 @@ use Math::Factor::XS 0.40 'factors'; # version 0.40 for factors() on BigInt
 
 
 use vars '$VERSION', '@ISA';
-$VERSION = 66;
+$VERSION = 67;
 use Math::NumSeq;
 use List::Util 'min';
 use Math::NumSeq::Base::IteratePred;

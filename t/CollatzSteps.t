@@ -30,7 +30,7 @@ use Math::NumSeq::CollatzSteps;
 # uncomment this to run the ### lines
 #use Devel::Comments;
 
-my $test_count = (tests => 12)[1];
+my $test_count = (tests => 13)[1];
 plan tests => $test_count;
 
 {
@@ -51,7 +51,7 @@ plan tests => $test_count;
 # VERSION
 
 {
-  my $want_version = 66;
+  my $want_version = 67;
   ok ($Math::NumSeq::CollatzSteps::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::CollatzSteps->VERSION,  $want_version,
@@ -83,6 +83,9 @@ plan tests => $test_count;
       'characteristic(increasing_from_i)');
   ok ($seq->characteristic('non_decreasing_from_i'), undef,
       'characteristic(non_decreasing_from_i)');
+
+  my @pnames = map {$_->{'name'}} $seq->parameter_info_list;
+  ok (join(',',@pnames), 'step_type,on_values');
 }
 
 

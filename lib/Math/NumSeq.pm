@@ -51,7 +51,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 66;
+$VERSION = 67;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;

@@ -23,6 +23,65 @@ use List::Util 'max';
 use Math::Factor::XS 0.39 'prime_factors'; # version 0.39 for prime_factors()
 
 
+# to_peak
+# 1
+# 2, 1                  0
+# 3, 10, 5, *16         3
+# 4, 2, 1               0
+# 5, *16, 8, 4, 2, 1    1
+# 6, 3, 10, 5, 16       4
+
+
+{
+  # n=138367  peak=2798323360    is 2*32
+  # n=5656191 peak=2412493616608 is 2**53
+
+  foreach my $n (1,2,3,7,15,27,255,447,639,703,1819,4255,4591,9663,20895,26623,31911,60975,77671,113383,138367,159487,270271,665215,704511,1042431,1212415,1441407,1875711,1988859,2643183,2684647,3041127,3873535,4637979,5656191) {
+    my $peak = collatz_peak($n);
+    last if $peak >= 2**64;
+    print "$n  $peak\n";
+  }
+  # my $seq = Math::NumSeq::OEIS->new(anum=>'A006885');
+  # while (my ($i,$value) = $seq->next) {
+  #   if ($value >= 2**32) {
+  #     last;
+  #   }
+  #   $n = $i;
+  # }
+  exit 0;
+}
+
+{
+  # A025586 peak reached
+  # A006884 n which gives new higher peak
+  # A006885 steps of new higher peak
+  # A025587 record setters
+
+  my $record = 0;
+  foreach my $n (1 .. 2000) {
+    my $peak = collatz_peak($n);
+    if ($peak > $record) {
+      $record = $peak;
+      print "$n,";
+    }
+  }
+  exit 0;
+
+  sub collatz_peak {
+    my ($n) = @_;
+    my $peak = $n;
+    while ($n > 1) {
+      if ($n % 2) {
+        $n = 3*$n + 1;
+      } else {
+        $n /= 2;
+      }
+      $peak = max($n,$peak);
+    }
+    return $peak;
+  }
+}
+
 {
   # reverse steps
 

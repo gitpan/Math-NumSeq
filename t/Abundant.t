@@ -35,7 +35,7 @@ use Math::NumSeq::Abundant;
 # VERSION
 
 {
-  my $want_version = 66;
+  my $want_version = 67;
   ok ($Math::NumSeq::Abundant::VERSION, $want_version, 'VERSION variable');
   ok (Math::NumSeq::Abundant->VERSION,  $want_version, 'VERSION class method');
 
@@ -67,8 +67,7 @@ use Math::NumSeq::Abundant;
   ok ($seq->characteristic('non_decreasing_from_i'), $seq->i_start);
 
   my @pnames = map {$_->{'name'}} $seq->parameter_info_list;
-  ok (join(',',@pnames),
-      'abundant_type');
+  ok (join(',',@pnames), 'abundant_type');
 }
 
 

@@ -56,6 +56,7 @@ sub want_module {
   my ($module) = @_;
   # return 0 unless $module =~ /Lucky/;
   # return 0 unless $module =~ /Abundant/;
+   return 0 unless $module =~ /Collatz/;
   return 1;
 }
 

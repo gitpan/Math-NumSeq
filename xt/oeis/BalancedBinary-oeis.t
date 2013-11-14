@@ -56,13 +56,13 @@ MyOEIS::compare_values
   (anum => 'A080300',
    func => sub {
      my ($count) = @_;
-    my $seq = Math::NumSeq::BalancedBinary->new;
-    my @got;
+     my $seq = Math::NumSeq::BalancedBinary->new;
+     my @got;
 
-    for (my $value = 0; @got < $count; $value++) {
-      my $i = $seq->value_to_i($value);
-      push @got, $i || 0;
-    }
+     for (my $value = 0; @got < $count; $value++) {
+       my $i = $seq->value_to_i($value);
+       push @got, $i || 0;
+     }
      return \@got;
    });
 

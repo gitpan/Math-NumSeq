@@ -30,11 +30,9 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 66;
+$VERSION = 67;
 use Math::NumSeq;
-use Math::NumSeq::Base::IterateIth;
-@ISA = ('Math::NumSeq::Base::IterateIth',
-        'Math::NumSeq');
+@ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
 # uncomment this to run the ### lines
@@ -42,7 +40,7 @@ use Math::NumSeq::Base::IterateIth;
 
 # use constant name => Math::NumSeq::__('Stern Diatomic');
 use constant description => Math::NumSeq::__('Stern\'s diatomic sequence.');
-use constant i_start => 0;
+use constant default_i_start => 0;
 use constant values_min => 0;
 use constant characteristic_smaller => 1;
 use constant characteristic_increasing => 0;
@@ -61,31 +59,63 @@ use constant oeis_anum => 'A002487';
 
 #------------------------------------------------------------------------------
 
+sub rewind {
+  my ($self) = @_;
+  $self->{'i'} = $self->i_start;
+  $self->{'p'} = 0;
+  $self->{'q'} = 1;
+}
+sub seek_to_i {
+  my ($self, $i) = @_;
+  $self->{'i'} = $i;
+  $self->{'p'} = $self->ith($i);
+  $self->{'q'} = $self->ith($i+1);
+}
+
+sub next {
+  my ($self) = @_;
+  my $p = $self->{'p'};
+  my $q = $self->{'q'};
+  $self->{'p'} = $q;
+  $self->{'q'} = $p + $q - 2*($p % $q);
+  return ($self->{'i'}++, $p);
+}
+
 sub ith {
   my ($self, $i) = @_;
-  ### SternDiatomic ith(): "$i"
+  return ($self->_ith_pair($i))[0];
+}
 
-  if ($i <= 0) {
-    return 0;
+# Return ($value[i], $value[i+1]).
+sub _ith_pair {
+  my ($self, $i) = @_;
+  ### SternDiatomic _ith_pair(): "$i"
+
+  if ($i < 0) {
+    if ($i < -1) {
+      return (undef,undef);
+    } else {
+      return (undef,0);
+    }
   }
   if (_is_infinite($i)) {  # don't loop forever if $value is +/-infinity
-    return $i;
+    return ($i,$i);
   }
 
-  my $b = ($i * 0); # inherit bignum 0
-  my $a = $b + 1;   # inherit bignum 1
+  my $p = ($i * 0); # inherit bignum 0
+  my $q = $p + 1;   # inherit bignum 1
 
   while ($i) {
     if ($i % 2) {
-      $b += $a;
+      $p += $q;
     } else {
-      $a += $b;
+      $q += $p;
     }
     $i = int($i/2);
   }
 
-  ### result: "$b"
-  return $b;
+  ### result: "$p, $q"
+  return ($p,$q);
 }
 
 sub pred {
@@ -123,8 +153,9 @@ It's constructed by successive levels with a recurrence
     D(2*i)   = D(i)
     D(2*i+1) = D(i) + D(i+1)
 
-So the sequence is extended by copying the previous level to the even
-indices of the next, and at the odd indices the sum of adjacent terms,
+So the sequence is extended by copying the previous level to the next spead
+out to even indices, and at the odd indices fill in the sum of adjacent
+terms,
 
    0,                    i=0
    1,                    i=1
@@ -132,10 +163,10 @@ indices of the next, and at the odd indices the sum of adjacent terms,
    1,  3,  2,  3,        i=4 to 7
    1,4,3,5,2,5,3,4,      i=8 to 15
 
-For example the i=4 row is a copy of the preceding values 1,2 with sums 1+2
-and 2+1 interleaved.  The value at the end of each row is the sum of the
-last of the previous row and the first of the current row (which is
-always 1).
+For example the i=4to7 row is a copy of the preceding row values 1,2 with
+sums 1+2 and 2+1 interleaved.  For the new value at the end of each row the
+sum wraps around so as to take the copied value on the left and the first
+value of the next row (which is always 1).
 
 =head2 Odd and Even
 
@@ -150,9 +181,9 @@ i=8 to 15 row copying to i=16 to 31,
     O . E . O . O . E . O . O . E .      spread
       O   O   E   O   O   E   O   O      sum adjacent
 
-Adding adjacent terms odd+even and even+odd are both odd and odd+odd gives
-even, so the pattern EOO in the original row spread and added gives EOO
-again in the next row.
+Adding adjacent terms odd+even and even+odd are both odd.  Adding adjacent
+odd+odd gives even.  So the pattern E,O,O in the original row when spread
+and added gives E,O,O again in the next row.
 
 =cut
 
@@ -187,6 +218,85 @@ Return true if C<$value> occurs in the sequence, which means simply integer
 C<$valueE<gt>=0>.
 
 =back
+
+=head1 FORMULAS
+
+=head2 Next
+
+X<Newman, Moshe>The sequence is iterated using a method by Moshe Newman.
+
+=over
+
+"Recounting the Rationals, Continued", answers to problem 10906 posed by
+Donald E. Knuth, C. P. Rupert, Alex Smith and Richard Stong, American
+Mathematical Monthly, volume 110, number 7, Aug-Sep 2003, pages 642-643,
+L<http://www.jstor.org/stable/3647762>
+
+=back
+
+Two successive sequence values are maintained and are advanced by a simple
+operation.
+
+    p = seq[i]      initially p=0 = seq[0]
+    q = seq[i+1]              q=1 = seq[1]
+
+    p_next = seq[i+1] = q
+    q_next = seq[i+2] = p+q - 2*(p mod q)
+
+    where the mod operation rounds towards zero
+    0 <= (p mod q) <= q-1
+
+The form by Newman uses a floor operation.  This suits expressing the
+iteration in terms of a rational x[i]=p/q.
+
+    p_next              1
+    ------  =  ----------------------
+    q_next     1 + 2*floor(p/q) - p/q
+
+For separate p,q a little rearrangement gives it in terms of the remainder p
+mod q.
+
+    p = q*floor(p/q) + rem      where rem = (p mod q)
+
+    so
+    p_next/q_next = q / (2*q*floor(p/q) + q - p)
+                  = q / (2*(p - rem) + q - p)  
+                  = q / (p+q - 2*rem)
+
+C<seek_to_i()> is implemented by calculating new p,q values with C<ith(i)>
+per below.
+
+=cut
+
+# f*q + r = p
+# f*q = p - r
+# q-r = 1 - (-p % q)
+# next = 1 / (2*floor(p/q) + 1 - p/q)
+#      = q / (2*q*floor(p/q) + q - p)
+#      = q / (2*q*f + q - p)
+#      = q / (2*(p - r) + q - p)
+#      = q / (2*p - 2*r + q - p)
+#      = q / (p + q - 2*r)
+
+=head2 Ith
+
+The sequence at an arbitrary i can be calculated from the bits of i,
+
+    p = 0
+    q = 1
+    for each bit of i from low to high
+      if bit=1 then p += q
+      if bit=0 then q += p
+    return p
+
+For example i=6 is binary "110" so p,q starts 0,1 then low bit=0 q+=p leaves
+that unchanged as 0,1.  Next bit=1 p+=q gives 1,1 and high bit=1 gives 2,1
+for result 2.
+
+Any low zero bits can be ignored since initial p=0 means their steps q+=p do
+nothing.  The current code doesn't use this since it's not expected i would
+usually have many trailing zeros and the q+=p saved won't be particularly
+slow.
 
 =head1 SEE ALSO
 

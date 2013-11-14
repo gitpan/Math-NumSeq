@@ -127,6 +127,10 @@ foreach my $elem
    # Ln2Bits.pm
    # PiBits.pm
    
+   [ 'Math::NumSeq::SternDiatomic',
+     [ 0, 1, 1, 2, 1, 3, 2, 3, 1, 4, 3, 5 ],
+   ],
+   
    [ 'Math::NumSeq::Abundant',
      [ 12, 18, 20, 24, 30 ],
    ],
@@ -1559,10 +1563,6 @@ foreach my $elem
        4,5,8,13,20,29,40,53,68,85,   # 20 to 29
      ],
      { power => 2 },
-   ],
-   
-   [ 'Math::NumSeq::SternDiatomic',
-     [ 0, 1, 1, 2, 1, 3, 2, 3, 1, 4, 3, 5 ],
    ],
    
    [ 'Math::NumSeq::DigitProduct',

@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
+
 # A005360 flimsy numbers, n*k has fewer 1-bits than n for some k
 # A125121 sturdy, not flimsy
 # A143069 the smallest k giving the fewest 1-bits in n*k
@@ -45,6 +46,169 @@ use List::Util 'min','max';
 
 # uncomment this to run the ### lines
 # use Smart::Comments;
+
+
+{
+  print "want_is_flimsy_i_end() ",want_is_flimsy_i_end(),"\n";
+  foreach my $n (0 .. want_is_flimsy_i_end()) {
+ #  foreach my $n (17) {
+    my $got = is_flimsy_by_division($n);
+    my $want = want_is_flimsy($n);
+    my $diff = ($got == $want ? '' : ' ********');
+    print "$n got=$got want=$want$diff\n";
+  }
+  exit 0;
+}
+
+
+{
+  foreach my $n (3 .. 121) {
+    my $got = is_flimsy_by_division($n);
+    my $want = want_is_flimsy($n);
+    my $diff = ($got == $want ? '' : ' ********');
+    # print "$n got=$got want=$want$diff   peakpos=$peak_pos\n";
+    print "$n got=$got want=$want$diff\n";
+  }
+  exit 0;
+}
+
+{
+  sub is_flimsy_by_division {
+    my ($n) = @_;
+    ### is_flimsy_by_division(): $n
+
+    while ($n && $n % 2 == 0) {
+      $n /= 2;
+    }
+    if ($n <= 3) {
+      return 0;
+    }
+
+    my $n_bits = count_1_bits($n);
+    my $max_bits = $n_bits - 2;
+    ### $n_bits
+    ### $max_bits
+
+    if ($max_bits < 1) {
+      # n has 2 or fewer bits, cannot be bettered ...
+      return 0;
+    }
+
+    my $seen = '';
+    my @backtrack_r;
+    my $bits = 1;
+    my $r = 1;
+    my $target = $n - 1;
+
+    for (;;) {
+      ### at: "r=$r bits=$bits"
+      if ($r == $target) {
+        ### yes ...
+        return 1;
+      }
+      my $s = vec($seen,$r,8);
+      if ($s && $s <= $bits) {
+        if (--$bits) {
+          $r = pop @backtrack_r;
+        } else {
+          ### no more backtrack ...
+          return 0;
+        }
+      } else {
+        vec($seen,$r,8) = $bits;
+        if (($r *= 2) > $n) { $r -= $n; }
+
+        if ($bits < $max_bits) {
+          push @backtrack_r, $r;
+          $bits++;
+          if (($r += 1) > $n) { $r -= $n; }
+        }
+      }
+    }
+  }
+}
+{
+  # Given h can be reached from four places f,
+  #
+  # h=1 reached from kbit=0  f=11 drop bit to h=1    if f<n
+  #                          f=10 zero bit to h=1
+  #
+  # h=1 reached from kbit=1
+  #   from f odd (f+n)/2 = h     drop zero  f=2h-n     if >= 0
+  #   from f even (f+n-1)/2 = h   drop one  f=2h-n+1
+
+  sub is_flimsy {
+    my ($n) = @_;
+    ### is_flimsy(): $n
+
+    while ($n && ! ($n & 1)) {
+      $n >>= 1;
+    }
+    if ($n <= 3) {
+      return 0;
+    }
+
+    # use Math::NumSeq::LeastPrimitiveRoot;
+    # if (Math::NumSeq::LeastPrimitiveRoot::_is_primitive_root(2, $n)) {
+    #   return 1;
+    # }
+
+    my @minbits;
+    foreach my $h (1 .. $n-1) {
+      $minbits[$h] = $n;
+    }
+    $minbits[0] = count_1_bits($n);
+
+    my @pending_h = (1);
+    my @pending_minbits = (1);
+    while (@pending_h) {
+      ### assert: scalar(@pending_h) == scalar(@pending_minbits)
+
+      my $h         = pop @pending_h;
+      my $h_minbits = pop @pending_minbits;
+
+      ### pop: "h=$h=".sprintf('%b',$h)." h_minbits=$h_minbits"
+      ### assert: $h < $n
+      ### assert: $h >= 0
+
+      if ($h_minbits >= $minbits[$h]) {
+        ### not an improvement over existing minbits: $minbits[$h]
+        next;
+      }
+      if ($h == 0) {
+        ### found improved n ...
+        return 1;
+      }
+      $minbits[$h] = $h_minbits;
+
+      {
+        my $f = 2*$h;
+        if ($f < $n) {
+          push @pending_h, $f;
+          push @pending_minbits, $h_minbits;
+          $f++;
+          if ($f < $n) {
+            push @pending_h, $f;
+            push @pending_minbits, $h_minbits + 1;
+          }
+        }
+      }
+      {
+        my $f = 2*$h - $n + 1;
+        if ($f >= 0) {
+          push @pending_h, $f;
+          push @pending_minbits, $h_minbits + 1;
+          $f--;
+          if ($f >= 0) {
+            push @pending_h, $f;
+            push @pending_minbits, $h_minbits;
+          }
+        }
+      }
+    }
+    return 0;
+  }
+}
 
 
 {
@@ -155,96 +319,6 @@ sub order_of_2 {
   close FH;
   system("dot -Tpng /tmp/x.graphviz >/tmp/x.png && xzgv /tmp/x.png");
   exit 0;
-}
-
-
-{
-  print "want_is_flimsy_i_end() ",want_is_flimsy_i_end(),"\n";
-  foreach my $n (0 .. want_is_flimsy_i_end()) {
-#  foreach my $n (11 .. 13) {
-    my $got = is_flimsy($n);
-    my $want = want_is_flimsy($n);
-    my $diff = ($got == $want ? '' : ' ********');
-    print "$n got=$got want=$want$diff\n";
-  }
-  exit 0;
-}
-
-
-# Given h can be reached from four places f,
-#
-# h=1 reached from kbit=0  f=11 drop bit to h=1    if f<n
-#                          f=10 zero bit to h=1
-#
-# h=1 reached from kbit=1
-#   from f odd (f+n)/2 = h     drop zero  f=2h-n     if >= 0
-#   from f even (f+n-1)/2 = h   drop one  f=2h-n+1
-
-sub is_flimsy {
-  my ($n) = @_;
-  ### is_flimsy(): $n
-
-  while ($n && ! ($n & 1)) {
-    $n >>= 1;
-  }
-  if ($n <= 3) {
-    return 0;
-  }
-
-  my @minbits;
-  foreach my $h (1 .. $n-1) {
-    $minbits[$h] = $n;
-  }
-  $minbits[0] = count_1_bits($n);
-
-  my @pending_h = (1);
-  my @pending_minbits = (1);
-  while (@pending_h) {
-    ### assert: scalar(@pending_h) == scalar(@pending_minbits)
-
-    my $h         = pop @pending_h;
-    my $h_minbits = pop @pending_minbits;
-
-    ### pop: "h=$h=".sprintf('%b',$h)." h_minbits=$h_minbits"
-    ### assert: $h < $n
-    ### assert: $h >= 0
-
-    if ($h_minbits >= $minbits[$h]) {
-      ### not an improvement over existing minbits: $minbits[$h]
-      next;
-    }
-    if ($h == 0) {
-      ### found improved n ...
-      return 1;
-    }
-    $minbits[$h] = $h_minbits;
-
-    {
-      my $f = 2*$h;
-      if ($f < $n) {
-        push @pending_h, $f;
-        push @pending_minbits, $h_minbits;
-        $f++;
-        if ($f < $n) {
-          push @pending_h, $f;
-          push @pending_minbits, $h_minbits + 1;
-        }
-      }
-    }
-    {
-      my $f = 2*$h - $n + 1;
-      if ($f >= 0) {
-        push @pending_h, $f;
-        push @pending_minbits, $h_minbits + 1;
-        $f--;
-        if ($f >= 0) {
-          push @pending_h, $f;
-          push @pending_minbits, $h_minbits;
-        }
-      }
-    }
-  }
-  return 0;
 }
 
 
@@ -558,7 +632,7 @@ sub XXis_flimsy {
   }
 }
 
-{
+BEGIN {
   my @want;
   sub want_is_flimsy {
     my ($n) = @_;
@@ -588,16 +662,6 @@ sub XXis_flimsy {
   #   foreach (@want) { $_ ||= 0 }
   # }
 }
-{
-  foreach my $n (3 .. 121) {
-    my $got = is_flimsy($n);
-    my $want = want_is_flimsy($n);
-    my $diff = ($got == $want ? '' : ' ********');
-    print "$n got=$got want=$want$diff   peakpos=$peak_pos\n";
-  }
-  exit 0;
-}
-
 
 
 {
