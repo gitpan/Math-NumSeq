@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2011, 2012 Kevin Ryde
+# Copyright 2011, 2012, 2014 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -26,17 +26,6 @@ use Math::BigInt;
 #use Smart::Comments;
 
 
-{
-  my $seq = Math::NumSeq::SlopingExcluded->new (radix => 2);
-  foreach (1 .. 30) {
-    my ($i, $value) = $seq->next;
-    # printf "%60s\n", $value;
-    my $vb = $value->as_bin;
-    $vb =~ s/^0b//;
-    printf "%60s\n", $vb;
-  }
-  exit 0;
-}
 
 {
   # which values
@@ -46,8 +35,8 @@ use Math::BigInt;
   require Math::BaseCnv;
   my @seen;
   my @table;
-  my $exp = 5;
-  my $radix = 10;
+  my $exp = 7;
+  my $radix = 3;
   my $limit = $radix**$exp;
   foreach my $i (0 .. $limit) {
     $table[$i] = digit_split($i,$radix);
@@ -78,16 +67,20 @@ use Math::BigInt;
     # print "sloping i=$i   $sloping $sb\n";
     $seen[$sloping] .= " $i";
   }
+  my @values;
   foreach my $i (0 .. $limit/$radix) {
     my $unseen = ($seen[$i] ? '' : '   ***');
     my $ib = Math::BaseCnv::cnv($i,10,$radix);
-    printf "%4d %20s%s\n", $i, $ib, $unseen;
+    if ($unseen) {
+      push @values, $i;
+      printf "%5d %20s%s\n", $i, $ib, $unseen;
+    }
   }
+  use lib 'xt';
+  require MyOEIS;
+  print MyOEIS->grep_for_values (name => "radix=$radix", array => \@values);
   exit 0;
 }
-
-
-
 
 {
   # by radix
@@ -162,7 +155,6 @@ use Math::BigInt;
     }
     return $n;
   }
-
 }
 
 {
@@ -173,6 +165,19 @@ use Math::BigInt;
     my ($i, $value) = $seq->next;
     $value = Math::BigInt->new(2)**$i - $value;
     print "$value\n";
+  }
+  exit 0;
+}
+
+
+{
+  my $seq = Math::NumSeq::SlopingExcluded->new (radix => 2);
+  foreach (1 .. 30) {
+    my ($i, $value) = $seq->next;
+    # printf "%60s\n", $value;
+    my $vb = $value->as_bin;
+    $vb =~ s/^0b//;
+    printf "%60s\n", $vb;
   }
   exit 0;
 }

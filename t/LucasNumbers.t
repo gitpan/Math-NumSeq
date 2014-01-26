@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2013 Kevin Ryde
+# Copyright 2013, 2014 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 42;
+plan tests => 90;
 
 use lib 't';
 use MyTestHelpers;
@@ -36,7 +36,7 @@ use Math::NumSeq::LucasNumbers;
 # VERSION
 
 {
-  my $want_version = 67;
+  my $want_version = 68;
   ok ($Math::NumSeq::LucasNumbers::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::LucasNumbers->VERSION,  $want_version,
@@ -51,6 +51,27 @@ use Math::NumSeq::LucasNumbers;
       "VERSION class check $check_version");
 }
 
+
+#------------------------------------------------------------------------------
+# POD docs fomulas L <-> F
+
+{
+  require Math::NumSeq::Fibonacci;
+  my $fib = Math::NumSeq::Fibonacci->new;
+  my $luc = Math::NumSeq::LucasNumbers->new;
+  for (my $i = 3; $i < 12; $i++) {
+    my ($F0,$F1) = $fib->ith_pair($i);
+    my ($L0,$L1) = $luc->ith_pair($i);
+
+    ok (( -$L0 + 2*$L1)/5, $F0);     # F[k]   = ( - L[k] + 2*L[k+1]) / 5
+    ok ((2*$L0 +   $L1)/5, $F1);     # F[k+1] = ( 2*L[k] +   L[k+1]) / 5
+    ok (($F0 + $L0)/2, $F1);       # F[k+1] = (F[k] + L[k])/2
+
+    ok ( -$F0 + 2*$F1, $L0);     # L[k]   =  - F[k] + 2*F[k+1]
+    ok (2*$F0 +   $F1, $L1);     # L[k+1] =  2*F[k] +   F[k+1]
+    ok ((5*$F0 + $L0)/2, $L1);     # L[k+1] = (5*F[k] + L[k]) / 2
+  }
+}
 
 #------------------------------------------------------------------------------
 # characteristic(), i_start(), parameters
@@ -80,40 +101,26 @@ use Math::NumSeq::LucasNumbers;
 }
 
 #------------------------------------------------------------------------------
-# negative ith()
+# negative ith() and ith_pair()
 
 {
   my $seq = Math::NumSeq::LucasNumbers->new;
-  my $l1 = $seq->ith(2);
-  my $l0 = $seq->ith(1);
-  for (my $i = 0; $i > -10; $i--) {
-    my $l = $seq->ith($i);
-    ok ($l + $l0, $l1);
-    $l1 = $l0;
-    $l0 = $l;
+  my $i = 1;
+  my $want_f0 = 1;  # L[1] = 1
+  my $want_f1 = 3;  # L[2] = 3
+  for (my $i = 1; $i > -10; $i--) {
+    {
+      my $got_f0 = $seq->ith($i);
+      ok ($got_f0, $want_f0);
+    }
+    {
+      my ($got_f0, $got_f1) = $seq->ith_pair($i);
+      ok ("$got_f0,$got_f1", "$want_f0,$want_f1", "ith_pair() i=$i");
+    }
+    # fprev + f0 = f1, so fprev = f1-f0
+    ($want_f0, $want_f1) = ($want_f1 - $want_f0, $want_f0);
   }
 }
-
 
 #------------------------------------------------------------------------------
-# docs claim L[i] = F[i+1] + F[i-1]
-#                 = F[i+2] - F[i-2]
-
-{
-  require Math::NumSeq::Fibonacci;
-  my $fib = Math::NumSeq::Fibonacci->new;
-  my $luc = Math::NumSeq::LucasNumbers->new;
-  for (my $i = 3; $i < 12; $i++) {
-    my $l = $luc->ith($i);
-    {
-      my $fsum = $fib->ith($i+1) + $fib->ith($i-1);
-      ok ($fsum, $l);
-    }
-    if ($i >= 2) {
-      my $fdiff = $fib->ith($i+2) - $fib->ith($i-2);
-      ok ($fdiff, $l);
-    }
-  }
-}
-
 exit 0;

@@ -1,4 +1,4 @@
-# Copyright 2011, 2012, 2013 Kevin Ryde
+# Copyright 2011, 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -19,10 +19,6 @@
 # Edsgar Dijkstra
 #    http://www.cs.utexas.edu/users/EWD/ewd05xx/EWD570.PDF
 #    http://www.cs.utexas.edu/users/EWD/ewd05xx/EWD578.PDF
-#
-# from 1858
-#
-# cf A000119 fibonacci diatomic
 
 
 package Math::NumSeq::SternDiatomic;
@@ -30,10 +26,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 67;
+$VERSION = 68;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
+
+use Math::NumSeq::Fibonacci;
+*_bit_split_hightolow = \&Math::NumSeq::Fibonacci::_bit_split_hightolow;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -68,8 +67,7 @@ sub rewind {
 sub seek_to_i {
   my ($self, $i) = @_;
   $self->{'i'} = $i;
-  $self->{'p'} = $self->ith($i);
-  $self->{'q'} = $self->ith($i+1);
+  ($self->{'p'},$self->{'q'}) = $self->ith_pair($i);
 }
 
 sub next {
@@ -83,11 +81,11 @@ sub next {
 
 sub ith {
   my ($self, $i) = @_;
-  return ($self->_ith_pair($i))[0];
+  return ($self->ith_pair($i))[0];
 }
 
 # Return ($value[i], $value[i+1]).
-sub _ith_pair {
+sub ith_pair {
   my ($self, $i) = @_;
   ### SternDiatomic _ith_pair(): "$i"
 
@@ -105,8 +103,8 @@ sub _ith_pair {
   my $p = ($i * 0); # inherit bignum 0
   my $q = $p + 1;   # inherit bignum 1
 
-  while ($i) {
-    if ($i % 2) {
+  foreach my $bit (_bit_split_hightolow($i)) {
+    if ($bit) {
       $p += $q;
     } else {
       $q += $p;
@@ -157,16 +155,18 @@ So the sequence is extended by copying the previous level to the next spead
 out to even indices, and at the odd indices fill in the sum of adjacent
 terms,
 
-   0,                    i=0
-   1,                    i=1
-   1,      2,            i=2 to 3
-   1,  3,  2,  3,        i=4 to 7
-   1,4,3,5,2,5,3,4,      i=8 to 15
+    0,                    i=0
+    1,                    i=1
+    1,      2,            i=2 to 3
+    1,  3,  2,  3,        i=4 to 7
+    1,4,3,5,2,5,3,4,      i=8 to 15
 
 For example the i=4to7 row is a copy of the preceding row values 1,2 with
-sums 1+2 and 2+1 interleaved.  For the new value at the end of each row the
-sum wraps around so as to take the copied value on the left and the first
-value of the next row (which is always 1).
+sums 1+2 and 2+1 interleaved.
+
+For the new value at the end of each row the sum wraps around so as to take
+the last copied value and the first value of the next row, which is
+always 1.  This means the last value in each row increments 1,2,3,4,5,etc.
 
 =head2 Odd and Even
 
@@ -212,6 +212,12 @@ Create and return a new sequence object.
 
 Return the C<$i>'th value of the sequence.
 
+=item C<($v0, $v1) = $seq-E<gt>ith_pair($i)>
+
+Return two values C<ith($i)> and C<ith($i+1)> from the sequence.  As
+described below (L</Ith Pair>) two values can be calculated with the same
+work as one.
+
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> occurs in the sequence, which means simply integer
@@ -223,7 +229,7 @@ C<$valueE<gt>=0>.
 
 =head2 Next
 
-X<Newman, Moshe>The sequence is iterated using a method by Moshe Newman.
+X<Newman, Moshe>The sequence is iterated using a method by Moshe Newman in
 
 =over
 
@@ -237,8 +243,8 @@ L<http://www.jstor.org/stable/3647762>
 Two successive sequence values are maintained and are advanced by a simple
 operation.
 
-    p = seq[i]      initially p=0 = seq[0]
-    q = seq[i+1]              q=1 = seq[1]
+    p = seq[i]    q = seq[i+1]  
+    initially p=seq[0]=0 and q=seq[1]=1
 
     p_next = seq[i+1] = q
     q_next = seq[i+2] = p+q - 2*(p mod q)
@@ -256,14 +262,14 @@ iteration in terms of a rational x[i]=p/q.
 For separate p,q a little rearrangement gives it in terms of the remainder p
 mod q.
 
-    p = q*floor(p/q) + rem      where rem = (p mod q)
-
-    so
-    p_next/q_next = q / (2*q*floor(p/q) + q - p)
+    division p = q*floor(p/q) + rem      where rem = (p mod q)
+    then
+    p_next/q_next = 1 / (1 + 2*floor(p/q) - p/q)    per Newman
+                  = q / (2*q*floor(p/q) + q - p)
                   = q / (2*(p - rem) + q - p)  
-                  = q / (p+q - 2*rem)
+                  = q / (p+q - 2*rem)               using p,q
 
-C<seek_to_i()> is implemented by calculating new p,q values with C<ith(i)>
+C<seek_to_i()> is implemented by calculating new p,q values with an Ith Pair
 per below.
 
 =cut
@@ -278,29 +284,43 @@ per below.
 #      = q / (2*p - 2*r + q - p)
 #      = q / (p + q - 2*r)
 
-=head2 Ith
+=head2 Ith Pair
 
-The sequence at an arbitrary i can be calculated from the bits of i,
+The two sequence values at an arbitrary i,i+1 can be calculated from the
+bits of i,
 
     p = 0
     q = 1
-    for each bit of i from low to high
+    for each bit of i from high to low
       if bit=1 then p += q
       if bit=0 then q += p
-    return p
+    return p,q      # are ith(i) and ith(i+1)
 
-For example i=6 is binary "110" so p,q starts 0,1 then low bit=0 q+=p leaves
-that unchanged as 0,1.  Next bit=1 p+=q gives 1,1 and high bit=1 gives 2,1
-for result 2.
+For example i=6 is binary "110" so
 
-Any low zero bits can be ignored since initial p=0 means their steps q+=p do
-nothing.  The current code doesn't use this since it's not expected i would
-usually have many trailing zeros and the q+=p saved won't be particularly
-slow.
+                         p,q
+                         ---
+   initial               0,1 
+   high bit=1 so p+=q    1,1   
+   next bit=1 so p+=q    2,1    
+   low  bit=0 so q+=p    2,3   is ith(6),ith(7)
+
+This is the same as the Calkin-Wilf tree descent, per
+L<Math::PlanePath::RationalsTree/Calkin-Wilf Tree>.  Its X/Y fractions are
+successive Stern diatomic sequence values.
+
+=head2 Ith Alone
+
+If only a single ith() value is desired then the bits of i can be taken from
+low to high with the same loop as above.  In that case p=ith(i) but q is not
+ith(i+1).  Any low zero bits can be ignored for this method since initial
+p=0 means their steps q+=p do nothing.
 
 =head1 SEE ALSO
 
 L<Math::NumSeq>
+
+L<Math::PlanePath::RationalsTree>
 
 =head1 HOME PAGE
 
@@ -308,7 +328,7 @@ L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 
-Copyright 2011, 2012, 2013 Kevin Ryde
+Copyright 2011, 2012, 2013, 2014 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

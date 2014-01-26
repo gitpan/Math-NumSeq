@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012, 2013 Kevin Ryde
+# Copyright 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,55 +20,33 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 6;
+plan tests => 5;
 
-use lib 't';
+use lib 't','xt';
 use MyTestHelpers;
 MyTestHelpers::nowarnings();
+use MyOEIS;
 
-use Math::NumSeq::OEIS;
+use Math::NumSeq::LucasNumbers;
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+#use Smart::Comments '###';
 
 
 #------------------------------------------------------------------------------
-# VERSION
+# A061084 - Lucas numbers negative indices L[-n] starting L[1] then downwards
 
-{
-  my $want_version = 68;
-  ok ($Math::NumSeq::OEIS::VERSION, $want_version,
-      'VERSION variable');
-  ok (Math::NumSeq::OEIS->VERSION, $want_version,
-      'VERSION class method');
-
-  ok (eval { Math::NumSeq::OEIS->VERSION($want_version); 1 },
-      1,
-      "VERSION class check $want_version");
-  my $check_version = $want_version + 1000;
-  ok (! eval { Math::NumSeq::OEIS->VERSION($check_version); 1 },
-      1,
-      "VERSION class check $check_version");
-}
-
-
-#------------------------------------------------------------------------------
-
-{
-  # 6-digits
-  my $seq = Math::NumSeq::OEIS->new (anum => 'A000002');
-  ok ($seq->isa('Math::NumSeq::Kolakoski') ? 1 : 0,
-      1);
-}
-
-{
-  # 7-digits
-  my $seq = Math::NumSeq::OEIS->new (anum => 'A0000040');
-  ok ($seq->isa('Math::NumSeq::Primes') ? 1 : 0,
-      1);
-}
+MyOEIS::compare_values
+  (anum => 'A061084',
+   func => sub {
+     my ($count) = @_;
+     my $seq  = Math::NumSeq::LucasNumbers->new;
+     my @got;
+     for (my $i = 1; @got < $count; $i--) {
+       push @got, $seq->ith($i);
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 exit 0;
-
-

@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013, 2014 Kevin Ryde
 
 # MyOEIS.pm is shared by several distributions.
 #
@@ -43,11 +43,11 @@ sub read_values {
     return;
   }
 
-  my $seq = eval { require Math::NumSeq::OEIS::File;
-                   Math::NumSeq::OEIS::File->new (anum => $anum) };
   my @bvalues;
   my $lo;
-  if ($seq) {
+  my $filename;
+  if (my $seq = eval { require Math::NumSeq::OEIS::File;
+                       Math::NumSeq::OEIS::File->new (anum => $anum) }) {
     my $count = 0;
     if (($lo, my $value) = $seq->next) {
       push @bvalues, $value;
@@ -55,13 +55,15 @@ sub read_values {
         push @bvalues, $value;
       }
     }
+    $filename = $seq->{'filename'};
   } else {
     my $error = $@;
-    @bvalues = read_stripped($anum);
+    @bvalues = Math::OEIS::Stripped->anum_to_values($anum);
     if (! @bvalues) {
       MyTestHelpers::diag ("$anum not available: ", $error);
       return;
     }
+    $filename = Math::OEIS::Stripped->filename;
   }
 
   my $desc = "$anum has ".scalar(@bvalues)." values";
@@ -90,25 +92,18 @@ sub read_values {
   }
   MyTestHelpers::diag ($desc);
 
-  return (\@bvalues, $lo, $seq->{'filename'});
+  return (\@bvalues, $lo, $filename);
 }
 
-# return list of values, or empty list if not found
-sub read_stripped {
-  my ($anum) = @_;
-  open FH, "< $ENV{HOME}/OEIS/stripped"
-    or return;
-  (my $num = $anum) =~ s/^A//;
-  my $line = bsearch_textfile (\*FH, sub {
-       my ($line) = @_;
-       $line =~ /^A(\d+)/ or return -1;
-       return ($1 <=> $num);
-     })
-      || return;
-  
-  $line =~ s/A\d+ *,?//;
-  $line =~ s/\s+$//;
-  return split /,/, $line;
+sub oeis_directory {
+  # my ($class) = @_;
+  require File::HomeDir;
+  my $dir = File::HomeDir->my_home;
+  if (! defined $dir) {
+    die 'File::HomeDir says you have no home directory';
+  }
+  require File::Spec;
+  return File::Spec->catdir($dir, 'OEIS');
 }
 
 # with Y reckoned increasing downwards
@@ -350,12 +345,7 @@ sub stripped_grep {
   my ($class, $str) = @_;
 
   if (! defined $stripped_mmap) {
-    require File::HomeDir;
-    my $home_dir = File::HomeDir->my_home;
-    if (! defined $home_dir) {
-      die 'File::HomeDir says you have no home directory';
-    }
-    my $stripped_filename = File::Spec->catfile($home_dir, 'OEIS', 'stripped');
+    my $stripped_filename = Math::OEIS::Stripped->filename;
     require File::Map;
     File::Map::map_file ($stripped_mmap, $stripped_filename);
     print "File::Map stripped file length ",length($stripped_mmap),"\n";
@@ -406,22 +396,30 @@ sub stripped_grep {
 
     my $pos = 0;
     for (;;) {
-      $pos = index($stripped_mmap,$str,$pos);
-      last if $pos < 0;
+      my $found_pos = index($stripped_mmap,$str,$pos);
+      ### $found_pos
+      last if $found_pos < 0;
+
+      unless (substr($stripped_mmap,$found_pos-1,1) =~ / |,/) {
+        $pos = $found_pos+1;
+        next;
+      }
 
       if ($count >= GREP_MAX_COUNT) {
         $ret .= "... and more matches\n";
         return $ret;
       }
 
-      my $start = rindex($stripped_mmap,"\n",$pos) + 1;
-      my $end = index($stripped_mmap,"\n",$pos);
+      my $start = rindex($stripped_mmap,"\n",$found_pos) + 1;
+      my $end = index($stripped_mmap,"\n",$found_pos);
       my $line = substr($stripped_mmap,$start,$end-$start);
       my ($anum) = ($line =~ /^(A\d+)/);
       $anum || die "oops, A-number not matched in line: ",$line;
 
+      my $name = Math::OEIS::Names->anum_to_name($anum);
+      if (! defined $name) { $name = '[name not found]'; }
       $ret .= $abs; $abs = '';
-      $ret .= $class->anum_to_name($anum);
+      $ret .= "$anum $name\n";
       $ret .= "$line\n";
 
       $pos = $end;
@@ -429,12 +427,6 @@ sub stripped_grep {
     }
   }
   return $ret;
-}
-
-sub anum_to_name {
-  my ($class, $anum) = @_;
-  $anum =~ /^A[0-9]+$/ or die "Bad A-number: ", $anum;
-  return `zgrep -e ^$anum $ENV{HOME}/OEIS/names.gz`;
 }
 
 # constant_diff($a,$b,$c,...)
@@ -470,5 +462,478 @@ sub constant_array {
   return $value;
 }
 
+
+#------------------------------------------------------------------------------
+
+=head1 FUNCTIONS
+
+=over
+
+=item C<$nobj = Math::OEIS::Names-E<gt>new(key =E<gt> value, ...)>
+  
+Create and return a new C<Math::OEIS::Names> object to read an OEIS "names"
+file.  The optional key/value parameters can be
+
+    filename => $filename         default ~/OEIS/names
+    fh       => $filehandle
+
+The default filename is F<~/OEIS/names>, so the F<OEIS> directory under the
+user's home directory.  A different filename can be given, or an open
+filehandle can be given.
+  
+=item C<$name = Math::OEIS::Names-E<gt>anum_to_name($anum)>
+
+For a given C<$anum> string such as "A000001" return the sequence name
+as a string, or if not found then C<undef>.
+
+C<$name> may contain non-ASCII characters.  In Perl 5.8 and higher C<$name>
+is decoded to Perl wide chars, in earlier Perl C<$name> is the native
+encoding of the names file (which is UTF-8).
+  
+=item C<$filename = $nobj-E<gt>filename()>
+
+=item C<$filename = Math::OEIS::Names-E<gt>filename()>
+  
+Return the names filename from a given C<$nobj> object, or the default
+filename if called as a class method C<Math::OEIS::Names>.
+
+=back  
+
+=head2 BUGS
+
+The current implementation is a text file binary search.  For large numbers
+of name lookups an actual database would probably be more efficient.
+Perhaps C<Math::OEIS::Names> could automatically look in an SQLite or
+similar database if it exists and is up-to-date.
+
+=cut
+
+{
+  package Math::OEIS::Names;
+  use strict;
+  use Carp 'croak';
+  use Search::Dict;
+  use File::Spec;
+
+  use base 'Class::Singleton';
+  *_new_instance = \&new;
+
+  sub new {
+    my $class = shift;
+    return bless { @_ }, $class;
+  }
+
+  sub default_filename {
+    my ($class) = @_;
+    return File::Spec->catfile (MyOEIS->oeis_directory(), 'names');
+  }
+
+  sub filename {
+    my ($self) = @_;
+    if (ref $self && defined $self->{'filename'}) {
+        return $self->{'filename'};
+    }
+    return $self->default_filename;
+  }
+
+  sub fh {
+    my ($self) = @_;
+    return ($self->{'fh'} ||= do {
+      my $filename = $self->filename;
+      open my $fh, '<', $filename
+        or croak "Cannot open ",$filename,": ",$!;
+      $fh
+    });
+  }
+  # return A-number string, or undef
+  sub line_to_anum {
+    my ($line) = @_;
+    $line =~ s/^(A\d+).*/$1/
+      or return '';  # comment lines
+    return $line
+  }
+
+  # C<($anum,$name) = Math::OEIS::Names-E<gt>line_split($line)>
+  # Split a line from the names file into A-number and name.
+  sub line_split {
+    my ($self, $line) = @_;
+    ### Names line_split(): $line
+    $line =~ /^(A\d+)\s*(.*)/
+      or return;  # perhaps comment lines
+    return ($1, $2)
+  }
+
+  use constant::defer _HAVE_ENCODE => sub {
+    eval { require Encode; 1 } || 0;
+  };
+
+  sub anum_to_name {
+    my ($self, $anum) = @_;
+    ### $anum
+    if (! ref $self) { $self = $self->instance; }
+    my $fh = $self->fh || return undef;
+    my $pos = Search::Dict::look ($fh, $anum,
+                                  { xfrm => sub {
+                                      my ($line) = @_;
+                                      ### $line
+                                      my ($got_anum) = $self->line_split($line)
+                                        or return '';
+                                      ### $got_anum
+                                      return $got_anum;
+                                    } });
+    if ($pos < 0) { croak 'Error reading names file: ',$!; }
+
+    my $line = readline $fh;
+    if (! defined $line) { return undef; }
+
+    my ($got_anum, $name) = $self->line_split($line);
+    if ($got_anum ne $anum) { return undef; }
+
+    if (_HAVE_ENCODE) {
+      $name = Encode::decode('utf8', $name, Encode::FB_PERLQQ());
+    }
+    return $name;
+  }
+}
+
+# sub anum_to_name {
+#   my ($class, $anum) = @_;
+#   $anum =~ /^A[0-9]+$/ or die "Bad A-number: ", $anum;
+#   return `zgrep -e ^$anum $ENV{HOME}/OEIS/names.gz`;
+# }
+
+#------------------------------------------------------------------------------
+
+=head1 FUNCTIONS
+
+=over
+
+=item C<$mos = Math::OEIS::Stripped-E<gt>new(key =E<gt> value, ...)>
+  
+Create and return a new C<Math::OEIS::Stripped> object to read an OEIS
+"stripped" file.  The optional key/value parameters can be
+
+    filename => $filename         default ~/OEIS/stripped
+    fh       => $filehandle
+
+The default filename is F<~/OEIS/stripped>, so in an F<OEIS> directory in
+the user's home directory.  A different filename can be given, or an open
+filehandle can be given.
+  
+=item C<@values = Math::OEIS::Stripped-E<gt>anum_to_values($anum)>
+
+=item C<$str = Math::OEIS::Stripped-E<gt>anum_to_values_str($anum)>
+
+Return the values from the stripped file for given C<$anum> (a string such
+as "A000001").
+
+C<anum_to_values()> returns a list of values, or no values if not found.
+C<anum_to_values_str()> returns a string like "1,2,3,4" or C<undef> if not
+found.
+
+The stripped file has a leading comma on its values list, but this is
+removed from C<anum_to_values_str()> for convenience of subsequent C<split>
+or similar.
+
+Draft sequences have an empty values list ",,".  The return for them is the
+same as "not found", reckoning that it doesn't exist yet.
+  
+=item C<$filename = $mos-E<gt>filename()>
+
+=item C<$filename = Math::OEIS::Stripped-E<gt>filename()>
+  
+Return the stripped filename from a given C<$mos> object, or the default
+filename if called as a class method C<Math::OEIS::Stripped>.
+
+=back  
+
+=cut
+
+{
+  package Math::OEIS::Stripped;
+  use strict;
+  use Carp 'croak';
+  use Search::Dict;
+  use File::Spec;
+
+  use base 'Class::Singleton';
+  *_new_instance = \&new;
+
+  sub new {
+    my $class = shift;
+    return bless { use_bigint => 'if_needed',
+                   @_ }, $class;
+  }
+
+  sub default_filename {
+    my ($class) = @_;
+    return File::Spec->catfile (MyOEIS->oeis_directory(), 'stripped');
+  }
+  sub filename {
+    my ($self) = @_;
+    if (ref $self && defined $self->{'filename'}) {
+        return $self->{'filename'};
+    }
+    return $self->default_filename;
+  }
+
+  sub fh {
+    my ($self) = @_;
+    return ($self->{'fh'} ||= do {
+      my $filename = $self->filename;
+      open my $fh, '<', $filename
+        or croak "Cannot open ",$filename,": ",$!;
+      $fh
+    });
+  }
+
+  sub anum_to_values {
+    my ($self, $anum) = @_;
+    if (! ref $self) { $self = $self->instance; }
+    my @values;
+    my $values_str = $self->anum_to_values_str($anum);
+    if (defined $values_str) {
+      @values = split /,/, $values_str;
+      if ($self->{'use_bigint'}) {
+        my $bigint_class = $self->bigint_class_load;
+        foreach my $value (@values) {
+          unless ($self->{'use_bigint'} eq 'if_needed'
+                  && length($value) < 10) {
+            $value = Math::BigInt->new($value);  # mutate array
+          }
+        }
+      }
+    }
+    return @values;
+  }
+  sub bigint_class_load {
+    my ($self) = @_;
+    return ($self->{'bigint_class_load'} ||= do {
+      require Module::Load;
+      my $bigint_class = $self->bigint_class;
+      Module::Load::load($bigint_class);
+      ### $bigint_class
+      $bigint_class
+    });
+  }
+
+  sub bigint_class {
+    my ($self) = @_;
+    return ($self->{'bigint_class'} ||= do {
+      require Math::BigInt;
+      eval { Math::BigInt->import (try => 'GMP') };
+      'Math::BigInt'
+    });
+  }
+
+  sub anum_to_values_str {
+    my ($self, $anum) = @_;
+    ### anum_to_values_str(): $anum
+    if (! ref $self) { $self = $self->instance; }
+
+    my $fh = $self->fh || return undef;
+    my $pos = Search::Dict::look
+      ($fh, $anum,
+       { xfrm => sub {
+           my ($line) = @_;
+           return ($self->line_to_anum($line) || '');
+         } });
+    if ($pos < 0) { croak 'Error reading stripped file: ',$!; }
+
+    my $line = readline $fh;
+    if (! defined $line) { return undef; }
+
+    my ($got_anum, $values_str) = $self->line_split_anum($line);
+    if ($got_anum ne $anum) { return undef; }
+
+    return $values_str;
+  }
+
+  # C<$anum = Math::OEIS::Stripped-E<gt>line_split_anum($line)>
+  #
+  # $line is a line from the stripped file.  Return the A-number string from
+  # the line such as "A000001", or C<undef> if unrecognised or a comment
+  # line etc.
+  #
+  sub line_to_anum {
+    my ($self, $line) = @_;
+    ### $line
+    $line =~ s/^(A\d+).*/$1/
+      or return '';  # comment lines
+    return $line
+  }
+
+  # C<($anum,$values_str) = Math::OEIS::Stripped-E<gt>line_split_anum($line)>
+  #
+  # Split a line from the stripped file into A-number and values string.
+  # Any leading comma like ",1,2,3" is removed from $values_str.
+  #
+  # If C<$line> is a comment or unrecognised then return no values.
+  #
+  sub line_split_anum {
+    my ($self, $line) = @_;
+    ### Stripped line_split_anum(): $line
+    $line =~ /^(A\d+)\s*,?([0-9].*)/
+      or return;  # comment lines or empty
+    return ($1, $2)
+  }
+
+  # # return list of values, or empty list if not found
+  # sub stripped_read_values {
+  #   my ($class, $anum) = @_;
+  #   open FH, "< " . __PACKAGE__->stripped_filename
+  #     or return;
+  #   (my $num = $anum) =~ s/^A//;
+  #   my $line = bsearch_textfile (\*FH, sub {
+  #        my ($line) = @_;
+  #        $line =~ /^A(\d+)/ or return -1;
+  #        return ($1 <=> $num);
+  #      })
+  #       || return;
+  #
+  #   $line =~ s/A\d+ *,?//;
+  #   $line =~ s/\s+$//;
+  #   return split /,/, $line;
+  # }
+
+}
+
+#------------------------------------------------------------------------------
+
+# my @values = Math::OEIS::Stripped->anum_to_values('A000129');
+# ### @values
+
+#------------------------------------------------------------------------------
+
+# Return the area enclosed by the curve N=n_start() to N <= $n_limit.
+#
+# lattice_type => 'triangular'
+#    Means take the six-way triangular lattice points as adjacent and
+#    measure in X/2 and Y*sqrt(3)/2 so that the points are unit steps.
+#
+sub path_enclosed_area {
+  my ($path, $n_limit, %options) = @_;
+  my $points = path_boundary_points($path, $n_limit, %options);
+  if (@$points <= 2) {
+    return 0;
+  }
+  require Math::Geometry::Planar;
+  my $polygon = Math::Geometry::Planar->new;
+  $polygon->points($points);
+  return $polygon->area;
+}
+
+{
+  my %lattice_type_to_divisor = (square => 1,
+                                 triangular => 4);
+
+  # Return the length of the boundary of the curve N=n_start() to N <= $n_limit.
+  #
+  # lattice_type => 'triangular'
+  #    Means take the six-way triangular lattice points as adjacent and
+  #    measure in X/2 and Y*sqrt(3)/2 so that the points are unit steps.
+  #
+  sub path_boundary_length {
+    my ($path, $n_limit, %options) = @_;
+    ### path_boundary_length(): "n_limit=$n_limit"
+
+    my $points = path_boundary_points($path, $n_limit, %options);
+    ### $points
+
+    my $lattice_type = ($options{'lattice_type'} || 'square');
+    my $triangular_mult = ($lattice_type eq 'triangular' ? 3 : 1);
+    my $divisor = ($options{'divisor'} || $lattice_type_to_divisor{$lattice_type});
+    ### $divisor
+    my $boundary = 0;
+    foreach my $i (0 .. $#$points) {
+      ### hypot: ($points->[$i]->[0] - $points->[$i-1]->[0])**2 + $triangular_mult*($points->[$i]->[1] - $points->[$i-1]->[1])**2
+
+      $boundary += sqrt(((  $points->[$i]->[0] - $points->[$i-1]->[0])**2
+                         + $triangular_mult
+                         * ($points->[$i]->[1] - $points->[$i-1]->[1])**2)
+                        / $divisor);
+    }
+    ### $boundary
+    return $boundary;
+  }
+}
+{
+  my @dir4_to_dxdy = ([1,0], [0,1], [-1,0], [0,-1]);
+  my @dir6_to_dxdy = ([2,0], [1,1], [-1,1], [-2,0], [-1,-1], [1,-1]);
+  my %lattice_type_to_dirtable = (square => \@dir4_to_dxdy,
+                                  triangular => \@dir6_to_dxdy);
+
+  # Return arrayref of points [ [$x1,$y1], [$x2,$y2], ... ]
+  # which are the points on the boundary of the curve N=n_start() to N <= $n_limit
+  # The final point should be taken to return to the initial $x1,$y1.
+  #
+  # lattice_type => 'triangular'
+  #    Means take the six-way triangular lattice points as adjacent.
+  #
+  sub path_boundary_points {
+    my ($path, $n_limit, %options) = @_;
+    ### path_boundary_points(): "n_limit=$n_limit"
+    my $lattice_type = ($options{'lattice_type'} || 'square');
+    my $dirtable = $lattice_type_to_dirtable{$lattice_type};
+    my $dirmod = scalar(@$dirtable);
+    my @points;
+    my $x = 0;
+    my $y = 0;
+    my $dir = $dirmod - 1;
+    my $dirrev = $dirmod / 2 - 1;
+    my @n_list = ($path->n_start);
+
+  TOBOUNDARY: for (;;) {
+      foreach my $i (1 .. $dirmod) {
+        my ($dx,$dy) = @{$dirtable->[($dir + $i) % $dirmod]};
+        my @next_n_list = $path->xy_to_n_list($x+$dx,$y+$dy);
+        if (! any_consecutive(\@n_list, \@next_n_list, $n_limit)) {
+          ### is boundary: "dxdy = $dx, $dy"
+          last TOBOUNDARY;
+        }
+      }
+      my ($dx,$dy) = @{$dirtable->[$dir]};
+      $x -= $dx;
+      $y -= $dy;
+      ### towards boundary: "$x, $y"
+    }
+
+    for (;;) {
+      ### at: "$x, $y"
+      push @points, [$x,$y];
+      $dir -= $dirrev;
+      foreach (1 .. $dirmod) {
+        my ($dx,$dy) = @{$dirtable->[$dir]};
+        my @next_n_list = $path->xy_to_n_list($x+$dx,$y+$dy);
+        ### @next_n_list
+        if (any_consecutive(\@n_list, \@next_n_list, $n_limit)) {
+          @n_list = @next_n_list;
+          $x += $dx;
+          $y += $dy;
+          last;
+        }
+        $dir = ($dir+1) % $dirmod;
+      }
+      if ($x == 0 && $y == 0) {
+        last;
+      }
+    }
+    return \@points;
+  }
+}
+
+sub any_consecutive {
+  my ($aref, $bref, $n_limit) = @_;
+  foreach my $a (@$aref) {
+    next if $a > $n_limit;
+    foreach my $b (@$bref) {
+      next if $b > $n_limit;
+      if (abs($a-$b) == 1) {
+        return 1;
+      }
+    }
+  }
+  return 0;
+}
 1;
 __END__

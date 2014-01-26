@@ -33,7 +33,7 @@ use Math::NumSeq::Runs;
 # VERSION
 
 {
-  my $want_version = 67;
+  my $want_version = 68;
   ok ($Math::NumSeq::Runs::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::Runs->VERSION,  $want_version,

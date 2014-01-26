@@ -36,9 +36,9 @@ use Math::NumSeq::LeastPrimitiveRoot;
 
 sub want_module {
   my ($module) = @_;
-   return 0 unless $module =~ /Collatz/;
+  # return 0 unless $module =~ /Collatz/;
   # return 0 unless $module =~ /DigitExtract/;
-  # return 0 unless $module =~ /PlanePath/;
+   return 0 unless $module =~ /PlanePath/;
   # return 0 unless $module =~ /HafermanCarpet/;
   return 1;
 }
@@ -53,9 +53,9 @@ sub want_planepath {
   # return 0 unless $planepath =~ /FactorRationals/;
   # return 0 unless $planepath =~ /SierpinskiArrowheadC/;
   # return 0 unless $planepath =~ /TriangleSpiralSkewed/;
-   return 0 unless $planepath =~ /Pythagorean/;
+  # return 0 unless $planepath =~ /Pythagorean/;
   # return 0 unless $planepath =~ /Pythag/;
-  # return 0 unless $planepath =~ /Ulam/;
+  # return 0 unless $planepath =~ /HTree/;
 
   return 0 if $planepath =~ /ByCells/; # exclude
   return 1;
@@ -64,12 +64,12 @@ sub want_coordinate {
   my ($type) = @_;
   # return 0 unless $type =~ /Turn4/;
   # return 0 unless $type =~ /SRL|SLR/;
-  # return 0 unless $type =~ /dR/;
+   return 0 unless $type =~ /MinAbsTri|MaxAbsTri/;
   # return 0 unless $type =~ /NumSiblings/;
   # return 0 unless $type =~ /SubHeight|NumChildren|NumSibling/;
   # return 0 unless $type =~ m{Abs[XY]};
   # return 0 unless $type =~ m{DiffXY/2};
-   return 0 if $type =~ /SubHeight|NumChildren|NumSibling/;
+  # return 0 if $type =~ /SubHeight|NumChildren|NumSibling/;
   return 1;
 }
 

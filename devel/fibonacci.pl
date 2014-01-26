@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012 Kevin Ryde
+# Copyright 2012, 2014 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -22,47 +22,51 @@ use strict;
 use warnings;
 use POSIX;
 use List::Util 'max','min';
+use Math::NumSeq::Fibonacci;
+use Math::NumSeq::LucasNumbers;
 
 {
-  require Math::NumSeq::Tribonacci;
-  my $seq = Math::NumSeq::Tribonacci->new (hi => 13);
-  my @next = ( $seq->next,
-               $seq->next,
-               $seq->next,
-               $seq->next,
-               $seq->next,
-               $seq->next );
-  ### @next
-  print $seq->pred(12),"\n";
-  ### $seq
-  exit 0;
-}
+  # negatives
+  my $class;
+  $class = 'Math::NumSeq::LucasNumbers';
+  $class = 'Math::NumSeq::Fibonacci';
+  my $seq = $class->new;
 
+  my $i = -96;
+  my $f0 = $seq->ith($i);
+  my $f1 = $seq->ith($i+1);
+  my @values;
+  for (1 .. 1) {
+    my ($v0,$v1) = $seq->ith_pair($i);
+    exit;
+    my $value = $seq->ith($i);
 
-{
-  # cumulative
-  require Math::NumSeq::Fibonacci;
-  my $seq = Math::NumSeq::Fibonacci->new;
+    my $diff = ($value == $f0 && $v0 == $f0 && $v1 == $f1 ? '' : ' ***');
 
-  my $total = 0;
-  foreach (1 .. 20) {
-    my ($i, $value) = $seq->next;
-    $total += $value;
-    print $seq->ith($i+2),"   ",$total+1,"\n";
+    print "$i $f0,$f1   $value  $v0,$v1$diff\n";
+
+    ($f0,$f1) = ($f1-$f0, $f0);
+    push @values, $value;
+    $i--;
   }
+
+  use lib 'xt'; require MyOEIS;
+  print MyOEIS->grep_for_values (array => \@values);
   exit 0;
 }
-
 {
   # value_to_i_estimate()
   # require Math::NumSeq::Fibonacci;
   # my $seq = Math::NumSeq::Fibonacci->new;
 
-  require Math::NumSeq::Pell;
-  my $seq = Math::NumSeq::Pell->new;
+  # require Math::NumSeq::Pell;
+  # my $seq = Math::NumSeq::Pell->new;
 
   # require Math::NumSeq::LucasNumbers;
   # my $seq = Math::NumSeq::LucasNumbers->new;
+
+  require Math::NumSeq::SlopingExcluded;
+  my $seq = Math::NumSeq::SlopingExcluded->new (radix => 10);
 
   my $target = 2;
   for (;;) {
@@ -84,6 +88,41 @@ use List::Util 'max','min';
   }
   exit 0;
 }
+{
+  # cumulative
+  require Math::NumSeq::Fibonacci;
+  my $seq = Math::NumSeq::Fibonacci->new;
+  $seq->next;
+  $seq->next;
+  my $total = 0;
+  my @values;
+  foreach (1 .. 20) {
+    my ($i, $value) = $seq->next;
+    $total += $value;
+    print $value,"   ",$total,"\n";
+    # print $seq->ith($i+2),"   ",$total+1,"\n";
+    push @values, $total;
+  }
+  use lib 'xt'; require MyOEIS;
+  print MyOEIS->grep_for_values (array => \@values);
+  exit 0;
+}
+
+{
+  require Math::NumSeq::Tribonacci;
+  my $seq = Math::NumSeq::Tribonacci->new (hi => 13);
+  my @next = ( $seq->next,
+               $seq->next,
+               $seq->next,
+               $seq->next,
+               $seq->next,
+               $seq->next );
+  ### @next
+  print $seq->pred(12),"\n";
+  ### $seq
+  exit 0;
+}
+
 
 {
   require Math::Fibonacci;

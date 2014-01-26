@@ -1,4 +1,4 @@
-# Copyright 2011, 2012, 2013 Kevin Ryde
+# Copyright 2011, 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -28,14 +28,14 @@ use strict;
 use Carp;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 67;
+$VERSION = 68;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 *_to_bigint = \&Math::NumSeq::_to_bigint;
 
 use Math::NumSeq::Fibonacci;
-*_bits_high_to_low = \&Math::NumSeq::Fibonacci::_bits_high_to_low;
+*_bit_split_hightolow = \&Math::NumSeq::Fibonacci::_bit_split_hightolow;
 *_blog2_estimate = \&Math::NumSeq::Fibonacci::_blog2_estimate;
 
 # uncomment this to run the ### lines
@@ -214,7 +214,7 @@ sub _value_to_i_and_floor {
       || return (0, $floor);  # i=0 not handled below
   }
 
-  my @bits = _bits_high_to_low($value);
+  my @bits = _bit_split_hightolow($value);
   my @fibs;
   {
     my $f0 = ($value * 0);  # inherit bignum 0
@@ -649,7 +649,7 @@ L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 
-Copyright 2011, 2012, 2013 Kevin Ryde
+Copyright 2011, 2012, 2013, 2014 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

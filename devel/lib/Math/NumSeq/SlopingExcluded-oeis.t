@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012, 2013 Kevin Ryde
+# Copyright 2012, 2014 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -21,43 +21,44 @@ use 5.004;
 use strict;
 
 use Test;
-plan tests => 4;
+plan tests => 1;
 
-use lib 't','xt';
+use lib 't','xt',              'devel/lib';
 use MyTestHelpers;
 MyTestHelpers::nowarnings();
 use MyOEIS;
 
-use Math::NumSeq::Squares;
+use Math::NumSeq::SlopingExcluded;
+
+# uncomment this to run the ### lines
+#use Smart::Comments '###';
 
 
 #------------------------------------------------------------------------------
-# A005214 - union triangulars and squares, starting from 1
+# A109684 - sloping ternary excluded, in ternary
 
 MyOEIS::compare_values
-  (anum => 'A005214',
+  (anum => 'A109684',
    func => sub {
      my ($count) = @_;
-     require Math::NumSeq::Triangular;
-     my $squares = Math::NumSeq::Squares->new;
-     my $triangular = Math::NumSeq::Triangular->new;
+     my $seq = Math::NumSeq::SlopingExcluded->new (radix => 3);
      my @got;
-     for (my $i = 1; @got < $count; $i++) {
-       if ($squares->pred($i) || $triangular->pred($i)) {
-         push @got, $i;
-       }
+     while (@got < $count) {
+       my ($i, $value) = $seq->next;
+       push @got, to_ternary_str($value);
      }
      return \@got;
    });
 
 #------------------------------------------------------------------------------
-# A000037 - non-squares
+# A103202 - sloping binary numbers, ie. the included values
+# cf A102370 unsorted
 
 MyOEIS::compare_values
-  (anum => 'A000037',
+  (anum => 'A103202',
    func => sub {
      my ($count) = @_;
-     my $seq = Math::NumSeq::Squares->new;
+     my $seq = Math::NumSeq::SlopingExcluded->new;
      my @got;
      for (my $i = 0; @got < $count; $i++) {
        if (! $seq->pred($i)) {
@@ -68,35 +69,50 @@ MyOEIS::compare_values
    });
 
 #------------------------------------------------------------------------------
-# A010052 - characteristic 1/0 of squares
+# A103581 - sloping binary excluded, in binary
 
 MyOEIS::compare_values
-  (anum => 'A010052',
+  (anum => 'A103581',
    func => sub {
      my ($count) = @_;
-     my $seq = Math::NumSeq::Squares->new;
-     my @got;
-     for (my $i = 0; @got < $count; $i++) {
-       push @got, $seq->pred($i) ? 1 : 0;
-     }
-     return \@got;
-   });
-
-#------------------------------------------------------------------------------
-# A001105 - 2*n^2
-
-MyOEIS::compare_values
-  (anum => 'A001105',
-   func => sub {
-     my ($count) = @_;
-     my $seq = Math::NumSeq::Squares->new;
+     my $seq = Math::NumSeq::SlopingExcluded->new (radix => 2);
      my @got;
      while (@got < $count) {
        my ($i, $value) = $seq->next;
-       push @got, 2*$value;
+       push @got, to_binary_str($value);
      }
      return \@got;
    });
+
+sub to_binary_str {
+  my ($n) = @_;
+  if (ref $n) {
+    my $str = $n->as_bin;
+    $str =~ s/^0b//;
+    return $str;
+  }
+  if ($n == 0) { return '0'; }
+  my $str = '';
+  my @bits;
+  while ($n) {
+    push @bits, $n%2;
+    $n = int($n/2);
+  }
+  return join('',reverse @bits);
+}
+
+sub to_ternary_str {
+  my ($n) = @_;
+  if ($n == 0) { return '0'; }
+  my $str = '';
+  my @digits;
+  while ($n) {
+    my $digit = $n % 3;
+    push @digits, $digit;
+    $n = int(($n-$digit)/3);
+  }
+  return join('',reverse @digits);
+}
 
 #------------------------------------------------------------------------------
 exit 0;

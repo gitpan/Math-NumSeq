@@ -25,7 +25,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 67;
+$VERSION = 68;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -242,18 +242,18 @@ L<http://www.borve.org/primeness/FOP.html>
 
 =back
 
-The default is C<level=E<gt>2>, asking for primes with an order of primeness
-E<gt>=2.  C<level=E<gt>1> gives all primes, and C<level=E<gt>0> gives all
-integers.
+The default is level=2, asking for primes with an order of primeness
+E<gt>=2.  level=1 gives all primes, and level=0 gives all integers.
 
-The next higher C<level=E<gt>3> restricts to primes whose index is prime,
-and then in addition demands that prime is at an index which is prime.
+The next higher level=3 restricts to primes whose index is prime, and then
+in addition demands that prime is at an index which is prime.
 
     level => 3
     5, 11, 31, 59, 127, 179, 277, 331, 431, 599, ...
 
 Successive levels filter further and the remaining values soon become quite
-large.  For example C<level=E<gt>10> starts at 9737333.
+large.  For example level=11 starts at 9737333 (and is quite slow to
+generate).
 
 =head2 Level Exact
 
@@ -270,15 +270,15 @@ stops there,
 Here 11 is not in the sequence because its order of primeness is 3, since 11
 is at index 5, 5 is at index 3, 3 is at index 2.
 
-C<level_type=E<gt>'exact', level=E<gt>1> means those primes which are at
-composite indexes.  This is all the primes which are not prime index primes,
-ie. primes not in the default PIP sequence.
+level_type=exact,level=1 means those primes which are at composite indexes.
+This is all the primes which are not prime index primes, ie. primes not in
+the default prime-index-primes sequence.
 
     level_type => 'exact', level => 1
     2, 7, 13, 19, 23, 29, 37, 43, 47, 53, 61, 71, 73, 79, ...
 
-C<level_type=E<gt>'exact', level=E<gt>0> means integers which have order of
-primeness 0, which is the composites, ie. the non-primes.
+level_type=exact,level=0 means integers which have order of primeness 0,
+which is the composites, ie. the non-primes.
 
 =head1 FUNCTIONS
 
@@ -301,7 +301,7 @@ any size.
 
 =head2 Value to i Estimate
 
-The i for a given value can be estimated by applying the prime to i estimate
+The i for a given value can be estimated by applying the prime-to-i estimate
 of the plain primes sequence (L<Math::NumSeq::Primes/Value to i Estimate>)
 according to the C<level> parameter.
 
@@ -309,7 +309,7 @@ according to the C<level> parameter.
       value = Primes value_to_i_estimate(value)
 
     if level_type eq "exact"
-      value -= Primes value_to_i_estimate(value)
+      value = value - Primes value_to_i_estimate(value)
 
     i_estimate = value
 

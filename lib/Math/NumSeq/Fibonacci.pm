@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 67;
+$VERSION = 68;
 use Math::NumSeq::Base::Sparse;  # FIXME: implement pred() directly ...
 @ISA = ('Math::NumSeq::Base::Sparse');
 
@@ -93,7 +93,7 @@ my $uv_i_limit = 0;
   ### $uv_i_limit
 
   __PACKAGE__->ith($uv_i_limit) == $uv_limit
-    or die "Oops, wrong uv_i_limit";
+    or warn "Oops, wrong uv_i_limit";
 }
 
 sub rewind {
@@ -129,9 +129,43 @@ sub next {
   return ($self->{'i'}++, $ret);
 }
 
+# F[k-1] + F[k] = F[k+1]
+# F[k-1] = F[k+1] - F[k]
+# F[2k+1] = (2F[k]+F[k-1])*(2F[k]-F[k-1]) + 2*(-1)^k
+#         = (2F[k] + F[k+1] - F[k])*(2F[k] - (F[k+1] - F[k])) + 2*(-1)^k
+#         = (F[k] + F[k+1])*(2F[k] - F[k+1] + F[k]) + 2*(-1)^k
+#         = (F[k] + F[k+1])*(3F[k] - F[k+1]) + 2*(-1)^k
+# F[2k] = F[k]*(F[k]+2F[k-1])
+#       = F[k]*(F[k]+2(F[k+1] - F[k]))
+#       = F[k]*(F[k]+2F[k+1] - 2F[k])
+#       = F[k]*(2F[k+1] - F[k])
+
 sub ith {
   my ($self, $i) = @_;
   ### Fibonacci ith(): $i
+
+  {
+    my $lowbit = ($i % 2);
+    $i = ($i - $lowbit) / 2;
+    my ($F0, $F1) = $self->ith_pair($i);
+
+    if ($i > $uv_i_limit && ! ref $F0) {
+      # automatic BigInt if not another bignum class
+      $F0 = _to_bigint($F0);
+      $F1 = _to_bigint($F1);
+    }
+
+    # last step needing just one of F[2k] or F[2k+1] by one multiply instead
+    # of two squares in the loop
+    #
+    if ($lowbit) {
+      $F0 = ($F0 + $F1) * (3*$F0 - $F1) + ($i % 2 ? -2 : 2);
+    } else {
+      $F0 *= (2*$F1 - $F0);
+    }
+    return $F0;
+  }
+
 
   if (_is_infinite($i)) {
     return $i;
@@ -146,7 +180,7 @@ sub ith {
     $neg = ($i % 2 == 0);
   }
 
-  my @bits = _bits_high_to_low($i);
+  my @bits = _bit_split_hightolow($i);
   ### @bits
 
   # k=1, Fk1=F[k-1]=0, Fk=F[k]=1
@@ -207,9 +241,80 @@ sub ith {
   return $Fk;
 }
 
-sub _bits_high_to_low {
+sub ith_pair {
+  my ($self, $i) = @_;
+  ### Fibonacci ith_pair(): $i
+
+  if (_is_infinite($i)) {
+    return ($i,$i);
+  }
+
+  my $neg = ($i < 0);
+  if ($neg) {
+    $i = -1-$i;
+  }
+
+  my @bits = _bit_split_hightolow($i+1);
+  ### @bits
+  shift @bits; # drop high 1-bit
+
+  # k=1 which is the high bit of @bits
+  # $Fk1 = F[k-1] = 0
+  # $Fk  = F[k]   = 1
+  #
+  my $Fk1 = ($i * 0);  # inherit bignum 0
+  if ($i >= $uv_i_limit && ! ref $Fk1) {
+    # automatic BigInt if not another number class
+    $Fk1 = _to_bigint(0);
+  }
+  my $Fk = $Fk1 + 1;  # inherit bignum 1
+
+  my $add = -2;  # (-1)^k
+  while (@bits) {
+    ### remaining bits: @bits
+    ### Fk1: "$Fk1"
+    ### Fk: "$Fk"
+
+    # two squares and some adds
+    # F[2k+1] = 4*F[k]^2 - F[k-1]^2 + 2*(-1)^k
+    # F[2k-1] =   F[k]^2 + F[k-1]^2
+    # F[2k] = F[2k+1] - F[2k-1]
+    #
+    $Fk *= $Fk;
+    $Fk1 *= $Fk1;
+    my $F2kplus1 = 4*$Fk - $Fk1 + $add;
+    $Fk1 += $Fk; # F[2k-1]
+    my $F2k = $F2kplus1 - $Fk1;
+
+    if (shift @bits) {  # high to low
+      $Fk1 = $F2k;     # F[2k]
+      $Fk = $F2kplus1; # F[2k+1]
+      $add = -2;
+    } else {
+      # $Fk1 is F[2k-1] already
+      $Fk = $F2k;  # F[2k]
+      $add = 2;
+    }
+  }
+
+  if ($neg) {
+    ($Fk1,$Fk) = ($Fk, $Fk1);
+    if ($i % 2) {
+      $Fk1 = -$Fk1;
+    } else {
+      $Fk = -$Fk;
+    }
+  }
+
+  ### final ...
+  ### Fk1: "$Fk1"
+  ### Fk: "$Fk"
+  return ($Fk1, $Fk);
+}
+
+sub _bit_split_hightolow {
   my ($n) = @_;
-  ### _bits_high_to_low(): "$n"
+  ### _bit_split_hightolow(): "$n"
 
   if (ref $n) {
     if ($n->isa('Math::BigInt')
@@ -226,7 +331,7 @@ sub _bits_high_to_low {
   return reverse @bits;
 }
 
-use constant 1.02 _PHI => (1 + sqrt(5)) / 2;
+use constant 1.02 _PHI  => (1 + sqrt(5)) / 2;
 use constant 1.02 _BETA => -1/_PHI;
 
 sub value_to_i_estimate {
@@ -371,13 +476,13 @@ according to bits of i from high to low
       bit = next bit of i, high to low, skip high 1 bit
       if bit == 1
          take F[2k+1], F[2k] as new F[k],F[k-1]
-         add = -2
+         add = -2 (for next loop)
       else bit == 0
          take F[2k], F[2k-1] as new F[k],F[k-1]
-         add = 2
+         add = 2 (for next loop)
 
 For the last (least significant) bit of i an optimization can be made with a
-single multiple for that last step (instead of two squares).
+single multiple for that last step, instead of two squares.
 
     bit = least significant bit of i
     if bit == 1
@@ -385,26 +490,26 @@ single multiple for that last step (instead of two squares).
     else
        F[2k]   = F[k]*(F[k]+2F[k-1])
 
-The "add" amount is 2*(-1)^k and is +2 or -2 according to k odd or even,
-which means whether the previous bit taken from i was 1 or 0.  That can be
-easily noted from each bit, to be used in the following loop iteration or
-the final step F[2k+1] formula.
+The "add" amount is 2*(-1)^k which means +2 or -2 according to k odd or
+even, which in turn means whether the previous bit taken from i was 1 or 0.
+That can be easily noted from each bit, to be used in the following loop
+iteration or the final step F[2k+1] formula.
 
 For small i it's usually faster to just successively add F[k+1]=F[k]+F[k-1],
-but when in bignum range the doubling k-E<gt>2k by two squares becomes
-faster than k many individual additions for the same thing.
+but when in bignums the doubling k-E<gt>2k by two squares is faster than
+doing k many individual additions for the same thing.
 
 =head2 Value to i Estimate
 
-F[i] increases as a power of phi, the golden ratio,
+F[i] increases as a power of phi, the golden ratio.  The exact value is
 
     F[i] = (phi^i - beta^i) / (phi - beta)    # exactly
 
     phi = (1+sqrt(5))/2 = 1.618
     beta = -1/phi = -0.618
 
-So taking a log (natural logarithm) to get i and ignoring beta^i which
-quickly becomes small
+Since abs(beta)E<lt>1 the beta^i term quickly becomes small.  So taking a
+log (natural logarithm) to get i,
 
     log(F[i]) ~= i*log(phi) - log(phi-beta)
     i ~= (log(F[i]) + log(phi-beta)) / log(phi)
@@ -433,7 +538,7 @@ L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 
-Copyright 2010, 2011, 2012, 2013 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013, 2014 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

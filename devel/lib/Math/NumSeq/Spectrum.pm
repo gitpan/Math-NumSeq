@@ -2,7 +2,7 @@
 # 'custom' or expression for spectrum value.
 
 
-# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -27,7 +27,7 @@ use List::Util 'max';
 use POSIX 'ceil';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 67;
+$VERSION = 68;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -64,11 +64,11 @@ sub oeis_anum {
                   : $self->parameter_default('spectrum'));
   if ($spectrum == PHI) {
     return 'A000201'; # Golden Sequence 1,3,4,6,8,9,11,12
-    # OEIS-Catalogue A000201
+    # OEIS-Catalogue: A000201
   }
   if ($spectrum == sqrt(2)) {
     return 'A001951'; # Golden Sequence 1,3,4,6,8,9,11,12
-    # # OEIS-Catalogue A000201 spectrum=sqrt(2)
+    # # OEIS-Catalogue: A000201 spectrum=sqrt(2)
   }
   return undef;
 }

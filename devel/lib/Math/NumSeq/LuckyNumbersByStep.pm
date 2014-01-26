@@ -1,4 +1,4 @@
-# Copyright 2012, 2013 Kevin Ryde
+# Copyright 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -21,7 +21,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 67;
+$VERSION = 68;
 
 use Math::NumSeq 7; # v.7 for _is_infinite()
 @ISA = ('Math::NumSeq');
@@ -46,7 +46,7 @@ use constant characteristic_integer => 1;
 #                              ^9th
 #    1,2,4,5,7,8,10,11,14,16,17,19,20,22,23,25,28,29,31,32,34,35,37,38,41,     
 #
-use constant oeis_anum => 'A000959';
+# use constant oeis_anum => 'A000959';
 
 #------------------------------------------------------------------------------
 

@@ -62,8 +62,8 @@ devel/lib/Math/NumSeq/DigitExtract.pm
 devel/lib/Math/NumSeq/DigitLengthModulo.pm
 devel/lib/Math/NumSeq/EratosthenesStage.pm
 devel/lib/Math/NumSeq/FactorialProducts.pm
+devel/lib/Math/NumSeq/FibonacciDiatomic.pm
 devel/lib/Math/NumSeq/FibonacciProducts.pm
-devel/lib/Math/NumSeq/FibonacciRepresentations.pm
 devel/lib/Math/NumSeq/HafermanByBits.pm
 devel/lib/Math/NumSeq/HafermanZ.pm
 devel/lib/Math/NumSeq/HypotCount.pm
@@ -100,7 +100,7 @@ devel/lib/Math/NumSeq/PrimesDigits.pm
 devel/lib/Math/NumSeq/PrimeSignatureLeast.pm
 devel/lib/Math/NumSeq/Products.pm
 devel/lib/Math/NumSeq/ReplicateDigits.pm
-devel/lib/Math/NumSeq/SlopingBinaryExcluded-oeis.t
+devel/lib/Math/NumSeq/SlopingExcluded-oeis.t
 devel/lib/Math/NumSeq/SlopingExcluded.pm
 devel/lib/Math/NumSeq/Spectrum.pm
 devel/lib/Math/NumSeq/StoehrSequence.pm
@@ -289,7 +289,6 @@ lib/Math/NumSeq/WoodallNumbers.pm
 Makefile.PL
 MANIFEST			This list of files
 MANIFEST.SKIP
-META.yml
 SIGNATURE
 t/Abundant.t
 t/All.t
@@ -391,6 +390,7 @@ xt/oeis/GolombSequence-oeis.t
 xt/oeis/HafermanCarpet-oeis.t
 xt/oeis/LemoineCount-oeis.t
 xt/oeis/LiouvilleFunction-oeis.t
+xt/oeis/LucasNumbers-oeis.t
 xt/oeis/LuckyNumbers-oeis.t
 xt/oeis/MephistoWaltz-oeis.t
 xt/oeis/MobiusFunction-oeis.t
@@ -427,4 +427,5 @@ xtools/my-manifest.sh
 xtools/my-pc.sh
 xtools/my-tags.sh
 xtools/my-wunused.sh
+META.yml                                 Module YAML meta-data (added by MakeMaker)
 META.json                                Module JSON meta-data (added by MakeMaker)

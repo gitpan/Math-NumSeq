@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -47,7 +47,7 @@ POSIX::setlocale(POSIX::LC_ALL(), 'C'); # no message translations
 
 sub want_anum {
   my ($anum) = @_;
-  # return 0 unless $anum =~ /A09119[12]/;
+  # return 0 unless $anum =~ /A000119/;
   # return 0 unless $anum =~ /A005228|A030124/;
   # return 0 unless $anum =~ /A177702|A102283|A131756/;
   return 1;
@@ -55,8 +55,9 @@ sub want_anum {
 sub want_module {
   my ($module) = @_;
   # return 0 unless $module =~ /Lucky/;
-  # return 0 unless $module =~ /Abundant/;
-   return 0 unless $module =~ /Collatz/;
+   return 0 unless $module =~ /Lucas|Fibonacci/;
+#   return 0 unless $module =~ /Collatz/;
+#   return 0 unless $module =~ /FibonacciDiatomic/;
   return 1;
 }
 
@@ -333,13 +334,6 @@ sub check_class {
       unshift @$want, 1;
     }
   }
-
-
-
-
-  # skip all except ...
-  #
-  # return unless $anum eq 'A057696';
 
 
   my $want_count = scalar(@$want);
@@ -643,10 +637,10 @@ sub check_class {
 # OEIS-Other vs files
 
 {
-  system("perl tools/make-oeis-catalogue.pl --module=TempOther --other=only") == 0
+  system("cd devel && perl ../tools/make-oeis-catalogue.pl --module=TempOther") == 0
     or die;
-  require 'lib/Math/NumSeq/OEIS/Catalogue/Plugin/TempOther.pm';
-  unlink  'lib/Math/NumSeq/OEIS/Catalogue/Plugin/TempOther.pm' or die;
+  require 'devel/lib/Math/NumSeq/OEIS/Catalogue/Plugin/TempOther.pm';
+  unlink  'devel/lib/Math/NumSeq/OEIS/Catalogue/Plugin/TempOther.pm' or die;
 
   MyTestHelpers::diag ("\"Other\" uncatalogued sequences:");
   my $aref = Math::NumSeq::OEIS::Catalogue::Plugin::TempOther::info_arrayref();

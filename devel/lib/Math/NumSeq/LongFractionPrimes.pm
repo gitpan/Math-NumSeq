@@ -1,4 +1,4 @@
-# Copyright 2012, 2013 Kevin Ryde
+# Copyright 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 67;
+$VERSION = 68;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -159,7 +159,7 @@ sub _is_primitive_root {
 sub _powmod {
   my ($base, $exponent, $modulus) = @_;
 
-  my @exponent = _bits_high_to_low($exponent)
+  my @exponent = _bit_split_hightolow($exponent)
     or return 1;
 
   my $power = $base;
@@ -176,9 +176,9 @@ sub _powmod {
   return $power;
 }
 
-sub _bits_high_to_low {
+sub _bit_split_hightolow {
   my ($n) = @_;
-  # ### _bits_high_to_low(): "$n"
+  # ### _bit_split_hightolow(): "$n"
 
   if (ref $n) {
     if ($n->isa('Math::BigInt')
@@ -266,7 +266,7 @@ L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 
-Copyright 2012, 2013 Kevin Ryde
+Copyright 2012, 2013, 2014 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

@@ -1,11 +1,4 @@
-# download related seqs
-# similar works in other bases .. SlopingExcluded
-
-# A104401 sloping binary
-
-
-
-# Copyright 2012, 2013 Kevin Ryde
+# Copyright 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -27,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 67;
+$VERSION = 68;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -35,17 +28,31 @@ use Math::NumSeq::Base::IterateIth;
         'Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
+use Math::NumSeq::NumAronson;
+*_round_down_pow = \&Math::NumSeq::NumAronson::_round_down_pow;
+
+use Math::NumSeq::Fibonacci;
+*_blog2_estimate = \&Math::NumSeq::Fibonacci::_blog2_estimate;
+
 # uncomment this to run the ### lines
 #use Smart::Comments;
 
-use constant name => Math::NumSeq::__('Sloping Digits Excluded');
-use constant description => Math::NumSeq::__('Integers not occurring as sloping binary, or selected radix.');
+
+# use constant name => Math::NumSeq::__('Sloping Excluded');
+use constant description => Math::NumSeq::__('Integers not occurring as sloping binary, or other selected radix.');
 use constant characteristic_increasing => 1;
 use constant default_i_start => 1;
 
-# "radix" parameter
-use Math::NumSeq::Base::Digits
-  'parameter_info_array';
+use constant parameter_info_array =>
+  [ { name      => 'radix',
+      share_key => 'radix_2',
+      type      => 'integer',
+      display   => Math::NumSeq::__('Radix'),
+      default   => 2,
+      minimum   => 2,
+      width     => 3,
+      description => Math::NumSeq::__('Radix, ie. base, for the values calculation.  Default is binary (base 2).'),
+    } ];
 
 sub values_min {
   my ($self) = @_;
@@ -68,7 +75,8 @@ my @oeis_anum = (
                  # OEIS-Catalogue array begin
                  undef,
                  undef,
-                 'A102371', # radix=2
+                 'A102371', #           # starting n=1 value=1
+                 'A109682', # radix=3
                  # OEIS-Catalogue array end
                 );
 sub oeis_anum {
@@ -104,10 +112,14 @@ sub ith {
     return $i;
   }
 
+  # inherit bignum $i, or Math::BigInt otherwise
+  my $zero = $i * 0;
+  if (! ref $zero) { $zero = Math::NumSeq::_to_bigint($zero) }
+
   my $radix = $self->{'radix'};
-  my $value = Math::NumSeq::_to_bigint($radix) ** $i - 1;
+  my $value = ($radix + $zero) ** $i - 1;
   my $offset = $i-1;
-  my $power = Math::NumSeq::_to_bigint(1);
+  my $power = 1 + $zero;  # bignum 1
 
   foreach (1 .. $i) {
     my $next_power = $power * $radix;
@@ -120,7 +132,7 @@ sub ith {
     $offset--;
   }
   return $value;
-  
+
 
 
   # my $one = ($i >= 30
@@ -163,91 +175,19 @@ sub value_to_i_estimate {
   my ($self, $value) = @_;
   ### value_to_i_estimate: $value
 
-  if (defined (my $blog2 = _blog2_estimate($value))) {
-    return $blog2;
+  my $log = _blog2_estimate($value);
+  if (defined $log) {
+    $log *= log(2);  # to natural log
   } else {
-    return int(log($value) * (1/log(2)));
+    $log = log($value);
   }
-}
-
-#------------------------------------------------------------------------------
-# generic
-
-# use Math::NumSeq::NumAronson;
-# *_round_down_pow = \&Math::NumSeq::NumAronson::_round_down_pow;
-#
-# use Math::NumSeq::Fibonacci;
-# *_blog2_estimate = \&Math::NumSeq::Fibonacci::_blog2_estimate;
-
-
-# if $n is a BigInt, BigRat or BigFloat then return an estimate of log base 2
-# otherwise return undef.
-#
-# For Math::BigInt
-#
-# For BigRat the calculation is just a bit count of the numerator less the
-# denominator so may be off by +/-1 or +/-2 or some such.  For
-#
-sub _blog2_estimate {
-  my ($n) = @_;
-
-  if (ref $n) {
-    ### _blog2_estimate(): "$n"
-
-    if ($n->isa('Math::BigRat')) {
-      return ($n->numerator->copy->blog(2) - $n->denominator->copy->blog(2))->numify;
-    }
-    if ($n->isa('Math::BigFloat')) {
-      return $n->as_int->blog(2)->numify;
-    }
-    if ($n->isa('Math::BigInt')) {
-      return $n->copy->blog(2)->numify;
-    }
-  }
-  return undef;
-}
-
-# return ($pow, $exp) with $pow = $base**$exp <= $n,
-# the next power of $base at or below $n
-#
-sub _round_down_pow {
-  my ($n, $base) = @_;
-  ### _round_down_pow(): "$n base $base"
-
-  if ($n < $base) {
-    return (1, 0);
-  }
-
-  # Math::BigInt and Math::BigRat overloaded log() return NaN, use integer
-  # based blog()
-  if (ref $n && ($n->isa('Math::BigInt') || $n->isa('Math::BigRat'))) {
-    my $exp = $n->copy->blog($base);
-    return (Math::BigInt->new(1)->blsft($exp,$base),
-            $exp);
-  }
-
-  my $exp = int(log($n)/log($base));
-  my $pow = $base**$exp;
-
-  # check how $pow actually falls against $n, not sure should trust float
-  # rounding in log()/log($base)
-  # Crib: $n as first arg in case $n==BigFloat and $pow==BigInt
-  if ($n < $pow) {
-    ### hmm, int(log) too big, decrease...
-    $exp -= 1;
-    $pow = $base**$exp;
-  } elsif ($n >= $base*$pow) {
-    ### hmm, int(log) too small, increase...
-    $exp += 1;
-    $pow *= $base;
-  }
-  return ($pow, $exp);
+  return int($log / log($self->{'radix'}));
 }
 
 1;
 __END__
 
-=for stopwords Ryde 
+=for stopwords Ryde
 
 =head1 NAME
 
@@ -263,34 +203,64 @@ Math::NumSeq::SlopingExcluded -- numbers not occurring in sloping binary
 
 I<In progress ...>
 
-The numbers not occurring in sloping binary,
+This sequence is numbers not occurring when the integers are read by
+diagonal sloping lines, as per
+
+=over
+
+David Applegate, Benoit Cloitre, Philippe DelE<233>ham and Neil Sloane,
+"Sloping Binary Numbers: A New Sequence Related to the Binary Numbers",
+Journal of Integer Sequences, volume 8, article 05.3.6, 2005.
+L<https://cs.uwaterloo.ca/journals/JIS/VOL8/Sloane/sloane300.html>
+
+=cut
+
+# Also http://arxiv.org/abs/math.NT/0505295
+
+=back
+
+The sequence begins
 
     1, 2, 7, 12, 29, 62, 123, 248, 505, 1018, 2047, 4084, 8181, ...
+    starting i=1
 
-Sloping binary numbers by David Applegate, Benoit Cloitre, Philippe
-DelE<233>ham and Neil Sloane are defined by writing integers in binary and
-reading on an upwards diagonal slope skipping the high 1-bit.
+All integers in binary and then reading on an upwards diagonal slope,
 
-    integers   sloping
-         0        0
-         1
+    Integers     Sloping     Excluded
+    in Binary
+    --------     -------     --------
+         0         0
+         1                      1 = 1
+        /                      10 = 2
+       1 0        11 = 3
         /
-       1 0       11   = 3
-        /
-       1 1
+       1 1       101 = 5
       / /
-     1 0 0      110   = 6
+     1 0 0       110 = 6
       / /
-     1 0 1      101   = 5
+     1 0 1       101 = 5
       / /
-     1 1 0      100   = 4
-      /
+     1 1 0       100 = 4
+      /                       111 = 7
      1 1 1
     /
-   1 0 0 0      1111  = 15
+   1 0 0 0      1111 = 15
 
-It can be shown that the values resulting give all the integers, except one
+The authors above show the sloping values give all the integers except one
 near each power 2^k.  The sequence here is those excluded values.
+
+At "1" the sloping value is reckoned as starting from the 1" in the
+following "10".  The effect is that the value "1" which is overlapped this
+way is excluded.  Similarly at "11" the sloping starts from the 1 in "100"
+and the "10" which is overlapped is excluded.
+
+=head2 Radix
+
+Optional C<radix =E<gt> $integer> parameter selects a base other than
+binary.  For example ternary is
+
+    radix => 3
+    2, 7, 24, 80, 238, 723, 2183, 5653, 19674, 59042, ...
 
 =head1 FUNCTIONS
 
@@ -300,7 +270,10 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =item C<$seq = Math::NumSeq::SlopingExcluded-E<gt>new ()>
 
-Create and return a new sequence object.
+=item C<$seq = Math::NumSeq::SlopingExcluded-E<gt>new (radix =E<gt> $integer)>
+
+Create and return a new sequence object.  The default is binary, or another
+C<radix> can be given.
 
 =back
 
@@ -310,11 +283,11 @@ Create and return a new sequence object.
 
 =item C<$value = $seq-E<gt>ith($i)>
 
-Return the C<$i>'th value which is not in sloping binary.
+Return the C<$i>'th value which is sloping excluded.
 
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value> is not included in sloping binary.
+Return true if C<$value> is a sloping excluded.
 
 =back
 
@@ -328,7 +301,7 @@ L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 
-Copyright 2012, 2013 Kevin Ryde
+Copyright 2012, 2013, 2014 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

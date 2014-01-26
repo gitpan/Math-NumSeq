@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012, 2013 Kevin Ryde
+# Copyright 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -27,27 +27,137 @@ use MyTestHelpers;
 MyTestHelpers::nowarnings();
 use MyOEIS;
 
-use Math::NumSeq::FibonacciWord;
+use Math::NumSeq::Fibonacci;
 
 # uncomment this to run the ### lines
 #use Smart::Comments '###';
 
 
-sub numeq_array {
-  my ($a1, $a2) = @_;
-  if (! ref $a1 || ! ref $a2) {
-    return 0;
+#------------------------------------------------------------------------------
+# A039834 - Fibonacci negative indices F[-n] starting F[0] then downwards
+
+MyOEIS::compare_values
+  (anum => 'A039834',
+   func => sub {
+     my ($count) = @_;
+     my $seq  = Math::NumSeq::Fibonacci->new;
+     my @got;
+     for (my $i = 0; @got < $count; $i--) {
+       push @got, $seq->ith($i);
+     }
+     return \@got;
+   });
+
+# Test 1 got: "different pos=93 numbers
+#  got=12200160415121876738
+# want=12200160415121876738, and more diff" (xt/oeis/Fibonacci-oeis.t at line 49)
+
+#------------------------------------------------------------------------------
+# A087172 - next lower Fibonacci <= n
+
+MyOEIS::compare_values
+  (anum => 'A087172',
+   func => sub {
+     my ($count) = @_;
+     my $seq  = Math::NumSeq::Fibonacci->new;
+     my @got;
+     $seq->next; # skip 0
+     (undef, my $fib) = $seq->next;
+     (undef, my $next_fib) = $seq->next;
+     for (my $n = 2; @got < $count; $n++) {
+       while ($next_fib < $n) {
+         $fib = $next_fib;
+         (undef, $next_fib) = $seq->next;
+       }
+       push @got, $fib;
+     }
+     return \@got;
+   });
+
+#------------------------------------------------------------------------------
+# A005592 - F(2n+1)+F(2n-1)-1
+
+MyOEIS::compare_values
+  (anum => 'A005592',
+   func => sub {
+     my ($count) = @_;
+     my @got;
+     my $seq  = Math::NumSeq::Fibonacci->new;
+     for (my $n = Math::NumSeq::_to_bigint(1); @got < $count; $n++) {
+       push @got, $seq->ith(2*$n+1) + $seq->ith(2*$n-1) - 1
+     }
+     return \@got;
+   });
+
+#------------------------------------------------------------------------------
+# A108852 - num fibs <= n
+
+MyOEIS::compare_values
+  (anum => 'A108852',
+   func => sub {
+     my ($count) = @_;
+     my @got;
+     my $seq  = Math::NumSeq::Fibonacci->new;
+     push @got, 1;   # past 1 occurring twice
+     my $num = 3;
+     for (my $n = 2; @got < $count; $n++) {
+       push @got, $num;
+       if ($seq->pred($n)) {
+         $num++;
+       }
+     }
+     return \@got;
+   });
+
+
+#------------------------------------------------------------------------------
+# A035105 - LCM of fibs
+
+MyOEIS::compare_values
+  (anum => 'A035105',
+   func => sub {
+     my ($count) = @_;
+     my @got;
+     my $seq  = Math::NumSeq::Fibonacci->new;
+     $seq->next; # skip 0
+     my $lcm = Math::NumSeq::_to_bigint(1);
+     while (@got < $count) {
+       my ($i, $value) = $seq->next;
+       $lcm = lcm($lcm,$value);
+       push @got, $lcm;
+     }
+     return \@got;
+   });
+
+sub lcm {
+  my $ret = shift;
+  while (@_) {
+    my $value = shift;
+    my $gcd = Math::BigInt::bgcd($ret,$value);
+    $ret *= $value/$gcd;
   }
-  my $i = 0;
-  while ($i < @$a1 && $i < @$a2) {
-    if ($a1->[$i] ne $a2->[$i]) {
-      return 0;
-    }
-    $i++;
-  }
-  return (@$a1 == @$a2);
+  return $ret;
 }
 
+#------------------------------------------------------------------------------
+# A020909 - length in bits of F[n]
+
+MyOEIS::compare_values
+  (anum => 'A020909',
+   func => sub {
+     my ($count) = @_;
+     require Math::BigInt;
+     require Math::NumSeq::DigitLength;
+     my $len  = Math::NumSeq::DigitLength->new(radix=>2);
+     my $seq  = Math::NumSeq::Fibonacci->new;
+     $seq->next; # skip initial 0
+     my @got;
+     while (@got < $count) {
+       my ($i, $fib) = $seq->next;
+       push @got, $len->ith($fib);
+     }
+     return \@got;
+   });
 
 #------------------------------------------------------------------------------
 # A060384 - number of decimal digits in Fib[n]
@@ -89,157 +199,6 @@ MyOEIS::compare_values
      }
      return \@got;
    });
-
-#------------------------------------------------------------------------------
-# A020909 - length in bits of F[n]
-
-{
-  my $anum = 'A020909';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my @got;
-  if ($bvalues) {
-    require Math::BigInt;
-    require Math::NumSeq::DigitLength;
-    my $len  = Math::NumSeq::DigitLength->new(radix=>2);
-    my $seq  = Math::NumSeq::Fibonacci->new;
-    $seq->next; # skip initial 0
-    while (@got < @$bvalues) {
-      my ($i, $fib) = $seq->next;
-      push @got, $len->ith($fib);
-    }
-    if (! numeq_array(\@got, $bvalues)) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
-  }
-  skip (! $bvalues,
-        numeq_array(\@got, $bvalues),
-        1, "$anum");
-}
-
-#------------------------------------------------------------------------------
-# A087172 - next lower Fibonacci <= n
-
-{
-  my $anum = 'A087172';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my @got;
-  if ($bvalues) {
-    my $seq  = Math::NumSeq::Fibonacci->new;
-    $seq->next; # skip 0
-    (undef, my $fib) = $seq->next;
-    (undef, my $next_fib) = $seq->next;
-    for (my $n = 2; @got < @$bvalues; $n++) {
-      while ($next_fib < $n) {
-        $fib = $next_fib;
-        (undef, $next_fib) = $seq->next;
-      }
-      push @got, $fib;
-    }
-    if (! numeq_array(\@got, $bvalues)) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
-  }
-  skip (! $bvalues,
-        numeq_array(\@got, $bvalues),
-        1, "$anum");
-}
-
-#------------------------------------------------------------------------------
-# A005592 - F(2n+1)+F(2n-1)-1
-
-{
-  my $anum = 'A005592';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my @got;
-  if ($bvalues) {
-    my $seq  = Math::NumSeq::Fibonacci->new;
-    for (my $n = Math::NumSeq::_to_bigint(1); @got < @$bvalues; $n++) {
-      push @got, $seq->ith(2*$n+1) + $seq->ith(2*$n-1) - 1
-    }
-    if (! numeq_array(\@got, $bvalues)) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
-  }
-  skip (! $bvalues,
-        numeq_array(\@got, $bvalues),
-        1, "$anum");
-}
-
-#------------------------------------------------------------------------------
-# A108852 - num fibs <= n
-
-{
-  my $anum = 'A108852';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my @got;
-  if ($bvalues) {
-    my $seq  = Math::NumSeq::Fibonacci->new;
-    push @got, 1;   # past 1 occurring twice
-    my $count = 3;
-    for (my $n = 2; @got < @$bvalues; $n++) {
-      push @got, $count;
-      if ($seq->pred($n)) {
-        $count++;
-      }
-    }
-    if (! numeq_array(\@got, $bvalues)) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
-  }
-  skip (! $bvalues,
-        numeq_array(\@got, $bvalues),
-        1, "$anum");
-}
-
-#------------------------------------------------------------------------------
-# A035105 - LCM of fibs
-
-{
-  my $anum = 'A035105';
-  my ($bvalues, $lo, $filename) = MyOEIS::read_values($anum);
-  my @got;
-  if ($bvalues) {
-    my $seq  = Math::NumSeq::Fibonacci->new;
-    $seq->next; # skip 0
-    my $lcm = Math::NumSeq::_to_bigint(1);
-    while (@got < @$bvalues) {
-      my ($i, $value) = $seq->next;
-      $lcm = lcm($lcm,$value);
-      push @got, $lcm;
-    }
-    if (! numeq_array(\@got, $bvalues)) {
-      MyTestHelpers::diag ("bvalues: ",join(',',@{$bvalues}[0..20]));
-      MyTestHelpers::diag ("got:     ",join(',',@got[0..20]));
-    }
-  } else {
-    MyTestHelpers::diag ("$anum not available");
-  }
-  skip (! $bvalues,
-        numeq_array(\@got, $bvalues),
-        1, "$anum");
-}
-
-sub lcm {
-  my $ret = shift;
-  while (@_) {
-    my $value = shift;
-    my $gcd = Math::BigInt::bgcd($ret,$value);
-    $ret *= $value/$gcd;
-  }
-  return $ret;
-}
 
 #------------------------------------------------------------------------------
 exit 0;

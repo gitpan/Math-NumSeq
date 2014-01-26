@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2011, 2012, 2013 Kevin Ryde
+# Copyright 2011, 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 121;
+plan tests => 132;
 
 use lib 't';
 use MyTestHelpers;
@@ -35,7 +35,7 @@ use Math::NumSeq::Fibonacci;
 # VERSION
 
 {
-  my $want_version = 67;
+  my $want_version = 68;
   ok ($Math::NumSeq::Fibonacci::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::Fibonacci->VERSION,  $want_version,
@@ -63,6 +63,23 @@ use Math::NumSeq::Fibonacci;
     ok ($f + $f0, $f1, "i=$i  $f+$f0 should be $f1");
     $f1 = $f0;
     $f0 = $f;
+  }
+}
+
+
+#------------------------------------------------------------------------------
+# negative ith_pair()
+
+{
+  my $seq = Math::NumSeq::Fibonacci->new;
+  my $want_f1 = $seq->ith(2);
+  my $want_f0 = $seq->ith(1);
+  for (my $i = 1; $i > -10; $i--) {
+    my ($got_f0, $got_f1) = $seq->ith_pair($i);
+    ok ("$got_f0,$got_f1", "$want_f0,$want_f1", "ith_pair() i=$i");
+
+    # fprev + f0 = f1, so fprev = f1-f0
+    ($want_f0, $want_f1) = ($want_f1 - $want_f0, $want_f0);
   }
 }
 

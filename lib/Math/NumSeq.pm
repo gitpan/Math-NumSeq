@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -15,6 +15,15 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
+
+# ($value1,$value2) = $self->ith_pair($i);
+# Return values for $i and $i+1, possibly undefs.
+# Same as ($self->ith($i), $self->ith($i+1)) but some classes faster.
+# SternDiatomic 
+# Fibonacci -- with ith() being sans last bit
+#    ith_pair_from_bits_hightolow()
+# LucasNumbers -- F,L then last step L,L
+#    ith_FL_from_bits_hightolow()
 
 # $value = $seq->value_floor($value)
 # $value = $seq->value_ceil($value)
@@ -51,7 +60,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 67;
+$VERSION = 68;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -194,6 +203,19 @@ sub new {
 sub tell_i {
   my ($self) = @_;
   return $self->{'i'};
+}
+
+sub ith_pair {
+  my ($self, $i) = @_;
+  return ($self->ith($i), $self->ith($i+1));
+}
+
+sub can {
+  my ($class, $method) = @_;
+  if ($method eq 'ith_pair' && ! return $class->can('ith')) {
+    return undef;
+  }
+  return $class->SUPER::can($method);
 }
 
 #------------------------------------------------------------------------------
@@ -453,6 +475,15 @@ are distinct, so that a value is an unambiguous location.
 Return the C<$i>'th value in the sequence.  Only some sequence classes
 implement this method.
 
+=item C<($v0, $v1) = $seq-E<gt>ith_pair($i)>
+
+Return two values C<ith($i)> and C<ith($i+1)> from the sequence.  This
+method can be used whenever C<ith()> exists.  C<can('ith_pair')> says
+whether C<ith_pair()> can be used in the usual way (and gives a coderef).
+
+For some sequences a pair of values can be calculated with less work than
+two separate C<ith()> calls.
+
 =item C<$bool = $seq-E<gt>pred($value)>
 
 Return true if C<$value> occurs in the sequence.  For example for the
@@ -645,7 +676,7 @@ http://user42.tuxfamily.org/math-numseq/index.html
 
 =head1 LICENSE
 
-Copyright 2010, 2011, 2012, 2013 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013, 2014 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

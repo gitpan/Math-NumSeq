@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -120,7 +120,6 @@ $|=1;
   $values_class = 'Math::NumSeq::EratosthenesStage';
   $values_class = 'Math::NumSeq::ReReplace';
   $values_class = 'Math::NumSeq::SqrtContinued';
-  $values_class = 'Math::NumSeq::SlopingExcluded';
   $values_class = 'Math::NumSeq::PrimeIndexOrder';
   $values_class = 'Math::NumSeq::KaprekarSteps';
   $values_class = 'Math::NumSeq::Padovan';
@@ -182,14 +181,11 @@ $|=1;
   $values_class = 'Math::NumSeq::LeastPrimitiveRoot';
   $values_class = 'Math::NumSeq::DedekindPsiCumulative';
   $values_class = 'Math::NumSeq::SumPowSub1';
-  $values_class = 'Math::NumSeq::Fibonacci';
-  $values_class = 'Math::NumSeq::LucasNumbers';
   $values_class = 'Math::NumSeq::PlanePathN';
   $values_class = 'Math::NumSeq::FibonacciRepresentations';
   $values_class = 'Math::NumSeq::LuckyNumbers';
   $values_class = 'Math::NumSeq::ProthNumbers';
   $values_class = 'Math::NumSeq::HafermanCarpet';
-  $values_class = 'Math::NumSeq::PrimeIndexPrimes';
   $values_class = 'Math::NumSeq::PlanePathTurn';
   $values_class = 'Math::NumSeq::DivisorCount';
   $values_class = 'Math::NumSeq::PowerPart';
@@ -200,14 +196,20 @@ $|=1;
   $values_class = 'Math::NumSeq::SternDiatomic';
   $values_class = 'Math::NumSeq::OEIS::File';
   $values_class = 'Math::NumSeq::CollatzSteps';
+  $values_class = 'Math::NumSeq::PrimeIndexPrimes';
+  $values_class = 'Math::NumSeq::FibonacciDiatomic';
+  $values_class = 'Math::NumSeq::Fibonacci';
+  $values_class = 'Math::NumSeq::SlopingExcluded';
+  $values_class = 'Math::NumSeq::LucasNumbers';
   
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new
     (
+     level => 11,
      # on_values => 'even',
      # end_type => 'to_peak',
      step_type => 'down',
-
+     
      # extract_type => 'middle_lower',
      # extract_offset => 0,
      
@@ -220,7 +222,7 @@ $|=1;
      # anum  => 'A151725',
      # anum  => 'A196199', # bfile
      # anum  => 'A194831', # small bfile
-      anum  => 'A102419',
+     anum  => 'A102419',
      
      # root_type => 'negative',
      # digit => 0,
@@ -261,7 +263,6 @@ $|=1;
      # recurrence_type => 'absdiff',
      # i_start => 0,
      # on_values => 'primes',
-     # level => 2,
      # level_type => 'exact',
      # stage => 1,
      
@@ -511,9 +512,9 @@ $|=1;
       }
       if ($seq->can('ith')) {
         if (! is_infinite($value) && $value >= 2**50) {
+          require Math::BigInt;
+          $i = Math::BigInt->new($i);
         }
-        require Math::BigInt;
-        $i = Math::BigInt->new($i);
         my $ith_value = $seq->ith($i);
         unless ((defined $value == defined $ith_value)
                 && (! defined $value
@@ -564,6 +565,38 @@ $|=1;
 
       if ($seq->can('pred') && ! $seq->pred($value)) {
         print " oops, pred($value) false\n";
+      }
+    }
+    print "\n";
+  }
+
+  if ($seq->can('ith_pair') && $seq->can('ith_pair') != \&Math::NumSeq::ith_pair) {
+    print "by ith_pair():      ";
+    foreach my $i ($seq->i_start .. $seq->i_start + $hi - 1) {
+      my ($value,$v1) = $seq->ith_pair($i);
+      if (! defined $value) {
+        print "undef\n";
+        if ($i > 3) {
+          last;
+        } else {
+          next;
+        }
+      }
+      if (defined $value) {
+        print "$value,";
+        #print "$i=$value,";
+      } else {
+        print "$i,";
+        $value=$i;
+      }
+      if ($value > DBL_INT_MAX) {
+        last;
+      }
+
+      my $vv0 = $seq->ith($i);
+      my $vv1 = $seq->ith($i+1);
+      if ($value != $vv0 || $v1 != $vv1) {
+        print " oops, ith_pair($i)=$value,$v1 but ith($i,$i+1)=$vv0,$vv1\n";
       }
     }
     print "\n";

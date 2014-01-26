@@ -1,4 +1,4 @@
-# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,16 +20,17 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 67;
+$VERSION = 68;
 use Math::NumSeq::Base::Sparse;
 @ISA = ('Math::NumSeq::Base::Sparse');
 
 use Math::NumSeq;
 *_is_infinite = \&Math::NumSeq::_is_infinite;
+*_to_bigint = \&Math::NumSeq::_to_bigint;
 
 use Math::NumSeq::Fibonacci;
 *_blog2_estimate = \&Math::NumSeq::Fibonacci::_blog2_estimate;
-*_bits_high_to_low = \&Math::NumSeq::Fibonacci::_bits_high_to_low;
+*_bit_split_hightolow = \&Math::NumSeq::Fibonacci::_bit_split_hightolow;
 
 
 # uncomment this to run the ### lines
@@ -89,14 +90,16 @@ sub _max {
 #    A080023 closest to log(phi), 2,3,4,7,11
 #    A169985 nearestint(phi^n) 1,2,3,4,7,11,18
 {
-  my %oeis_anum = (0 => 'A000032',  # Lucas starting at 2,1,3,...
-                   1 => 'A000204'); # Lucas starting at   1,3,...
+  my %oeis_anum = (
+                   # OEIS-Catalogue array begin
+                   0 => 'A000032', # i_start=0  # Lucas starting at 2,1,3,...
+                   1 => 'A000204', #            # Lucas starting at   1,3,...
+                   # OEIS-Catalogue array end
+                  );
   sub oeis_anum {
     my ($self) = @_;
     return $oeis_anum{$self->i_start};
   }
-  # OEIS-Catalogue: A000204
-  # OEIS-Catalogue: A000032 i_start=0
 }
 
 #------------------------------------------------------------------------------
@@ -188,7 +191,6 @@ sub next {
 #      = (1+3)^2/4 - 3*1^2 - 2
 #      = 16/4 - 3 - 2
 
-
 # F[3] = ((F[1]+L[1])^2 - 2*(-1)^1)/4 + F[1]^2
 #      = ((1+3)^2 - -2)/4 + 1^2
 #      = (16 + 2)/4 + 1
@@ -201,7 +203,7 @@ sub next {
 
 # -8,5,-3,2,-1,1, 0, 1,1,2,3,5,8,13,21
 # -11,7,-4,3,-1, 2, 1,3,4,7,11,18,29
-# 
+#
 
 sub ith {
   my ($self, $i) = @_;
@@ -215,89 +217,41 @@ sub ith {
     return 2;
   }
 
-  my $neg;
-  if ($i < 0) {
-    $i = -$i;
-    $neg = $i % 2;
-  }
-
-  # k=1, L[1]=1
-  my $Lk = ($i * 0) + 1;  # inherit bignum 1
-  my $add = -2; # 2*(-1)^k
-
-  my @bits = _bits_high_to_low($i);
-  ### @bits
+  # automatic BigInt if not another bignum class
+  my $to_bigint = ($i >= $uv_i_limit || $i <= -$uv_i_limit && ! ref $i);
+  ### $to_bigint
 
   my $lowzeros = 0;
-  until (pop @bits) {
+  until ($i % 2) {
     $lowzeros++;
+    $i /= 2;
   }
 
-  if (shift @bits) {
-    ### high bit not the only 1-bit in i ...
-
-    my $Fk = $Lk; # k=1, F[1]=1
-
-    while (@bits) {
-      ### remaining bits: @bits
-      ### Lk: "$Lk"
-      ### Fk: "$Fk"
-
-      # two squares and some adds
-      # F[2k] = (F[k]+L[k])^2/2 - 3*F[k]^2 - 2*(-1)^k
-      # L[2k] = 5*F[k]^2 + 2*(-1)^k
-      #
-      # F[2k+1] = ((F[k]+L[k])^2 - 2*(-1)^k)/4 + F[k]^2
-      # L[2k+1] = (5*(F[k]+L[k])^2 - 2*(-1)^k))/4 + F[k]^2
-      #
-      $Lk += $Fk;
-      $Lk *= $Lk;  # (F[k]+L[k])^2
-      $Fk *= $Fk;  # F[k]^2
-
-      if (shift @bits) {
-        ### double,shift to 2k+1 ...
-        $Lk /= 4;
-        ($Fk,$Lk) = ($Lk + $Fk,
-                     5*($Lk - $Fk) - 2*$add);
-        $add = -2;
-      } else {
-        ### double to 2k ...
-        ($Fk,$Lk) = ($Lk/2 - 3*$Fk - $add,
-                     5*$Fk + $add);
-        $add = 2;
-      }
-    }
-
-    ### final double,shift to 2k+1 ...
-    ### Lk: "$Lk"
-    ### Fk: "$Fk"
-
-    $Lk += $Fk;
-    $Lk *= $Lk;  # (F[k]+L[k])^2
-    $Fk *= $Fk;  # F[k]^2
-    $Lk = 5*($Lk/4 - $Fk) - 2*$add;
-    $add = -2;
-    ### Lk: "$Lk"
+  my ($L0) = $self->ith_pair($i);
+  ### $L0
+  if ($to_bigint) {
+    ### to bigint ...
+    $L0 = _to_bigint($L0);
+    ### $L0
   }
 
   ### apply lowzeros: $lowzeros
+  my $add = -2;
   while ($lowzeros--) {
-    $Lk *= $Lk;
-    $Lk -= $add;
+    $L0 *= $L0;
+    $L0 -= $add;
     $add = 2;
-    ### lowzeros Lk: "$Lk"
+    ### lowzeros L0: "$L0 " . ref $L0
   }
 
-  ### final ...
-  ### Lk: "$Lk"
+  ### final ith() ...
+  ### L0: "$L0"
 
-  if ($neg) { $Lk = -$Lk; }
-  return $Lk;
-
+  return $L0;
 
 
-
-
+  # {
+  # # cf plain interative
   # $i--;
   # my $f0 = ($i * 0) + 1;  # inherit bignum 1
   # my $f1 = $f0 + 2;       # inherit bignum 3
@@ -310,6 +264,75 @@ sub ith {
   #   $f1 += $f0;
   # }
   # return $f1;
+  # }
+}
+
+sub ith_pair {
+  my ($self, $i) = @_;
+  ### LucasNumbers ith_pair(): $i
+
+  if (_is_infinite($i)) {
+    return ($i,$i);
+  }
+  $i = int($i);
+
+  my $neg;
+  if ($i < 0) {
+    $i = -1 - $i;    # L[-k] = L[-1-k] * (-1)^k
+    $neg = 1;
+  }
+
+  my ($Lk, $Lkplus1);
+  if ($i == 0) {
+    $Lk = 2;       # L[0] = 2
+    $Lkplus1 = 1;  # L[1] = 1
+
+  } else {
+    # initial k=1
+    my $zero = ($i >= $uv_i_limit && ! ref $i
+                ? _to_bigint(0)   # automatic BigInt if not another bignum class
+                : $i * 0);        # inherit bignum $i
+
+    $Lk = 1 + $zero;       # L[k]   = L[1] = 1
+    $Lkplus1 = 3 + $zero;  # L[k+1] = L[2] = 3
+    my $add = -2;  # 2*(-1)^k
+
+
+    my @bits = _bit_split_hightolow($i);
+    ### @bits
+    shift @bits; # drop high 1-bit
+
+    while (@bits) {
+      ### at: "Lk=$Lk Lkplus1=$Lkplus1 bit=$bits[0]"
+      $Lk *= $Lk;
+      $Lk -= $add;                 # L[2k] = L[k]^2 - 2*(-1)^k
+
+      $Lkplus1 *= $Lkplus1;
+      $Lkplus1 += $add;            # L[2k+2] = L[k+1]^2 + 2*(-1)^k
+
+      # L[2k+1] = L[2k+2] - L[2k]
+      my $Lmid = $Lkplus1 - $Lk;   # L[2k+1] = L[2k+2] - L[2k]
+
+      if (shift @bits) {  # high to low
+        $Lk = $Lmid;               # L[2k+1], L[2k+2]
+        $add = -2;
+      } else {
+        $Lkplus1 = $Lmid;          # L[2k], L[2k+1]
+        $add = 2;
+      }
+    }
+  }
+  ### loop final: "Lk=$Lk Lkplus1=$Lkplus1"
+
+  if ($neg) {
+    ($Lk,$Lkplus1) = ($Lkplus1, $Lk);
+    if ($i % 2) {
+      $Lkplus1 = -$Lkplus1;
+    } else {
+      $Lk = -$Lk;
+    }
+  }
+  return ($Lk, $Lkplus1);
 }
 
 use constant 1.02 _PHI => (1 + sqrt(5)) / 2;
@@ -428,45 +451,41 @@ Estimate> below.
 
 =head1 FORMULAS
 
-=head2 Ith
+=head2 Ith Pair
 
-Fibonacci F[k] and Lucas L[k] can be calculated together by a powering
-algorithm with two squares per doubling,
+A pair of Lucas numbers L[k], L[k+1] can be calculated together by a
+powering algorithm with two squares per doubling,
 
-    F[2k] = (F[k]+L[k])^2/2 - 3*F[k]^2 - 2*(-1)^k
-    L[2k] =                   5*F[k]^2 + 2*(-1)^k
-    
-    F[2k+1] =    ((F[k]+L[k])/2)^2 + F[k]^2
-    L[2k+1] = 5*(((F[k]+L[k])/2)^2 - F[k]^2) - 4*(-1)^k
+    L[2k]   = L[k]^2   - 2*(-1)^k
+    L[2k+2] = L[k+1]^2 + 2*(-1)^k
+
+    L[2k+1] = L[2k+2] - L[2k]
+
+    if bit==0 then take L[2k], L[2k+1]
+    if bit==1 then take L[2k+1], L[2k+2]
 
 The 2*(-1)^k terms mean adding or subtracting 2 according to k odd or even.
 This means add or subtract according to the previous bit handled.
 
-At the last step, which is the lowest bit of i, only L[2k] or L[2k+1] is
-needed for the return, not the F[] too.
+=head2 Ith
 
-For any trailing zero bits of i the final doublings L[2k] can be done
-without the F[] and with just one square as
+For any trailing zero bits of i the final doublings can be done by L[2k]
+alone which is one square per 0-bit.
 
-    L[2k] = L[k]^2 - 2*(-1)^k
-
-So
-
-    main double/step L[],F[] until the lowest 1-bit of i is reached
-    then L[2k+1] formula for that bit
-    then L[2k] single squarings for any low 0-bits
+    ith_pair(odd part of i) to get L[2k+1]  (ignore L[2k+2])
+    loop L[2k] = L[k]^2 - 2*(-1)^k for each trailing 0-bit of i
 
 =head2 Value to i Estimate
 
-L[i] increases as a power of phi, the golden ratio,
+L[i] increases as a power of phi, the golden ratio.  The exact value is
 
     L[i] = phi^i + beta^i    # exactly
 
     phi = (1+sqrt(5))/2 = 1.618
     beta = -1/phi = -0.618
 
-So taking a log (natural logarithm) to get i, and ignoring beta^i which
-quickly becomes small since abs(beta)E<lt>1,
+Since abs(beta)E<lt>1 the beta^i term quickly becomes small.  So taking a
+log (natural logarithm) to get i,
 
     log(L[i]) ~= i*log(phi)
     i ~= log(L[i]) * 1/log(phi)
@@ -485,8 +504,34 @@ L<Math::NumSeq::Fibonacci/Value to i Estimate>), being bigger by
       = -log(phi-beta) / log(phi)
       = -1.67
 
-On that basis it could even be close enough to take Lestimate = Festimate-1
-(or vice-versa).
+On that basis it could even be close enough to take Lestimate = Festimate-1,
+or vice-versa.
+
+=head2 Ith Fibonacci and Lucas
+
+It's also possible to calculate a Fibonacci F[k] and Lucas L[k] together by
+a similar powering algorithm with two squares per doubling, but a couple of
+extra factors,
+
+    F[2k] = (F[k]+L[k])^2/2 - 3*F[k]^2 - 2*(-1)^k
+    L[2k] =                   5*F[k]^2 + 2*(-1)^k
+
+    F[2k+1] =    ((F[k]+L[k])/2)^2 + F[k]^2
+    L[2k+1] = 5*(((F[k]+L[k])/2)^2 - F[k]^2) - 4*(-1)^k
+
+Or the conversions between a pair of Fibonacci and Lucas are
+
+    F[k]   = ( - L[k] + 2*L[k+1])/5
+    F[k+1] = ( 2*L[k] +   L[k+1])/5   = (F[k] + L[k])/2
+
+    L[k]   =  - F[k] + 2*F[k+1]
+    L[k+1] =  2*F[k] +   F[k+1]       = (5*F[k] + L[k])/2
+
+=cut
+
+# MY-PARI-CHECK: [-1,2;2,1] * [-1,2;2,1] == [5,0;0,5]
+
+=pod
 
 =head1 SEE ALSO
 
@@ -500,7 +545,7 @@ L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 
-Copyright 2010, 2011, 2012, 2013 Kevin Ryde
+Copyright 2010, 2011, 2012, 2013, 2014 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

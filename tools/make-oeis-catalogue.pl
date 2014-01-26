@@ -1,6 +1,6 @@
 #!perl -w
 
-# Copyright 2011, 2012, 2013 Kevin Ryde
+# Copyright 2011, 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -19,21 +19,22 @@
 
 
 # Usage: perl tools/make-oeis-catalogue.pl
+#
 
 use 5.004;
 use strict;
+use Cwd;
 use Getopt::Long;
 use Data::Dumper;
 use ExtUtils::Manifest;
 use Module::Util;
-use Cwd;
 use File::Path;
 
 use vars '$VERSION';
-$VERSION = 67;
+$VERSION = 68;
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+# use Smart::Comments;
 
 my $outmodule = 'BuiltinTable';
 my $distname = 'Math-NumSeq';
@@ -58,11 +59,13 @@ my $exit_code = 0;
 my @info_arrayref;
 my @filenames;
 if (Cwd::getcwd() =~ /devel$/) {
-  @filenames = <lib/Math/NumSeq/*.pm>;
+  @filenames = glob "lib/Math/NumSeq/*.pm";
 } else {
   my $manifest_href = ExtUtils::Manifest::maniread();
   @filenames = keys %$manifest_href;
 }
+### @filenames
+
 # files for Math::NumSeq::Foo, and not sub-parts
 @filenames = grep { m{^(lib/Math/NumSeq/[^/]*
                       |lib/App/MathImage/NumSeq/[^/]*)$}x
@@ -206,4 +209,5 @@ use constant info_arrayref =>
 HERE
 
 print $out "$dump;\n1;\n__END__\n";
+print "wrote $outfilename\n";
 exit $exit_code;

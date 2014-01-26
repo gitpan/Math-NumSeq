@@ -38,7 +38,7 @@ plan tests => $test_count;
 # VERSION
 
 {
-  my $want_version = 67;
+  my $want_version = 68;
   ok ($Math::NumSeq::BalancedBinary::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::BalancedBinary->VERSION,  $want_version,

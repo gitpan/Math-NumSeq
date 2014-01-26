@@ -22,7 +22,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 67;
+$VERSION = 68;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
@@ -2613,16 +2613,16 @@ use constant info_arrayref =>
     ]
   },
   {
-    'anum' => 'A000204',
-    'class' => 'Math::NumSeq::LucasNumbers'
-  },
-  {
     'anum' => 'A000032',
     'class' => 'Math::NumSeq::LucasNumbers',
     'parameters' => [
       'i_start',
       0
     ]
+  },
+  {
+    'anum' => 'A000204',
+    'class' => 'Math::NumSeq::LucasNumbers'
   },
   {
     'anum' => 'A000959',

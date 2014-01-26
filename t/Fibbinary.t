@@ -36,7 +36,7 @@ use Math::NumSeq::Fibbinary;
 # VERSION
 
 {
-  my $want_version = 67;
+  my $want_version = 68;
   ok ($Math::NumSeq::Fibbinary::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::Fibbinary->VERSION,  $want_version,
