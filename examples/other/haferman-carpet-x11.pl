@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2013 Kevin Ryde
+# Copyright 2013, 2014 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -36,7 +36,7 @@ use vars '%Keysyms';
 use X11::Keysyms '%Keysyms', qw(MISCELLANY LATIN1);
 
 use vars '$VERSION';
-$VERSION = 68;
+$VERSION = 69;
 
 # uncomment this to run the ### lines
 # use Smart::Comments;
@@ -204,6 +204,7 @@ if (! Getopt::Long::GetOptions
 --scale N                   cell size in pixels
 --geometry WIDTHxHEIGHT     window size
 --fullscreen                full screen window
+--initial=1                 initial centre cell value
 ";
        exit 0;
      },
@@ -314,7 +315,7 @@ X11::Protocol::WM::set_wm_hints
    input         => 1,
    icon_pixmap   => $icon_bitmap);
 if ($window_initial_fullscreen) {
-  X11::Protocol::WM::set_net_wm_state($X, 'FULLSCREEN');
+  X11::Protocol::WM::set_net_wm_state($X, $window, 'FULLSCREEN');
 }
 
 # $window_buffer is the DBE back buffer of $window, or if no DBE then
@@ -584,7 +585,9 @@ $X->{'event_handler'} = sub {
     $redraw_bitmaps = 1;
     $redraw = 1;
   } elsif ($h{'name'} eq 'Expose') {
-    $redraw = 1;
+    if ($h{'count'} == 0) {  # when no further exposures for this window
+      $redraw = 1;
+    }
 
   } elsif ($h{'name'} eq 'ClientMessage') {
     # WM_DELETE_PROTOCOL used only because X11::Protocol 0.56 goes into an
@@ -608,11 +611,17 @@ my $fh = $X->{'connection'}->fh;
 for (;;) {
   event_to_keysym_update();
 
-  do {
+  # handle_input() while there's events etc from the server.
+  # Then if $redraw is not wanted go into handle_input() to wait for events.
+  # (The redraw code includes at least one round-trip and that might read
+  # events which turns on $redraw again.)
+  # 
+  while (fh_readable($fh) || ! $redraw) {
     $X->handle_input;
-  } while (fh_readable($fh));
+  } 
 
   if ($redraw) {
+    ### main loop redraw ...
     $redraw = 0;
     if ($redraw_bitmaps) {
       $redraw_bitmaps = 0;
@@ -712,7 +721,12 @@ Start with the window full screen.
 
 =item C<--geometry WIDTHxHEIGHT>
 
-Starting size of the window.  For example C<--geometry=300x200>.
+Initial size of the window.  For example C<--geometry=300x200>.
+
+=item C<--initial 1>
+
+Set the initial cell value, which is the cell at the very centre of the
+pattern.  It can be 0 or 1.  The default is 0.
 
 =item C<--scale N>
 
@@ -728,7 +742,7 @@ The key and button controls are
 
 =item C
 
-Centre the carpet in the window (which is its initial position).
+Centre the carpet in the window (its initial position).
 
 =item F
 
@@ -736,15 +750,19 @@ Toggle fullscreen (requires a Net-WM window manager).
 
 =item I
 
-Invert the black/white colours.
+Invert black/white colours.
 
 =item Q
 
 Quit.
 
-=item arrow keys, page up/down
+=item Arrow keys, Page up, Page down
 
 Scroll the carpet in the window.
+
+=item Space
+
+Toggle initial cell value 0 E<lt>-E<gt> 1.
 
 =item +, -
 
@@ -761,35 +779,35 @@ Drag the carpet in the window.
 =head2 Carpet Cells
 
 The value of the carpet at a given X,Y is given by the position of the
-lowest odd digit pair when X and Y are expressed in negaternary,
+lowest odd digit pair of X,Y when X and Y are written in negaternary,
 
      lowest "odd"        carpet
     X,Y digit pair       value
     --------------       ------
     even position          0
     odd position           1
-    no such pair         initial
+    no such pair       initial cell
 
 An "odd" pair of digits means a pair which has xdigit+ydigit == 1 mod 2.
-Since each Each digit is -1,0,1 this is abs(xdigit)!=abs(ydigit).
+Since each digit is -1,0,1 this is abs(xdigit)!=abs(ydigit).
 
     "even" digit pairs              "odd" digit pairs
     0,0 1,1 -1,1 1,-1, -1,-1        0,1 1,0 0,-1 -1,0
 
 For example X=-4, Y=1 written in negaternary is X=[-1][-1], Y=[0][1].  The
-two lowest digits are xdigit=-1, ydigit=1 which is "even".  The next two
-digits are xdigit=-1, ydigit=0 which is "odd".  That "odd" pair is at an odd
-position (the low end is position 0 and the next is position 1, etc).  So in
-the table look under "odd position" for carpet value 1.
+two lowest digits are xdigit=-1, ydigit=1 which is an "even" pair.  The next
+two digits are xdigit=-1, ydigit=0 which is an "odd" pair.  That "odd" pair
+is at an odd position (the low end is position 0 and the next is position 1,
+etc).  So in the table look under "odd position" for carpet value 1.
 
 If there are no "odd" digit pairs at all in X,Y then the carpet cell is the
-initial cell value which is the cell at the very centre of the carpet.  The
-default in the program is initial value 0.
+initial cell value which is the cell at the very centre of the carpet.  As
+described above the default in the program is 0.
 
 =head2 Drawing
 
-The X drawing is done by constructing two bitmaps which is a block of "1"
-expanded down according to the Haferman carpet rule, and a block of "0".
+The X drawing is done by constructing two bitmaps which are a block of "0"
+or "1" expanded down according to the Haferman carpet rule.
 
     +---+---+---+         +---+---+---+
     |           |         | 0 | 1 | 0 |
@@ -799,8 +817,8 @@ expanded down according to the Haferman carpet rule, and a block of "0".
     |           |         | 0 | 1 | 0 |
     +---+---+---+         +---+---+---+
 
-The bitmap size is scale*3^exp, where exp is chosen so the size is less than
-the window size (the bigger of width and height).  With such a size at most
+The bitmap size is scale*3^exp with exp chosen so this size is less than the
+window size (the bigger of width and height).  With such a size at most
 three blocks across and down suffice to cover the window,
 
            block    block    block
@@ -823,15 +841,16 @@ three blocks across and down suffice to cover the window,
 
             X=-1      X=0       X=+1
 
-The desired pixel region X,Y becomes "block" X,Y coordinates and an offset.
-The block X,Y gives a cell value as described above, and that cell value
-selects the "0" or "1" bitmap.  If exp is odd then the "initial" value used
-for the cell calculation must be inverted, since an odd exp is an odd number
-of expansions and flips the centre cell 0E<lt>-E<gt>1.
+The desired pixel region X,Y becomes X,Y coordinates of the "block" and an
+offset.  The block X,Y gives a cell value as described above, and that cell
+value selects the "0" or "1" bitmap.  If exp in the bitmap size is odd then
+the "initial" value used for the cell calculation must be inverted.  This is
+since an odd exp is an odd number of expansions and that flips the centre
+cell 0E<lt>-E<gt>1.
 
 Scrolling is smoothed by drawing with the server DOUBLE-BUFFER extension if
-available.  But even if it's not then it's only 9 block copies and should
-look reasonable.
+available.  But even without that it's only at most 9 block copies and so
+should look reasonable.
 
 =head1 ENVIRONMENT VARIABLES
 
@@ -856,7 +875,7 @@ L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 
-Math-NumSeq is Copyright 2010, 2011, 2012, 2013 Kevin Ryde
+Math-NumSeq is Copyright 2010, 2011, 2012, 2013, 2014 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

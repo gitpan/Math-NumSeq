@@ -191,8 +191,6 @@ $|=1;
   $values_class = 'Math::NumSeq::PowerPart';
   $values_class = 'Math::NumSeq::Abundant';
   $values_class = 'Math::NumSeq::DigitExtract';
-  $values_class = 'Math::NumSeq::PlanePathCoord';
-  $values_class = 'Math::NumSeq::PlanePathDelta';
   $values_class = 'Math::NumSeq::SternDiatomic';
   $values_class = 'Math::NumSeq::OEIS::File';
   $values_class = 'Math::NumSeq::CollatzSteps';
@@ -201,6 +199,8 @@ $|=1;
   $values_class = 'Math::NumSeq::Fibonacci';
   $values_class = 'Math::NumSeq::SlopingExcluded';
   $values_class = 'Math::NumSeq::LucasNumbers';
+  $values_class = 'Math::NumSeq::PlanePathDelta';
+  $values_class = 'Math::NumSeq::PlanePathCoord';
   
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new
@@ -296,21 +296,21 @@ $|=1;
      # planepath => 'PyramidRows,step=3',
      # planepath => 'LCornerTree,parts=diagonal-1',
      # planepath => 'UlamWarburton,parts=4',
-     # coordinate_type => 'GCD',
+     planepath => 'DragonCurve',
+      coordinate_type => 'NumOverlap',
      # coordinate_type => 'TRSquared',
      # coordinate_type => 'NumSiblings',
      # coordinate_type => 'AbsDiff',
      
      # planepath => 'PythagoreanTree,coordinates=AC',
-     # planepath => 'DragonCurve',
      # planepath => 'AlternatePaper',
      # planepath => 'RationalsTree,tree_type=L',
-     # planepath => 'TerdragonCurve,arms=1',
+      # planepath => 'R5DragonMidpoint,arms=1',
      # planepath => 'CellularRule,rule=84',
      # planepath => 'PyramidRows,step=2',
      # planepath => 'Columns,height=2,n_start=0',
-      planepath => 'MultipleRings,step=0,ring_shape=circle',
-      delta_type=>'dRadius',
+     # planepath => 'MultipleRings,step=0,ring_shape=circle',
+      # delta_type=>'dTRadius',
      
      # planepath => 'MultipleRings,step=1,ring_shape=circle',
      # planepath => 'Diagonals',

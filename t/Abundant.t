@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2013 Kevin Ryde
+# Copyright 2013, 2014 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -35,7 +35,7 @@ use Math::NumSeq::Abundant;
 # VERSION
 
 {
-  my $want_version = 68;
+  my $want_version = 69;
   ok ($Math::NumSeq::Abundant::VERSION, $want_version, 'VERSION variable');
   ok (Math::NumSeq::Abundant->VERSION,  $want_version, 'VERSION class method');
 

@@ -1,4 +1,4 @@
-# Copyright 2012, 2013 Kevin Ryde
+# Copyright 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -17,9 +17,6 @@
 
 
 
-# David Madore  Oct 24 2004, 8:00 pm
-# http://sci.tech-archive.net/Archive/sci.math.research/2004-10/0218.html
-#
 # Benoit Cloitre followups
 # http://sci.tech-archive.net/Archive/sci.math.research/2004-10/0224.html
 # http://sci.tech-archive.net/Archive/sci.math.research/2004-11/0015.html
@@ -32,7 +29,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 68;
+$VERSION = 69;
 
 use Math::NumSeq 7; # v.7 for _is_infinite()
 @ISA = ('Math::NumSeq');
@@ -156,10 +153,19 @@ replacing every N'th occurrence of a term with N.
 
     1, 2, 1, 2, 3, 3, 1, 2, 4, 4, 3, 4, ...
 
-=head2 Stages
+As per
 
-The optional C<stage =E<gt> $n> parameter limits the replacements to a given
-number of stages of the algorithm.  The default -1 means unlimited.
+=over
+
+David Madore, "have you seen this sequence?", sci.math.research, 24 Oct
+2004,
+L<http://sci.tech-archive.net/Archive/sci.math.research/2004-10/0218.html>
+
+L<http://www.madore.org/~david/.misc/seq.png>
+
+=back
+
+=head2 Stages
 
 The generating procedure begins with all 1s,
 
@@ -173,12 +179,16 @@ Then every third 1 is changed to 3, and every third 2 changed to 3 also,
 
     stage 2: 1,2,1,2,3,3,1,2,1,2,3,3,...
 
-Then every fourth 1 becomes 4, fourth 2 becomes 4, fourth 3 becomes 4.
+Then every fourth 1 becomes 4, every fourth 2 becomes 4, and every fourth 3
+becomes 4.
 
     stage 3: 1,2,1,2,3,3,1,2,4,4,3,4,...
 
-The replacement of N at every Nth is applied separately to the 1s, 2s, 3s
+The replacement by N of every Nth is applied separately to the 1s, 2s, 3s
 etc remaining at each stage.
+
+The optional C<stage =E<gt> $n> parameter limits the replacements to a given
+number of stages of the algorithm.  The default -1 means unlimited.
 
 =head1 FUNCTIONS
 
@@ -187,6 +197,8 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 =over 4
 
 =item C<$seq = Math::NumSeq::ReReplace-E<gt>new ()>
+
+=item C<$seq = Math::NumSeq::ReRound-E<gt>new (stages =E<gt> $integer)>
 
 Create and return a new sequence object.
 
@@ -208,7 +220,7 @@ L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 
-Copyright 2012, 2013 Kevin Ryde
+Copyright 2012, 2013, 2014 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

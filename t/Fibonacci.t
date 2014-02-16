@@ -20,7 +20,7 @@
 use 5.004;
 use strict;
 use Test;
-plan tests => 132;
+plan tests => 2444;
 
 use lib 't';
 use MyTestHelpers;
@@ -29,13 +29,13 @@ MyTestHelpers::nowarnings();
 use Math::NumSeq::Fibonacci;
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+# use Smart::Comments;
 
 #------------------------------------------------------------------------------
 # VERSION
 
 {
-  my $want_version = 68;
+  my $want_version = 69;
   ok ($Math::NumSeq::Fibonacci::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::Fibonacci->VERSION,  $want_version,
@@ -89,28 +89,37 @@ use Math::NumSeq::Fibonacci;
 
 {
   my $seq = Math::NumSeq::Fibonacci->new;
-  foreach my $i (0 .. 10, 100,200) {
+  foreach my $i (0 .. 150) {
     $seq->seek_to_i($i);
-    {
+
+    foreach my $i ($i .. $i+3) {
       my ($got_i, $got_value) = $seq->next;
       ok ($got_i, $i);
       ok ($got_value == $seq->ith($i), 1);
+
+      { my ($pair_0, $pair_1) = $seq->ith_pair($i);
+        ok ($got_value == $pair_0, 1);
+      }
+      { my ($pair_0, $pair_1) = $seq->ith_pair($i-1);
+        ok ($got_value == $pair_1, 1);
+      }
     }
-    {
-      my ($got_i, $got_value) = $seq->next;
-      ok ($got_i, $i+1);
-      ok ($got_value == $seq->ith($i+1), 1);
-    }
-    {
-      my ($got_i, $got_value) = $seq->next;
-      ok ($got_i, $i+2);
-      ok ($got_value == $seq->ith($i+2), 1);
-    }
-    {
-      my ($got_i, $got_value) = $seq->next;
-      ok ($got_i, $i+3);
-      ok ($got_value == $seq->ith($i+3), 1);
-    }
+
+    # fib(103) = 1500520536206896083277
+    # {
+    #   my ($got_i, $got_value) = $seq->next;
+    #   ok ($got_i, $i+3);
+    #   my $got_ith = $seq->ith($i+3);
+    #   ok ($got_value == $got_ith, 1, "at got_i=$i");
+    #   unless ($got_value == $got_ith) {
+    #     MyTestHelpers::diag ("got_value ",$got_value, " ", sprintf('%.1f',$got_value),
+    #                          " ref=", ref($got_value));
+    #     MyTestHelpers::diag ("got_ith   ",$got_ith, " ", sprintf('%.1f',$got_ith),
+    #                          " ref=", ref($got_ith));
+    #     my $diff = $got_ith - $got_value;
+    #     MyTestHelpers::diag ("diff   ",$diff);
+    #   }
+    # }
   }
 }
 

@@ -17,6 +17,10 @@ with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 69, February 2014
+    - Fibonacci fix ith() automatic BigInt, as exposed by long-double
+      tests RT#92528
+
 Version 68, January 2014
     - new ith_pair()
 

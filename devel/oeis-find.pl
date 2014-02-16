@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -62,9 +62,9 @@ sub want_planepath {
 }
 sub want_coordinate {
   my ($type) = @_;
-  # return 0 unless $type =~ /Turn4/;
+   return 0 unless $type =~ /Overlap/;
   # return 0 unless $type =~ /SRL|SLR/;
-   return 0 unless $type =~ /MinAbsTri|MaxAbsTri/;
+  # return 0 unless $type =~ /MinAbsTri|MaxAbsTri/;
   # return 0 unless $type =~ /NumSiblings/;
   # return 0 unless $type =~ /SubHeight|NumChildren|NumSibling/;
   # return 0 unless $type =~ m{Abs[XY]};

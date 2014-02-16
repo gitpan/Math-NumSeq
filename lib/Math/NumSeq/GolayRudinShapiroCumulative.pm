@@ -1,4 +1,4 @@
-# Copyright 2012, 2013 Kevin Ryde
+# Copyright 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 68;
+$VERSION = 69;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -40,8 +40,7 @@ use constant characteristic_smaller => 1;
 use constant i_start => Math::NumSeq::GolayRudinShapiro->default_i_start;
 
 #------------------------------------------------------------------------------
-# cf A020986 - cumulative 1,-1, always positive
-#    A020990 - cumulative GRS(2n+1), flips sign at odd i
+# cf A020990 - cumulative GRS(2n+1), flips sign at odd i
 #    A051032 - GRS cumulative of 2^n
 #    A212591 - index of first occurrence of k in the partial sums
 #    A020991 - index of last occurrence of k in the partial sums
@@ -341,7 +340,7 @@ L<http://user42.tuxfamily.org/math-numseq/index.html>
 
 =head1 LICENSE
 
-Copyright 2012, 2013 Kevin Ryde
+Copyright 2012, 2013, 2014 Kevin Ryde
 
 Math-NumSeq is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free

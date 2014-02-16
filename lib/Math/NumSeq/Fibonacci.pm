@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 68;
+$VERSION = 69;
 use Math::NumSeq::Base::Sparse;  # FIXME: implement pred() directly ...
 @ISA = ('Math::NumSeq::Base::Sparse');
 
@@ -29,7 +29,7 @@ use Math::NumSeq;
 *_to_bigint = \&Math::NumSeq::_to_bigint;
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+# use Smart::Comments;
 
 
 # use constant name => Math::NumSeq::__('Fibonacci Numbers');
@@ -49,8 +49,9 @@ use constant oeis_anum => 'A000045'; # fibonacci starting at i=0 0,1,1,2,3
 
 #------------------------------------------------------------------------------
 
-# the biggest f0 for which both f0 and f1 fit into a UV, and which therefore
-# for the next step will require BigInt
+# $uv_limit is the biggest Fibonacci number f0 for which both f0 and f1 fit
+# into a UV.  Upon reaching $uv_limit the next step will require BigInt.
+# $uv_i_limit is the i index of $uv_limit.
 #
 my $uv_limit;
 my $uv_i_limit = 0;
@@ -144,101 +145,25 @@ sub ith {
   my ($self, $i) = @_;
   ### Fibonacci ith(): $i
 
-  {
-    my $lowbit = ($i % 2);
-    $i = ($i - $lowbit) / 2;
-    my ($F0, $F1) = $self->ith_pair($i);
+  my $lowbit = ($i % 2);
+  my $pair_i = ($i - $lowbit) / 2;
+  my ($F0, $F1) = $self->ith_pair($pair_i);
 
-    if ($i > $uv_i_limit && ! ref $F0) {
-      # automatic BigInt if not another bignum class
-      $F0 = _to_bigint($F0);
-      $F1 = _to_bigint($F1);
-    }
-
-    # last step needing just one of F[2k] or F[2k+1] by one multiply instead
-    # of two squares in the loop
-    #
-    if ($lowbit) {
-      $F0 = ($F0 + $F1) * (3*$F0 - $F1) + ($i % 2 ? -2 : 2);
-    } else {
-      $F0 *= (2*$F1 - $F0);
-    }
-    return $F0;
+  if ($i > $uv_i_limit && ! ref $F0) {
+    ### automatic BigInt as not another bignum class ...
+    $F0 = _to_bigint($F0);
+    $F1 = _to_bigint($F1);
   }
 
-
-  if (_is_infinite($i)) {
-    return $i;
-  }
-  if ($i == 0) {
-    return $i;
-  }
-
-  my $neg;
-  if ($i < 0) {
-    $i = -$i;
-    $neg = ($i % 2 == 0);
-  }
-
-  my @bits = _bit_split_hightolow($i);
-  ### @bits
-
-  # k=1, Fk1=F[k-1]=0, Fk=F[k]=1
-  shift @bits; # high 1
-  my $Fk1 = ($i * 0);  # inherit bignum 0
-  if ($i > $uv_i_limit && ! ref $Fk1) {
-    # automatic BigInt if not another bignum class
-    $Fk1 = _to_bigint(0);
-  }
-  my $Fk = $Fk1 + 1;  # inherit bignum 1
-
-  my $add = -2;
-  while (@bits > 1) {
-    ### remaining bits: @bits
-    ### Fk1: "$Fk1"
-    ### Fk: "$Fk"
-
-    # two squares and some adds
-    # F[2k+1] = 4*F[k]^2 - F[k-1]^2 + 2*(-1)^k
-    # F[2k-1] =   F[k]^2 + F[k-1]^2
-    # F[2k] = F[2k+1] - F[2k-1]
-    #
-    $Fk *= $Fk;
-    $Fk1 *= $Fk1;
-    my $F2kplus1 = 4*$Fk - $Fk1 + $add;
-    $Fk1 += $Fk; # F[2k-1]
-    my $F2k = $F2kplus1 - $Fk1;
-
-    if (shift @bits) {  # high to low
-      $Fk1 = $F2k;     # F[2k]
-      $Fk = $F2kplus1; # F[2k+1]
-      $add = -2;
-    } else {
-      # $Fk1 is F[2k-1] already
-      $Fk = $F2k;  # F[2k]
-      $add = 2;
-    }
-  }
-
-  ### final ...
-  ### Fk1: "$Fk1"
-  ### Fk: "$Fk"
-  ### @bits
-
-  # last step needing just one of F[2k] or F[2k+1] by one multiply instead
-  # of two squares in the loop
-  # F[2k+1] = (2F[k]+F[k-1])*(2F[k]-F[k-1]) + 2*(-1)^k
-  # F[2k]   = F[k]*(F[k]+2F[k-1])
+  # last step needing just one of F[2k] or F[2k+1] done by one multiply
+  # instead of two squares in the ith_pair() loop
   #
-  if (shift @bits) {
-    $Fk *= 2;
-    $Fk = ($Fk + $Fk1)*($Fk - $Fk1) + $add;
+  if ($lowbit) {
+    $F0 = ($F0 + $F1) * (3*$F0 - $F1) + ($pair_i % 2 ? -2 : 2);
   } else {
-    $Fk *= ($Fk + 2*$Fk1);
+    $F0 *= (2*$F1 - $F0);
   }
-
-  if ($neg) { $Fk = -$Fk; }
-  return $Fk;
+  return $F0;
 }
 
 sub ith_pair {

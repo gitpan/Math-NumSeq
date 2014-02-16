@@ -362,7 +362,7 @@ sub stripped_grep {
 
   my $orig_str = $str;
   my $abs = '';
-  foreach my $mung ('none', 'negate', 'abs', 'half') {
+  foreach my $mung ('none', 'negate', 'abs', 'half', 'quarter') {
     if ($ret) { last; }
 
     if ($mung eq 'none') {
@@ -379,6 +379,14 @@ sub stripped_grep {
       }
       $str = join (',', map {$_/2} split /,/, $orig_str);
       $abs = "[HALF]\n";
+
+    } elsif ($mung eq 'quarter') {
+      if ($str =~ /[13579](,|$)/) {
+        ### not all even to halve ...
+        next;
+      }
+      $str = join (',', map {$_/2} split /,/, $orig_str);
+      $abs = "[QUARTER]\n";
 
     } elsif ($mung eq 'abs') {
       $str = $orig_str;
@@ -813,7 +821,9 @@ filename if called as a class method C<Math::OEIS::Stripped>.
 #
 sub path_enclosed_area {
   my ($path, $n_limit, %options) = @_;
+  ### path_enclosed_area() ...
   my $points = path_boundary_points($path, $n_limit, %options);
+  ### $points
   if (@$points <= 2) {
     return 0;
   }
@@ -843,9 +853,13 @@ sub path_enclosed_area {
     my $lattice_type = ($options{'lattice_type'} || 'square');
     my $triangular_mult = ($lattice_type eq 'triangular' ? 3 : 1);
     my $divisor = ($options{'divisor'} || $lattice_type_to_divisor{$lattice_type});
+    my $side = ($options{'side'} || 'all');
     ### $divisor
+
     my $boundary = 0;
-    foreach my $i (0 .. $#$points) {
+    foreach my $i (($side eq 'all' ? 0 : 1)
+                   ..
+                   $#$points) {
       ### hypot: ($points->[$i]->[0] - $points->[$i-1]->[0])**2 + $triangular_mult*($points->[$i]->[1] - $points->[$i-1]->[1])**2
 
       $boundary += sqrt(((  $points->[$i]->[0] - $points->[$i-1]->[0])**2
@@ -863,25 +877,27 @@ sub path_enclosed_area {
   my %lattice_type_to_dirtable = (square => \@dir4_to_dxdy,
                                   triangular => \@dir6_to_dxdy);
 
-  # Return arrayref of points [ [$x1,$y1], [$x2,$y2], ... ]
-  # which are the points on the boundary of the curve N=n_start() to N <= $n_limit
-  # The final point should be taken to return to the initial $x1,$y1.
+  # Return arrayref of points [ [$x,$y], ..., [$to_x,$to_y]]
+  # which are the points on the boundary of the curve from $x,$y to
+  # $to_x,$to_y inclusive.
   #
   # lattice_type => 'triangular'
   #    Means take the six-way triangular lattice points as adjacent.
   #
-  sub path_boundary_points {
-    my ($path, $n_limit, %options) = @_;
-    ### path_boundary_points(): "n_limit=$n_limit"
+  sub path_boundary_points_ft {
+    my ($path, $n_limit, $x,$y, $to_x,$to_y, %options) = @_;
+    ### path_boundary_points_ft(): "$x,$y to $to_x,$to_y"
+    ### $n_limit
+
     my $lattice_type = ($options{'lattice_type'} || 'square');
     my $dirtable = $lattice_type_to_dirtable{$lattice_type};
     my $dirmod = scalar(@$dirtable);
     my @points;
-    my $x = 0;
-    my $y = 0;
-    my $dir = $dirmod - 1;
+    my $dir = $options{'dir'} // ($dirmod - 1);
     my $dirrev = $dirmod / 2 - 1;
-    my @n_list = ($path->n_start);
+    my @n_list = $path->xy_to_n_list($x,$y)
+      or die "Oops, no n_list at $x,$y";
+    ### initial: "dir=$dir  n_list=".join(',',@n_list)
 
   TOBOUNDARY: for (;;) {
       foreach my $i (1 .. $dirmod) {
@@ -893,6 +909,10 @@ sub path_enclosed_area {
         }
       }
       my ($dx,$dy) = @{$dirtable->[$dir]};
+      if ($x == $to_x && $y == $to_y) {
+        $to_x -= $dx;
+        $to_y -= $dy;
+      }
       $x -= $dx;
       $y -= $dy;
       ### towards boundary: "$x, $y"
@@ -902,10 +922,11 @@ sub path_enclosed_area {
       ### at: "$x, $y"
       push @points, [$x,$y];
       $dir -= $dirrev;
+      $dir %= $dirmod;
       foreach (1 .. $dirmod) {
         my ($dx,$dy) = @{$dirtable->[$dir]};
         my @next_n_list = $path->xy_to_n_list($x+$dx,$y+$dy);
-        ### @next_n_list
+        ### consider: "dir=$dir  next_n_list=".join(',',@next_n_list)
         if (any_consecutive(\@n_list, \@next_n_list, $n_limit)) {
           @n_list = @next_n_list;
           $x += $dx;
@@ -914,7 +935,11 @@ sub path_enclosed_area {
         }
         $dir = ($dir+1) % $dirmod;
       }
-      if ($x == 0 && $y == 0) {
+      if ($x == $to_x && $y == $to_y) {
+        ### stop at: "$x,$y"
+        unless ($x == $points[0][0] && $y == $points[0][1]) {
+          push @points, [$x,$y];
+        }
         last;
       }
     }
@@ -922,6 +947,34 @@ sub path_enclosed_area {
   }
 }
 
+# Return arrayref of points [ [$x1,$y1], [$x2,$y2], ... ]
+# which are the points on the boundary of the curve N=n_start() to N <= $n_limit
+# The final point should be taken to return to the initial $x1,$y1.
+#
+# lattice_type => 'triangular'
+#    Means take the six-way triangular lattice points as adjacent.
+#
+sub path_boundary_points {
+  my ($path, $n_limit, %options) = @_;
+  ### path_boundary_points(): "n_limit=$n_limit"
+  ### %options
+
+  my $x = 0;
+  my $y = 0;
+  my $to_x = $x;
+  my $to_y = $y;
+  if ($options{'side'} && $options{'side'} eq 'right') {
+    ($to_x,$to_y) = $path->n_to_xy($n_limit);
+
+  } elsif ($options{'side'} && $options{'side'} eq 'left') {
+    ($x,$y) = $path->n_to_xy($n_limit);
+  }
+  return path_boundary_points_ft($path, $n_limit, $x,$y, $to_x,$to_y, %options);
+}
+
+# $aref and $bref are arrayrefs of N values.
+# Return true if any pair of values $aref->[a], $bref->[b] are consecutive.
+# Values in the arrays which are > $n_limit are ignored.
 sub any_consecutive {
   my ($aref, $bref, $n_limit) = @_;
   foreach my $a (@$aref) {

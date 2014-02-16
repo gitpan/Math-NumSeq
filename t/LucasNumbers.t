@@ -36,7 +36,7 @@ use Math::NumSeq::LucasNumbers;
 # VERSION
 
 {
-  my $want_version = 68;
+  my $want_version = 69;
   ok ($Math::NumSeq::LucasNumbers::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::LucasNumbers->VERSION,  $want_version,

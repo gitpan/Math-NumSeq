@@ -31,7 +31,7 @@ use Module::Util;
 use File::Path;
 
 use vars '$VERSION';
-$VERSION = 68;
+$VERSION = 69;
 
 # uncomment this to run the ### lines
 # use Smart::Comments;

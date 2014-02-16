@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2010, 2011, 2012, 2013 Kevin Ryde
+# Copyright 2010, 2011, 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -25,6 +25,21 @@ use POSIX;
 use Smart::Comments;
 
 
+{
+  require Math::NumSeq::OEIS::File;
+  my $seq = Math::NumSeq::OEIS::File->new(
+                                          anum=>'A000002',
+                                          # anum=>'A088218',
+                                          # anum=>'A000290',
+                                         );
+  ### $seq
+  ### description: $seq->description
+  ### characteristic(increasing): $seq->characteristic('increasing')
+  ### characteristic(smaller): $seq->characteristic('smaller')
+  ### values_min: $seq->values_min
+  ### values_max: $seq->values_max
+  exit 0;
+}
 {
   require Math::NumSeq::OEIS::File;
   my $anum = 'A000032';
@@ -105,20 +120,6 @@ use Smart::Comments;
   exit 0;
 }
 
-{
-  require Math::NumSeq::OEIS::File;
-  my $seq = Math::NumSeq::OEIS::File->new(
-                                          anum=>'A088218',
-                                          # anum=>'A000290',
-                                         );
-  ### $seq
-  ### description: $seq->description
-  ### characteristic(increasing): $seq->characteristic('increasing')
-  ### characteristic(smaller): $seq->characteristic('smaller')
-  ### values_min: $seq->values_min
-  ### values_max: $seq->values_max
-  exit 0;
-}
 
 {
   # how many i to be sure of increasing / non_decreasing
