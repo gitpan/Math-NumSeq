@@ -31,6 +31,7 @@ devel/exe-sortadd.c
 devel/expression.pl
 devel/factorials.pl
 devel/fibbinary.pl
+devel/fibonacci-representations.pl
 devel/fibonacci-word.pl
 devel/fibonacci.pl
 devel/flimsy.pl
@@ -62,7 +63,6 @@ devel/lib/Math/NumSeq/DigitExtract.pm
 devel/lib/Math/NumSeq/DigitLengthModulo.pm
 devel/lib/Math/NumSeq/EratosthenesStage.pm
 devel/lib/Math/NumSeq/FactorialProducts.pm
-devel/lib/Math/NumSeq/FibonacciDiatomic.pm
 devel/lib/Math/NumSeq/FibonacciProducts.pm
 devel/lib/Math/NumSeq/HafermanByBits.pm
 devel/lib/Math/NumSeq/HafermanZ.pm
@@ -202,6 +202,7 @@ lib/Math/NumSeq/Factorials.pm
 lib/Math/NumSeq/Fibbinary.pm
 lib/Math/NumSeq/FibbinaryBitCount.pm
 lib/Math/NumSeq/Fibonacci.pm
+lib/Math/NumSeq/FibonacciRepresentations.pm
 lib/Math/NumSeq/FibonacciWord.pm
 lib/Math/NumSeq/File.pm
 lib/Math/NumSeq/FractionDigits.pm
@@ -308,6 +309,7 @@ t/Expression.t
 t/Factorials.t
 t/Fibbinary.t
 t/Fibonacci.t
+t/FibonacciRepresentations.t
 t/FibonacciWord.t
 t/File-1.txt
 t/File.t
@@ -327,6 +329,7 @@ t/NumSeq.t
 t/Odd.t
 t/OEIS-File.t
 t/OEIS.t
+t/Pell.t
 t/Perrin.t
 t/PolignacObstinate.t
 t/PowerFlip.t
@@ -382,6 +385,7 @@ xt/oeis/Factorials-oeis.t
 xt/oeis/Fibbinary-oeis.t
 xt/oeis/FibbinaryBitCount-oeis.t
 xt/oeis/Fibonacci-oeis.t
+xt/oeis/FibonacciRepresentations-oeis.t
 xt/oeis/FibonacciWord-oeis.t
 xt/oeis/File-oeis.t
 xt/oeis/GolayRudinShapiro-oeis.t
@@ -396,6 +400,7 @@ xt/oeis/MephistoWaltz-oeis.t
 xt/oeis/MobiusFunction-oeis.t
 xt/oeis/NumSeq-oeis.t
 xt/oeis/Palindromes-oeis.t
+xt/oeis/Pell-oeis.t
 xt/oeis/PisanoPeriod-oeis.t
 xt/oeis/Polygonal-oeis.t
 xt/oeis/PowerFlip-oeis.t

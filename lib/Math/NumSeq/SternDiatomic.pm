@@ -20,13 +20,21 @@
 #    http://www.cs.utexas.edu/users/EWD/ewd05xx/EWD570.PDF
 #    http://www.cs.utexas.edu/users/EWD/ewd05xx/EWD578.PDF
 
+# Some Properties of a Function Studied by De Rham, Carlitz and Dijkstra and
+# its Relation to the Eisenstein-Stern's Diatomic Sequence
+# I. Urhiba, Math. Comm. 6 2001 181-198
+
+# Lind stern summary 
+# An extension of Stern's diatomic sequence Duke Math J 36
+# 1969 55-60
+
 
 package Math::NumSeq::SternDiatomic;
 use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 69;
+$VERSION = 70;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -53,7 +61,9 @@ use constant characteristic_integer => 1;
 #    A049455,A049456 stern/farey tree
 #    A070878 stern by rows
 #    A070879 stern by rows
+#    http://oeis.org/stern_brocot.html
 #
+# cf Michael Somos iteration in A002487
 use constant oeis_anum => 'A002487';
 
 #------------------------------------------------------------------------------
@@ -243,16 +253,16 @@ L<http://www.jstor.org/stable/3647762>
 Two successive sequence values are maintained and are advanced by a simple
 operation.
 
-    p = seq[i]    q = seq[i+1]  
-    initially p=seq[0]=0 and q=seq[1]=1
+    maintaining p = seq[i], q = seq[i+1]  
+    initial p = seq[0] = 0
+            q = seq[1] = 1
 
     p_next = seq[i+1] = q
     q_next = seq[i+2] = p+q - 2*(p mod q)
+      where the mod operation rounds towards zero
+      0 <= (p mod q) <= q-1
 
-    where the mod operation rounds towards zero
-    0 <= (p mod q) <= q-1
-
-The form by Newman uses a floor operation.  This suits expressing the
+The form by Newman uses a floor operation.  That suits expressing the
 iteration in terms of a rational x[i]=p/q.
 
     p_next              1
@@ -269,8 +279,8 @@ mod q.
                   = q / (2*(p - rem) + q - p)  
                   = q / (p+q - 2*rem)               using p,q
 
-C<seek_to_i()> is implemented by calculating new p,q values with an Ith Pair
-per below.
+C<seek_to_i()> is implemented by calculating a pair of new p,q values with
+an C<ith_pair()> per below.
 
 =cut
 
@@ -286,8 +296,8 @@ per below.
 
 =head2 Ith Pair
 
-The two sequence values at an arbitrary i,i+1 can be calculated from the
-bits of i,
+For C<ith_pair()> the two sequence values at an arbitrary i,i+1 can be
+calculated from the bits of i,
 
     p = 0
     q = 1
@@ -311,10 +321,11 @@ successive Stern diatomic sequence values.
 
 =head2 Ith Alone
 
-If only a single ith() value is desired then the bits of i can be taken from
-low to high with the same loop as above.  In that case p=ith(i) but q is not
-ith(i+1).  Any low zero bits can be ignored for this method since initial
-p=0 means their steps q+=p do nothing.
+If only a single ith() value is desired then a variation can be made on the
+L</Ith Pair> above.  Taking the bits of i from low to high (instead of high
+to low) gives p=ith(i), but q is not ith(i+1).  Low zero bits can be ignored
+for this approach since initial p=0 means the steps q+=p for bit=0 do
+nothing.
 
 =head1 SEE ALSO
 

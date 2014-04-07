@@ -37,7 +37,7 @@ use Math::NumSeq::SqrtContinued;
 # VERSION
 
 {
-  my $want_version = 69;
+  my $want_version = 70;
   ok ($Math::NumSeq::SqrtContinued::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::SqrtContinued->VERSION,  $want_version,

@@ -59,7 +59,6 @@ $|=1;
   require Math::NumSeq::DigitLength;
   $values_class = 'Math::NumSeq::DigitLength';
   $values_class = 'Math::NumSeq::DigitProduct';
-  $values_class = 'Math::NumSeq::Pell';
   $values_class = 'Math::NumSeq::KlarnerRado';
   $values_class = 'Math::NumSeq::Kolakoski';
   $values_class = 'Math::NumSeq::UlamSequence';
@@ -67,7 +66,6 @@ $|=1;
   $values_class = 'Math::NumSeq::SumTwoSquares';
   $values_class = 'Math::NumSeq::CunninghamChain';
   $values_class = 'Math::NumSeq::CunninghamPrimes';
-  $values_class = 'Math::NumSeq::AlmostPrimes';
   $values_class = 'Math::NumSeq::DigitMiddle';
   $values_class = 'Math::NumSeq::SqrtEngel';
   $values_class = 'Math::NumSeq::RepdigitRadix';
@@ -181,7 +179,6 @@ $|=1;
   $values_class = 'Math::NumSeq::LeastPrimitiveRoot';
   $values_class = 'Math::NumSeq::DedekindPsiCumulative';
   $values_class = 'Math::NumSeq::SumPowSub1';
-  $values_class = 'Math::NumSeq::PlanePathN';
   $values_class = 'Math::NumSeq::FibonacciRepresentations';
   $values_class = 'Math::NumSeq::LuckyNumbers';
   $values_class = 'Math::NumSeq::ProthNumbers';
@@ -195,12 +192,15 @@ $|=1;
   $values_class = 'Math::NumSeq::OEIS::File';
   $values_class = 'Math::NumSeq::CollatzSteps';
   $values_class = 'Math::NumSeq::PrimeIndexPrimes';
-  $values_class = 'Math::NumSeq::FibonacciDiatomic';
+  $values_class = 'Math::NumSeq::FibonacciRepresentations';
   $values_class = 'Math::NumSeq::Fibonacci';
   $values_class = 'Math::NumSeq::SlopingExcluded';
   $values_class = 'Math::NumSeq::LucasNumbers';
   $values_class = 'Math::NumSeq::PlanePathDelta';
+  $values_class = 'Math::NumSeq::AlmostPrimes';
   $values_class = 'Math::NumSeq::PlanePathCoord';
+  $values_class = 'Math::NumSeq::PlanePathN';
+  $values_class = 'Math::NumSeq::Pell';
   
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new
@@ -296,14 +296,17 @@ $|=1;
      # planepath => 'PyramidRows,step=3',
      # planepath => 'LCornerTree,parts=diagonal-1',
      # planepath => 'UlamWarburton,parts=4',
-     planepath => 'DragonCurve',
-      coordinate_type => 'NumOverlap',
+     # planepath => 'DragonCurve',
+     # planepath => 'Godfrey',
+      planepath => 'AlternatePaper',
+     #planepath => 'CCurve',
+     # coordinate_type => 'Revisit',
+     # coordinate_type => 'NumOverlap',
      # coordinate_type => 'TRSquared',
      # coordinate_type => 'NumSiblings',
      # coordinate_type => 'AbsDiff',
      
      # planepath => 'PythagoreanTree,coordinates=AC',
-     # planepath => 'AlternatePaper',
      # planepath => 'RationalsTree,tree_type=L',
       # planepath => 'R5DragonMidpoint,arms=1',
      # planepath => 'CellularRule,rule=84',
@@ -334,7 +337,7 @@ $|=1;
      # planepath => 'QuadricIslands',
      # line_type => 'Depth_start',
      # planepath => 'WythoffArray,x_start=1,y_start=1',
-     # line_type => 'X_axis',
+      line_type => 'X_axis',
      # line_type => 'Depth_end',
      # i_start => 1,
      

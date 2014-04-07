@@ -38,7 +38,7 @@ sub want_module {
   my ($module) = @_;
   # return 0 unless $module =~ /Collatz/;
   # return 0 unless $module =~ /DigitExtract/;
-   return 0 unless $module =~ /PlanePath/;
+   return 0 unless $module =~ /PlanePathTurn/;
   # return 0 unless $module =~ /HafermanCarpet/;
   return 1;
 }
@@ -47,27 +47,30 @@ sub want_planepath {
   # return 0 unless $planepath =~ /Knight/;
   # return 0 unless $planepath =~ /CCurve/;
   # return 0 unless $planepath =~ /Divis|DiagonalRationals|CoprimeCol/;
-  # return 0 unless $planepath =~ /HilbertCurve/;
+   return 0 unless $planepath =~ /Rows/;
   # return 0 unless $planepath =~ /LCornerTree/;
   # return 0 unless $planepath =~ /LCorn|RationalsTree/;
   # return 0 unless $planepath =~ /FactorRationals/;
-  # return 0 unless $planepath =~ /SierpinskiArrowheadC/;
+  # return 0 unless $planepath =~ /MPeaks/;
   # return 0 unless $planepath =~ /TriangleSpiralSkewed/;
   # return 0 unless $planepath =~ /Pythagorean/;
   # return 0 unless $planepath =~ /Pythag/;
   # return 0 unless $planepath =~ /HTree/;
+  # return 0 unless $planepath =~ /CoprimeColumns/;
+  # return 0 unless $planepath =~ /Godfrey/;
 
   return 0 if $planepath =~ /ByCells/; # exclude
   return 1;
 }
 sub want_coordinate {
   my ($type) = @_;
-   return 0 unless $type =~ /Overlap/;
+  # return 0 unless $type =~ /Revisit/;
+  # return 0 unless $type =~ /Overlap/;
   # return 0 unless $type =~ /SRL|SLR/;
   # return 0 unless $type =~ /MinAbsTri|MaxAbsTri/;
   # return 0 unless $type =~ /NumSiblings/;
   # return 0 unless $type =~ /SubHeight|NumChildren|NumSibling/;
-  # return 0 unless $type =~ m{Abs[XY]};
+   return 0 unless $type =~ m{Turn};
   # return 0 unless $type =~ m{DiffXY/2};
   # return 0 if $type =~ /SubHeight|NumChildren|NumSibling/;
   return 1;

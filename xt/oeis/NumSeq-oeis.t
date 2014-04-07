@@ -54,10 +54,10 @@ sub want_anum {
 }
 sub want_module {
   my ($module) = @_;
-  # return 0 unless $module =~ /Lucky/;
-   return 0 unless $module =~ /Lucas|Fibonacci/;
+  # return 0 unless $module =~ /Almost/;
+  # return 0 unless $module =~ /Lucas|Fibonacci/;
 #   return 0 unless $module =~ /Collatz/;
-#   return 0 unless $module =~ /FibonacciDiatomic/;
+   return 0 unless $module =~ /FibonacciRepresentations/;
   return 1;
 }
 

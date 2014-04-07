@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2012, 2013 Kevin Ryde
+# Copyright 2012, 2013, 2014 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -45,6 +45,34 @@ use Math::NumSeq::Fibbinary;
 # uncomment this to run the ### lines
 # use Smart::Comments '###';
 
+
+#------------------------------------------------------------------------------
+# A054204 - has only even Fibs
+
+MyOEIS::compare_values
+  (anum => 'A054204',
+   func => sub {
+     my ($count) = @_;
+     my $seq = Math::NumSeq::Fibbinary->new;
+     my @got;
+     $seq->next;  # not initial 0
+     while (@got < $count) {
+       my ($i, $value) = $seq->next;
+       if (all_odds_0($value)) {
+         push @got, $i;
+       }
+     }
+     return \@got;
+   });
+
+sub all_odds_0 {
+  my ($n) = @_;
+  while ($n) {
+    if ($n & 2) { return 0; }
+    $n >>= 2;
+  }
+  return 1;
+}
 
 #------------------------------------------------------------------------------
 # A095734 least 0<->1 flips to make Zeck into palindrome
@@ -174,7 +202,6 @@ MyOEIS::compare_values
      my ($count) = @_;
 
      require Math::BigInt;
-     require Math::Permute::Array;
      my $seq = Math::NumSeq::Fibbinary->new;
      my @got;
      for (my $c = 1; @got < $count; $c++) {

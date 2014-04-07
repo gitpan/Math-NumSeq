@@ -60,7 +60,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 69;
+$VERSION = 70;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -572,6 +572,7 @@ L<Math::NumSeq::Primorials>,
 L<Math::NumSeq::Fibonacci>,
 L<Math::NumSeq::LucasNumbers>,
 L<Math::NumSeq::FibonacciWord>,
+L<Math::NumSeq::FibonacciRepresentations>,
 L<Math::NumSeq::PisanoPeriod>,
 L<Math::NumSeq::PisanoPeriodSteps>,
 L<Math::NumSeq::Fibbinary>,

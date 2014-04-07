@@ -20,6 +20,9 @@
 # DragonCurve repeating runs
 #
 # cf fxtbook ch38 p756
+#
+# cf visualizing
+# http://cs-people.bu.edu/ilir/zecko/
 
 
 package Math::NumSeq::Fibbinary;
@@ -28,7 +31,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 69;
+$VERSION = 70;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -59,6 +62,7 @@ sub values_min {
 #    A037011 - baum-sweet cubic, might be 1 iff i is in the fibbinary seq
 #    A014417 - n in fibonacci base, the fibbinaries written out in binary
 #    A139764 - smallest Zeckendorf term
+#    A054204 - using only even Fibs
 #
 use constant oeis_anum => 'A003714';  # Fibbinary, OFFSET=0 start value=0
 
@@ -440,17 +444,25 @@ The bits of the fibbinary values encode Fibonacci numbers used to represent
 i in Zeckendorf style Fibonacci base.  In the Zeckendorf base system an
 integer i is a sum of Fibonacci numbers,
 
-    i = F(k1) + F(k2) + ... F(kn)         k1 > k2 > ... > kn
+    i = F[k1] + F[k2] + ... F[kn]         k1 > k2 > ... > kn
 
 Each k is chosen as the highest Fibonacci less than the remainder at that
-point.  For example, reckoning the Fibonaccis as F(0)=1, F(1)=2, etc,
+point.  For example, reckoning the Fibonaccis as F[0]=1, F[2]=2, etc
 
-    20 = 13+5+1 = F(5)+F(3)+F(0)
+    19 = 13+5+1 = F[5]+F[3]+F[0]
+
+=for Test-Pari fibonacci(2) == 1
+
+=for Test-Pari fibonacci(4) == 3
+
+=for Test-Pari fibonacci(7) + fibonacci(5) + fibonacci(2) == 19
 
 The k's are then assembled as 1-bits in binary to encode this sum in an
 integer,
 
-    fibbinary(20) = 2^5 + 2^3 + 2^0 = 41
+    fibbinary(19) = 2^5 + 2^3 + 2^0 = 41
+
+=for Test-Pari 2^5 + 2^3 + 2^0 == 41
 
 The gaps between Fibonacci numbers means that after subtracting F(k) the
 next cannot be F(k-1), it must be F(k-2) or less.  For that reason there's

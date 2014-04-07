@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 69;
+$VERSION = 70;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 
@@ -63,7 +63,7 @@ use constant parameter_info_array =>
 my %oeis_anum
   = (repeated =>
      [ undef,
-       undef,
+       'A000040',  # 1, just the primes
        'A001358',  # 2 with repeats
        'A014612',  # 3 with repeats
        'A014613',  # 4 with repeats
@@ -83,6 +83,7 @@ my %oeis_anum
        'A069279',  # 18 with repeats
        'A069280',  # 19 with repeats
        'A069281',  # 20 with repeats
+       # OEIS-Other:     A000040 factor_count=1
        # OEIS-Catalogue: A001358
        # OEIS-Catalogue: A014612 factor_count=3
        # OEIS-Catalogue: A014613 factor_count=4
@@ -105,7 +106,7 @@ my %oeis_anum
      ],
      distinct =>
      [ undef,
-       undef,
+       'A000040', # 1, just the primes
        'A006881', # 2 distinct primes
        'A007304', # 3 distinct primes
        'A046386', # 4 distinct primes
@@ -114,6 +115,7 @@ my %oeis_anum
        'A123321', # 7 distinct primes
        'A123322', # 8 distinct primes
        'A115343', # 9 distinct primes
+       # OEIS-Other:     A000040 multiplicity=distinct factor_count=1
        # OEIS-Catalogue: A006881 multiplicity=distinct
        # OEIS-Catalogue: A007304 multiplicity=distinct factor_count=3
        # OEIS-Catalogue: A046386 multiplicity=distinct factor_count=4
@@ -368,20 +370,45 @@ Math::NumSeq::AlmostPrimes -- semiprimes and other fixed number of prime factors
 
 =head1 DESCRIPTION
 
-The sequence of numbers having a given number of prime factors.  The default
-is the semiprimes C<factor_count =E<gt> 2> giving products of two primes
-P*Q, which is 4,6,9,10,14,15,etc.  For example 15 because 15=3*5.
+This sequence is various "almost prime" numbers.  These are numbers with a
+given number of prime factors.  The default is 2 prime factors, which are
+the semi-primes.  For example 15 because 15=3*5.
+
+    4, 6, 9, 10, 14, 15, 21, 22, 25, 26, 33, 34, 35, ...
+    # starting i=1
+
+=head2 Factor Count
 
 C<factor_count =E<gt> $c> controls how many prime factors are to be used.
-1 is the primes themselves (the same as L<Math::NumSeq::Primes>).  Or for
-example factor count 4 the sequence is 16,24,36,40,54,60,etc,
-eg. 60=2*2*3*5.
+1 would be the primes themselves (the same as L<Math::NumSeq::Primes>).  Or
+for example factor count 4 is as follows.  60 is present because 60=2*2*3*5
+has precisely 4 prime factors.
+
+    # factor_count => 4
+    16, 24, 36, 40, 54, 60, ...
+
+The first number in the sequence is 2^factor_count, being prime factor 2
+repeated factor_count many times.
+
+=head2 Multiplicity
 
 C<multiplicity =E<gt> 'distinct'> asks for products of distinct primes.  For
-the default 2 factors this means no squares like 4=2*2, leaving
-6,10,14,15,21,etc.  For other factor count it eliminates any repeated
-factors, so for example factor count 4 becomes 210,330,390,462,510,546,etc.
-The first in the sequence is the primorial 2*3*5*7=210.
+the default factor count 2 this means exclude squares like 4=2*2, which
+leaves
+
+    # multiplicity => 'distinct'
+    6, 10, 14, 15, 21, ...
+
+For other factor counts, multiplicity "distinct" eliminates any numbers with
+repeated factors, leaving only square-free numbers.  For example factor
+count 4 becomes
+
+    # factor_count => 4, multiplicity => 'distinct'
+    210, 330, 390, 462, 510, 546, ...
+
+For multiplicity "distinct" the first value in the sequence is a primorial
+(see L<Math::NumSeq::Primorials>), being the first C<factor_count> many
+primes multipled together.  For example 210 above is primorial 2*3*5*7.
 
 =head1 FUNCTIONS
 
@@ -391,7 +418,12 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =item C<$seq = Math::NumSeq::AlmostPrimes-E<gt>new ()>
 
-Create and return a new sequence object.
+=item C<$seq = Math::NumSeq::AlmostPrimes-E<gt>new (factor_count =E<gt> $integer, multiplicity =E<gt> $str)>
+
+Create and return a new sequence object.  C<multiplicity> can be
+
+    "repeated"  repeated primes allowed (the default)
+    "distinct"  all primes must be distinct
 
 =item C<$bool = $seq-E<gt>pred($value)>
 

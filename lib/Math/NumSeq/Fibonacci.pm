@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 69;
+$VERSION = 70;
 use Math::NumSeq::Base::Sparse;  # FIXME: implement pred() directly ...
 @ISA = ('Math::NumSeq::Base::Sparse');
 
@@ -106,9 +106,7 @@ sub rewind {
 }
 sub seek_to_i {
   my ($self, $i) = @_;
-  # ENHANCE-ME: $self->ith_pair($i) giving i and i+1, or i-1 and i
-  $self->{'f0'} = $self->ith($i);
-  $self->{'f1'} = $self->ith($i+1);
+  ($self->{'f0'}, $self->{'f1'}) = $self->ith_pair($i);
   $self->{'i'} = $i;
 }
 sub next {
@@ -370,9 +368,24 @@ will return C<$i> and corresponding value.
 
 Return the C<$i>'th Fibonacci number.
 
+For negative <$i> the sequence is extended backwards as F[i]=F[i+2]-F[i+1].
+The effect is the same Fibonacci numbers but negative at negative even i.
+
+     i     F[i]
+    ---    ----
+     0       0
+    -1       1
+    -2      -1       <----+ negative at even i
+    -3       2            |
+    -4      -3       <----+
+
+When C<$value> exceeds the range of a Perl unsigned integer the return is a
+C<Math::BigInt> to preserve precision.
+
 =item C<$bool = $seq-E<gt>pred($value)>
 
-Return true if C<$value> is a Fibonacci number.
+Return true if C<$value> occurs in the sequence, so is a positive Fibonacci
+number.
 
 =item C<$i = $seq-E<gt>value_to_i_estimate($value)>
 

@@ -35,7 +35,7 @@ use Math::NumSeq::Fibonacci;
 # VERSION
 
 {
-  my $want_version = 69;
+  my $want_version = 70;
   ok ($Math::NumSeq::Fibonacci::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::Fibonacci->VERSION,  $want_version,
@@ -179,6 +179,5 @@ if (! Math::BigFloat->can('bnan')) {
         'ith() on BigFloat nan,inf,neginf should return big nan');
 }
 
+#------------------------------------------------------------------------------
 exit 0;
-
-

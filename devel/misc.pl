@@ -38,8 +38,8 @@ use Smart::Comments;
   exit 0;
 }
 {
-  require Math::NumSeq::FibonacciDiatomic;
-  my $seq = Math::NumSeq::FibonacciDiatomic->new;
+  require Math::NumSeq::FibonacciRepresentations;
+  my $seq = Math::NumSeq::FibonacciRepresentations->new;
   { my $value = $seq->ith(3);
     print "$value\n";
   }
