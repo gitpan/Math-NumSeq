@@ -26,7 +26,7 @@ use strict;
 use Math::Prime::XS 0.23 'is_prime'; # version 0.23 fix for 1928099
 
 use vars '$VERSION', '@ISA';
-$VERSION = 70;
+$VERSION = 71;
 
 use Math::NumSeq;
 use Math::NumSeq::Primes;

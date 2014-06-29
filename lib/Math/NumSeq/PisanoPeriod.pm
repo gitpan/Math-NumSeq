@@ -41,7 +41,7 @@ use strict;
 use Math::Prime::XS 'is_prime';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 70;
+$VERSION = 71;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;

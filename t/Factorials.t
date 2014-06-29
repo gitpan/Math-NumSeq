@@ -33,7 +33,7 @@ use Math::NumSeq::Factorials;
 # VERSION
 
 {
-  my $want_version = 70;
+  my $want_version = 71;
   ok ($Math::NumSeq::Factorials::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::Factorials->VERSION,  $want_version,

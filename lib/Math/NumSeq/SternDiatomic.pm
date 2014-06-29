@@ -34,7 +34,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 70;
+$VERSION = 71;
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
@@ -270,7 +270,8 @@ iteration in terms of a rational x[i]=p/q.
     q_next     1 + 2*floor(p/q) - p/q
 
 For separate p,q a little rearrangement gives it in terms of the remainder p
-mod q.
+mod q, as per formula a(n)=a(n-2)+a(n-1)-2*(a(n-2) mod a(n-1)) by Mike
+Stay OEIS A002487, November 2006.
 
     division p = q*floor(p/q) + rem      where rem = (p mod q)
     then
@@ -278,6 +279,12 @@ mod q.
                   = q / (2*q*floor(p/q) + q - p)
                   = q / (2*(p - rem) + q - p)  
                   = q / (p+q - 2*rem)               using p,q
+
+In terms of the Calkin-Wilf tree this method works because the number of
+trailing right leg steps can be found by m=floor(p/q), then take a step
+across, then back down again by m many left leg steps.  When at the
+right-most edge of the tree the step across goes down by one extra left,
+thereby automatically wrapping around at the end of each row.
 
 C<seek_to_i()> is implemented by calculating a pair of new p,q values with
 an C<ith_pair()> per below.
@@ -293,6 +300,8 @@ an C<ith_pair()> per below.
 #      = q / (2*(p - r) + q - p)
 #      = q / (2*p - 2*r + q - p)
 #      = q / (p + q - 2*r)
+
+=pod
 
 =head2 Ith Pair
 

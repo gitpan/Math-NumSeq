@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright 2013 Kevin Ryde
+# Copyright 2013, 2014 Kevin Ryde
 
 # This file is part of Math-NumSeq.
 #
@@ -178,7 +178,7 @@ use Math::NumSeq::HafermanCarpet;
       # shift @values;
       print join(',',@values),"\n";
       require MyOEIS;
-      print MyOEIS->grep_for_values
+      Math::OEIS::Grep->search
         (name => "initial_value=$initial_value bit=$bit",
          array => \@values);
     }
@@ -248,7 +248,7 @@ use Math::NumSeq::HafermanCarpet;
 
     require MyOEIS;
     $#values = 70;
-    print MyOEIS->grep_for_values
+    Math::OEIS::Grep->search
       (name => "centre axis initial_value=$initial_value",
        array => \@values);
   }
@@ -270,7 +270,7 @@ use Math::NumSeq::HafermanCarpet;
   # 81  01101101111101101111101101101101101111101
   #      123456789                    n
   #      001001002001001002001001003  low 0-trits
-  #      
+  #
   # cf A014578 is 1->110, 0->111
   #
   foreach my $initial (0, 1) {
@@ -289,8 +289,8 @@ use Math::NumSeq::HafermanCarpet;
     require MyOEIS;
     $#values = 70;
     shift @values;
-    print MyOEIS->grep_for_values(name => "centre axis starting $initial",
-                                  array => \@values);
+    Math::OEIS::Grep->search(name => "centre axis starting $initial",
+                             array => \@values);
   }
   exit 0;
 }
@@ -354,8 +354,8 @@ use Math::NumSeq::HafermanCarpet;
           push @values, $n;
         }
       }
-      print MyOEIS->grep_for_values(name => $name,
-                                    array => \@values);
+      Math::OEIS::Grep->search(name => $name,
+                               array => \@values);
     }
   }
   exit 0;
@@ -450,7 +450,7 @@ use Math::NumSeq::HafermanCarpet;
     push @values, $seq->ith($i) ? 0 : 1;
   }
   print join(',',@values),"\n";
-  print MyOEIS->grep_for_values_aref(\@values);
+  Math::OEIS::Grep->search(array=>\@values);
   exit 0;
 }
 

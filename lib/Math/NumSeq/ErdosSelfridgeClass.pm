@@ -21,7 +21,7 @@ use strict;
 use Math::NumSeq::Primes;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 70;
+$VERSION = 71;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -227,7 +227,7 @@ are reduced to 2s and 3s.
 
 =head2 Class -
 
-Option C<on_values =E<gt> '-'> applies the same procedure to prime
+Option C<p_or_m =E<gt> '-'> applies the same procedure to prime
 factors of p-1, giving a "class-" number.
 
     0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 2, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, ...
@@ -250,7 +250,7 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =item C<$seq = Math::NumSeq::ErdosSelfridgeClass-E<gt>new ()>
 
-=item C<$seq = Math::NumSeq::ErdosSelfridgeClass-E<gt>new (p_or_m =E<gt> $str, on_values =E<gt> 'all')>
+=item C<$seq = Math::NumSeq::ErdosSelfridgeClass-E<gt>new (p_or_m =E<gt> $str, on_values =E<gt> $str)>
 
 Create and return a new sequence object.
 
@@ -275,6 +275,8 @@ C<on_values> (a string) can be
 Return the class number of C<$value>, or 0 if C<$value> is not a prime.
 
 This method is only available for the default C<on_values=E<gt>'all'>.
+C<$seq-E<gt>can('ith')> says whether C<ith()> can be used (and gives a
+coderef).
 
 =item C<$bool = $seq-E<gt>pred($value)>
 

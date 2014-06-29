@@ -17,6 +17,10 @@ with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
+Version 71, June 2014
+    - new Xenodromes
+    - OEIS also use text files "A123456.internal.txt"
+
 Version 70, April 2014
     - new FibonacciRepresentations
     - Pell new seek_to_i(), negative ith()

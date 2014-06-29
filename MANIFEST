@@ -107,9 +107,7 @@ devel/lib/Math/NumSeq/StoehrSequence.pm
 devel/lib/Math/NumSeq/SumPowSub1.pm
 devel/lib/Math/NumSeq/SumTwoSquares.pm
 devel/lib/Math/NumSeq/SumXsq3Ysq.pm
-devel/lib/Math/NumSeq/Xenodromes-slow.t
 devel/lib/Math/NumSeq/xenodromes.pl
-devel/lib/Math/NumSeq/Xenodromes.pm
 devel/lipschitz.pl
 devel/lucky-numbers.gri
 devel/lucky-numbers.pl
@@ -287,6 +285,7 @@ lib/Math/NumSeq/TwinPrimes.pm
 lib/Math/NumSeq/UlamSequence.pm
 lib/Math/NumSeq/UndulatingNumbers.pm
 lib/Math/NumSeq/WoodallNumbers.pm
+lib/Math/NumSeq/Xenodromes.pm
 Makefile.PL
 MANIFEST			This list of files
 MANIFEST.SKIP
@@ -422,7 +421,9 @@ xt/oeis/TotientSteps-oeis.t
 xt/oeis/Triangular-oeis.t
 xt/oeis/TwinPrimes-oeis.t
 xt/oeis/Woodall-oeis.t
+xt/oeis/Xenodromes-oeis.t
 xt/pod_lists.t
+xt/slow/Xenodromes-slow.t
 xtools/my-check-copyright-years.sh
 xtools/my-check-spelling.sh
 xtools/my-deb.sh

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 70;
+$VERSION = 71;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
@@ -224,7 +224,8 @@ The sequence begins
     1, 2, 7, 12, 29, 62, 123, 248, 505, 1018, 2047, 4084, 8181, ...
     starting i=1
 
-All integers in binary and then reading on an upwards diagonal slope,
+All integers are written in binary and the read on an upwards diagonal
+slope,
 
     Integers     Sloping     Excluded
     in Binary

@@ -57,7 +57,7 @@ sub want_module {
   # return 0 unless $module =~ /Almost/;
   # return 0 unless $module =~ /Lucas|Fibonacci/;
 #   return 0 unless $module =~ /Collatz/;
-   return 0 unless $module =~ /FibonacciRepresentations/;
+   return 0 unless $module =~ /Xenodromes/;
   return 1;
 }
 
@@ -504,7 +504,8 @@ sub check_class {
       }
     }
     {
-      unless ($seq->isa('Math::NumSeq::FractionDigits')) {
+      unless ($seq->isa('Math::NumSeq::FractionDigits')
+             || $seq->isa('Math::NumSeq::Xenodromes')) {
 
         my $values_max = $seq->values_max;
         if (defined $values_max) {
@@ -598,7 +599,8 @@ sub check_class {
     }
     {
       my $values_max = $seq->values_max;
-      if (defined $values_max) {
+      if (defined $values_max
+          && ! $seq->isa('Math::NumSeq::Xenodromes')) {
         my $data_max = _max(@$want);
         if ($values_max != $data_max) {
           $good = 0;

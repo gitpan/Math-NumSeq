@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION','@ISA';
-$VERSION = 70;
+$VERSION = 71;
 use Math::NumSeq::Base::Sparse;  # FIXME: implement pred() directly ...
 @ISA = ('Math::NumSeq::Base::Sparse');
 
@@ -278,6 +278,29 @@ sub value_to_i_estimate {
               / log(_PHI) );
 }
 
+sub _UNTESTED__value_to_i {
+  my ($self, $value) = @_;
+  if ($value < 0) { return undef; }
+  my $i = $self->value_to_i_estimate($value) - 3;
+  if (_is_infinite($i)) { return $i; }
+
+  if ($i < 0) { $i = 0; }
+  my ($f0,$f1) = $self->ith_pair($i);
+  foreach (1 .. 10) {
+    if ($f0 == $value) {
+      return $i;
+    }
+    last if $f0 > $value;
+    if ($i == $uv_i_limit && ! ref $f0) {
+      # automatic BigInt if not another number class
+      $f1 = _to_bigint($f1);
+    }
+    ($f0, $f1) = ($f1, $f0+$f1);
+    $i += 1;
+  }
+  return undef;
+}
+
 #------------------------------------------------------------------------------
 # generic, shared
 
@@ -429,8 +452,8 @@ single multiple for that last step, instead of two squares.
        F[2k]   = F[k]*(F[k]+2F[k-1])
 
 The "add" amount is 2*(-1)^k which means +2 or -2 according to k odd or
-even, which in turn means whether the previous bit taken from i was 1 or 0.
-That can be easily noted from each bit, to be used in the following loop
+even, which means whether the previous bit taken from i was 1 or 0.  That
+can be easily noted from each bit, to be used in the following loop
 iteration or the final step F[2k+1] formula.
 
 For small i it's usually faster to just successively add F[k+1]=F[k]+F[k-1],

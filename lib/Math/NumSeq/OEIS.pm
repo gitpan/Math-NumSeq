@@ -21,7 +21,7 @@ use strict;
 use Carp;
 
 use vars '$VERSION','@ISA';
-$VERSION = 70;
+$VERSION = 71;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
@@ -95,20 +95,21 @@ Math::NumSeq::OEIS -- number sequence by OEIS A-number
 
 =head1 DESCRIPTION
 
-This module selects a C<NumSeq> by an A-number from Sloane's Online
+This module selects a C<NumSeq> by an A-number of Sloane's Online
 Encyclopedia of Integer Sequences.
 
 If there's C<NumSeq> code implementing the sequence then that's used,
-otherwise local files if available.  See L<Math::NumSeq::OEIS::Catalogue>
-for querying available A-numbers.
+otherwise local downloaded OEIS files if available.  See
+L<Math::NumSeq::OEIS::Catalogue> for querying available A-numbers.
 
 =head2 Files
 
 Local files should be in a F<~/OEIS> direectory, ie. an F<OEIS> directory in
 the user's home directory (see L<File::HomeDir>).  Files can be HTML, OEIS
-internal, B-file, and/or A-file.
+internal, b-file, and/or a-file.
 
     ~/OEIS/A000032.html
+    ~/OEIS/A000032.internal.txt
     ~/OEIS/A000032.internal.html
     ~/OEIS/b000032.txt
     ~/OEIS/a000032.txt
@@ -116,20 +117,24 @@ internal, B-file, and/or A-file.
 As downloaded from for example
 
     http://oeis.org/A000032
+    http://oeis.org/search?q=id:A000032&fmt=text
     http://oeis.org/A000032/internal
     http://oeis.org/A000032/b000032.txt
     http://oeis.org/A000032/a000032.txt
 
-The "internal" format is more reliable than the HTML for parsing.  It's
-wrapped in HTML, hence F<.internal.html> filename.  The b-file or a-file can
-be used alone but in that case there's no C<$seq-E<gt>description()> and it
-may limit the C<$seq-E<gt>characteristic()> attributes.
+The "internal" text format is the most reliable for parsing.  This is the
+"text" link in the main sequence pages.  The "internal" link is the same
+wrapped in HTML.  It can be used here as F<.internal.html>.
 
-B-files F<b000000.txt> are long lists of values.  A-files F<a000000.txt>
-similarly and even longer, but sometimes are auxiliary info instead (which
-is ignored).  Some sequences don't have these, only the 30 or 40 sample
-values from the HTML or internal page.  Those samples might be enough for
-fast growing sequences.
+b-files F<b000000.txt> are long lists of values.  a-files F<a000000.txt>
+similarly and even longer, but sometimes are auxiliary info instead (and in
+that case not used).  Some sequences don't have these, only the 30 or 40
+sample values from the HTML or internal page.  Those samples might be enough
+for fast growing sequences.
+
+b-file or a-file can be used alone by this module, without the text or HTML
+parts.  In that case there's no C<$seq-E<gt>description()> and it may limit
+the C<$seq-E<gt>characteristic()> attributes.
 
 =head2 Other Notes
 
@@ -169,10 +174,10 @@ preserve precision.  Is that a good idea?
 
 An F<a000000.txt> or F<b000000.txt> file is read line by line.  For Perl 5.8
 ithreads there's a C<CLONE> setup which re-opens the file in a new thread so
-the C<$seq> in each thread has its own position.  (See L<perlthrtut> and
-L<perlmod/Making your module threadsafe>).
+C<$seq> in each thread has its own position.  (See L<perlthrtut> and
+L<perlmod/Making your module threadsafe>.)
 
-But a C<fork()> will still have both parent and child with the same open
+But a process C<fork()> will have both parent and child with the same open
 file so care should be taken that only one of them uses C<$seq> in that
 case.  The same is true of all open file handling across a C<fork()>.
 
@@ -193,7 +198,7 @@ processing an entire file if just a few values are wanted.
 
 If C<$i> happens to be the next line or just a short distance ahead of what
 was last read then no search is necessary.  This means that C<ith()> called
-sequentially i=1,2,3,4,etc simply reads successive lines, the same as
+sequentially i=1,2,3,4,etc simply reads successive lines the same as
 C<next()> would do.
 
 =back
@@ -205,13 +210,13 @@ C<next()> would do.
 =item C<$str = $seq-E<gt>description()>
 
 Return a human-readable description of the sequence.  For the downloaded
-files this is the "%N NAME" part which is a short description of the
+files this is the name part ("%N") which is a short description of the
 sequence.
 
 A few sequences may have non-ASCII characters in the description.  For Perl
 5.8 and up they're decoded to wide-chars.  Not sure what to do for earlier
-Perl, currently they're left as the bytes from the download, which
-unfortunately may be utf-8.
+Perl, currently they're left as the bytes from the download, which may be
+utf-8.
 
 =item C<$value = $seq-E<gt>values_min()>
 
@@ -221,10 +226,10 @@ Return the minimum or maximum values in the sequence, or C<undef> if unknown
 or infinity.
 
 For files C<values_min()> is guessed from the first few values if
-non-negative, and C<values_max()> normally is considered to be infinite.  If
-the range seems to be limited (eg. sequences of -1,0,1) then min and max are
-obtained from those, and likewise for "full" sequences where the samples are
-the entire sequence.
+non-negative, and C<values_max()> is normally considered to be infinite.
+For keyword "full" the samples are the entire sequence and gives the
+range. If a range seems to be limited (eg. sequences of -1,0,1) then min and
+max are obtained from those.
 
 =item C<$ret = $seq-E<gt>characteristic($key)>
 
@@ -235,7 +240,7 @@ L<Math::NumSeq/Information>),
 
 =item *
 
-"integer" is always true.
+"integer" always true.
 
 =item *
 
@@ -247,25 +252,21 @@ by decreasing values after the first few, etc.
 
 =item * 
 
-"digits" is from KEYWORDS "cons" for decimal constants.  Some other digit
-sequences are recognised by their DESCRIPTION part though this may be
-unreliable.
+"digits" is from keyword "cons" for decimal constants.  Some other digit
+sequences are recognised by their name part though this may be unreliable.
 
 =item * 
 
-"count" is from a DESCRIPTION with "number of".  This is probably
-unreliable.
+"count" is from a name with "number of".  This is probably unreliable.
 
-=item *
+=back
 
-All the "KEYWORDS" from the OEIS are provided as booleans under
+All the keywords from the OEIS are provided as booleans under
 names "OEIS_easy" etc.  So for example
 
     if ($seq->characteristic("OEIS_nice")) {
       print "nooiice ...\n";
     }
-
-=back
 
 =back
 

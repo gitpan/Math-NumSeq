@@ -26,7 +26,7 @@ use lib 't';
 use MyTestHelpers;
 BEGIN { MyTestHelpers::nowarnings() }
 
-my $test_count = (tests => 2592)[1];
+my $test_count = (tests => 2604)[1];
 plan tests => $test_count;
 
 # uncomment this to run the ### lines
@@ -126,6 +126,10 @@ foreach my $elem
    # Expression.pm
    # Ln2Bits.pm
    # PiBits.pm
+
+   [ 'Math::NumSeq::Xenodromes',
+     [ 0 .. 9, 10, 12, 13 .. 19, 20, 21, 23, 24,
+     ] ],
 
    [ 'Math::NumSeq::FibonacciRepresentations',
      [ 1, 1, 1, 2, 1, 2, 2, 1, 3, 2, 2, 3, 1, 3, 3, 2, 4, 2, 3, 3,

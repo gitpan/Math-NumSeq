@@ -26,6 +26,25 @@ use Math::NumSeq::Fibonacci;
 use Math::NumSeq::LucasNumbers;
 
 {
+  # cumulative
+  require Math::NumSeq::Fibonacci;
+  my $seq = Math::NumSeq::Fibonacci->new;
+  $seq->next;
+  $seq->next;
+  my $total = 0;
+  my @values;
+  foreach (1 .. 20) {
+    my ($i, $value) = $seq->next;
+    $total += $value;
+    print $value,"   ",$total,"\n";
+    # print $seq->ith($i+2),"   ",$total+1,"\n";
+    push @values, $total;
+  }
+  require Math::OEIS::Grep;
+  Math::OEIS::Grep->search (array => \@values);
+  exit 0;
+}
+{
   # negatives
   my $class;
   $class = 'Math::NumSeq::LucasNumbers';
@@ -51,7 +70,7 @@ use Math::NumSeq::LucasNumbers;
   }
 
   use lib 'xt'; require MyOEIS;
-  print MyOEIS->grep_for_values (array => \@values);
+  Math::OEIS::Grep->search (array => \@values);
   exit 0;
 }
 {
@@ -88,25 +107,7 @@ use Math::NumSeq::LucasNumbers;
   }
   exit 0;
 }
-{
-  # cumulative
-  require Math::NumSeq::Fibonacci;
-  my $seq = Math::NumSeq::Fibonacci->new;
-  $seq->next;
-  $seq->next;
-  my $total = 0;
-  my @values;
-  foreach (1 .. 20) {
-    my ($i, $value) = $seq->next;
-    $total += $value;
-    print $value,"   ",$total,"\n";
-    # print $seq->ith($i+2),"   ",$total+1,"\n";
-    push @values, $total;
-  }
-  use lib 'xt'; require MyOEIS;
-  print MyOEIS->grep_for_values (array => \@values);
-  exit 0;
-}
+
 
 {
   require Math::NumSeq::Tribonacci;

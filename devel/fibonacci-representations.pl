@@ -26,8 +26,16 @@ use Math::NumSeq::Fibonacci;
 use Math::NumSeq::FibonacciRepresentations;
 
 # uncomment this to run the ### lines
-use Smart::Comments;
+# use Smart::Comments;
 
+{
+  # print array by rows
+
+  my $seq = Math::NumSeq::FibonacciRepresentations->new;
+  my ($v0,$v1) = $seq->ith_pair(12);
+  print "ith_pair  $v0  $v1\n";
+  exit 0;
+}
 {
   # print array by rows
 

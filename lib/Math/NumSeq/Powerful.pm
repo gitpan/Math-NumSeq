@@ -21,7 +21,7 @@ use strict;
 use List::Util 'min';
 
 use vars '$VERSION','@ISA';
-$VERSION = 70;
+$VERSION = 71;
 use Math::NumSeq 7; # v.7 for _is_infinite()
 use Math::NumSeq::Base::IteratePred;
 @ISA = ('Math::NumSeq::Base::IteratePred',
@@ -29,7 +29,7 @@ use Math::NumSeq::Base::IteratePred;
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
 # uncomment this to run the ### lines
-#use Smart::Comments;
+# use Smart::Comments;
 
 
 # use constant name => Math::NumSeq::__('Powerful Numbers');
@@ -288,7 +288,18 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =item C<$seq = Math::NumSeq::Powerful-E<gt>new (powerful_type =E<gt> $str, power =E<gt> $integer)>
 
-Create and return a new sequence object.
+Create and return a new sequence object.  C<powerful_type> can be
+
+    "some"    (the default)
+    "all"
+
+C<power> must be 2 or more.
+
+=back
+
+=head2 Random Access
+
+=over
 
 =item C<$bool = $seq-E<gt>pred($value)>
 

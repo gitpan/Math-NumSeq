@@ -22,9 +22,9 @@ use POSIX 'ceil';
 use List::Util 'max';
 
 use vars '$VERSION','@ISA';
-$VERSION = 70;
+$VERSION = 71;
 
-use Math::NumSeq 7; # v.7 for _is_infinite()
+use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');

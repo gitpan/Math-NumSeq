@@ -49,7 +49,6 @@ $|=1;
   # # $values_class = $gen->values_class('DigitsModulo');
   # $values_class = $gen->values_class('RadixWithoutDigit');
   # $values_class = $gen->values_class('Odd');
-  # $values_class = $gen->values_class('Palindromes');
   # # $values_class = $gen->values_class('MathSequence');
   # $values_class = $gen->values_class('DigitLength');
   # $values_class = $gen->values_class('SumXsq3Ysq');
@@ -80,7 +79,6 @@ $|=1;
   $values_class = 'Math::NumSeq::SqrtContinued';
   $values_class = 'Math::NumSeq::SqrtContinuedPeriod';
   $values_class = 'Math::NumSeq::PolignacObstinate';
-  $values_class = 'Math::NumSeq::Powerful';
   $values_class = 'Math::NumSeq::RepdigitRadix';
   $values_class = 'Math::NumSeq::SieveMultiples';
   $values_class = 'Math::NumSeq::ReverseAdd';
@@ -133,11 +131,9 @@ $|=1;
   $values_class = 'Math::NumSeq::Repdigits';
   $values_class = 'Math::NumSeq::AllPrimeFactors';
   $values_class = 'Math::NumSeq::MaxDigitCount';
-  $values_class = 'Math::NumSeq::Palindromes';
   $values_class = 'Math::NumSeq::PrimeExponentFlip';
   $values_class = 'Math::NumSeq::PrimesDigits';
   $values_class = 'Math::NumSeq::Plaindromes';
-  $values_class = 'Math::NumSeq::Xenodromes';
   $values_class = 'Math::NumSeq::DuffinianNumbers';
   $values_class = 'Math::NumSeq::ReRound';
   $values_class = 'Math::NumSeq::SophieGermainPrimes';
@@ -179,7 +175,6 @@ $|=1;
   $values_class = 'Math::NumSeq::LeastPrimitiveRoot';
   $values_class = 'Math::NumSeq::DedekindPsiCumulative';
   $values_class = 'Math::NumSeq::SumPowSub1';
-  $values_class = 'Math::NumSeq::FibonacciRepresentations';
   $values_class = 'Math::NumSeq::LuckyNumbers';
   $values_class = 'Math::NumSeq::ProthNumbers';
   $values_class = 'Math::NumSeq::HafermanCarpet';
@@ -201,10 +196,17 @@ $|=1;
   $values_class = 'Math::NumSeq::PlanePathCoord';
   $values_class = 'Math::NumSeq::PlanePathN';
   $values_class = 'Math::NumSeq::Pell';
+  $values_class = 'Math::NumSeq::Powerful';
+  $values_class = 'Math::NumSeq::FibonacciRepresentations';
+  $values_class = 'Math::NumSeq::Palindromes';
+  $values_class = 'Math::NumSeq::Xenodromes';
   
   eval "require $values_class; 1" or die $@;
   my $seq = $values_class->new
     (
+     powerful_type => 'some',
+     power => 1,
+     
      level => 11,
      # on_values => 'even',
      # end_type => 'to_peak',
@@ -298,7 +300,7 @@ $|=1;
      # planepath => 'UlamWarburton,parts=4',
      # planepath => 'DragonCurve',
      # planepath => 'Godfrey',
-      planepath => 'AlternatePaper',
+     planepath => 'AlternatePaper',
      #planepath => 'CCurve',
      # coordinate_type => 'Revisit',
      # coordinate_type => 'NumOverlap',
@@ -308,12 +310,12 @@ $|=1;
      
      # planepath => 'PythagoreanTree,coordinates=AC',
      # planepath => 'RationalsTree,tree_type=L',
-      # planepath => 'R5DragonMidpoint,arms=1',
+     # planepath => 'R5DragonMidpoint,arms=1',
      # planepath => 'CellularRule,rule=84',
      # planepath => 'PyramidRows,step=2',
      # planepath => 'Columns,height=2,n_start=0',
      # planepath => 'MultipleRings,step=0,ring_shape=circle',
-      # delta_type=>'dTRadius',
+     # delta_type=>'dTRadius',
      
      # planepath => 'MultipleRings,step=1,ring_shape=circle',
      # planepath => 'Diagonals',
@@ -337,7 +339,7 @@ $|=1;
      # planepath => 'QuadricIslands',
      # line_type => 'Depth_start',
      # planepath => 'WythoffArray,x_start=1,y_start=1',
-      line_type => 'X_axis',
+     line_type => 'X_axis',
      # line_type => 'Depth_end',
      # i_start => 1,
      
@@ -352,8 +354,6 @@ $|=1;
      # prime_type => 'twin',
      # round_count => 2,
      # pairs => 'both',
-     # powerful_type => 'all',
-     # power => 3,
      # multiples => 1,
      # digit => 1,
      

@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 70;
+$VERSION = 71;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
@@ -55,6 +55,12 @@ use constant parameter_info_array =>
 
 #------------------------------------------------------------------------------
 # cf 
+#
+# A023787 katadromes OFFSET=0
+# A023754 plaindromes base13 OFFSET=0
+# A023755 plaindromes base14 OFFSET=0
+# A023756 plaindromes base15 OFFSET=0
+
 my %oeis_anum = (
                  # plaindromes
                  13 => 'A023754',

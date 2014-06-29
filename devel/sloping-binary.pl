@@ -77,8 +77,8 @@ use Math::BigInt;
     }
   }
   use lib 'xt';
-  require MyOEIS;
-  print MyOEIS->grep_for_values (name => "radix=$radix", array => \@values);
+  Math::OEIS::Grep->search (name => "radix=$radix",
+                            array => \@values);
   exit 0;
 }
 

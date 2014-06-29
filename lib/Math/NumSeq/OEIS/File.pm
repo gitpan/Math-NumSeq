@@ -29,14 +29,14 @@ use File::Spec;
 use Symbol 'gensym';
 
 use vars '$VERSION','@ISA';
-$VERSION = 70;
+$VERSION = 71;
 
 use Math::NumSeq;
 @ISA = ('Math::NumSeq');
 *_to_bigint = \&Math::NumSeq::_to_bigint;
 
 use vars '$VERSION';
-$VERSION = 70;
+$VERSION = 71;
 
 eval q{use Scalar::Util 'weaken'; 1}
   || eval q{sub weaken { $_[0] = undef }; 1 }
@@ -49,6 +49,10 @@ eval q{use Scalar::Util 'weaken'; 1}
 # use constant name => Math::NumSeq::__('OEIS File');
 use Math::NumSeq::OEIS;
 *parameter_info_array = \&Math::NumSeq::OEIS::parameter_info_array;
+
+use constant::defer _HAVE_ENCODE => sub {
+  eval { require Encode; 1 } || 0;
+};
 
 sub description {
   my ($class_or_self) = @_;
@@ -230,7 +234,8 @@ sub new {
     last;
   }
 
-  my $have_info = (_read_internal($self, $anum)
+  my $have_info = (_read_internal_txt($self, $anum)
+                   || _read_internal_html($self, $anum)
                    || _read_html($self, $anum));
 
   if (! $have_info && ! $self->{'fh'}) {
@@ -365,12 +370,12 @@ sub _analyze {
 #   my ($x, $y) = @_;
 #   ### _value_cmp(): "$x  $y"
 #   ### cmp: $x cmp $y
-# 
+#
 #   my $x_neg = substr($x,0,1) eq '-';
 #   my $y_neg = substr($y,0,1) eq '-';
 #   ### $x_neg
 #   ### $y_neg
-# 
+#
 #   return ($y_neg <=> $x_neg
 #           || ($x_neg ? -1 : 1) * (length($x) <=> length($y)
 #                                   || $x cmp $y));
@@ -521,13 +526,88 @@ sub _afile_is_good {
   return 0;
 }
 
-sub _read_internal {
+sub _read_internal_txt {
   my ($self, $anum) = @_;
-  ### _read_internal(): $anum
+  ### _read_internal_txt(): $anum
 
   return 0 if $self->{'_dont_use_internal'};
 
-  foreach my $basefile ("$anum.internal", "$anum.internal.html") {
+  foreach my $basefile ("$anum.internal.txt") {
+    my ($fullname, $contents) = _slurp_oeis_file($self,$basefile)
+      or next;
+    if (_HAVE_ENCODE) {
+      # "Internal" text format is utf-8.
+      $contents = Encode::decode('utf-8', $contents, Encode::FB_PERLQQ());
+    }
+
+    ### $contents
+
+    # eg. "%O A007318 0,5"
+    my $offset;
+    if ($contents =~ /^%O\s+\Q$anum\E\s+(\d+)/im) {
+      $offset = $1;
+      ### %O line: $offset
+    } else {
+      $offset = 0;
+    }
+
+    # eg. "%N A007318 Pascal's triangle ..."
+    if ($contents =~ m{^%N\s+\Q$anum\E\s+(.*)}im) {
+      _set_description ($self, $1);
+    } else {
+      ### description not matched ...
+    }
+
+    # eg. "%K A007318 nonn,tabl,nice,easy,core,look,hear,changed"
+    _set_characteristics ($self,
+                          $contents =~ /^%K\s+\Q$anum\E\s+(.*)/im && $1);
+
+    # the eishelp1.html says
+    # %V,%W,%X lines for signed sequences
+    # %S,%T,%U lines for non-negative sequences
+    # though now %S is signed and unsigned both is it?
+    #
+    if (! $self->{'fh'}) {
+      my @samples;
+      # capital %STU etc, but any case <tt>
+      while ($contents =~ m{^%[VWX]\s+\Q$anum\E\s+(.*)}mg) {
+        push @samples, $1;
+      }
+      unless (@samples) {
+        while ($contents =~ m{^%[STU]\s+\Q$anum\E\s+(.*)}mg) {
+          push @samples, $1;
+        }
+        unless (@samples) {
+          croak "Oops list of values not found in ",$self->{'filename'};
+        }
+      }
+      # join multiple lines of samples
+      _split_sample_values ($self, join(', ',@samples));
+    }
+
+    # %O "OFFSET" is subscript of first number.
+    # Or for digit expansions it's the number of terms before the decimal
+    # point, per http://oeis.org/eishelp2.html#RO
+    #
+    unless ($self->{'characteristic'}->{'digits'}) {
+      $self->{'i'} = $self->{'i_start'} = $offset;
+    }
+    ### i: $self->{'i'}
+    ### i_start: $self->{'i_start'}
+
+    return 1; # success
+  }
+
+  return 0; # file not found
+}
+
+sub _read_internal_html {
+  my ($self, $anum) = @_;
+  ### _read_internal_html(): $anum
+
+  return 0 if $self->{'_dont_use_internal'};
+
+  foreach my $basefile ("$anum.internal.html") {
     my ($fullname, $contents) = _slurp_oeis_file($self,$basefile)
       or next;
     # "Internal" files are served as html with a <meta> charset indicator
@@ -753,9 +833,6 @@ sub _split_sample_values {
   $self->{'array'} = [ split /[, \t\r\n]+/, $str ];
 }
 
-use constant::defer _HAVE_ENCODE => sub {
-  eval { require Encode; 1 } || 0;
-};
 sub _decode_html_charset {
   my ($contents) = @_;
 

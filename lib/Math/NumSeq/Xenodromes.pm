@@ -20,7 +20,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 70;
+$VERSION = 71;
 
 use Math::NumSeq;
 use Math::NumSeq::Base::IteratePred;
@@ -36,8 +36,10 @@ use Math::NumSeq::Repdigits;
 
 
 # use constant name => Math::NumSeq::__('...');
-use constant description => Math::NumSeq::__('Numbers with non-decreasing hex digits, and options for related numbers.');
-use constant default_i_start => 0;
+use constant description => Math::NumSeq::__('Numbers with all digits distinct.');
+
+# This is i_start=1 value=0 following the OEIS and Palindromes.pm.
+use constant default_i_start => 1;
 use constant values_min => 0;
 
 use Math::NumSeq::Base::Digits
@@ -46,7 +48,8 @@ use Math::NumSeq::Base::Digits
 sub values_max {
   my ($self) = @_;
   my $radix = $self->{'radix'};
-  return _digit_join([reverse 0 .. $radix-1], $radix);
+  return _digit_join_lowtohigh([reverse 0 .. $radix-1],
+                               $radix);
 }
 
 #------------------------------------------------------------------------------
@@ -60,19 +63,14 @@ sub values_max {
 #              = Sum (k+1)! * n!/k!*(n-k)!, k = 0..n.
 #              = Sum (k+1) * n!/(n-k)!, k = 0..n.
 #              = Sum k = 0..n of (k+1)*n*(n-1)*...*(n-k+1)
-#
-#
-# A023787 katadromes OFFSET=0
-# A023754 plaindromes base13 OFFSET=0
-# A023755 plaindromes base14 OFFSET=0
-# A023756 plaindromes base15 OFFSET=0
+#    A043537 how many distinct digits
 
 # OFFSET=1 for value=0
 my @oeis_anum = (
                  # OEIS-Catalogue array begin
                  undef,     #   # 0
                  undef,     #   # 1
-                 undef,     #   # radix=2 ? 0,1,2 only
+                 undef,     #   # radix=2 no seq with 0,1,2 only
                  'A023798', # radix=3
                  'A023799', # radix=4
                  'A023800', # radix=5
@@ -109,7 +107,7 @@ sub next {
   my $digits = $self->{'digits'}; # arrayref of integers
   my $skip = $self->{'skip'}; # arrayref of strings
 
-  ### Xenodrome next() ...
+  ### Xenodromes next() ...
   ### $digits
 
   my $pos = 0;
@@ -136,7 +134,7 @@ sub next {
       ### use digit: $digit
       $digits->[$pos] = $digit;
       if (--$pos < 0) {
-        return ($self->{'i'}++, _digit_join($digits,$radix));
+        return ($self->{'i'}++, _digit_join_lowtohigh($digits,$radix));
       }
       ### descend to pos: $pos
       $digits->[$pos] = -1;
@@ -163,18 +161,19 @@ sub next {
 #    1      2      3      4      5   6
 
 
-# 1 to 9  is 9
+# 0 to 9  is 10 values
 # 10 to 98 is 9*9=81
 sub ith {
   my ($self, $i) = @_;
-  ### Xenodrome ith(): $i
+  ### Xenodromes ith(): $i
 
   my $radix = $self->{'radix'};
-  if ($i < $radix) {
-    return $i;
+  if ($i <= $radix) {
+    # i=1 to i=radix
+    return $i-1;
   }
 
-  $i -= $radix;
+  $i -= $radix+1;
   my $total = my $this = $radix-1;
   my $len = 1;
   for (;;) {
@@ -200,7 +199,7 @@ sub ith {
         splice @xeno, $i, 1; # remove
       }
       @digits = reverse @digits;  # now low to high
-      return _digit_join(\@digits,$radix);
+      return _digit_join_lowtohigh(\@digits,$radix);
     }
     if ($len >= $radix) {
       return undef;
@@ -211,16 +210,16 @@ sub ith {
 
 sub pred {
   my ($self, $value) = @_;
-  ### Xenodrome pred(): $value
+  ### Xenodromes pred(): $value
 
   if ($value != int($value) || _is_infinite($value)) {
     return 0;
   }
   $value = abs($value);
 
-  my @seen;
+  my %seen;
   foreach my $digit (_digit_split_lowtohigh($value, $self->{'radix'})) {
-    if ($seen[$digit]++) {
+    if ($seen{$digit}++) {
       return 0;
     }
   }
@@ -228,7 +227,7 @@ sub pred {
 }
 
 # $aref->[0] low digit
-sub _digit_join {
+sub _digit_join_lowtohigh {
   my ($aref, $radix) = @_;
   my $n = 0;
   foreach my $digit (reverse @$aref) { # high to low
@@ -245,12 +244,12 @@ __END__
 
 =head1 NAME
 
-Math::NumSeq::Xenodrome -- integers with all digits unique
+Math::NumSeq::Xenodromes -- integers with all digits unique
 
 =head1 SYNOPSIS
 
- use Math::NumSeq::Xenodrome;
- my $seq = Math::NumSeq::Xenodrome->new;
+ use Math::NumSeq::Xenodromes;
+ my $seq = Math::NumSeq::Xenodromes->new;
  my ($i, $value) = $seq->next;
 
 =head1 DESCRIPTION
@@ -258,15 +257,17 @@ Math::NumSeq::Xenodrome -- integers with all digits unique
 This is integers which have all digits different,
 
     0, ..., 9, 10, 12, 13, ..., 19, 20, 21, 23, 24, ...
+    # starting i=1 value=0
 
-For example value 11 is not in the sequence because it has digit 1 appearing
+For example 11 is not in the sequence because it has digit 1 appearing
 twice.
 
 This is a finite sequence since the maximum value with distinct digits is
 9876543210.
 
-The optional C<radix> parameter (default decimal) controls the base used for
-the digits.  In binary for example there's just three values, 0, 1, 2.
+The optional C<radix> parameter controls the base used for the digits
+(default decimal).  In binary for example there's just three values, 0,
+1, 2.
 
 =head1 FUNCTIONS
 
@@ -274,7 +275,9 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 
 =over 4
 
-=item C<$seq = Math::NumSeq::Xenodrome-E<gt>new ()>
+=item C<$seq = Math::NumSeq::Xenodromes-E<gt>new ()>
+
+=item C<$seq = Math::NumSeq::Xenodromes-E<gt>new (radix =E<gt> $integer)>
 
 Create and return a new sequence object.
 

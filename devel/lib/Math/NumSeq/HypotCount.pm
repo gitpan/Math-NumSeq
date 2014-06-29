@@ -29,8 +29,10 @@ use strict;
 use POSIX 'ceil';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 70;
+$VERSION = 71;
+
 use Math::NumSeq;
+use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;

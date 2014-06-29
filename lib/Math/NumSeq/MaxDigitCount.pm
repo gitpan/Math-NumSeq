@@ -20,14 +20,14 @@ use 5.004;
 use strict;
 use List::Util 'max';
 
-use Math::NumSeq;
-*_is_infinite = \&Math::NumSeq::_is_infinite;
-
 use vars '$VERSION', '@ISA';
-$VERSION = 70;
+$VERSION = 71;
+
+use Math::NumSeq;
 use Math::NumSeq::Base::IterateIth;
 @ISA = ('Math::NumSeq::Base::IterateIth',
         'Math::NumSeq');
+*_is_infinite = \&Math::NumSeq::_is_infinite;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;

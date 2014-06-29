@@ -22,13 +22,13 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 70;
+$VERSION = 71;
 use Math::NumSeq::OEIS::Catalogue::Plugin;
 @ISA = ('Math::NumSeq::OEIS::Catalogue::Plugin');
 
 ## no critic (CodeLayout::RequireTrailingCommaAtNewline)
 
-# total 896 A-numbers in 116 modules
+# total 910 A-numbers in 117 modules
 
 use constant info_arrayref =>
 [
@@ -7341,6 +7341,114 @@ use constant info_arrayref =>
   {
     'anum' => 'A003261',
     'class' => 'Math::NumSeq::WoodallNumbers'
+  },
+  {
+    'anum' => 'A023798',
+    'class' => 'Math::NumSeq::Xenodromes',
+    'parameters' => [
+      'radix',
+      3
+    ]
+  },
+  {
+    'anum' => 'A023799',
+    'class' => 'Math::NumSeq::Xenodromes',
+    'parameters' => [
+      'radix',
+      4
+    ]
+  },
+  {
+    'anum' => 'A023800',
+    'class' => 'Math::NumSeq::Xenodromes',
+    'parameters' => [
+      'radix',
+      5
+    ]
+  },
+  {
+    'anum' => 'A023801',
+    'class' => 'Math::NumSeq::Xenodromes',
+    'parameters' => [
+      'radix',
+      6
+    ]
+  },
+  {
+    'anum' => 'A023802',
+    'class' => 'Math::NumSeq::Xenodromes',
+    'parameters' => [
+      'radix',
+      7
+    ]
+  },
+  {
+    'anum' => 'A023803',
+    'class' => 'Math::NumSeq::Xenodromes',
+    'parameters' => [
+      'radix',
+      8
+    ]
+  },
+  {
+    'anum' => 'A023804',
+    'class' => 'Math::NumSeq::Xenodromes',
+    'parameters' => [
+      'radix',
+      9
+    ]
+  },
+  {
+    'anum' => 'A010784',
+    'class' => 'Math::NumSeq::Xenodromes'
+  },
+  {
+    'anum' => 'A023805',
+    'class' => 'Math::NumSeq::Xenodromes',
+    'parameters' => [
+      'radix',
+      11
+    ]
+  },
+  {
+    'anum' => 'A023806',
+    'class' => 'Math::NumSeq::Xenodromes',
+    'parameters' => [
+      'radix',
+      12
+    ]
+  },
+  {
+    'anum' => 'A023807',
+    'class' => 'Math::NumSeq::Xenodromes',
+    'parameters' => [
+      'radix',
+      13
+    ]
+  },
+  {
+    'anum' => 'A023808',
+    'class' => 'Math::NumSeq::Xenodromes',
+    'parameters' => [
+      'radix',
+      14
+    ]
+  },
+  {
+    'anum' => 'A023809',
+    'class' => 'Math::NumSeq::Xenodromes',
+    'parameters' => [
+      'radix',
+      15
+    ]
+  },
+  {
+    'anum' => 'A023810',
+    'class' => 'Math::NumSeq::Xenodromes',
+    'parameters' => [
+      'radix',
+      16
+    ]
   }
 ]
 ;

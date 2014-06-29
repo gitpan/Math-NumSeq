@@ -60,7 +60,7 @@ use 5.004;
 use strict;
 
 use vars '$VERSION', '@ISA';
-$VERSION = 70;
+$VERSION = 71;
 
 # uncomment this to run the ### lines
 #use Smart::Comments;
@@ -478,8 +478,8 @@ implement this method.
 =item C<($v0, $v1) = $seq-E<gt>ith_pair($i)>
 
 Return two values C<ith($i)> and C<ith($i+1)> from the sequence.  This
-method can be used whenever C<ith()> exists.  C<can('ith_pair')> says
-whether C<ith_pair()> can be used in the usual way (and gives a coderef).
+method can be used whenever C<ith()> exists.  C<$seq-E<gt>can('ith_pair')>
+says whether C<ith_pair()> can be used (and gives a coderef).
 
 For some sequences a pair of values can be calculated with less work than
 two separate C<ith()> calls.
@@ -608,6 +608,7 @@ L<Math::NumSeq::RadixConversion>,
 L<Math::NumSeq::MaxDigitCount>
 
 L<Math::NumSeq::Palindromes>,
+L<Math::NumSeq::Xenodromes>,
 L<Math::NumSeq::Beastly>,
 L<Math::NumSeq::Repdigits>,
 L<Math::NumSeq::RepdigitAny>,

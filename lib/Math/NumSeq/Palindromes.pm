@@ -15,15 +15,24 @@
 # You should have received a copy of the GNU General Public License along
 # with Math-NumSeq.  If not, see <http://www.gnu.org/licenses/>.
 
+
+# cf A206913 next binary palindrome <= n   value_floor
+#    A206914 next binary palindrome >= n   value_ceil
+#    A206920 sum first n binary palindromes
+
+
 package Math::NumSeq::Palindromes;
 use 5.004;
 use strict;
 use List::Util 'max';
 
 use vars '$VERSION', '@ISA';
-$VERSION = 70;
+$VERSION = 71;
+
 use Math::NumSeq;
-@ISA = ('Math::NumSeq');
+use Math::NumSeq::Base::IterateIth;
+@ISA = ('Math::NumSeq::Base::IterateIth',
+        'Math::NumSeq');
 *_is_infinite = \&Math::NumSeq::_is_infinite;
 
 use Math::NumSeq::Repdigits;
@@ -82,33 +91,6 @@ sub oeis_anum {
 
 #------------------------------------------------------------------------------
 
-
-  # my @digits;
-  # while ($lo > 0) {
-  #   push @digits, $lo % $radix;
-  #   $lo = int ($lo / $radix);
-  # }
-  # my $td = int((@digits+1)/2);
-  # splice @digits, 0, int(@digits/2);  # delete low half
-  # my $i = 0;
-  # while (@digits) {
-  #   $i = $i*$radix + pop @digits;
-  # }
-  # ...
-sub rewind {
-  my ($self) = @_;
-  $self->{'i'} = $self->i_start;
-
-  my $radix = $self->{'radix'};
-  if ($radix < 2) { $radix = 10; }
-  $self->{'radix'} = $radix;
-}
-sub next {
-  my ($self) = @_;
-  my $i = $self->{'i'}++;
-  return ($i, $self->ith($i));
-}
-
 sub ith {
   my ($self, $i) = @_;
   ### Palindrome ith(): $i
@@ -130,14 +112,14 @@ sub ith {
   my $ret;
   for (;;) {
     if ($i < $limit) {
-      ### first, no low
+      ### first, no low ...
       $i += $add;
       $ret = int($i / $radix);
       last;
     }
     $i -= $limit;
     if ($i < $limit) {
-      ### second
+      ### second ...
       $i += $add;
       $ret = $i;
       last;
@@ -180,21 +162,6 @@ sub pred {
 1;
 __END__
 
-# sub _my_cnv {
-#   my ($n, $radix) = @_;
-#   if ($radix <= 36) {
-#     require Math::BaseCnv;
-#     return Math::BaseCnv::cnv($n,10,$radix);
-#   } else {
-#     my $ret = '';
-#     do {
-#       $ret = sprintf('[%d]', $n % $radix) . $ret;
-#     } while ($n = int($n/$radix));
-#     return $ret;
-#   }
-# }
-
-
 =for stopwords Ryde Math-NumSeq ie
 
 =head1 NAME
@@ -212,6 +179,7 @@ Math::NumSeq::Palindromes -- palindrome numbers like 15351
 The palindrome numbers which read the same backwards and forwards.
 
     0 .. 9, 11, 22, ..., 99, 101, 111, 121, ... 191, 202, ...
+    # starting i=1 value=0
 
 The default is decimal or the
 C<radix> parameter can select another base.
@@ -227,6 +195,17 @@ See L<Math::NumSeq/FUNCTIONS> for behaviour common to all sequence classes.
 =item C<$seq = Math::NumSeq::Palindromes-E<gt>new (radix =E<gt> $r)>
 
 Create and return a new sequence object.
+
+=back
+
+=head2 Iterating
+
+=over
+
+=item C<$seq-E<gt>seek_to_i($i)>
+
+Move the current sequence position to C<$i>.  The next call to C<next()>
+will return C<$i> and corresponding value.
 
 =back
 

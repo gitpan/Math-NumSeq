@@ -35,7 +35,7 @@ use Math::NumSeq::GolombSequence;
 # VERSION
 
 {
-  my $want_version = 70;
+  my $want_version = 71;
   ok ($Math::NumSeq::GolombSequence::VERSION, $want_version,
       'VERSION variable');
   ok (Math::NumSeq::GolombSequence->VERSION,  $want_version,

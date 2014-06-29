@@ -23,6 +23,7 @@ use HTML::Entities::Interpolate;
 use List::Util;
 use URI::Escape;
 use Module::Load;
+use Math::OEIS::Grep;
 
 use lib 'xt';
 use MyOEIS;
@@ -38,7 +39,7 @@ sub want_module {
   my ($module) = @_;
   # return 0 unless $module =~ /Collatz/;
   # return 0 unless $module =~ /DigitExtract/;
-   return 0 unless $module =~ /PlanePathTurn/;
+   return 0 unless $module =~ /PlanePathN/;
   # return 0 unless $module =~ /HafermanCarpet/;
   return 1;
 }
@@ -47,7 +48,7 @@ sub want_planepath {
   # return 0 unless $planepath =~ /Knight/;
   # return 0 unless $planepath =~ /CCurve/;
   # return 0 unless $planepath =~ /Divis|DiagonalRationals|CoprimeCol/;
-   return 0 unless $planepath =~ /Rows/;
+   return 0 unless $planepath =~ /Gray/;
   # return 0 unless $planepath =~ /LCornerTree/;
   # return 0 unless $planepath =~ /LCorn|RationalsTree/;
   # return 0 unless $planepath =~ /FactorRationals/;
@@ -70,7 +71,7 @@ sub want_coordinate {
   # return 0 unless $type =~ /MinAbsTri|MaxAbsTri/;
   # return 0 unless $type =~ /NumSiblings/;
   # return 0 unless $type =~ /SubHeight|NumChildren|NumSibling/;
-   return 0 unless $type =~ m{Turn};
+  # return 0 unless $type =~ m{Turn};
   # return 0 unless $type =~ m{DiffXY/2};
   # return 0 if $type =~ /SubHeight|NumChildren|NumSibling/;
   return 1;
@@ -323,7 +324,7 @@ sub special_values {
       ### no grep for all same values ...
     } else {
       my $name = "$module $params";
-      my $found = MyOEIS->grep_for_values(array => $values_aref);
+      my $found = Math::OEIS::Grep->search(array => $values_aref);
       if ($found) {
         print "\n";
         print "$name\n";
